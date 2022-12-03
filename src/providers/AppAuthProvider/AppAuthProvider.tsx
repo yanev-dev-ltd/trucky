@@ -4,17 +4,9 @@ import { Box, CircularProgress} from '@mui/material'
 
 
 const Authenticated: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-    const user = useAppAuthProvider()
+    const { user, subscription } = useAppAuthProvider()
   
-    // if (error || subError) {
-    //   return (
-    //     <Box display='flex' flexDirection='column' alignItems='center' mt={6}>
-    //       <Typography><FormattedMessage id='app.Wrong' /></Typography>
-    //     </Box>
-    //   );
-    // }
-  
-    if (user === 'loading') {
+    if (user === 'loading' || subscription === 'loading') {
       return (
         <Box display='flex' flexDirection='column' alignItems='center' mt={6}>
           <CircularProgress />
@@ -22,22 +14,23 @@ const Authenticated: React.FC<React.PropsWithChildren<unknown>> = ({ children })
       );
     }
   
-    if (user !== 'anonymous') {
+    if (user !== 'anonymous' && subscription === 'active') {
       return (
         <>
           {children}
         </>);
     }
   
-    // if (auth && subscription !== 'active') {
+    if (user !== 'anonymous' && subscription !== 'active') {
+       return <Box>Inactive</Box>
     //   return (
     //     <Elements stripe={stripePromise}>
     //       <Box p={1}>
     //         <Typography color='error'><FormattedMessage id={`app.stripe.${subscription}`} /></Typography>
     //         <CheckoutForm />
     //       </Box>
-    //     </Elements>);
-    // }
+    //     </Elements>)
+    }
     return <LogIn />;
   };
   

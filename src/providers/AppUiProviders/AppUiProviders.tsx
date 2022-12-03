@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { ThemeProvider, StyledEngineProvider } from '@mui/material'
+import { ThemeProvider, StyledEngineProvider, CssBaseline } from '@mui/material'
 import { theme } from '../../styles/theme'
 import messagesEn from '../../translations/en.json';
 import messagesBg from '../../translations/bg.json';
@@ -19,15 +19,16 @@ const AppUiProviders: React.FC<React.PropsWithChildren<unknown>> = ({ children }
     return (
         <IntlProvider locale={'en'} messages={messages['en']}>
             <StyledEngineProvider injectFirst>
-                <ThemeProvider theme={theme('light')}>
+                <ThemeProvider theme={theme('dark')}>
+                    <CssBaseline />
                     <Provider store={store}>
                         <Online>
                             {children}
                         </Online>
                         <Offline>
-                        <Box display='flex' flexDirection='column' alignItems='center' mt={6}>
-                            <Typography><FormattedMessage id='app.Offline' /></Typography>
-                        </Box>
+                            <Box display='flex' flexDirection='column' alignItems='center' mt={6}>
+                                <Typography><FormattedMessage id='app.Offline' /></Typography>
+                            </Box>
                         </Offline>
                     </Provider>
                 </ThemeProvider>

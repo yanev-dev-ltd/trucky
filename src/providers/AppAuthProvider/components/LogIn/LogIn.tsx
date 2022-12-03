@@ -5,7 +5,7 @@ import { auth } from '../../../../services/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FirebaseError } from '../../types'
 import { useDispatch } from 'react-redux'
-import { login } from '../../redux'
+import { login, logout } from '../../redux'
 
 const LogIn = () => {
   const [email, setEmail] = useState('')
@@ -20,10 +20,10 @@ const LogIn = () => {
       setLoading(true)
       try {
         const user = await signInWithEmailAndPassword(auth, email, password)
-        dispatch(login({ id: user.user.uid, email: user.user.email || '' }))
+        dispatch(login( user.user.uid ))
       } catch (error) {
         setError((error as FirebaseError).code)
-        dispatch(login(undefined))
+        dispatch(logout())
         setLoading(false)
       }
     }, [email, password]
