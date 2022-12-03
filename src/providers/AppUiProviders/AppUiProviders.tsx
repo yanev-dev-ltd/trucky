@@ -19,7 +19,7 @@ const AppUiProviders: React.FC<React.PropsWithChildren<unknown>> = ({ children }
     return (
         <IntlProvider locale={'en'} messages={messages['en']}>
             <StyledEngineProvider injectFirst>
-                <ThemeProvider theme={theme('dark')}>
+                <ThemeProvider theme={theme('light')}>
                     <Provider store={store}>
                         <Online>
                             {children}

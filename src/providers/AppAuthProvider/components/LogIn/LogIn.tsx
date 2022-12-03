@@ -4,22 +4,26 @@ import LoadingButton from '../../../../components/common/LoadingButton/LoadingBu
 import { auth } from '../../../../services/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FirebaseError } from '../../types'
+import { useDispatch } from 'react-redux'
+import { login } from '../../redux'
 
 const LogIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
 
   const onSubmit = useCallback(
     async (e: React.SyntheticEvent) => {
       e.preventDefault()
       setLoading(true)
       try {
-        const user = await signInWithEmailAndPassword(auth, email, password);
-        console.log(user)
+        const user = await signInWithEmailAndPassword(auth, email, password)
+        dispatch(login({ id: user.user.uid, email: user.user.email || '' }))
       } catch (error) {
         setError((error as FirebaseError).code)
+        dispatch(login(undefined))
         setLoading(false)
       }
     }, [email, password]

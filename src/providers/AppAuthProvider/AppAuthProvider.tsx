@@ -1,9 +1,10 @@
-import { useSelector } from 'react-redux'
 import LogIn from './components/LogIn/LogIn'
-import { RootState } from '../../store/store'
+import useAppAuthProvider from './hooks/useAppAuthProvider'
+import { Box, CircularProgress} from '@mui/material'
+
 
 const Authenticated: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-    const user = useSelector((state: RootState) => state.auth.user)
+    const user = useAppAuthProvider()
   
     // if (error || subError) {
     //   return (
@@ -13,15 +14,15 @@ const Authenticated: React.FC<React.PropsWithChildren<unknown>> = ({ children })
     //   );
     // }
   
-    // if (isFetching || subIsFetching) {
-    //   return (
-    //     <Box display='flex' flexDirection='column' alignItems='center' mt={6}>
-    //       <CircularProgress />
-    //     </Box>
-    //   );
-    // }
+    if (user === 'loading') {
+      return (
+        <Box display='flex' flexDirection='column' alignItems='center' mt={6}>
+          <CircularProgress />
+        </Box>
+      );
+    }
   
-    if (user) {
+    if (user !== 'anonymous') {
       return (
         <>
           {children}
