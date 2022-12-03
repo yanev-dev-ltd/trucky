@@ -9,7 +9,7 @@ import { ref, onValue } from 'firebase/database'
 const useAppAuthProvider = () => {
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.auth.user)
-    const [subscription, setSubscription] = useState<string>('loading')
+    const [subscription, setSubscription] = useState<string>('inactive')
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user?.uid) {
@@ -21,10 +21,14 @@ const useAppAuthProvider = () => {
         return () => unsubscribe()
     }, [])
     useEffect(() => {
-        onValue(ref(db, 'stripe_customers/' + user), (snapshot) => {
+        if (user === 'loading' || user === 'anonymous') {
+            return
+        }
+        const unsubscribe = onValue(ref(db, 'stripe_customers/' + user), (snapshot) => {
             const snp = snapshot.val()
             if (snp?.status) setSubscription(snp.status)
         })
+        return () => unsubscribe()
     }, [user])
     return { user, subscription }
 }

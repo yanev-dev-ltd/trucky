@@ -21,6 +21,7 @@ const LogIn = () => {
       try {
         const user = await signInWithEmailAndPassword(auth, email, password)
         dispatch(login( user.user.uid ))
+        setLoading(false)
       } catch (error) {
         setError((error as FirebaseError).code)
         dispatch(logout())
