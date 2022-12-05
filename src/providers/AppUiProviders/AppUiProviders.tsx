@@ -6,31 +6,30 @@ import messagesBg from '../../translations/bg.json';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Offline, Online } from 'react-detect-offline'
 import { Box, Typography } from '@mui/material'
-import store from '../../store/store'
-import { Provider } from 'react-redux'
+import useAppUiProvider  from '../AppUiProviders/hooks/useAppUiProvider'
+import sx from './styles/AppUiProviders.sx'
 
 const AppUiProviders: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
+    const settings = useAppUiProvider()
     const messages = useMemo(() => {
-        return {
-            en: messagesEn,
-            bg: messagesBg
+        switch (settings?.locale) {
+            case 'bg': return messagesBg
+            default: return messagesEn
         }
-    },[])
+    },[settings])
     return (
-        <IntlProvider locale={'en'} messages={messages['en']}>
+        <IntlProvider locale={settings?.locale || 'en'} messages={messages}>
             <StyledEngineProvider injectFirst>
-                <ThemeProvider theme={theme('dark')}>
+                <ThemeProvider theme={theme(settings?.theme || 'dark')}>
                     <CssBaseline />
-                    <Provider store={store}>
-                        <Online>
-                            {children}
-                        </Online>
-                        <Offline>
-                            <Box display='flex' flexDirection='column' alignItems='center' mt={6}>
-                                <Typography><FormattedMessage id='app.Offline' /></Typography>
-                            </Box>
-                        </Offline>
-                    </Provider>
+                    <Online>
+                        {children}
+                    </Online>
+                    <Offline>
+                        <Box sx={sx.container}>
+                            <Typography><FormattedMessage id='app.Offline' /></Typography>
+                        </Box>
+                    </Offline>
                 </ThemeProvider>
             </StyledEngineProvider>
         </IntlProvider>
