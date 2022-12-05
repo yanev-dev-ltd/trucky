@@ -9,7 +9,7 @@ import { ref, onValue } from 'firebase/database'
 const useAppAuthProvider = () => {
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.auth.user)
-    const [subscription, setSubscription] = useState<string>('inactive')
+    const [subscription, setSubscription] = useState<string>('')
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user?.uid) {
