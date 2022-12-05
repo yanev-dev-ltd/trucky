@@ -93,7 +93,7 @@
   "app.ViewServiceDetails": "Виж Сервизните Детайли",
   "app.SearchVehicles": "Търси по име",
   "app.Phone": "Телефон",
-  "app.Email": "Email",
+  "app.Email": "Ел. поща",
   "app.AddCard": "Добави Картата",
   "app.stripe.": "Грешка",
   "app.stripe.incomplete_number": "Невалиден номер на картата.",
@@ -102,11 +102,11 @@
   "app.stripe.incomplete_zip": "Невалиден пощенски код.",
   "app.stripe.invalid_expiry_year_past": "Датата на изтичане на картата не може да е в миналото.",
   "app.stripe.invalid_number": "Невалиден номер на картата.",
-  "app.stripe.email_invalid": "Невалиден email.",
+  "app.stripe.email_invalid": "Невалидна ел. поща.",
   "app.stripe.billing_details[name]": "Полето Име не може да е празно",
   "app.stripe.billing_details[phone]": "Полето Телефон не може да е празно",
 
-  "app.stripe.account_already_exists": "Предоставеният email вече има регистриран акаунт.",
+  "app.stripe.account_already_exists": "Предоставената ел. поща вече има регистриран акаунт.",
   "app.stripe.account_country_invalid_address": "Страната на бизнес адресът не съвпада със страната на акаунта. Бизнес адресът трябва да се намира в същата страна на акаунта.",
   "app.stripe.account_invalid": "Акаунт идентификаторът е невалиден. Проверете заявката и определете валиден идентификатор.",
   "app.stripe.account_number_invalid": "Банковият номер е невалиден. (липсващи цифри)",
@@ -286,5 +286,7 @@
   "app.DeleteAccount": "Изтриване на акаунта",
   "app.Warning": "ВНИМАНИЕ! С натискане на бутона по-долу цялата информация, съхранявана в приложението, ще бъде изтрита за постоянно.",
   "app.Consumables": "Консумативи",
-  "app.DeleteVehicle": "Изтрий Превозното Средство"
+  "app.DeleteVehicle": "Изтрий Превозното Средство",
+  "app.LogIn": "Вход",
+  "app.Password": "Парола"
 }

@@ -286,5 +286,7 @@
   "app.DeleteAccount": "Delete Account",
   "app.Warning": "WARNING! By clicking the button below, all information stored in the aplication will be permanently deleted.",
   "app.Consumables": "Consumables",
-  "app.DeleteVehicle": "Delete Vehicle"
+  "app.DeleteVehicle": "Delete Vehicle",
+  "app.LogIn": "Log In",
+  "app.Password": "Password"
 }

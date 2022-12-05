@@ -8,19 +8,21 @@ import { Offline, Online } from 'react-detect-offline'
 import { Box, Typography } from '@mui/material'
 import useAppUiProvider  from '../AppUiProviders/hooks/useAppUiProvider'
 import sx from './styles/AppUiProviders.sx'
+import useLocalStorage from '../../hooks/useLocalStorage'
 
 const AppUiProviders: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
     const settings = useAppUiProvider()
+    const [settingsStorage, setSettingsStorage] = useLocalStorage('settings', settings)
     const messages = useMemo(() => {
-        switch (settings?.locale) {
+        switch (settings?.locale || settingsStorage?.locale) {
             case 'bg': return messagesBg
             default: return messagesEn
         }
-    },[settings])
+    },[settings, settingsStorage])
     return (
-        <IntlProvider locale={settings?.locale || 'en'} messages={messages}>
+        <IntlProvider locale={settings?.locale || settingsStorage?.locale || 'en'} messages={messages}>
             <StyledEngineProvider injectFirst>
-                <ThemeProvider theme={theme(settings?.theme || 'dark')}>
+                <ThemeProvider theme={theme(settings?.theme || settingsStorage?.theme || 'dark')}>
                     <CssBaseline />
                     <Online>
                         {children}
