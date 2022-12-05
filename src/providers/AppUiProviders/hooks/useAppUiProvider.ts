@@ -21,7 +21,6 @@ const useAppUiProvider = () => {
             const snp = snapshot.val()
             dispatch(set(snp))
             setSettings(snp)
-            console.log(snp)
             setSettingsStorage(snp)
         })
         return () => unsubscribe()
