@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 // import thunk from 'redux-thunk';
 import authReducer from '../providers/AppAuthProvider/redux';
+import settingsReducer from '../providers/AppUiProviders/redux'
 
 const reducer = {
     auth: authReducer,
+    settings: settingsReducer
 }
 
 const store = configureStore({

@@ -1,15 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Settings } from '../types'
+import { PaletteMode } from '../../../styles/theme'
 
-const initialState = { theme: 'light', locale: 'en', units: 'm' }
+const initialState = { theme: PaletteMode.Light , locale: 'en', units: 'm' }
 
 
 export const settingsSlice = createSlice({
     name: 'settings',
     initialState,
     reducers: {
-      set: (state, action) => {
+      set: (state, action: PayloadAction<Settings>) => {
         state = action.payload
       },
     },

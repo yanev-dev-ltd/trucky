@@ -1,8 +1,5 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { Button } from '@mui/material'
-import { signOut } from 'firebase/auth'
-import { auth } from '../services/firebase'
 
 const Home: NextPage = () => {
   return (
@@ -12,7 +9,6 @@ const Home: NextPage = () => {
       </Head>
       <main>
         <h1>Hello world</h1>
-        <Button onClick={() => signOut(auth)}>Logout</Button>
       </main>
     </>
   );

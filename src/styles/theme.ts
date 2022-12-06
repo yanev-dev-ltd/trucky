@@ -14,9 +14,12 @@ declare module '@mui/material/styles' {
     }
 }
 
-export type PaletteMode = 'dark' | 'light' | undefined
+export enum PaletteMode { 
+  Dark = 'dark',
+  Light = 'light'
+}
 
-export const theme = (mode: PaletteMode = 'light') => createTheme({
+export const theme = (mode: PaletteMode = PaletteMode.Light) => createTheme({
     palette: {
       mode,
       primary: {
