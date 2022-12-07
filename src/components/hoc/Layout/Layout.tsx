@@ -2,6 +2,7 @@ import React from 'react'
 import { Box } from '@mui/material'
 import Navigation from './components/Navigation/Navigation'
 import Header from './components/Header/Header'
+import sx from './styles/Layout.sx'
 
 type useLayout = {
     children: React.ReactNode
@@ -14,9 +15,9 @@ type LayoutProps = {
 const Layout: React.FC<LayoutProps> = ({ children }: useLayout) => {
     return (<>
         <Header />
-        <Box display='flex' alignItems='stretch'>
+        <Box sx={sx.wrap}>
           <Navigation />
-          <Box style={{ flex: 1, height: 'calc(100vh - 54px)', overflow: 'auto' }}>
+          <Box sx={sx.page}>
             { children }
           </Box>
         </Box>
