@@ -16,7 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children }: useLayout) => {
         <Header />
         <Box display='flex' alignItems='stretch'>
           <Navigation />
-          <Box style={{ flex: 1 }}>
+          <Box style={{ flex: 1, height: 'calc(100vh - 54px)', overflow: 'auto' }}>
             { children }
           </Box>
         </Box>

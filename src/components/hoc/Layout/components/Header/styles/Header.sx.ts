@@ -3,7 +3,7 @@ import { SxProps, Theme } from '@mui/material'
 const sx: Record<string, SxProps<Theme>> = {
     header: {
         padding: 1,
-        borderBottom: (theme) => `1px solid ${theme.palette.background.paper}`,
+        backgroundColor: 'action.hover',
         height: 54,
         display: 'flex',
         justifyContent: 'space-between',
@@ -12,23 +12,6 @@ const sx: Record<string, SxProps<Theme>> = {
     logo: {
         marginTop: 1,
         marginLeft: 1,
-    },
-    notifications: {
-        position: 'relative'
-    },
-    notificationsCount: {
-        position: 'absolute',
-        top: 0,
-        right: 10,
-        zIndex: 10,
-        backgroundColor: 'danger.main',
-        fontSize: 10,
-        padding: '0 5px',
-        borderRadius: 100,
-        color: '#fff'
-    },
-    notificationsList: {
-        width: 320
     },
     gray: {
         backgroundColor: 'action.selected'

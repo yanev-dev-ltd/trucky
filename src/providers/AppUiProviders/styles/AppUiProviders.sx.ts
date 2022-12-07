@@ -6,7 +6,7 @@ const sx: Record<string, SxProps<Theme>> = {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh'
+        height: 'calc(100vh - 54px)'
     },
 }
 
