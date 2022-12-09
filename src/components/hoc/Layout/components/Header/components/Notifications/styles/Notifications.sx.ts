@@ -16,7 +16,8 @@ const sx: Record<string, SxProps<Theme>> = {
         color: '#fff'
     },
     notificationsList: {
-        width: 320
+        width: 320,
+        maxHeight: 600,
     },
     gray: {
         backgroundColor: 'action.selected'
@@ -37,7 +38,10 @@ const sx: Record<string, SxProps<Theme>> = {
     time: {
         fontSize: 10,
         wordWrap: 'break-word',
-        maxWidth: 70
+        maxWidth: '100%',
+        paddingRight: 1,
+        paddingLeft: 1,
+        textAlign: 'center'
     },
     link: {
         color: 'text.primary',
@@ -52,7 +56,7 @@ const sx: Record<string, SxProps<Theme>> = {
         color: 'text.primary',
         textDecoration: 'none',
         display: 'flex',
-        width: 70,
+        width: 86,
         flexDirection: 'column',
         alignItems: 'center',
     },

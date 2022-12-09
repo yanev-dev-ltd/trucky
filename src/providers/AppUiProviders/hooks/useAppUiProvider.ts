@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { ref, onValue } from 'firebase/database'
 import { RootState } from '../../../store/store'
-import { set } from '../redux'
+import { setSettings } from '../redux'
 import { db } from '../../../services/firebase'
-import { Settings } from '../types'
 import useLocalStorage from '../../../hooks/useLocalStorage'
 
 const useAppUiProvider = () => {
-    const [settingsStorage, setSettingsStorage] = useLocalStorage('settings', { locale: 'en', theme: 'light', units: 'm' })
+    const settings = useSelector((state: RootState) => state.settings)
+    const [settingsStorage, setSettingsStorage] = useLocalStorage('settings', settings)
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.auth.user)
-    const [settings, setSettings] = useState<Settings | undefined>()
     
     useEffect(() => {
         if (user === 'loading' || user === 'anonymous') {
@@ -19,14 +18,13 @@ const useAppUiProvider = () => {
         }
         const unsubscribe = onValue(ref(db, 'settings/' + user), (snapshot) => {
             const snp = snapshot.val()
-            dispatch(set(snp))
-            setSettings(snp)
             setSettingsStorage(snp)
+            dispatch(setSettings(snp))
         })
         return () => unsubscribe()
     }, [user])
 
-    return settings
+    return settingsStorage
 }
 
 export default useAppUiProvider

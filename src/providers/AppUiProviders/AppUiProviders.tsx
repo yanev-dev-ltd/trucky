@@ -12,17 +12,16 @@ import useLocalStorage from '../../hooks/useLocalStorage'
 
 const AppUiProviders: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
     const settings = useAppUiProvider()
-    const [settingsStorage, setSettingsStorage] = useLocalStorage('settings', settings)
     const messages = useMemo(() => {
-        switch (settings?.locale || settingsStorage?.locale) {
+        switch (settings?.locale) {
             case 'bg': return messagesBg
             default: return messagesEn
         }
-    },[settings, settingsStorage])
+    },[settings])
     return (
-        <IntlProvider locale={settings?.locale || settingsStorage?.locale || 'en'} messages={messages}>
+        <IntlProvider locale={settings?.locale || 'en'} messages={messages}>
             <StyledEngineProvider injectFirst>
-                <ThemeProvider theme={theme(settings?.theme || settingsStorage?.theme || 'dark')}>
+                <ThemeProvider theme={theme(settings?.theme || 'dark')}>
                     <CssBaseline />
                     <Online>
                         {children}

@@ -88,7 +88,7 @@ const Navigation = () => {
                     sx={router.asPath.startsWith('/stats') ? sx.itemCurrent : sx.item}
                 >
                     <ListItemIcon>
-                    <BarChart fontSize='large' sx={sx.icon} />
+                        <BarChart fontSize='large' sx={sx.icon} />
                     </ListItemIcon>
                     <Typography variant='inherit'><FormattedMessage id='app.Stats' /></Typography>
                 </MenuItem>
