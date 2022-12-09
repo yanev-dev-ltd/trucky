@@ -17,7 +17,7 @@ const Navigation = () => {
                     sx={router.asPath.startsWith('/vehicles') ? sx.itemCurrent : sx.item}
                 >
                     <ListItemIcon>
-                    <LocalShipping fontSize='large' sx={sx.icon} />
+                        <LocalShipping fontSize='large' sx={sx.icon} />
                     </ListItemIcon>
                     <Typography variant='inherit'><FormattedMessage id='app.Vehicles' /></Typography>
                 </MenuItem>
@@ -27,7 +27,7 @@ const Navigation = () => {
                     sx={router.asPath.startsWith('/drivers') ? sx.itemCurrent : sx.item}
                 >
                     <ListItemIcon>
-                    <People fontSize='large' sx={sx.icon} />
+                        <People fontSize='large' sx={sx.icon} />
                     </ListItemIcon>
                     <Typography variant='inherit'><FormattedMessage id='app.Drivers' /></Typography>
                 </MenuItem>
@@ -37,7 +37,7 @@ const Navigation = () => {
                     sx={router.asPath.startsWith('/orders') ? sx.itemCurrent : sx.item}
                 >
                     <ListItemIcon>
-                    <ListAlt fontSize='large' sx={sx.icon} />
+                        <ListAlt fontSize='large' sx={sx.icon} />
                     </ListItemIcon>
                     <Typography variant='inherit'><FormattedMessage id='app.Orders' /></Typography>
                 </MenuItem>
@@ -47,7 +47,7 @@ const Navigation = () => {
                     sx={router.asPath.startsWith('/routes') ? sx.itemCurrent : sx.item}
                 >
                     <ListItemIcon>
-                    <Room fontSize='large' sx={sx.icon} />
+                        <Room fontSize='large' sx={sx.icon} />
                     </ListItemIcon>
                     <Typography variant='inherit'><FormattedMessage id='app.Routes' /></Typography>
                 </MenuItem>
@@ -57,7 +57,7 @@ const Navigation = () => {
                     sx={router.asPath.startsWith('/invoices') ? sx.itemCurrent : sx.item}
                 >
                     <ListItemIcon>
-                    <Receipt fontSize='large' sx={sx.icon} />
+                        <Receipt fontSize='large' sx={sx.icon} />
                     </ListItemIcon>
                     <Typography variant='inherit'><FormattedMessage id='app.Invoices' /></Typography>
                 </MenuItem>
@@ -67,7 +67,7 @@ const Navigation = () => {
                     sx={router.asPath.startsWith('/clients') ? sx.itemCurrent : sx.item}
                 >
                     <ListItemIcon>
-                    <AccountBox fontSize='large' sx={sx.icon} />
+                        <AccountBox fontSize='large' sx={sx.icon} />
                     </ListItemIcon>
                     <Typography variant='inherit'><FormattedMessage id='app.Clients' /></Typography>
                 </MenuItem>
@@ -98,7 +98,7 @@ const Navigation = () => {
                     sx={router.asPath.startsWith('/settings') ? sx.itemCurrent : sx.item}
                 >
                     <ListItemIcon>
-                    <Settings fontSize='large' sx={sx.icon} />
+                        <Settings fontSize='large' sx={sx.icon} />
                     </ListItemIcon>
                     <Typography variant='inherit'><FormattedMessage id='app.Settings' /></Typography>
                 </MenuItem>
