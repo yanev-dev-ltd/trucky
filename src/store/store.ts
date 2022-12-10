@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit'
-// import thunk from 'redux-thunk';
 import authReducer from '../providers/AppAuthProvider/redux';
 import settingsReducer from '../redux/settings'
 

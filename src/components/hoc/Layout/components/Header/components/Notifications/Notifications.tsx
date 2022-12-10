@@ -1,9 +1,11 @@
+import { useMemo } from 'react'
 import { Box, IconButton, Typography, Popover, List, ListItem, ListItemText, Tooltip, ListItemAvatar, Avatar } from '@mui/material'
 import { NotificationsActive, ReceiptLong } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import { formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
 import Link from 'next/link'
+import Head from 'next/head'
 import sx from './styles/Notifications.sx'
 import useNotifications from './hooks/useNotifications'
 import { useSelector } from 'react-redux'
@@ -103,6 +105,12 @@ const readMsgs = [
 const Notifications = () => {
     const { anchorEl, handleClick, handleClose } = useNotifications()
     const settings = useSelector((state: RootState) => state.settings)
+    const locale = useMemo(() => {
+        switch (settings?.settings?.locale) {
+            case 'bg': return bg
+            default: return enUS
+        }
+    }, [settings?.settings?.locale])
 
     const renderItem = (item: NotificationItem) => {
         const { id, title, message, timeCreated, url } = item;
@@ -115,7 +123,7 @@ const Notifications = () => {
                     <Box sx={sx.avatar}>
                         <Avatar><ReceiptLong /></Avatar>
                         <Typography sx={sx.time}>
-                            {formatRelative(new Date(timeCreated), new Date(), { locale: settings?.settings?.locale === 'bg' ? bg : enUS })}
+                            {formatRelative(new Date(timeCreated), new Date(), { locale })}
                         </Typography>
                     </Box>
                     </ListItemAvatar>
@@ -132,22 +140,26 @@ const Notifications = () => {
     const read = readMsgs.map(renderItem)
     return (
         <>
+            <Head>
+                <title>(3) Trucky.one</title>
+                <link rel="shortcut icon" href="/icons/favicon.ico" />
+            </Head>
             <Tooltip title={<FormattedMessage id='app.Notifications' />}>
                 <IconButton onClick={handleClick} sx={sx.notifications}><NotificationsActive /><Typography sx={sx.notificationsCount}>9</Typography></IconButton>
             </Tooltip>
             <Popover
-            id='notifications'
-            open={Boolean(anchorEl)}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-            }}
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-            }}
+                id='notifications'
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
+                }}
             >
                 <List sx={sx.notificationsList}>
                     {unread.length > 0 && (

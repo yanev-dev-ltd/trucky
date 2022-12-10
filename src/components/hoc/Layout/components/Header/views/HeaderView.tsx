@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Button, IconButton, Tooltip } from '@mui/material';
-import { Fullscreen, FullscreenExit } from '@mui/icons-material'
+import { Box, IconButton, Tooltip } from '@mui/material';
+import { Fullscreen, FullscreenExit, Logout } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl';
 import Link from 'next/link'
 import { signOut } from 'firebase/auth'
@@ -20,7 +20,9 @@ export const HeaderView = ({ handleFullscreen, fullscreen}: HeaderProps): JSX.El
           <IconButton onClick={handleFullscreen}>{fullscreen ? <FullscreenExit /> : <Fullscreen />}</IconButton>
         </Tooltip>
         <Notifications />
-        <Button onClick={() => signOut(auth)}><FormattedMessage id='app.Logout' /></Button>
+        <Tooltip title={<FormattedMessage id='app.Logout' />}>
+          <IconButton onClick={() => signOut(auth)}><Logout /></IconButton>
+        </Tooltip>
       </Box>
     </Box>
   );
