@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Settings } from '../types'
-import { PaletteMode } from '../../../styles/theme'
+import { Settings } from '../types/settings'
+import { PaletteMode } from '../styles/theme'
 
 const initialState = { settings: { theme: PaletteMode.Light , locale: 'en', units: 'm' }}
 

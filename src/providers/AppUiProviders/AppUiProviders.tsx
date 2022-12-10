@@ -6,12 +6,11 @@ import messagesBg from '../../translations/bg.json';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Offline, Online } from 'react-detect-offline'
 import { Box, Typography } from '@mui/material'
-import useAppUiProvider  from '../AppUiProviders/hooks/useAppUiProvider'
+import useSettings  from '../../hooks/useSettings'
 import sx from './styles/AppUiProviders.sx'
-import useLocalStorage from '../../hooks/useLocalStorage'
 
 const AppUiProviders: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-    const settings = useAppUiProvider()
+    const settings = useSettings()
     const messages = useMemo(() => {
         switch (settings?.locale) {
             case 'bg': return messagesBg

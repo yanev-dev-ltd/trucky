@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Button, Tooltip } from '@mui/material';
-import { ReceiptLong, Fullscreen, FullscreenExit } from '@mui/icons-material'
+import { Box, Button, IconButton, Tooltip } from '@mui/material';
+import { Fullscreen, FullscreenExit } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl';
 import Link from 'next/link'
 import { signOut } from 'firebase/auth'
@@ -15,9 +15,9 @@ export const HeaderView = ({ handleFullscreen, fullscreen}: HeaderProps): JSX.El
   return (
     <Box sx={sx.header}>
       <Box sx={sx.logo}><Link href='/'><Image src='/icons/logo.svg' alt='Trucky.one - manage your fleet' width={150} height={24} priority /></Link></Box>
-      <Box>
+      <Box sx={sx.buttons}>
         <Tooltip title={fullscreen ? <FormattedMessage id='app.ExitFullscreen' /> : <FormattedMessage id='app.Fullscreen' />}>
-          <Button onClick={handleFullscreen}>{fullscreen ? <FullscreenExit /> : <Fullscreen />}</Button>
+          <IconButton onClick={handleFullscreen}>{fullscreen ? <FullscreenExit /> : <Fullscreen />}</IconButton>
         </Tooltip>
         <Notifications />
         <Button onClick={() => signOut(auth)}><FormattedMessage id='app.Logout' /></Button>

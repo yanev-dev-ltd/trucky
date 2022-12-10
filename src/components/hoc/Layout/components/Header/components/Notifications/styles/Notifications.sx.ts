@@ -7,7 +7,7 @@ const sx: Record<string, SxProps<Theme>> = {
     notificationsCount: {
         position: 'absolute',
         top: 0,
-        right: 10,
+        left: 'calc(100% - 16px)',
         zIndex: 10,
         backgroundColor: 'danger.main',
         fontSize: 10,

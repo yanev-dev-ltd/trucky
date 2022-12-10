@@ -32,6 +32,10 @@ const sx: Record<string, SxProps<Theme>> = {
         color: 'text.primary',
         textDecoration: 'none',
         display: 'block'
+    },
+    buttons: {
+        display: 'flex',
+        gap: 1,
     }
 }
 

@@ -1,6 +1,49 @@
 {
   "rules": {
-    ".read": "now < 1672524000000",  // 2023-1-1
-    ".write": "now < 1672524000000",  // 2023-1-1
+    "vehicles": {
+      "$uid": {
+        ".write": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
+        ".read": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'"
+      }
+    },
+    "drivers": {
+      "$uid": {
+        ".write": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
+        ".read": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'"
+      }
+    },
+    "routes": {
+      "$uid": {
+        ".write": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
+        ".read": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'"
+      }
+    },
+    "stripe_customers": {
+      "$uid": {
+        "payment_method_id": {
+          ".write": "$uid === auth.uid"
+        },
+        "card": {
+          ".write": "$uid === auth.uid"
+        },
+        ".write": false,
+        ".read": "$uid === auth.uid"
+      },
+      ".indexOn": ["customer_id"]
+    },
+    "settings": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid"
+      }
+    },
+    "time_notifications": {
+      ".write": false,
+      ".read": false
+    },
+    "milage_notifications": {
+      ".write": false,
+      ".read": false
+    }
   }
 }

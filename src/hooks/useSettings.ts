@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { ref, onValue } from 'firebase/database'
-import { RootState } from '../../../store/store'
-import { setSettings } from '../redux'
-import { db } from '../../../services/firebase'
-import useLocalStorage from '../../../hooks/useLocalStorage'
+import { RootState } from '../store/store'
+import { setSettings } from '../redux/settings'
+import { db } from '../services/firebase'
+import useLocalStorage from '../hooks/useLocalStorage'
 
 const useAppUiProvider = () => {
     const settings = useSelector((state: RootState) => state.settings)

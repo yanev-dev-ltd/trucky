@@ -1,4 +1,4 @@
-import { Box, Button, Typography, Popover, List, ListItem, ListItemText, Tooltip, ListItemAvatar, Avatar } from '@mui/material'
+import { Box, IconButton, Typography, Popover, List, ListItem, ListItemText, Tooltip, ListItemAvatar, Avatar } from '@mui/material'
 import { NotificationsActive, ReceiptLong } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import { formatRelative } from 'date-fns'
@@ -8,6 +8,7 @@ import sx from './styles/Notifications.sx'
 import useNotifications from './hooks/useNotifications'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../store/store'
+import { NotificationItem } from './types'
 
 const unreadMsgs = [
     {
@@ -99,19 +100,11 @@ const readMsgs = [
     }
 ]
 
-type Item = {
-    id: number
-    title: string
-    message: string
-    timeCreated: number
-    url: string
-}
-
 const Notifications = () => {
     const { anchorEl, handleClick, handleClose } = useNotifications()
     const settings = useSelector((state: RootState) => state.settings)
 
-    const renderItem = (item: Item) => {
+    const renderItem = (item: NotificationItem) => {
         const { id, title, message, timeCreated, url } = item;
     
         return (
@@ -122,7 +115,7 @@ const Notifications = () => {
                     <Box sx={sx.avatar}>
                         <Avatar><ReceiptLong /></Avatar>
                         <Typography sx={sx.time}>
-                            {formatRelative(new Date(timeCreated), new Date(), { locale: settings.settings.locale === 'bg' ? bg : enUS })}
+                            {formatRelative(new Date(timeCreated), new Date(), { locale: settings?.settings?.locale === 'bg' ? bg : enUS })}
                         </Typography>
                     </Box>
                     </ListItemAvatar>
@@ -140,7 +133,7 @@ const Notifications = () => {
     return (
         <>
             <Tooltip title={<FormattedMessage id='app.Notifications' />}>
-                <Button onClick={handleClick} sx={sx.notifications}><NotificationsActive /><Typography sx={sx.notificationsCount}>3</Typography></Button>
+                <IconButton onClick={handleClick} sx={sx.notifications}><NotificationsActive /><Typography sx={sx.notificationsCount}>9</Typography></IconButton>
             </Tooltip>
             <Popover
             id='notifications'
