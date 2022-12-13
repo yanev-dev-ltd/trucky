@@ -1,7 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
-import { MenuList, MenuItem, Paper, Typography, ListItemIcon } from '@mui/material';
-import { LocalShipping, People, ListAlt, Room, Receipt, AccountBox, BarChart, Settings } from '@mui/icons-material';
+import Link from 'next/link'
+import { MenuList, MenuItem, Paper, Typography, ListItemIcon } from '@mui/material'
+import { LocalShipping, People, ListAlt, Room, Receipt, AccountBox, BarChart, Settings } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import sx from './styles/Navigation.sx'
 import { useRouter } from 'next/router'

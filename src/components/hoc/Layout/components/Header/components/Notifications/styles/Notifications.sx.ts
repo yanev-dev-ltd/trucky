@@ -6,14 +6,15 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     notificationsCount: {
         position: 'absolute',
-        top: 0,
-        left: 'calc(100% - 16px)',
+        top: '-2px',
+        left: 'calc(100% - 20px)',
         zIndex: 10,
-        backgroundColor: 'danger.main',
-        fontSize: 10,
-        padding: '0 5px',
+        backgroundColor: 'primary.main',
+        fontSize: 12,
+        padding: '0 6px',
         borderRadius: 100,
-        color: '#fff'
+        color: '#fff',
+        fontWeight: 'bold',
     },
     notificationsList: {
         width: 320,

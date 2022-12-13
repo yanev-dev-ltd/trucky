@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/display-name */
 import React, { ComponentPropsWithoutRef, FC } from 'react'
+import { Vehicles } from '../components/vehicles/types'
 
 /**
  * Creates an implementation of a component using a View and a Controller hook
@@ -19,3 +20,5 @@ export const wrap =
         const controller = useController(controllerArgs)
         return <AnyView {...controller}>{children}</AnyView>
     }
+
+export const snapshotToArray = (snapshot: Object): Vehicles['vehicles'] => Object.entries(snapshot).map(e => Object.assign(e[1], { key: e[0] }));

@@ -3,7 +3,7 @@ import { auth } from '../../../../../services/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FirebaseError } from '../../../types'
 import { useDispatch } from 'react-redux'
-import { login, logout } from '../../../redux'
+import { logout } from '../../../redux'
 
 const useLogin = () => {
     const emailRef = useRef<HTMLInputElement | null>(null)
@@ -17,8 +17,7 @@ const useLogin = () => {
             e.preventDefault()
             setLoading(true)
             try {
-                const user = await signInWithEmailAndPassword(auth, emailRef?.current?.value || '', passwordRef?.current?.value || '')
-                dispatch(login( user.user.uid ))
+                await signInWithEmailAndPassword(auth, emailRef?.current?.value || '', passwordRef?.current?.value || '')
                 setLoading(false)
             } catch (error) {
                 setError((error as FirebaseError).code)

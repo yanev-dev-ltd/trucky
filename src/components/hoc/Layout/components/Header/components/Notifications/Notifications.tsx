@@ -141,11 +141,11 @@ const Notifications = () => {
     return (
         <>
             <Head>
-                <title>(3) Trucky.one</title>
+                <title>(13) Trucky.one</title>
                 <link rel="shortcut icon" href="/icons/favicon.ico" />
             </Head>
             <Tooltip title={<FormattedMessage id='app.Notifications' />}>
-                <IconButton onClick={handleClick} sx={sx.notifications}><NotificationsActive /><Typography sx={sx.notificationsCount}>9</Typography></IconButton>
+                <IconButton onClick={handleClick} sx={sx.notifications}><NotificationsActive /><Typography sx={sx.notificationsCount}>9+</Typography></IconButton>
             </Tooltip>
             <Popover
                 id='notifications'

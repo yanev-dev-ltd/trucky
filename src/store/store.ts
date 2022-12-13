@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from '../providers/AppAuthProvider/redux';
 import settingsReducer from '../redux/settings'
+import vehiclesReducer from '../components/vehicles/redux'
 
 const reducer = {
     auth: authReducer,
-    settings: settingsReducer
+    settings: settingsReducer,
+    vehicles: vehiclesReducer,
 }
 
 const store = configureStore({
