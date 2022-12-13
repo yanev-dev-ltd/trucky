@@ -92,12 +92,12 @@ export function Table<T extends Record<string, unknown>>(
                   <span>
                     {column.isSorted ? (
                       column.isSortedDesc ? (
-                        <ArrowDropDown
+                        <ArrowDropUp
                           fontSize="small"
                           style={{ marginBottom: "-5px" }}
                         />
                       ) : (
-                        <ArrowDropUp
+                        <ArrowDropDown
                           fontSize="small"
                           style={{ marginBottom: "-5px" }}
                         />

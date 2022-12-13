@@ -9,6 +9,7 @@ import {
   Button,
   Box,
   Typography,
+  Tooltip,
 } from "@mui/material";
 
 import types from "../../api/types";
@@ -46,14 +47,11 @@ export const Vehicles = () => {
         Header: <FormattedMessage id="app.Details" />,
         id: "details",
         accessor: (v) => (
-          <Button
-            component={Link}
-            href={`/vehicles/${v.key}`}
-            variant="outlined"
-            startIcon={<FormatListBulleted />}
-          >
-            <FormattedMessage id="app.Details" />
-          </Button>
+          <Tooltip title={<FormattedMessage id="app.Details" />}>
+            <Button component={Link} href={`/vehicles/${v.key}`}>
+              <FormatListBulleted />
+            </Button>
+          </Tooltip>
         ),
       },
     ],
