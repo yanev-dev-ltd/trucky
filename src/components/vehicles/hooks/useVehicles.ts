@@ -5,8 +5,9 @@ import { RootState } from '../../../store/store'
 import { db } from '../../../services/firebase'
 import { setVehicles } from '../redux'
 import { snapshotToArray } from '../../../utils/globalUtils'
+import { VehicleProps, useVehicleProps } from '../types'
 
-const useVehicles = () => {
+const useVehicles =  ({ vehicleId, edit }:useVehicleProps): VehicleProps => {
     const vehicles = useSelector((state: RootState) => state.vehicles)
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.auth.user)
@@ -22,7 +23,7 @@ const useVehicles = () => {
         return () => unsubscribe()
     }, [user])
 
-    return vehicles
+    return { vehicles, vehicleId, edit }
 }
 
 export default useVehicles
