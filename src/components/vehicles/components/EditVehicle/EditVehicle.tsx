@@ -97,8 +97,16 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
     const [mileage, setMileage] = useState(vehicle?.mileage || 0)
     const currentDriver = drivers.find((d) => d.id === vehicle?.driver)
     const key = vehicle?.key
-    console.log(vehicle?.units, settings?.units, units)
+
     useEffect(() => {
+        reset()
+    }, [vehicle, settings?.units])
+
+    // const handleFRChange = (e) => {
+    //   setFuelRoute(routes.find(r => r.date === e.target.value));
+    // };
+
+    const reset = useCallback(() => {
         setName(vehicle?.name || '')
         setServices(vehicle?.services || [])
         setType(vehicle?.type || 0)
@@ -107,10 +115,6 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
         setMileage(vehicle?.mileage || 0)
         setUnits(vehicle?.units || settings?.units)
     }, [vehicle, settings?.units])
-
-    // const handleFRChange = (e) => {
-    //   setFuelRoute(routes.find(r => r.date === e.target.value));
-    // };
 
     const handleEditServiceOpen = useCallback((id: string | boolean) => {
         setServiceId(id)
@@ -405,17 +409,22 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                     <FormattedMessage id="app.Save" />
                                 </Button>
 
-                                <NextLink href={`/vehicles/${vehicleId}`}>
-                                    <Tooltip
-                                        title={
-                                            <FormattedMessage id="app.Cancel" />
-                                        }
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicleId}`
+                                            )
+                                        }}
                                     >
-                                        <IconButton size="small" sx={sx.edit}>
-                                            <Close />
-                                        </IconButton>
-                                    </Tooltip>
-                                </NextLink>
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
                             </form>
                         )}
                     </Paper>
@@ -444,17 +453,22 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 <Typography>
                                     <FormattedMessage id="app.Type" />
                                 </Typography>
-                                <NextLink href={`/vehicles/${vehicleId}`}>
-                                    <Tooltip
-                                        title={
-                                            <FormattedMessage id="app.Cancel" />
-                                        }
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicleId}`
+                                            )
+                                        }}
                                     >
-                                        <IconButton size="small" sx={sx.edit}>
-                                            <Close />
-                                        </IconButton>
-                                    </Tooltip>
-                                </NextLink>
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
                                 <FormControl
                                     fullWidth
                                     variant="outlined"
@@ -585,17 +599,22 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 <Typography>
                                     <FormattedMessage id="app.Mileage" />
                                 </Typography>
-                                <NextLink href={`/vehicles/${vehicleId}`}>
-                                    <Tooltip
-                                        title={
-                                            <FormattedMessage id="app.Cancel" />
-                                        }
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicleId}`
+                                            )
+                                        }}
                                     >
-                                        <IconButton size="small" sx={sx.edit}>
-                                            <Close />
-                                        </IconButton>
-                                    </Tooltip>
-                                </NextLink>
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
                                 <TextField
                                     variant="outlined"
                                     label={
@@ -649,17 +668,22 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 <Typography>
                                     <FormattedMessage id="app.Driver" />
                                 </Typography>
-                                <NextLink href={`/vehicles/${vehicleId}`}>
-                                    <Tooltip
-                                        title={
-                                            <FormattedMessage id="app.Cancel" />
-                                        }
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicleId}`
+                                            )
+                                        }}
                                     >
-                                        <IconButton size="small" sx={sx.edit}>
-                                            <Close />
-                                        </IconButton>
-                                    </Tooltip>
-                                </NextLink>
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
                                 <FormControl
                                     fullWidth
                                     variant="outlined"
