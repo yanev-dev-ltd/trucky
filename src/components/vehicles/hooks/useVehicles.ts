@@ -18,7 +18,7 @@ const useVehicles =  ({ vehicleId, edit }:useVehicleProps): VehicleProps => {
         }
         const unsubscribe = onValue(ref(db, 'vehicles/' + user), (snapshot) => {
             const snp = snapshot.val()
-            dispatch(setVehicles(snapshotToArray(snp)))
+            dispatch(setVehicles(snp ? snapshotToArray(snp) : []))
         })
         return () => unsubscribe()
     }, [user])

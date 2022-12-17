@@ -72,7 +72,12 @@ const sx: Record<string, SxProps<Theme>> = {
         padding: (theme) => `${theme.spacing()}px 0`,
     },
     warn: {
+        marginTop: 2,
         backgroundColor: 'danger.main',
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: 'danger.dark'
+        }
     },
 }
 

@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl'
 import {
     TextField,
     CircularProgress,
+    IconButton,
     Button,
     Box,
     Typography,
@@ -54,9 +55,12 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 id: 'details',
                 accessor: (v) => (
                     <Tooltip title={<FormattedMessage id="app.Details" />}>
-                        <Button component={Link} href={`/vehicles/${v.key}`}>
+                        <IconButton
+                            component={Link}
+                            href={`/vehicles/${v.key}`}
+                        >
                             <FormatListBulleted />
-                        </Button>
+                        </IconButton>
                     </Tooltip>
                 ),
             },
@@ -66,7 +70,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
 
     // TODO : end day of payment
 
-    if (vehicles?.[0].key === 'loading') {
+    if (vehicles?.[0]?.key === 'loading') {
         return (
             <Box sx={sx.loading}>
                 <CircularProgress />
@@ -105,13 +109,11 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                     </Typography>
                 </Box>
             )}
-            {vehicleId && (
-                <EditVehicle
-                    vehicleId={vehicleId}
-                    vehicle={() => vehicles.find((v) => v.key === vehicleId)}
-                    edit={edit}
-                />
-            )}
+            <EditVehicle
+                vehicleId={vehicleId}
+                vehicle={vehicles.find((v) => v.key === vehicleId)}
+                edit={edit}
+            />
         </Box>
     )
 }

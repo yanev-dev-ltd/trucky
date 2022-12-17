@@ -21,22 +21,23 @@ export enum PaletteMode {
 
 export const theme = (mode: PaletteMode = PaletteMode.Light) => createTheme({
     palette: {
-      mode,
-      primary: {
-        main: '#0a84ff'
-      },
-      secondary: {
-        main: blue[300]
-      },
-      orange: {
-        main: '#faebce',
-        dark: '#f5c779'
-      },
-      green: {
-        main: '#bbdfdb'
-      },
-      danger: {
-        main: red[300]
-      }
+		mode,
+		primary: {
+			main: '#0a84ff'
+		},
+		secondary: {
+			main: blue[300]
+		},
+		orange: {
+			main: '#faebce',
+			dark: '#f5c779'
+		},
+		green: {
+			main: '#bbdfdb'
+		},
+		danger: {
+			main: red[400],
+			dark: red[700]
+		}
     },
   })

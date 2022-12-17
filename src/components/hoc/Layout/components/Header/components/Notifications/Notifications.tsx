@@ -1,5 +1,16 @@
 import { useMemo } from 'react'
-import { Box, IconButton, Typography, Popover, List, ListItem, ListItemText, Tooltip, ListItemAvatar, Avatar } from '@mui/material'
+import {
+    Box,
+    IconButton,
+    Typography,
+    Popover,
+    List,
+    ListItem,
+    ListItemText,
+    Tooltip,
+    ListItemAvatar,
+    Avatar,
+} from '@mui/material'
 import { NotificationsActive, ReceiptLong } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import { formatRelative } from 'date-fns'
@@ -18,22 +29,22 @@ const unreadMsgs = [
         title: 'Title',
         message: 'Message',
         timeCreated: 1670602365240,
-        url: '/invoices'
+        url: '/invoices',
     },
     {
         id: 2,
         title: 'Title 2',
         message: 'Message 2',
         timeCreated: 1670501365240,
-        url: '/invoices'
+        url: '/invoices',
     },
     {
         id: 3,
         title: 'Title 3',
         message: 'Message 3',
         timeCreated: 1633005321168,
-        url: '/invoices'
-    }
+        url: '/invoices',
+    },
 ]
 
 const readMsgs = [
@@ -42,97 +53,110 @@ const readMsgs = [
         title: 'Title',
         message: 'Message',
         timeCreated: 1586774169772,
-        url: '/invoices'
+        url: '/invoices',
     },
     {
         id: 2,
         title: 'Title 2',
         message: 'Message 2',
         timeCreated: 1586774169772,
-        url: '/invoices'
+        url: '/invoices',
     },
     {
         id: 3,
         title: 'Title 3',
         message: 'Message 3',
         timeCreated: 1586774169772,
-        url: '/invoices'
+        url: '/invoices',
     },
     {
         id: 4,
         title: 'Title',
         message: 'Message',
         timeCreated: 1586774169772,
-        url: '/invoices'
+        url: '/invoices',
     },
     {
         id: 5,
         title: 'Title 2',
         message: 'Message 2',
         timeCreated: 1586774169772,
-        url: '/invoices'
+        url: '/invoices',
     },
     {
         id: 6,
         title: 'Title 3',
         message: 'Message 3',
         timeCreated: 1586774169772,
-        url: '/invoices'
+        url: '/invoices',
     },
     {
         id: 7,
         title: 'Title',
         message: 'Message',
         timeCreated: 1586774169772,
-        url: '/invoices'
+        url: '/invoices',
     },
     {
         id: 8,
         title: 'Title 2',
         message: 'Message 2',
         timeCreated: 1586774169772,
-        url: '/invoices'
+        url: '/invoices',
     },
     {
         id: 9,
         title: 'Title 3',
         message: 'Message 3',
         timeCreated: 1586774169772,
-        url: '/invoices'
-    }
+        url: '/invoices',
+    },
 ]
+
+const hasNotifications = true
 
 const Notifications = () => {
     const { anchorEl, handleClick, handleClose } = useNotifications()
-    const settings = useSelector((state: RootState) => state.settings)
+    const { settings } = useSelector((state: RootState) => state.settings)
     const locale = useMemo(() => {
-        switch (settings?.settings?.locale) {
-            case 'bg': return bg
-            default: return enUS
+        switch (settings?.locale) {
+            case 'bg':
+                return bg
+            default:
+                return enUS
         }
-    }, [settings?.settings?.locale])
+    }, [settings?.locale])
 
     const renderItem = (item: NotificationItem) => {
-        const { id, title, message, timeCreated, url } = item;
-    
+        const { id, title, message, timeCreated, url } = item
+
         return (
-          <ListItem key={id} sx={sx.item}>
-            <Link href={url} style={{ textDecoration: 'none', width: '100%' }}>
-                <Box sx={sx.link}>
-                    <ListItemAvatar sx={sx.avatar}>
-                    <Box sx={sx.avatar}>
-                        <Avatar><ReceiptLong /></Avatar>
-                        <Typography sx={sx.time}>
-                            {formatRelative(new Date(timeCreated), new Date(), { locale })}
-                        </Typography>
+            <ListItem key={id} sx={sx.item}>
+                <Link
+                    href={url}
+                    style={{ textDecoration: 'none', width: '100%' }}
+                >
+                    <Box sx={sx.link}>
+                        <ListItemAvatar sx={sx.avatar}>
+                            <Box sx={sx.avatar}>
+                                <Avatar>
+                                    <ReceiptLong />
+                                </Avatar>
+                                <Typography sx={sx.time}>
+                                    {formatRelative(
+                                        new Date(timeCreated),
+                                        new Date(),
+                                        { locale }
+                                    )}
+                                </Typography>
+                            </Box>
+                        </ListItemAvatar>
+                        <Box style={{ flex: 1 }}>
+                            <ListItemText primary={title} secondary={message} />
+                        </Box>
                     </Box>
-                    </ListItemAvatar>
-                    <Box style={{ flex: 1 }}>
-                        <ListItemText primary={title} secondary={message} />
-                    </Box>
-                </Box>
-            </Link>
-          </ListItem>
+                </Link>
+            </ListItem>
         )
     }
 
@@ -141,47 +165,65 @@ const Notifications = () => {
     return (
         <>
             <Head>
-                <title>(13) Trucky.one</title>
-                <link rel="shortcut icon" href="/icons/favicon.ico" />
+                <title>Trucky.one</title>
+                {hasNotifications ? (
+                    <link
+                        rel="shortcut icon"
+                        href="/icons/notification/favicon.ico"
+                    />
+                ) : (
+                    <link rel="shortcut icon" href="/icons/fav/favicon.ico" />
+                )}
             </Head>
-            <Tooltip title={<FormattedMessage id='app.Notifications' />}>
-                <IconButton onClick={handleClick} sx={sx.notifications}><NotificationsActive /><Typography sx={sx.notificationsCount}>9+</Typography></IconButton>
+            <Tooltip title={<FormattedMessage id="app.Notifications" />}>
+                <IconButton onClick={handleClick} sx={sx.notifications}>
+                    <NotificationsActive />
+                    <Typography sx={sx.notificationsCount}>9+</Typography>
+                </IconButton>
             </Tooltip>
             <Popover
-                id='notifications'
+                id="notifications"
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 anchorOrigin={{
                     vertical: 'bottom',
-                    horizontal: 'right'
+                    horizontal: 'right',
                 }}
                 transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'right'
+                    horizontal: 'right',
                 }}
             >
                 <List sx={sx.notificationsList}>
                     {unread.length > 0 && (
-                    <>
-                        <ListItem sx={sx.gray}>
-                            <ListItemText secondary={<FormattedMessage id='app.Recent' />} />
-                        </ListItem>
-                        {unread}
-                    </>
+                        <>
+                            <ListItem sx={sx.gray}>
+                                <ListItemText
+                                    secondary={
+                                        <FormattedMessage id="app.Recent" />
+                                    }
+                                />
+                            </ListItem>
+                            {unread}
+                        </>
                     )}
                     {read.length > 0 && (
-                    <>
-                        <ListItem sx={sx.gray}>
-                            <ListItemText secondary={<FormattedMessage id='app.Older' />} />
-                        </ListItem>
-                        {read}
-                    </>
+                        <>
+                            <ListItem sx={sx.gray}>
+                                <ListItemText
+                                    secondary={
+                                        <FormattedMessage id="app.Older" />
+                                    }
+                                />
+                            </ListItem>
+                            {read}
+                        </>
                     )}
                     {!unread.length && !read.length && (
-                    <Box textAlign='center' m={1}>
-                        <Typography>No notifications yet...</Typography>
-                    </Box>
+                        <Box textAlign="center" m={1}>
+                            <Typography>No notifications yet...</Typography>
+                        </Box>
                     )}
                 </List>
             </Popover>
