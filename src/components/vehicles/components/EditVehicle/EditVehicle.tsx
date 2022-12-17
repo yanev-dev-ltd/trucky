@@ -166,15 +166,20 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
         [key, router, vehicleId, type, vehicle]
     )
 
-    const handleUnits = useCallback(
-        (event: ChangeEvent<HTMLInputElement>) => {
+    const handleUnits = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+        setUnits(event.target.value)
+    }, [])
+
+    const saveUnits = useCallback(
+        (event: SyntheticEvent) => {
+            event.preventDefault()
             if (!key || !auth?.currentUser?.uid) return
-            update(ref(db, 'vehicles/' + auth.currentUser.uid + '/' + key), {
-                units: event.target.value,
+            update(ref(db, 'vehicles/' + auth?.currentUser?.uid + '/' + key), {
+                units,
             })
-            setUnits(event.target.value)
+            router.push('/vehicles/' + vehicleId)
         },
-        [key, auth?.currentUser?.uid, db]
+        [router, key, vehicleId, units, vehicle]
     )
 
     const handleMileage = useCallback(
@@ -525,18 +530,23 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                         )}
                         {edit === 'units' && (
                             <Box>
-                                <NextLink href={`/vehicles/${vehicleId}`}>
-                                    <Tooltip
-                                        title={
-                                            <FormattedMessage id="app.Cancel" />
-                                        }
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicleId}`
+                                            )
+                                        }}
                                     >
-                                        <IconButton size="small" sx={sx.edit}>
-                                            <Close />
-                                        </IconButton>
-                                    </Tooltip>
-                                </NextLink>
-                                <Box>
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
+                                <form onSubmit={saveUnits}>
                                     <FormControl component="fieldset">
                                         <FormLabel
                                             component="legend"
@@ -567,7 +577,12 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                             />
                                         </RadioGroup>
                                     </FormControl>
-                                </Box>
+                                    <Box>
+                                        <Button color="primary" type="submit">
+                                            <FormattedMessage id="app.Save" />
+                                        </Button>
+                                    </Box>
+                                </form>
                             </Box>
                         )}
                     </Paper>
@@ -892,7 +907,11 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                             </List>
                             {uploadProgress.length === 0 &&
                                 uploadedFiles.length === 0 && (
-                                    <Box display="flex" justifyContent="center">
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        mb={2}
+                                    >
                                         <Typography>
                                             <FormattedMessage id="app.NoDocuments" />
                                         </Typography>
@@ -983,7 +1002,7 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                             serviceId={serviceId}
                         /> */}
                         {services.length === 0 && (
-                            <Box display="flex" justifyContent="center">
+                            <Box display="flex" justifyContent="center" mb={2}>
                                 <Typography>
                                     <FormattedMessage id="app.NoService" />
                                 </Typography>
