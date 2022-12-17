@@ -1,8 +1,9 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import Link from 'next/link'
 import Table from '../../common/Table/Table'
 import { Add, FormatListBulleted } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
+import Fuse from 'fuse.js'
 import {
     TextField,
     CircularProgress,
@@ -26,6 +27,26 @@ export const VehiclesView: React.FC<VehicleProps> = ({
     vehicleId,
     edit,
 }): JSX.Element => {
+    const [search, setSearch] = useState<string | boolean>(false)
+    const [filteredVehicles, setFilteredVehicles] =
+        useState<Vehicle[]>(vehicles)
+    useEffect(() => {
+        const fuse = new Fuse(vehicles, {
+            keys: ['name'],
+            shouldSort: true,
+            threshold: 0.6,
+            location: 0,
+            distance: 100,
+            minMatchCharLength: 3,
+        })
+
+        if (search && typeof search === 'string' && search.length >= 3) {
+            const tempVehicles = fuse.search(search)
+            setFilteredVehicles(tempVehicles.map((s) => s.item))
+        } else {
+            setFilteredVehicles(vehicles)
+        }
+    }, [search, vehicles])
     const columns = useMemo(
         () => [
             {
@@ -88,30 +109,36 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                     variant="outlined"
                     label={<FormattedMessage id="app.SearchVehicles" />}
                     size="small"
+                    onChange={(e) => setSearch(e.target.value)}
                 />
                 <Button variant="contained" color="primary" startIcon={<Add />}>
                     <FormattedMessage id="app.addVehicle" />
                 </Button>
             </Box>
-            {Array.isArray(vehicles) && vehicles.length > 0 && (
-                <Table columns={columns} data={vehicles} name="vehicles" />
+            {Array.isArray(vehicles) && filteredVehicles.length > 0 && (
+                <Table
+                    columns={columns}
+                    data={filteredVehicles}
+                    name="vehicles"
+                />
             )}
-            {Array.isArray(vehicles) && vehicles.length === 0 && (
-                <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    flexDirection="column"
-                    style={{ height: 'calc(100vh - 54px - 72px)' }}
-                >
-                    <Typography variant="h5" sx={sx.padding}>
-                        <FormattedMessage id="app.noVehicles" />
-                    </Typography>
-                </Box>
-            )}
+            {Array.isArray(filteredVehicles) &&
+                filteredVehicles.length === 0 && (
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        flexDirection="column"
+                        style={{ height: 'calc(100vh - 54px - 72px)' }}
+                    >
+                        <Typography variant="h5" sx={sx.padding}>
+                            <FormattedMessage id="app.noVehicles" />
+                        </Typography>
+                    </Box>
+                )}
             <EditVehicle
                 vehicleId={vehicleId}
-                vehicle={vehicles.find((v) => v.key === vehicleId)}
+                vehicle={filteredVehicles.find((v) => v.key === vehicleId)}
                 edit={edit}
             />
         </Box>

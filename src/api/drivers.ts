@@ -16,5 +16,5 @@ const drivers = [
     }
   ];
   
-  export default drivers;
+  export default drivers
   

@@ -5,14 +5,26 @@ const sx: Record<string, SxProps<Theme>> = {
         padding: 2,
     },
     wrap: {
-        width: 400,
+        width: 500,
         padding: 2,
         overflowY: 'auto',
         maxHeight: '100%',
+        position: 'relative',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        '&::-webkit-scrollbar': {
+            width: '5px',
+        },
+        '&::-webkit-scrollbar-track': {
+            background: (theme) => theme.palette.background.default,
+        },
+        '&::-webkit-scrollbar-thumb': {
+            background: (theme) => theme.palette.text.secondary,
+        },
     },
     paper: {
         padding: 1,
-        backgroundColor: 'background.default',
         marginTop: 2,
         position: 'relative',
     },
@@ -29,8 +41,9 @@ const sx: Record<string, SxProps<Theme>> = {
         marginBottom: 1,
     },
     listLabel: {
-        width: '40%',
+        width: '30%',
         textAlign: 'right',
+        backgroundColor: 'transparent'
     },
     listText: {
         width: '60%',
@@ -57,14 +70,15 @@ const sx: Record<string, SxProps<Theme>> = {
     routesList: {
         maxHeight: 350,
         overflowY: 'auto',
+        marginTop: 2,
         '&::-webkit-scrollbar': {
-            width: 5,
+            width: '5px',
         },
         '&::-webkit-scrollbar-track': {
-            background: 'background.default',
+            background: (theme) => theme.palette.background.default,
         },
         '&::-webkit-scrollbar-thumb': {
-            background: 'text.secondary',
+            background: (theme) => theme.palette.text.secondary,
         },
     },
     relative: {
@@ -79,6 +93,11 @@ const sx: Record<string, SxProps<Theme>> = {
             backgroundColor: 'danger.dark'
         }
     },
+    textWrap: {
+        textOverflow: 'ellipsis',
+        maxWidth: 440,
+        overflow: 'hidden'
+    }
 }
 
 export default sx

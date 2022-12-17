@@ -14,6 +14,7 @@ import {
     IconButton,
     List,
     ListItem,
+    ListItemButton,
     ListItemIcon,
     ListItemText,
     ListSubheader,
@@ -27,7 +28,6 @@ import {
     TableHead,
     TableRow,
     Divider,
-    Link,
     TextField,
     ListItemSecondaryAction,
     Radio,
@@ -364,6 +364,11 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
         >
             {!vehicle && (
                 <Box display="flex" justifyContent="center" p={2} sx={sx.wrap}>
+                    <NextLink href={'/vehicles'}>
+                        <IconButton size="small" sx={sx.edit}>
+                            <Close />
+                        </IconButton>
+                    </NextLink>
                     <Typography>
                         <FormattedMessage id="app.VehicleNotFound" />
                     </Typography>
@@ -372,7 +377,9 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
             {vehicle && (
                 <Box sx={sx.wrap}>
                     <Box display="flex" justifyContent="space-between">
-                        <FormattedMessage id="app.Details" />
+                        <Typography variant="h6">
+                            <FormattedMessage id="app.Details" />
+                        </Typography>
                         <NextLink href={'/vehicles'}>
                             <IconButton size="small">
                                 <Close />
@@ -385,12 +392,36 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 <Typography>
                                     <FormattedMessage id="app.Name" />
                                 </Typography>
-                                <Typography variant="h6">{name}</Typography>
-                                <NextLink href={`/vehicles/${vehicleId}/name`}>
-                                    <IconButton size="small" sx={sx.edit}>
+                                {name.length > 40 ? (
+                                    <Tooltip title={name}>
+                                        <Typography
+                                            variant="h6"
+                                            sx={sx.textWrap}
+                                        >
+                                            {name}
+                                        </Typography>
+                                    </Tooltip>
+                                ) : (
+                                    <Typography variant="h6" sx={sx.textWrap}>
+                                        {name}
+                                    </Typography>
+                                )}
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/vehicles/${vehicleId}/name`
+                                            )
+                                            reset()
+                                        }}
+                                    >
                                         <Edit />
                                     </IconButton>
-                                </NextLink>
+                                </Tooltip>
                             </>
                         )}
                         {edit === 'name' && (
@@ -408,7 +439,7 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 />
                                 <Button
                                     color="primary"
-                                    disabled={!name}
+                                    disabled={!name || name === vehicle.name}
                                     type="submit"
                                 >
                                     <FormattedMessage id="app.Save" />
@@ -436,11 +467,22 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                     <Paper sx={sx.paper}>
                         {edit !== 'type' && (
                             <>
-                                <NextLink href={`/vehicles/${vehicleId}/type`}>
-                                    <IconButton size="small" sx={sx.edit}>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/vehicles/${vehicleId}/type`
+                                            )
+                                            reset()
+                                        }}
+                                    >
                                         <Edit />
                                     </IconButton>
-                                </NextLink>
+                                </Tooltip>
                                 <Typography>
                                     <FormattedMessage id="app.Type" />
                                 </Typography>
@@ -500,7 +542,7 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 </FormControl>
                                 <Button
                                     color="primary"
-                                    disabled={!type}
+                                    disabled={!type || type === vehicle.type}
                                     type="submit"
                                 >
                                     <FormattedMessage id="app.Save" />
@@ -511,11 +553,22 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                     <Paper sx={sx.paper}>
                         {edit !== 'units' && (
                             <>
-                                <NextLink href={`/vehicles/${vehicleId}/units`}>
-                                    <IconButton size="small" sx={sx.edit}>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/vehicles/${vehicleId}/units`
+                                            )
+                                            reset()
+                                        }}
+                                    >
                                         <Edit />
                                     </IconButton>
-                                </NextLink>
+                                </Tooltip>
                                 <Typography>
                                     <FormattedMessage id="app.Units" />
                                 </Typography>
@@ -578,7 +631,11 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                         </RadioGroup>
                                     </FormControl>
                                     <Box>
-                                        <Button color="primary" type="submit">
+                                        <Button
+                                            color="primary"
+                                            type="submit"
+                                            disabled={units === vehicle.units}
+                                        >
                                             <FormattedMessage id="app.Save" />
                                         </Button>
                                     </Box>
@@ -589,19 +646,41 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                     <Paper sx={sx.paper}>
                         {edit !== 'mileage' && (
                             <>
-                                <NextLink
-                                    href={`/vehicles/${vehicleId}/mileage`}
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
                                 >
-                                    <IconButton size="small" sx={sx.edit}>
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/vehicles/${vehicleId}/mileage`
+                                            )
+                                            reset()
+                                        }}
+                                    >
                                         <Edit />
                                     </IconButton>
-                                </NextLink>
-                                <Typography>
+                                </Tooltip>
+                                <Typography sx={sx.textWrap}>
                                     <FormattedMessage id="app.Mileage" />
                                 </Typography>
-                                <Typography variant="h6">{mileage}</Typography>
+                                {mileage.toString().length > 40 ? (
+                                    <Tooltip title={mileage}>
+                                        <Typography
+                                            variant="h6"
+                                            sx={sx.textWrap}
+                                        >
+                                            {mileage}
+                                        </Typography>
+                                    </Tooltip>
+                                ) : (
+                                    <Typography variant="h6" sx={sx.textWrap}>
+                                        {mileage}
+                                    </Typography>
+                                )}
                                 <Typography>
-                                    {units === 'km' ? (
+                                    {vehicle.units === 'km' ? (
                                         <FormattedMessage id="app.Km" />
                                     ) : (
                                         <FormattedMessage id="app.Miles" />
@@ -639,6 +718,12 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                     onChange={handleMileage}
                                     sx={sx.select}
                                     fullWidth
+                                    type="number"
+                                    InputProps={{
+                                        inputProps: {
+                                            max: 999999999,
+                                        },
+                                    }}
                                     helperText={
                                         units === 'km' ? (
                                             <FormattedMessage id="app.Km" />
@@ -649,7 +734,12 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 />
                                 <Button
                                     color="primary"
-                                    disabled={!mileage}
+                                    disabled={
+                                        !mileage ||
+                                        +mileage ===
+                                            (vehicle?.mileage &&
+                                                +vehicle.mileage)
+                                    }
                                     type="submit"
                                 >
                                     <FormattedMessage id="app.Save" />
@@ -660,20 +750,41 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                     <Paper sx={sx.paper}>
                         {edit !== 'driver' && (
                             <>
-                                <NextLink
-                                    href={`/vehicles/${vehicleId}/driver`}
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
                                 >
-                                    <IconButton size="small" sx={sx.edit}>
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/vehicles/${vehicleId}/driver`
+                                            )
+                                            reset()
+                                        }}
+                                    >
                                         <Edit />
                                     </IconButton>
-                                </NextLink>
+                                </Tooltip>
                                 <Typography>
                                     <FormattedMessage id="app.Driver" />
                                 </Typography>
-                                <Typography variant="h6">
-                                    {currentDriver?.name}
-                                </Typography>
-                                <Typography variant="caption">
+                                {currentDriver?.name &&
+                                currentDriver?.name.length > 40 ? (
+                                    <Tooltip title={currentDriver?.name}>
+                                        <Typography
+                                            variant="h6"
+                                            sx={sx.textWrap}
+                                        >
+                                            {currentDriver.name}
+                                        </Typography>
+                                    </Tooltip>
+                                ) : (
+                                    <Typography variant="h6" sx={sx.textWrap}>
+                                        {currentDriver?.name}
+                                    </Typography>
+                                )}
+                                <Typography variant="caption" sx={sx.textWrap}>
                                     {currentDriver?.phone}
                                 </Typography>
                             </>
@@ -725,7 +836,9 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 </FormControl>
                                 <Button
                                     color="primary"
-                                    disabled={!driver}
+                                    disabled={
+                                        !driver || driver?.id === vehicle.driver
+                                    }
                                     type="submit"
                                 >
                                     <FormattedMessage id="app.Save" />
@@ -734,13 +847,15 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                         )}
                     </Paper>
                     <Paper sx={sx.paper}>
-                        <IconButton size="small" sx={sx.edit}>
-                            <Edit />
-                        </IconButton>
+                        <Tooltip title={<FormattedMessage id="app.Edit" />}>
+                            <IconButton size="small" sx={sx.edit}>
+                                <Edit />
+                            </IconButton>
+                        </Tooltip>
                         <Typography>
                             <FormattedMessage id="app.LastRoute" />
                         </Typography>
-                        <List dense>
+                        <List sx={sx.select} dense>
                             <ListItem>
                                 <ListItemIcon>
                                     <Adjust />
@@ -793,54 +908,54 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                             </Tooltip>
                         </Box>
                         <List dense sx={sx.routesList}>
-                            <ListItem button selected>
+                            <ListItemButton>
                                 <ListItemText
                                     primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
                                     secondary="11/11/2020 - 12/11/2020"
                                 />
-                            </ListItem>
-                            <ListItem button>
+                            </ListItemButton>
+                            <ListItemButton>
                                 <ListItemText
                                     primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
                                     secondary="11/11/2020 - 12/11/2020"
                                 />
-                            </ListItem>
-                            <ListItem button>
+                            </ListItemButton>
+                            <ListItemButton>
                                 <ListItemText
                                     primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
                                     secondary="11/11/2020 - 12/11/2020"
                                 />
-                            </ListItem>
-                            <ListItem button>
+                            </ListItemButton>
+                            <ListItemButton>
                                 <ListItemText
                                     primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
                                     secondary="11/11/2020 - 12/11/2020"
                                 />
-                            </ListItem>
-                            <ListItem button>
+                            </ListItemButton>
+                            <ListItemButton>
                                 <ListItemText
                                     primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
                                     secondary="11/11/2020 - 12/11/2020"
                                 />
-                            </ListItem>
-                            <ListItem button>
+                            </ListItemButton>
+                            <ListItemButton>
                                 <ListItemText
                                     primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
                                     secondary="11/11/2020 - 12/11/2020"
                                 />
-                            </ListItem>
-                            <ListItem button>
+                            </ListItemButton>
+                            <ListItemButton>
                                 <ListItemText
                                     primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
                                     secondary="11/11/2020 - 12/11/2020"
                                 />
-                            </ListItem>
-                            <ListItem button>
+                            </ListItemButton>
+                            <ListItemButton>
                                 <ListItemText
                                     primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
                                     secondary="11/11/2020 - 12/11/2020"
                                 />
-                            </ListItem>
+                            </ListItemButton>
                         </List>
                     </Paper>
                     <Paper sx={sx.paper}>
@@ -1015,6 +1130,7 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                         onClick={deleteVehicle}
                         startIcon={<Delete />}
                         color="secondary"
+                        fullWidth
                     >
                         <FormattedMessage id="app.DeleteVehicle" />
                     </LoadingButton>

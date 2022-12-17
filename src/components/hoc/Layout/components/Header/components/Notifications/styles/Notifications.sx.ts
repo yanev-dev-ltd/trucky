@@ -19,6 +19,16 @@ const sx: Record<string, SxProps<Theme>> = {
     notificationsList: {
         width: 320,
         maxHeight: 600,
+        overflowY: 'auto',
+        '&::-webkit-scrollbar': {
+            width: '5px',
+        },
+        '&::-webkit-scrollbar-track': {
+            background: (theme) => theme.palette.background.paper,
+        },
+        '&::-webkit-scrollbar-thumb': {
+            background: (theme) => theme.palette.text.secondary,
+        },
     },
     gray: {
         backgroundColor: 'action.selected'
