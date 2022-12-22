@@ -1,10 +1,4 @@
-import {
-    useState,
-    useEffect,
-    useCallback,
-    ChangeEvent,
-    SyntheticEvent,
-} from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import {
     Box,
     Typography,
@@ -36,7 +30,6 @@ import {
     FormLabel,
     Tooltip,
 } from '@mui/material'
-import { SelectChangeEvent } from '@mui/material/Select'
 import {
     Close,
     Edit,
@@ -45,10 +38,10 @@ import {
     InsertDriveFile,
     AddCircle,
     Visibility,
-    CloudUpload,
     Delete,
 } from '@mui/icons-material'
-import { format } from 'date-fns'
+import { format, formatRelative } from 'date-fns'
+import { bg, enUS } from 'date-fns/locale'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import { FormattedMessage, useIntl } from 'react-intl'
@@ -57,66 +50,47 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import LoadingButton from '../../../common/LoadingButton/LoadingButton'
 import { db, auth, storage } from '../../../../services/firebase'
 import { ref, update } from 'firebase/database'
-import {
-    ref as storageRef,
-    uploadBytesResumable,
-    getDownloadURL,
-    deleteObject,
-} from 'firebase/storage'
-import { uuid } from 'uuidv4'
+import { ref as storageRef, deleteObject, getBlob } from 'firebase/storage'
 import sx from './styles/EditVehicle.sx'
 // import routes from '../../api/routes';
 import { serviceTypes } from '../../../../api/services'
 import types from '../../../../api/types'
 import drivers from '../../../../api/drivers'
-import { EditVehicleProps, Files, UploadProgress } from './types'
+import { EditVehicleProps } from './types'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../store/store'
+import { Service, VehicleFile } from '../../types'
+import useEditVehicle from './hooks/useEditVehicle'
+import Upload from '../../../common/Upload/Upload'
+import Confirm from '../../../common/Confirm/Confirm'
+import { saveAs } from 'file-saver'
 
-const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
+const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
     const intl = useIntl()
     const router = useRouter()
+    const { saveVehicleField, editedVehicle, setEditedVehicle, reset } =
+        useEditVehicle(vehicle)
     const { settings } = useSelector((state: RootState) => state.settings)
     // const [fuelRoute, setFuelRoute] = useState(routes[0]);
     const [services, setServices] = useState(vehicle?.services || [])
     const [editServiceOpen, setEditServiceOpen] = useState(false)
-    const [serviceId, setServiceId] = useState<string | boolean>(false)
+    const [serviceId, setServiceId] = useState<number | boolean>(false)
     const [newServiceOpen, setNewServiceOpen] = useState(false)
-    const [name, setName] = useState(vehicle?.name || '')
-    const [type, setType] = useState(vehicle?.type || 0)
-    const [driver, setDriver] = useState(
-        drivers.find((d) => d.id === vehicle?.driver)
-    )
-    const [filesToUpload, setFilesToUpload] = useState<Files>([])
-    const [uploadProgress, setUploadProgress] = useState<UploadProgress>([])
-    const [uploadedFiles, setUploadedFiles] = useState(vehicle?.files || [])
-    const [uploadError, setUploadError] = useState<string | boolean>(false)
-    const [units, setUnits] = useState<string>(
-        vehicle?.units || settings?.units
-    )
-    const [mileage, setMileage] = useState(vehicle?.mileage || 0)
+    const [confirmDeleteFile, setConfirmDeleteFile] = useState<
+        VehicleFile | undefined
+    >()
     const currentDriver = drivers.find((d) => d.id === vehicle?.driver)
-    const key = vehicle?.key
+    const vehicleId = vehicle?.key
+    const locale = useMemo(() => {
+        switch (settings?.locale) {
+            case 'bg':
+                return bg
+            default:
+                return enUS
+        }
+    }, [settings?.locale])
 
-    useEffect(() => {
-        reset()
-    }, [vehicle, settings?.units])
-
-    // const handleFRChange = (e) => {
-    //   setFuelRoute(routes.find(r => r.date === e.target.value));
-    // };
-
-    const reset = useCallback(() => {
-        setName(vehicle?.name || '')
-        setServices(vehicle?.services || [])
-        setType(vehicle?.type || 0)
-        setDriver(drivers.find((d) => d.id === vehicle?.driver))
-        setUploadedFiles(vehicle?.files || [])
-        setMileage(vehicle?.mileage || 0)
-        setUnits(vehicle?.units || settings?.units)
-    }, [vehicle, settings?.units])
-
-    const handleEditServiceOpen = useCallback((id: string | boolean) => {
+    const handleEditServiceOpen = useCallback((id: number | boolean) => {
         setServiceId(id)
         setEditServiceOpen(true)
     }, [])
@@ -133,228 +107,52 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
         setNewServiceOpen(false)
     }, [])
 
-    const handleName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value)
+    const downloadFile = useCallback(async (f: VehicleFile) => {
+        saveAs(await getBlob(storageRef(storage, f.path)), f.name)
     }, [])
-
-    const saveName = useCallback(
-        (event: SyntheticEvent) => {
-            event.preventDefault()
-            if (!key || !auth?.currentUser?.uid || name === '') return
-            update(ref(db, 'vehicles/' + auth?.currentUser?.uid + '/' + key), {
-                name,
-            })
-            router.push('/vehicles/' + vehicleId)
-        },
-        [router, vehicleId, key, name]
-    )
-
-    const handleType = useCallback((event: SelectChangeEvent) => {
-        setType(+event.target.value)
-    }, [])
-
-    const saveType = useCallback(
-        (event: SyntheticEvent) => {
-            event.preventDefault()
-            if (!key || !type || !auth?.currentUser?.uid) return
-            if (!type) return
-            update(ref(db, 'vehicles/' + auth.currentUser.uid + '/' + key), {
-                type,
-            })
-            router.push('/vehicles/' + vehicleId)
-        },
-        [key, router, vehicleId, type, vehicle]
-    )
-
-    const handleUnits = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        setUnits(event.target.value)
-    }, [])
-
-    const saveUnits = useCallback(
-        (event: SyntheticEvent) => {
-            event.preventDefault()
-            if (!key || !auth?.currentUser?.uid) return
-            update(ref(db, 'vehicles/' + auth?.currentUser?.uid + '/' + key), {
-                units,
-            })
-            router.push('/vehicles/' + vehicleId)
-        },
-        [router, key, vehicleId, units, vehicle]
-    )
-
-    const handleMileage = useCallback(
-        (event: ChangeEvent<HTMLInputElement>) => {
-            setMileage(+event.target.value)
-        },
-        []
-    )
-
-    const saveMileage = useCallback(
-        (event: SyntheticEvent) => {
-            event.preventDefault()
-            if (!key || !driver || !auth?.currentUser?.uid) return
-            update(ref(db, 'vehicles/' + auth.currentUser.uid + '/' + key), {
-                mileage,
-            })
-            router.push('/vehicles/' + vehicleId)
-        },
-        [router, key, vehicleId, mileage, vehicle, driver]
-    )
-
-    const handleDriver = useCallback((event: SelectChangeEvent) => {
-        setDriver(drivers.find((d) => d.id === event.target.value))
-    }, [])
-
-    const saveDriver = useCallback(
-        (event: SyntheticEvent) => {
-            event.preventDefault()
-            if (!key || !driver || !auth?.currentUser?.uid) return
-            update(ref(db, 'vehicles/' + auth.currentUser.uid + '/' + key), {
-                driver: driver.id,
-            })
-            router.push('/vehicles/' + vehicleId)
-        },
-        [router, key, vehicleId, driver, vehicle]
-    )
-
-    const handleFilesUpload = useCallback(
-        (event: ChangeEvent<HTMLInputElement>) => {
-            if (
-                !event ||
-                !event.target ||
-                !event.target.files ||
-                event.target.files.length === 0
-            ) {
-                return
-            }
-            setFilesToUpload(
-                Array.from(event.target.files).map((file) => {
-                    return { filename: file, progress: 0 }
-                })
-            )
-        },
-        []
-    )
-
-    useEffect(() => {
-        filesToUpload.map((up, i) => {
-            if (!auth?.currentUser?.uid) return
-            const fileNameSplit = up.filename.name.split('.')
-            const ext = fileNameSplit.pop()
-            const fileName = uuid() + '-' + Date.now() + '.' + ext
-            const filePath = `user/${auth.currentUser.uid}/vehicles/${fileName}`
-            // const uploadTask = storage.child(filePath).put(up.filename);
-            const currentRef = storageRef(storage, filePath)
-            const uploadTask = uploadBytesResumable(currentRef, up.filename)
-            uploadTask.on(
-                'state_changed',
-                (snapshot) => {
-                    const progress =
-                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                    setUploadProgress(
-                        filesToUpload.map((p, index) =>
-                            i === index
-                                ? {
-                                      filename: up.filename,
-                                      path: filePath,
-                                      progress,
-                                  }
-                                : p
-                        )
-                    )
-                },
-                (error) => {
-                    setUploadError(
-                        intl.formatMessage({
-                            id: error.code || 'storage/unknown',
-                        })
-                    )
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then(
-                        (downloadURL) => {
-                            setUploadedFiles((oldUploadedFiles) => {
-                                const files = [
-                                    ...oldUploadedFiles,
-                                    {
-                                        name: filesToUpload[i].filename.name,
-                                        url: downloadURL,
-                                        path: filePath,
-                                    },
-                                ]
-                                return files
-                            })
-                        }
-                    )
-                }
-            )
-            return null
-        })
-    }, [filesToUpload, key, intl])
-
-    useEffect(() => {
-        if (!key) return
-        setUploadProgress((oldUploadProgress) =>
-            oldUploadProgress.filter(
-                (oup) => !uploadedFiles.find((uf) => uf.path === oup.path)
-            )
-        )
-        const currentFilesCount = vehicle?.files?.length || 0
-        if (
-            uploadedFiles.length === filesToUpload.length + currentFilesCount &&
-            auth.currentUser
-        ) {
-            setUploadProgress([])
-            update(ref(db, 'vehicles/' + auth.currentUser.uid + '/' + key), {
-                files: uploadedFiles,
-            })
-        }
-    }, [uploadedFiles, key, filesToUpload, vehicle])
 
     const deleteUploadedFile = useCallback(
-        (f) => {
-            if (!key || !auth?.currentUser?.uid) return
-            const desertRef = ref(storage, f.path)
+        (f: VehicleFile) => {
+            if (!vehicleId || !auth?.currentUser?.uid || !vehicle?.files) return
+            const desertRef = storageRef(storage, f.path)
             deleteObject(desertRef)
                 .then(() => {
-                    const files = uploadedFiles.filter(
-                        (uf) => uf.path !== f.path
-                    )
-                    vehicle.files = files
+                    const files = vehicle?.files
+                        ? vehicle?.files.filter((uf) => uf.path !== f.path)
+                        : []
                     update(
                         ref(
                             db,
-                            'vehicles/' + auth?.currentUser?.uid + '/' + key
+                            'vehicles/' +
+                                auth?.currentUser?.uid +
+                                '/' +
+                                vehicleId
                         ),
                         { files }
                     )
-                    setUploadedFiles(files)
                 })
-                .catch((error) =>
-                    setUploadError(
-                        intl.formatMessage({ id: 'storage/unknown' }) +
-                            ': ' +
-                            error
-                    )
-                )
+                .catch((error) => console.log(error))
         },
-        [intl, key, vehicle, uploadedFiles]
+        [intl, vehicleId, vehicle]
     )
 
     const saveService = useCallback(
-        (s) => {
-            if (!key || !auth?.currentUser?.uid) return
-            update(ref(db, 'vehicles/' + auth.currentUser.uid + '/' + key), {
-                services: s,
-            })
+        (s: Service) => {
+            if (!vehicleId || !auth?.currentUser?.uid) return
+            update(
+                ref(db, 'vehicles/' + auth.currentUser.uid + '/' + vehicleId),
+                {
+                    services: s,
+                }
+            )
         },
-        [key]
+        [vehicleId]
     )
 
     const deleteVehicle = useCallback(() => {
-        console.log('delete vehicle', key)
+        console.log('delete vehicle', vehicleId)
         // TODO: delete the vehicle and write a function for clearing the db and storage
-    }, [key])
+    }, [vehicleId])
 
     return (
         <Drawer
@@ -392,18 +190,18 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 <Typography>
                                     <FormattedMessage id="app.Name" />
                                 </Typography>
-                                {name.length > 40 ? (
-                                    <Tooltip title={name}>
+                                {vehicle?.name && vehicle.name.length > 40 ? (
+                                    <Tooltip title={vehicle.name}>
                                         <Typography
                                             variant="h6"
                                             sx={sx.textWrap}
                                         >
-                                            {name}
+                                            {vehicle.name}
                                         </Typography>
                                     </Tooltip>
                                 ) : (
                                     <Typography variant="h6" sx={sx.textWrap}>
-                                        {name}
+                                        {vehicle.name}
                                     </Typography>
                                 )}
                                 <Tooltip
@@ -425,22 +223,34 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                             </>
                         )}
                         {edit === 'name' && (
-                            <form onSubmit={saveName}>
+                            <form
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                    saveVehicleField('name')
+                                }}
+                            >
                                 <Typography>
                                     <FormattedMessage id="app.Name" />
                                 </Typography>
                                 <TextField
                                     variant="outlined"
                                     label={<FormattedMessage id="app.Name" />}
-                                    value={name || ''}
-                                    onChange={handleName}
+                                    value={editedVehicle?.name || ''}
+                                    onChange={(event) => {
+                                        setEditedVehicle({
+                                            ...vehicle,
+                                            name: event.target.value || '',
+                                        })
+                                    }}
                                     fullWidth
                                     sx={sx.select}
                                 />
                                 <Button
                                     color="primary"
-                                    disabled={!name || name === vehicle.name}
                                     type="submit"
+                                    disabled={
+                                        vehicle.name === editedVehicle?.name
+                                    }
                                 >
                                     <FormattedMessage id="app.Save" />
                                 </Button>
@@ -496,7 +306,12 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                             </>
                         )}
                         {edit === 'type' && (
-                            <form onSubmit={saveType}>
+                            <form
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                    saveVehicleField('type')
+                                }}
+                            >
                                 <Typography>
                                     <FormattedMessage id="app.Type" />
                                 </Typography>
@@ -527,8 +342,13 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                     <Select
                                         labelId="type-label"
                                         id="type"
-                                        value={type}
-                                        onChange={handleType}
+                                        value={editedVehicle?.type || 0}
+                                        onChange={(event) =>
+                                            setEditedVehicle({
+                                                ...vehicle,
+                                                type: +event.target.value,
+                                            })
+                                        }
                                         label={
                                             <FormattedMessage id="app.Type" />
                                         }
@@ -542,7 +362,10 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 </FormControl>
                                 <Button
                                     color="primary"
-                                    disabled={!type || type === vehicle.type}
+                                    disabled={
+                                        !editedVehicle?.type ||
+                                        editedVehicle.type === vehicle.type
+                                    }
                                     type="submit"
                                 >
                                     <FormattedMessage id="app.Save" />
@@ -573,7 +396,8 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                     <FormattedMessage id="app.Units" />
                                 </Typography>
                                 <Typography variant="h6">
-                                    {units === 'm' ? (
+                                    {(vehicle.units || settings.units) ===
+                                    'm' ? (
                                         <FormattedMessage id="app.Miles" />
                                     ) : (
                                         <FormattedMessage id="app.Km" />
@@ -599,7 +423,12 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                         <Close />
                                     </IconButton>
                                 </Tooltip>
-                                <form onSubmit={saveUnits}>
+                                <form
+                                    onSubmit={(event) => {
+                                        event.preventDefault()
+                                        saveVehicleField('units')
+                                    }}
+                                >
                                     <FormControl component="fieldset">
                                         <FormLabel
                                             component="legend"
@@ -611,8 +440,17 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                             aria-label="units"
                                             row
                                             name="units"
-                                            value={units || 'km'}
-                                            onChange={handleUnits}
+                                            value={
+                                                editedVehicle?.units ||
+                                                settings.units ||
+                                                'km'
+                                            }
+                                            onChange={(event) =>
+                                                setEditedVehicle({
+                                                    ...vehicle,
+                                                    units: event.target.value,
+                                                })
+                                            }
                                         >
                                             <FormControlLabel
                                                 value="km"
@@ -634,7 +472,10 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                         <Button
                                             color="primary"
                                             type="submit"
-                                            disabled={units === vehicle.units}
+                                            disabled={
+                                                editedVehicle?.units ===
+                                                vehicle.units
+                                            }
                                         >
                                             <FormattedMessage id="app.Save" />
                                         </Button>
@@ -665,18 +506,19 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 <Typography sx={sx.textWrap}>
                                     <FormattedMessage id="app.Mileage" />
                                 </Typography>
-                                {mileage.toString().length > 40 ? (
-                                    <Tooltip title={mileage}>
+                                {vehicle?.mileage &&
+                                vehicle?.mileage.toString().length > 40 ? (
+                                    <Tooltip title={vehicle?.mileage}>
                                         <Typography
                                             variant="h6"
                                             sx={sx.textWrap}
                                         >
-                                            {mileage}
+                                            {vehicle?.mileage}
                                         </Typography>
                                     </Tooltip>
                                 ) : (
                                     <Typography variant="h6" sx={sx.textWrap}>
-                                        {mileage}
+                                        {vehicle?.mileage}
                                     </Typography>
                                 )}
                                 <Typography>
@@ -689,7 +531,12 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                             </>
                         )}
                         {edit === 'mileage' && (
-                            <form onSubmit={saveMileage}>
+                            <form
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                    saveVehicleField('mileage')
+                                }}
+                            >
                                 <Typography>
                                     <FormattedMessage id="app.Mileage" />
                                 </Typography>
@@ -714,8 +561,13 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                     label={
                                         <FormattedMessage id="app.Mileage" />
                                     }
-                                    value={mileage || ''}
-                                    onChange={handleMileage}
+                                    value={editedVehicle?.mileage || ''}
+                                    onChange={(event) =>
+                                        setEditedVehicle({
+                                            ...vehicle,
+                                            mileage: +event.target.value,
+                                        })
+                                    }
                                     sx={sx.select}
                                     fullWidth
                                     type="number"
@@ -725,7 +577,7 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                         },
                                     }}
                                     helperText={
-                                        units === 'km' ? (
+                                        vehicle.units === 'km' ? (
                                             <FormattedMessage id="app.Km" />
                                         ) : (
                                             <FormattedMessage id="app.Miles" />
@@ -735,10 +587,9 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 <Button
                                     color="primary"
                                     disabled={
-                                        !mileage ||
-                                        +mileage ===
-                                            (vehicle?.mileage &&
-                                                +vehicle.mileage)
+                                        (editedVehicle?.mileage &&
+                                            +editedVehicle?.mileage) ===
+                                        (vehicle?.mileage && +vehicle.mileage)
                                     }
                                     type="submit"
                                 >
@@ -790,7 +641,12 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                             </>
                         )}
                         {edit === 'driver' && (
-                            <form onSubmit={saveDriver}>
+                            <form
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                    saveVehicleField('driver')
+                                }}
+                            >
                                 <Typography>
                                     <FormattedMessage id="app.Driver" />
                                 </Typography>
@@ -821,14 +677,20 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                     <Select
                                         labelId="driver-label"
                                         id="driver"
-                                        value={driver?.id}
-                                        onChange={handleDriver}
+                                        value={editedVehicle?.driver || ''}
+                                        onChange={(event) => {
+                                            setEditedVehicle({
+                                                ...vehicle,
+                                                driver:
+                                                    event.target.value || '',
+                                            })
+                                        }}
                                         label={
                                             <FormattedMessage id="app.Driver" />
                                         }
                                     >
-                                        {drivers.map((d, i) => (
-                                            <MenuItem key={i} value={d.id}>
+                                        {drivers.map((d) => (
+                                            <MenuItem key={d.id} value={d.id}>
                                                 {d.name}
                                             </MenuItem>
                                         ))}
@@ -837,7 +699,7 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                 <Button
                                     color="primary"
                                     disabled={
-                                        !driver || driver?.id === vehicle.driver
+                                        editedVehicle?.driver === vehicle.driver
                                     }
                                     type="submit"
                                 >
@@ -959,46 +821,82 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                         </List>
                     </Paper>
                     <Paper sx={sx.paper}>
-                        <form>
-                            <Box sx={sx.edit}>
-                                <input
-                                    type="file"
-                                    id="document-upload"
-                                    name="document-upload"
-                                    multiple
-                                    style={{ display: 'none' }}
-                                    onChange={handleFilesUpload}
-                                />
-                                <Tooltip
-                                    title={<FormattedMessage id="app.Upload" />}
-                                >
-                                    <IconButton size="small">
-                                        <label
-                                            htmlFor="document-upload"
+                        <Box sx={sx.edit}>
+                            {/* <input
+                                type="file"
+                                id="document-upload"
+                                name="document-upload"
+                                multiple
+                                style={{ display: 'none' }}
+                                onChange={handleFilesUpload}
+                            />
+                            <Tooltip
+                                title={<FormattedMessage id="app.Upload" />}
+                            >
+                                <IconButton size="small">
+                                    <label
+                                        htmlFor="document-upload"
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        <CloudUpload />
+                                    </label>
+                                </IconButton>
+                            </Tooltip> */}
+                            <Upload
+                                filepath={
+                                    auth?.currentUser?.uid
+                                        ? `user/${auth?.currentUser?.uid}/vehicles`
+                                        : undefined
+                                }
+                                dbpath={
+                                    auth?.currentUser?.uid
+                                        ? `vehicles/${auth.currentUser.uid}/${vehicleId}`
+                                        : undefined
+                                }
+                                currentFiles={vehicle?.files || []}
+                            />
+                        </Box>
+                        <Typography>
+                            <FormattedMessage id="app.Documents" />
+                        </Typography>
+                        <List dense>
+                            {vehicle?.files &&
+                                vehicle?.files.length > 0 &&
+                                vehicle?.files.map((uf, i) => (
+                                    <ListItem key={i}>
+                                        <ListItemIcon
+                                            onClick={() => downloadFile(uf)}
                                             style={{ cursor: 'pointer' }}
                                         >
-                                            <CloudUpload />
-                                        </label>
-                                    </IconButton>
-                                </Tooltip>
-                            </Box>
-                            <Typography>
-                                <FormattedMessage id="app.Documents" />
-                            </Typography>
-                            {uploadError && <Box>{uploadError}</Box>}
-                            <List dense>
-                                {uploadedFiles.map((uf, i) => (
-                                    <ListItem key={i}>
-                                        <ListItemIcon>
                                             <InsertDriveFile />
                                         </ListItemIcon>
-                                        <ListItemText primary={uf.name} />
+                                        <ListItemText
+                                            primary={
+                                                <Typography
+                                                    style={{
+                                                        textDecoration:
+                                                            'underline',
+                                                    }}
+                                                >
+                                                    {uf.name}
+                                                </Typography>
+                                            }
+                                            secondary={formatRelative(
+                                                new Date(uf.date),
+                                                new Date(),
+                                                { locale }
+                                            )}
+                                            onClick={() => downloadFile(uf)}
+                                            style={{
+                                                cursor: 'pointer',
+                                            }}
+                                        />
                                         <ListItemSecondaryAction>
                                             <IconButton
                                                 edge="end"
                                                 aria-label="delete"
                                                 onClick={() =>
-                                                    deleteUploadedFile(uf)
+                                                    setConfirmDeleteFile(uf)
                                                 }
                                             >
                                                 <Delete />
@@ -1006,33 +904,28 @@ const EditVehicle = ({ vehicleId, vehicle, edit }: EditVehicleProps) => {
                                         </ListItemSecondaryAction>
                                     </ListItem>
                                 ))}
-                                {uploadProgress.map((up, i) => (
-                                    <ListItem key={i}>
-                                        <ListItemIcon>
-                                            <InsertDriveFile />
-                                        </ListItemIcon>
-                                        <ListItemText
-                                            primary={up.filename.name}
-                                            secondary={`${Math.round(
-                                                up.progress
-                                            )}%`}
-                                        />
-                                    </ListItem>
-                                ))}
-                            </List>
-                            {uploadProgress.length === 0 &&
-                                uploadedFiles.length === 0 && (
-                                    <Box
-                                        display="flex"
-                                        justifyContent="center"
-                                        mb={2}
-                                    >
-                                        <Typography>
-                                            <FormattedMessage id="app.NoDocuments" />
-                                        </Typography>
-                                    </Box>
-                                )}
-                        </form>
+                        </List>
+                        <Confirm
+                            onCancel={() => setConfirmDeleteFile(undefined)}
+                            onSubmit={() =>
+                                confirmDeleteFile &&
+                                deleteUploadedFile(confirmDeleteFile)
+                            }
+                            isOpen={Boolean(confirmDeleteFile)}
+                            message={
+                                <FormattedMessage
+                                    id="app.DeleteFileConfirm"
+                                    values={{ file: confirmDeleteFile?.name }}
+                                />
+                            }
+                        />
+                        {(!vehicle?.files || vehicle?.files.length === 0) && (
+                            <Box display="flex" justifyContent="center" mb={2}>
+                                <Typography>
+                                    <FormattedMessage id="app.NoDocuments" />
+                                </Typography>
+                            </Box>
+                        )}
                     </Paper>
                     <Paper sx={sx.paper}>
                         <Typography>

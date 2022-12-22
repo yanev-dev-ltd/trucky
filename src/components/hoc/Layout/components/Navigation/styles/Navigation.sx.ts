@@ -6,6 +6,9 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     list: {
       padding: 0,
+      height: 'calc(100vh - 54px)',
+      display: 'flex',
+      flexDirection: 'column'
     },
     item: {
       display: 'flex',
@@ -25,7 +28,7 @@ const sx: Record<string, SxProps<Theme>> = {
     icon: {
       color: 'text.primary',
       margin: '0 auto'
-    }
+    },
 }
 
 export default sx

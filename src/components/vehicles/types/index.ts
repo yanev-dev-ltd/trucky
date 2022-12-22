@@ -8,20 +8,8 @@ export type Vehicle = {
     type?: number
     units?: string
     route?: string
-    files?: {
-        name: string
-        path: string
-        url: string
-    }[]
-    services?: {
-        cost: string
-        date: number
-        driver: string
-        mileage: number
-        place: string
-        reminder: string
-        type: number
-    }
+    files?: VehicleFile[]
+    services?: Service[]
 }
 
 export type useVehicleProps = {
@@ -33,4 +21,21 @@ export type VehicleProps = {
     vehicleId: string | undefined
     vehicles: Vehicles,
     edit: string | undefined
+}
+
+export type Service = {
+    cost: number
+    date: number
+    driver: string
+    mileage: number
+    place: string
+    reminder: string
+    type: number
+}
+
+export type VehicleFile = {
+    name: string
+    path: string
+    url: string
+    date: number
 }

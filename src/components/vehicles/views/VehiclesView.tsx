@@ -32,7 +32,19 @@ export const VehiclesView: React.FC<VehicleProps> = ({
         useState<Vehicle[]>(vehicles)
     useEffect(() => {
         const fuse = new Fuse(vehicles, {
-            keys: ['name'],
+            keys: [
+                'name',
+                {
+                    name: 'driver',
+                    getFn: (d) =>
+                        drivers.find((dr) => dr.id === d.driver)?.name || '',
+                },
+                {
+                    name: 'type',
+                    getFn: (t) =>
+                        types.find((type) => type.id === t.type)?.name || '',
+                },
+            ],
             shouldSort: true,
             threshold: 0.6,
             location: 0,
@@ -101,15 +113,13 @@ export const VehiclesView: React.FC<VehicleProps> = ({
 
     return (
         <Box>
-            <Box display="flex" justifyContent="space-between" sx={sx.padding}>
-                <Typography variant="h6">
-                    <FormattedMessage id="app.Vehicles" />
-                </Typography>
+            <Box sx={sx.header}>
                 <TextField
                     variant="outlined"
-                    label={<FormattedMessage id="app.SearchVehicles" />}
+                    label={<FormattedMessage id="app.Search" />}
                     size="small"
                     onChange={(e) => setSearch(e.target.value)}
+                    sx={sx.search}
                 />
                 <Button variant="contained" color="primary" startIcon={<Add />}>
                     <FormattedMessage id="app.addVehicle" />
@@ -137,7 +147,6 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                     </Box>
                 )}
             <EditVehicle
-                vehicleId={vehicleId}
                 vehicle={filteredVehicles.find((v) => v.key === vehicleId)}
                 edit={edit}
             />

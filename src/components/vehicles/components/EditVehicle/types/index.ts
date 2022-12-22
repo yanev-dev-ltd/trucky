@@ -1,6 +1,5 @@
 import { Vehicle } from '../../../types'
 export type EditVehicleProps = {
-    vehicleId: string | undefined
     vehicle: Vehicle | undefined
     edit: string | undefined
 }
@@ -8,9 +7,10 @@ export type EditVehicleProps = {
 export type Files = {
     filename: File
     progress: number
+    path? : string
 }[]
 
-export type UploadProgress = Files | {
+export type UploadProgress = {
     filename: string
     path: string
     progress: number
