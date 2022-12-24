@@ -1,20 +1,20 @@
 import { useMemo, useState, useEffect } from 'react'
 import Link from 'next/link'
 import Table from '../../common/Table/Table'
-import { Add, FormatListBulleted } from '@mui/icons-material'
+import { FormatListBulleted } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import Fuse from 'fuse.js'
 import {
     TextField,
     CircularProgress,
     IconButton,
-    Button,
     Box,
     Typography,
     Tooltip,
 } from '@mui/material'
 
 import EditVehicle from '../components/EditVehicle/EditVehicle'
+import AddVehicle from '../components/AddVehicle/AddVehicle'
 
 import types from '../../../api/types'
 import drivers from '../../../api/drivers'
@@ -121,9 +121,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                     onChange={(e) => setSearch(e.target.value)}
                     sx={sx.search}
                 />
-                <Button variant="contained" color="primary" startIcon={<Add />}>
-                    <FormattedMessage id="app.addVehicle" />
-                </Button>
+                <AddVehicle />
             </Box>
             {Array.isArray(vehicles) && filteredVehicles.length > 0 && (
                 <Table

@@ -27,6 +27,7 @@
   "app.DeleteCreditCard": "Изтрий Кредитната Карта",
   "app.DeleteStartAddress": "Изтрий Краен Адрес",
   "app.DeleteVehicle": "Изтрий Превозното Средство",
+  "app.Deleting": "Изтриване на {name}",
   "app.Details": "Детайли",
   "app.Distance": "Дистанция",
   "app.Documents": "Документи",

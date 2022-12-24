@@ -67,7 +67,7 @@ const sx: Record<string, SxProps<Theme>> = {
     link: {
         color: 'text.primary',
     },
-    routesList: {
+    fixedHeight: {
         maxHeight: 350,
         overflowY: 'auto',
         marginTop: 2,

@@ -4,4 +4,6 @@ export type ConfirmProps = {
     onCancel: () => void
     onSubmit: () => void
     message?: string | ReactNode
+    type?: string
+    submit?: string | ReactNode
 }

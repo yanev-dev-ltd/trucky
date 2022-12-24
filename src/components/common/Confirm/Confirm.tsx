@@ -11,7 +11,14 @@ import { FormattedMessage } from 'react-intl'
 import sx from './styles/Confirm.sx'
 import { ConfirmProps } from './types'
 
-const Confirm = ({ isOpen, onCancel, onSubmit, message }: ConfirmProps) => {
+const Confirm = ({
+    isOpen,
+    onCancel,
+    onSubmit,
+    message,
+    type,
+    submit,
+}: ConfirmProps) => {
     return (
         <Dialog open={isOpen} onClose={onCancel}>
             <DialogTitle>
@@ -30,8 +37,12 @@ const Confirm = ({ isOpen, onCancel, onSubmit, message }: ConfirmProps) => {
             </DialogTitle>
             {message && <DialogContent>{message}</DialogContent>}
             <DialogActions sx={sx.dialog}>
-                <Button autoFocus onClick={onSubmit}>
-                    <FormattedMessage id="app.Submit" />
+                <Button
+                    autoFocus
+                    onClick={onSubmit}
+                    sx={type ? sx[type] : undefined}
+                >
+                    {submit || <FormattedMessage id="app.Submit" />}
                 </Button>
             </DialogActions>
         </Dialog>

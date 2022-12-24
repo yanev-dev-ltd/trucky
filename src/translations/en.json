@@ -27,6 +27,7 @@
   "app.DeleteCreditCard": "Delete Credit Card",
   "app.DeleteStartAddress": "Delete Start Address",
   "app.DeleteVehicle": "Delete Vehicle",
+  "app.Deleting": "Deleting {name}",
   "app.Details": "Details",
   "app.Distance": "Distance",
   "app.Documents": "Documents",

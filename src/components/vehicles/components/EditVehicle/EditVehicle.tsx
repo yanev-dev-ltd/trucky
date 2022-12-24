@@ -49,7 +49,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 // import NewServiceDialog from './NewServiceDialog'
 import LoadingButton from '../../../common/LoadingButton/LoadingButton'
 import { db, auth, storage } from '../../../../services/firebase'
-import { ref, update } from 'firebase/database'
+import { ref, update, remove } from 'firebase/database'
 import { ref as storageRef, deleteObject, getBlob } from 'firebase/storage'
 import sx from './styles/EditVehicle.sx'
 // import routes from '../../api/routes';
@@ -79,6 +79,8 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
     const [confirmDeleteFile, setConfirmDeleteFile] = useState<
         VehicleFile | undefined
     >()
+    const [confirmDeleteVehicle, setConfirmDeleteVehicle] =
+        useState<boolean>(false)
     const currentDriver = drivers.find((d) => d.id === vehicle?.driver)
     const vehicleId = vehicle?.key
     const locale = useMemo(() => {
@@ -150,7 +152,10 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
     )
 
     const deleteVehicle = useCallback(() => {
-        console.log('delete vehicle', vehicleId)
+        if (!vehicleId || !auth?.currentUser?.uid) return
+        remove(ref(db, 'vehicles/' + auth.currentUser.uid + '/' + vehicleId))
+        setConfirmDeleteVehicle(false)
+        router.push('/vehicles')
         // TODO: delete the vehicle and write a function for clearing the db and storage
     }, [vehicleId])
 
@@ -353,6 +358,11 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                             <FormattedMessage id="app.Type" />
                                         }
                                     >
+                                        {!editedVehicle?.type && (
+                                            <MenuItem value={0} disabled>
+                                                &#8212;
+                                            </MenuItem>
+                                        )}
                                         {types.map((t, i) => (
                                             <MenuItem key={i} value={t.id}>
                                                 {t.name}
@@ -769,7 +779,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                 </IconButton>
                             </Tooltip>
                         </Box>
-                        <List dense sx={sx.routesList}>
+                        <List dense sx={sx.fixedHeight}>
                             <ListItemButton>
                                 <ListItemText
                                     primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
@@ -859,7 +869,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                         <Typography>
                             <FormattedMessage id="app.Documents" />
                         </Typography>
-                        <List dense>
+                        <List dense sx={sx.fixedHeight}>
                             {vehicle?.files &&
                                 vehicle?.files.length > 0 &&
                                 vehicle?.files.map((uf, i) => (
@@ -872,14 +882,22 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         </ListItemIcon>
                                         <ListItemText
                                             primary={
-                                                <Typography
-                                                    style={{
-                                                        textDecoration:
-                                                            'underline',
-                                                    }}
-                                                >
-                                                    {uf.name}
-                                                </Typography>
+                                                uf.name &&
+                                                uf.name.length > 30 ? (
+                                                    <Tooltip title={uf.name}>
+                                                        <Typography
+                                                            sx={sx.textWrap}
+                                                        >
+                                                            {uf.name}
+                                                        </Typography>
+                                                    </Tooltip>
+                                                ) : (
+                                                    <Typography
+                                                        sx={sx.textWrap}
+                                                    >
+                                                        {uf.name}
+                                                    </Typography>
+                                                )
                                             }
                                             secondary={formatRelative(
                                                 new Date(uf.date),
@@ -918,6 +936,8 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     values={{ file: confirmDeleteFile?.name }}
                                 />
                             }
+                            type="warn"
+                            submit={<FormattedMessage id="app.Delete" />}
                         />
                         {(!vehicle?.files || vehicle?.files.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>
@@ -1020,13 +1040,26 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                     <Divider />
                     <LoadingButton
                         sx={sx.warn}
-                        onClick={deleteVehicle}
+                        onClick={() => setConfirmDeleteVehicle(true)}
                         startIcon={<Delete />}
                         color="secondary"
                         fullWidth
                     >
                         <FormattedMessage id="app.DeleteVehicle" />
                     </LoadingButton>
+                    <Confirm
+                        onCancel={() => setConfirmDeleteVehicle(false)}
+                        onSubmit={deleteVehicle}
+                        isOpen={confirmDeleteVehicle}
+                        message={
+                            <FormattedMessage
+                                id="app.Deleting"
+                                values={{ name: vehicle.name }}
+                            />
+                        }
+                        type="warn"
+                        submit={<FormattedMessage id="app.Delete" />}
+                    />
                 </Box>
             )}
         </Drawer>
