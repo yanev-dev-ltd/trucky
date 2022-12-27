@@ -1,14 +1,22 @@
 import { useMemo } from 'react'
-import { ThemeProvider, StyledEngineProvider, CssBaseline } from '@mui/material'
+import {
+    ThemeProvider,
+    StyledEngineProvider,
+    CssBaseline,
+    IconButton,
+    Box,
+    Typography,
+} from '@mui/material'
+import { Close } from '@mui/icons-material'
 import { theme } from '../../styles/theme'
 import messagesEn from '../../translations/en.json'
 import messagesBg from '../../translations/bg.json'
 import { IntlProvider, FormattedMessage } from 'react-intl'
 import { Offline, Online } from 'react-detect-offline'
-import { Box, Typography } from '@mui/material'
 import useSettings from '../../hooks/useSettings'
 import sx from './styles/AppUiProviders.sx'
 import { SnackbarProvider } from 'notistack'
+import SnackbarClose from './components/SnackbarClose/SnackbarClose'
 
 const AppUiProviders: React.FC<React.PropsWithChildren<unknown>> = ({
     children,
@@ -30,7 +38,13 @@ const AppUiProviders: React.FC<React.PropsWithChildren<unknown>> = ({
         >
             <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={theme(settings?.theme || 'dark')}>
-                    <SnackbarProvider maxSnack={5} autoHideDuration={5000}>
+                    <SnackbarProvider
+                        maxSnack={5}
+                        autoHideDuration={5000}
+                        action={(snackbarId) => (
+                            <SnackbarClose id={snackbarId} />
+                        )}
+                    >
                         <CssBaseline />
                         <Online>{children}</Online>
                         <Offline>
