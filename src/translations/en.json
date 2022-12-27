@@ -28,6 +28,8 @@
   "app.DeletedDocumentSuccess": "Document deleted",
   "app.DeleteStartAddress": "Delete Start Address",
   "app.DeleteVehicle": "Delete Vehicle",
+  "app.DeletedVehicleError": "Error deleting the vehicle",
+  "app.DeletedVehicleSuccess": "The vehicle was deleted",
   "app.Deleting": "Deleting {name}",
   "app.Details": "Details",
   "app.Distance": "Distance",

@@ -23,4 +23,5 @@ export type useEditVehicleResponse = {
     reset: () => void
     downloadFile: (f: VehicleFile) => void
     deleteUploadedFile: (f: VehicleFile) => void
+    deleteVehicle: () => void
 }

@@ -18,6 +18,17 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     search: {
         width: 300
+    },
+    scroll: {
+        '&::-webkit-scrollbar': {
+            width: '5px',
+        },
+        '&::-webkit-scrollbar-track': {
+            background: (theme) => theme.palette.background.default,
+        },
+        '&::-webkit-scrollbar-thumb': {
+            background: (theme) => theme.palette.text.secondary,
+        },
     }
 }
 

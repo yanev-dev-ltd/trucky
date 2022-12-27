@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Vehicle } from '../../../types'
 import { db, auth, storage } from '../../../../../services/firebase'
-import { ref, update } from 'firebase/database'
+import { ref, update, remove } from 'firebase/database'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
@@ -72,7 +72,23 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         [intl, vehicle]
     )
 
-    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteUploadedFile }
+    const deleteVehicle = useCallback(() => {
+        if (!vehicle?.key || !auth?.currentUser?.uid) return
+        try {
+            remove(ref(db, 'vehicles/' + auth.currentUser.uid + '/' + vehicle?.key))
+            enqueueSnackbar(intl.formatMessage({
+                id: 'app.DeletedVehicleSuccess',
+            }), { variant: 'success' })
+        } catch (error) {
+            enqueueSnackbar(intl.formatMessage({
+                id: 'app.DeletedVehicleError',
+            }), { variant: 'error' })
+        }
+        router.push('/vehicles')
+        // TODO: delete the vehicle and write a function for clearing the db and storage
+    }, [vehicle?.key])
+
+    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteUploadedFile, deleteVehicle }
 }
 
 export default useEditVehicle

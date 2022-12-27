@@ -28,6 +28,8 @@
   "app.DeletedDocumentSuccess": "Документът е изтрит.",
   "app.DeleteStartAddress": "Изтрий Краен Адрес",
   "app.DeleteVehicle": "Изтрий Превозното Средство",
+  "app.DeletedVehicleError": "Грешка при изтриването на превозното средство.",
+  "app.DeletedVehicleSuccess": "Превозното средство е изтрито",
   "app.Deleting": "Изтриване на {name}",
   "app.Details": "Детайли",
   "app.Distance": "Дистанция",

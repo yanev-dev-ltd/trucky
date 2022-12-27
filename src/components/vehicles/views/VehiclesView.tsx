@@ -118,7 +118,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 Header: <FormattedMessage id="app.Driver" />,
                 id: 'driver',
                 accessor: (v: Vehicle) =>
-                    drivers.find((d) => d.id === v.driver)?.name,
+                    drivers.find((d) => d.id === v.driver)?.name || '-',
             },
             {
                 Header: <FormattedMessage id="app.Route" />,
@@ -167,6 +167,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
             </Box>
             {Array.isArray(vehicles) && filteredVehicles.length > 0 && (
                 <Table
+                    stickyHeader
                     columns={columns}
                     data={filteredVehicles}
                     name="vehicles"

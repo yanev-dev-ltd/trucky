@@ -49,7 +49,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 // import NewServiceDialog from './NewServiceDialog'
 import LoadingButton from '../../../common/LoadingButton/LoadingButton'
 import { db, auth } from '../../../../services/firebase'
-import { ref, update, remove } from 'firebase/database'
+import { ref, update } from 'firebase/database'
 import sx from './styles/EditVehicle.sx'
 // import routes from '../../api/routes';
 import { serviceTypes } from '../../../../api/services'
@@ -72,6 +72,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
         reset,
         downloadFile,
         deleteUploadedFile,
+        deleteVehicle,
     } = useEditVehicle(vehicle)
     const { settings } = useSelector((state: RootState) => state.settings)
     // const [fuelRoute, setFuelRoute] = useState(routes[0]);
@@ -85,11 +86,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
     const [confirmDeleteVehicle, setConfirmDeleteVehicle] =
         useState<boolean>(false)
     const currentDriver = drivers.find((d) => d.id === vehicle?.driver)
-    const vehicleId = vehicle?.key
-    const vehiclesTypeKeys = Object.keys(VehicleTypes) as Array<
-        keyof typeof VehicleTypes
-    >
-    const fuelKeys = Object.keys(FuelTypes) as Array<keyof typeof FuelTypes>
+
     const locale = useMemo(() => {
         switch (settings?.locale) {
             case 'bg':
@@ -118,28 +115,28 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
 
     const saveService = useCallback(
         (s: Service) => {
-            if (!vehicleId || !auth?.currentUser?.uid) return
+            if (!vehicle?.key || !auth?.currentUser?.uid) return
             update(
-                ref(db, 'vehicles/' + auth.currentUser.uid + '/' + vehicleId),
+                ref(
+                    db,
+                    'vehicles/' + auth.currentUser.uid + '/' + vehicle?.key
+                ),
                 {
                     services: s,
                 }
             )
         },
-        [vehicleId]
+        [vehicle?.key]
     )
 
-    const deleteVehicle = useCallback(() => {
-        if (!vehicleId || !auth?.currentUser?.uid) return
-        remove(ref(db, 'vehicles/' + auth.currentUser.uid + '/' + vehicleId))
-        setConfirmDeleteVehicle(false)
-        router.push('/vehicles')
-        // TODO: delete the vehicle and write a function for clearing the db and storage
-    }, [vehicleId])
+    const vehiclesTypeKeys = Object.keys(VehicleTypes) as Array<
+        keyof typeof VehicleTypes
+    >
+    const fuelKeys = Object.keys(FuelTypes) as Array<keyof typeof FuelTypes>
 
     return (
         <Drawer
-            open={Boolean(vehicleId)}
+            open={Boolean(vehicle?.key)}
             anchor="right"
             onClose={() => router.push('/vehicles')}
         >
@@ -195,7 +192,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         sx={sx.edit}
                                         onClick={() => {
                                             router.push(
-                                                `/vehicles/${vehicleId}/name`
+                                                `/vehicles/${vehicle?.key}/name`
                                             )
                                             reset()
                                         }}
@@ -247,7 +244,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         onClick={() => {
                                             reset()
                                             router.push(
-                                                `/vehicles/${vehicleId}`
+                                                `/vehicles/${vehicle?.key}`
                                             )
                                         }}
                                     >
@@ -268,7 +265,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         sx={sx.edit}
                                         onClick={() => {
                                             router.push(
-                                                `/vehicles/${vehicleId}/type`
+                                                `/vehicles/${vehicle?.key}/type`
                                             )
                                             reset()
                                         }}
@@ -313,7 +310,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         onClick={() => {
                                             reset()
                                             router.push(
-                                                `/vehicles/${vehicleId}`
+                                                `/vehicles/${vehicle?.key}`
                                             )
                                         }}
                                     >
@@ -383,7 +380,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         sx={sx.edit}
                                         onClick={() => {
                                             router.push(
-                                                `/vehicles/${vehicleId}/fuel`
+                                                `/vehicles/${vehicle?.key}/fuel`
                                             )
                                             reset()
                                         }}
@@ -428,7 +425,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         onClick={() => {
                                             reset()
                                             router.push(
-                                                `/vehicles/${vehicleId}`
+                                                `/vehicles/${vehicle?.key}`
                                             )
                                         }}
                                     >
@@ -498,7 +495,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         sx={sx.edit}
                                         onClick={() => {
                                             router.push(
-                                                `/vehicles/${vehicleId}/units`
+                                                `/vehicles/${vehicle?.key}/units`
                                             )
                                             reset()
                                         }}
@@ -530,7 +527,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         onClick={() => {
                                             reset()
                                             router.push(
-                                                `/vehicles/${vehicleId}`
+                                                `/vehicles/${vehicle?.key}`
                                             )
                                         }}
                                     >
@@ -609,7 +606,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         sx={sx.edit}
                                         onClick={() => {
                                             router.push(
-                                                `/vehicles/${vehicleId}/mileage`
+                                                `/vehicles/${vehicle?.key}/mileage`
                                             )
                                             reset()
                                         }}
@@ -663,7 +660,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         onClick={() => {
                                             reset()
                                             router.push(
-                                                `/vehicles/${vehicleId}`
+                                                `/vehicles/${vehicle?.key}`
                                             )
                                         }}
                                     >
@@ -723,7 +720,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         sx={sx.edit}
                                         onClick={() => {
                                             router.push(
-                                                `/vehicles/${vehicleId}/driver`
+                                                `/vehicles/${vehicle?.key}/driver`
                                             )
                                             reset()
                                         }}
@@ -773,7 +770,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         onClick={() => {
                                             reset()
                                             router.push(
-                                                `/vehicles/${vehicleId}`
+                                                `/vehicles/${vehicle?.key}`
                                             )
                                         }}
                                     >
@@ -964,7 +961,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                 }
                                 dbpath={
                                     auth?.currentUser?.uid
-                                        ? `vehicles/${auth.currentUser.uid}/${vehicleId}`
+                                        ? `vehicles/${auth.currentUser.uid}/${vehicle?.key}`
                                         : undefined
                                 }
                                 currentFiles={vehicle?.files || []}
@@ -1185,7 +1182,10 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                     </LoadingButton>
                     <Confirm
                         onCancel={() => setConfirmDeleteVehicle(false)}
-                        onSubmit={deleteVehicle}
+                        onSubmit={() => {
+                            deleteVehicle()
+                            setConfirmDeleteVehicle(false)
+                        }}
                         isOpen={confirmDeleteVehicle}
                         message={
                             <FormattedMessage
