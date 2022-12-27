@@ -9,6 +9,7 @@ import {
 import { useIntl } from 'react-intl'
 import { v4 as uuid } from 'uuid'
 import { Files, UploadProps, UploadedFile } from '../types'
+import { useSnackbar } from 'notistack'
 
 const useUpload = ({filepath, dbpath, currentFiles}: UploadProps) => {
     const intl = useIntl()
@@ -16,6 +17,7 @@ const useUpload = ({filepath, dbpath, currentFiles}: UploadProps) => {
     const [uploadProgress, setUploadProgress] = useState<number[]>([])
     const [uploadError, setUploadError] = useState<string[]>([])
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
+    const { enqueueSnackbar } = useSnackbar()
     const handleAddFiles = useCallback( 
         (event: ChangeEvent<HTMLInputElement>) => {
             if (
@@ -103,7 +105,12 @@ const useUpload = ({filepath, dbpath, currentFiles}: UploadProps) => {
                     files: [...currentFiles, ...uploadedFiles.filter((uf) => uf.url !== 'error')],
                 }
             )
-            clearFiles()
+            const count = uploadedFiles.filter((uf) => uf.url !== 'error').length
+            const errors = uploadedFiles.filter((uf) => uf.url === 'error').length
+            enqueueSnackbar(intl.formatMessage({
+                id: count === 0 ? 'app.UploadedNoDocumentsSuccess' : count === 1 ? 'app.UploadedOneDocumentSuccess' : 'app.UploadedManyDocumentsSuccess',
+            }, { count }), { variant: 'success' })
+            if (errors === 0) clearFiles()
         }
     }, [uploadedFiles, files, currentFiles])
     const clearFiles = useCallback(() => {

@@ -97,6 +97,11 @@ const sx: Record<string, SxProps<Theme>> = {
         textOverflow: 'ellipsis',
         maxWidth: 440,
         overflow: 'hidden'
+    },
+    textWrapSmall: {
+        textOverflow: 'ellipsis',
+        maxWidth: 340,
+        overflow: 'hidden'
     }
 }
 

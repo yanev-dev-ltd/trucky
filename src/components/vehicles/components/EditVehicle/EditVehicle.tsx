@@ -48,28 +48,31 @@ import { FormattedMessage, useIntl } from 'react-intl'
 // import EditServiceDialog from './EditServiceDialog'
 // import NewServiceDialog from './NewServiceDialog'
 import LoadingButton from '../../../common/LoadingButton/LoadingButton'
-import { db, auth, storage } from '../../../../services/firebase'
+import { db, auth } from '../../../../services/firebase'
 import { ref, update, remove } from 'firebase/database'
-import { ref as storageRef, deleteObject, getBlob } from 'firebase/storage'
 import sx from './styles/EditVehicle.sx'
 // import routes from '../../api/routes';
 import { serviceTypes } from '../../../../api/services'
-import types from '../../../../api/types'
 import drivers from '../../../../api/drivers'
 import { EditVehicleProps } from './types'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../store/store'
-import { Service, VehicleFile } from '../../types'
+import { Service, VehicleFile, VehicleTypes, FuelTypes } from '../../types'
 import useEditVehicle from './hooks/useEditVehicle'
 import Upload from '../../../common/Upload/Upload'
 import Confirm from '../../../common/Confirm/Confirm'
-import { saveAs } from 'file-saver'
 
 const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
     const intl = useIntl()
     const router = useRouter()
-    const { saveVehicleField, editedVehicle, setEditedVehicle, reset } =
-        useEditVehicle(vehicle)
+    const {
+        saveVehicleField,
+        editedVehicle,
+        setEditedVehicle,
+        reset,
+        downloadFile,
+        deleteUploadedFile,
+    } = useEditVehicle(vehicle)
     const { settings } = useSelector((state: RootState) => state.settings)
     // const [fuelRoute, setFuelRoute] = useState(routes[0]);
     const [services, setServices] = useState(vehicle?.services || [])
@@ -83,6 +86,10 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
         useState<boolean>(false)
     const currentDriver = drivers.find((d) => d.id === vehicle?.driver)
     const vehicleId = vehicle?.key
+    const vehiclesTypeKeys = Object.keys(VehicleTypes) as Array<
+        keyof typeof VehicleTypes
+    >
+    const fuelKeys = Object.keys(FuelTypes) as Array<keyof typeof FuelTypes>
     const locale = useMemo(() => {
         switch (settings?.locale) {
             case 'bg':
@@ -108,35 +115,6 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
     const handleNewServiceClose = useCallback(() => {
         setNewServiceOpen(false)
     }, [])
-
-    const downloadFile = useCallback(async (f: VehicleFile) => {
-        saveAs(await getBlob(storageRef(storage, f.path)), f.name)
-    }, [])
-
-    const deleteUploadedFile = useCallback(
-        (f: VehicleFile) => {
-            if (!vehicleId || !auth?.currentUser?.uid || !vehicle?.files) return
-            const desertRef = storageRef(storage, f.path)
-            deleteObject(desertRef)
-                .then(() => {
-                    const files = vehicle?.files
-                        ? vehicle?.files.filter((uf) => uf.path !== f.path)
-                        : []
-                    update(
-                        ref(
-                            db,
-                            'vehicles/' +
-                                auth?.currentUser?.uid +
-                                '/' +
-                                vehicleId
-                        ),
-                        { files }
-                    )
-                })
-                .catch((error) => console.log(error))
-        },
-        [intl, vehicleId, vehicle]
-    )
 
     const saveService = useCallback(
         (s: Service) => {
@@ -302,11 +280,17 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     <FormattedMessage id="app.Type" />
                                 </Typography>
                                 <Typography variant="h6">
-                                    {
-                                        types.find(
-                                            (t) => t.id === vehicle?.type
-                                        )?.name
-                                    }
+                                    {vehicle?.type ? (
+                                        <FormattedMessage
+                                            id={`app.VehicleType.${
+                                                VehicleTypes[
+                                                    vehicle?.type as keyof typeof VehicleTypes
+                                                ]
+                                            }`}
+                                        />
+                                    ) : (
+                                        '-'
+                                    )}
                                 </Typography>
                             </>
                         )}
@@ -347,11 +331,12 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     <Select
                                         labelId="type-label"
                                         id="type"
-                                        value={editedVehicle?.type || 0}
+                                        value={editedVehicle?.type || ''}
                                         onChange={(event) =>
                                             setEditedVehicle({
                                                 ...vehicle,
-                                                type: +event.target.value,
+                                                type: event.target
+                                                    .value as keyof VehicleTypes,
                                             })
                                         }
                                         label={
@@ -359,13 +344,17 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         }
                                     >
                                         {!editedVehicle?.type && (
-                                            <MenuItem value={0} disabled>
+                                            <MenuItem value={''} disabled>
                                                 &#8212;
                                             </MenuItem>
                                         )}
-                                        {types.map((t, i) => (
-                                            <MenuItem key={i} value={t.id}>
-                                                {t.name}
+                                        {vehiclesTypeKeys.map((key, i) => (
+                                            <MenuItem key={i} value={key}>
+                                                {
+                                                    <FormattedMessage
+                                                        id={`app.VehicleType.${VehicleTypes[key]}`}
+                                                    />
+                                                }
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -375,6 +364,121 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     disabled={
                                         !editedVehicle?.type ||
                                         editedVehicle.type === vehicle.type
+                                    }
+                                    type="submit"
+                                >
+                                    <FormattedMessage id="app.Save" />
+                                </Button>
+                            </form>
+                        )}
+                    </Paper>
+                    <Paper sx={sx.paper}>
+                        {edit !== 'fuel' && (
+                            <>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/vehicles/${vehicleId}/fuel`
+                                            )
+                                            reset()
+                                        }}
+                                    >
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip>
+                                <Typography>
+                                    <FormattedMessage id="app.Fuel" />
+                                </Typography>
+                                <Typography variant="h6">
+                                    {vehicle?.fuel ? (
+                                        <FormattedMessage
+                                            id={`app.FuelType.${
+                                                FuelTypes[
+                                                    vehicle?.fuel as keyof typeof FuelTypes
+                                                ]
+                                            }`}
+                                        />
+                                    ) : (
+                                        '-'
+                                    )}
+                                </Typography>
+                            </>
+                        )}
+                        {edit === 'fuel' && (
+                            <form
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                    saveVehicleField('fuel')
+                                }}
+                            >
+                                <Typography>
+                                    <FormattedMessage id="app.Fuel" />
+                                </Typography>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicleId}`
+                                            )
+                                        }}
+                                    >
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
+                                <FormControl
+                                    fullWidth
+                                    variant="outlined"
+                                    sx={sx.select}
+                                >
+                                    <InputLabel id="type-label">
+                                        <FormattedMessage id="app.Fuel" />
+                                    </InputLabel>
+                                    <Select
+                                        labelId="type-label"
+                                        id="type"
+                                        value={editedVehicle?.fuel || ''}
+                                        onChange={(event) =>
+                                            setEditedVehicle({
+                                                ...vehicle,
+                                                fuel: event.target
+                                                    .value as keyof FuelTypes,
+                                            })
+                                        }
+                                        label={
+                                            <FormattedMessage id="app.Fuel" />
+                                        }
+                                    >
+                                        {!editedVehicle?.fuel && (
+                                            <MenuItem value={''} disabled>
+                                                &#8212;
+                                            </MenuItem>
+                                        )}
+                                        {fuelKeys.map((key, i) => (
+                                            <MenuItem key={i} value={key}>
+                                                {
+                                                    <FormattedMessage
+                                                        id={`app.FuelType.${FuelTypes[key]}`}
+                                                    />
+                                                }
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <Button
+                                    color="primary"
+                                    disabled={
+                                        !editedVehicle?.fuel ||
+                                        editedVehicle.fuel === vehicle.fuel
                                     }
                                     type="submit"
                                 >
@@ -888,7 +992,12 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                                         <Typography
                                                             sx={sx.textWrap}
                                                         >
-                                                            {uf.name}
+                                                            {uf.name.replaceAll(
+                                                                ' ',
+                                                                String.fromCharCode(
+                                                                    160
+                                                                )
+                                                            )}
                                                         </Typography>
                                                     </Tooltip>
                                                 ) : (
@@ -925,15 +1034,42 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                         </List>
                         <Confirm
                             onCancel={() => setConfirmDeleteFile(undefined)}
-                            onSubmit={() =>
+                            onSubmit={() => {
                                 confirmDeleteFile &&
-                                deleteUploadedFile(confirmDeleteFile)
-                            }
+                                    deleteUploadedFile(confirmDeleteFile)
+                                setConfirmDeleteFile(undefined)
+                            }}
                             isOpen={Boolean(confirmDeleteFile)}
                             message={
                                 <FormattedMessage
                                     id="app.DeleteFileConfirm"
-                                    values={{ file: confirmDeleteFile?.name }}
+                                    values={{
+                                        file:
+                                            confirmDeleteFile &&
+                                            confirmDeleteFile?.name.length >
+                                                20 ? (
+                                                <Tooltip
+                                                    title={
+                                                        confirmDeleteFile?.name
+                                                    }
+                                                >
+                                                    <Typography
+                                                        sx={sx.textWrapSmall}
+                                                    >
+                                                        {confirmDeleteFile?.name.replaceAll(
+                                                            ' ',
+                                                            String.fromCharCode(
+                                                                160
+                                                            )
+                                                        )}
+                                                    </Typography>
+                                                </Tooltip>
+                                            ) : (
+                                                <Typography sx={sx.textWrap}>
+                                                    {confirmDeleteFile?.name}
+                                                </Typography>
+                                            ),
+                                    }}
                                 />
                             }
                             type="warn"

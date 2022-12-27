@@ -16,17 +16,18 @@ import {
 import EditVehicle from '../components/EditVehicle/EditVehicle'
 import AddVehicle from '../components/AddVehicle/AddVehicle'
 
-import types from '../../../api/types'
 import drivers from '../../../api/drivers'
 
 import sx from '../styles/Vehicles.sx'
-import { Vehicle, VehicleProps } from '../types'
+import { Vehicle, VehicleProps, VehicleTypes, FuelTypes } from '../types'
+import { useIntl } from 'react-intl'
 
 export const VehiclesView: React.FC<VehicleProps> = ({
     vehicles,
     vehicleId,
     edit,
 }): JSX.Element => {
+    const intl = useIntl()
     const [search, setSearch] = useState<string | boolean>(false)
     const [filteredVehicles, setFilteredVehicles] =
         useState<Vehicle[]>(vehicles)
@@ -42,7 +43,28 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 {
                     name: 'type',
                     getFn: (t) =>
-                        types.find((type) => type.id === t.type)?.name || '',
+                        t.type
+                            ? intl.formatMessage({
+                                  id: `app.VehicleType.${
+                                      VehicleTypes[
+                                          t.type as keyof typeof VehicleTypes
+                                      ]
+                                  }`,
+                              })
+                            : '-',
+                },
+                {
+                    name: 'fuel',
+                    getFn: (t) =>
+                        t.fuel
+                            ? intl.formatMessage({
+                                  id: `app.FuelType.${
+                                      FuelTypes[
+                                          t.fuel as keyof typeof FuelTypes
+                                      ]
+                                  }`,
+                              })
+                            : '-',
                 },
             ],
             shouldSort: true,
@@ -70,7 +92,27 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 Header: <FormattedMessage id="app.Type" />,
                 id: 'type',
                 accessor: (v: Vehicle) =>
-                    types.find((t) => t.id === v.type)?.name,
+                    v.type
+                        ? intl.formatMessage({
+                              id: `app.VehicleType.${
+                                  VehicleTypes[
+                                      v.type as keyof typeof VehicleTypes
+                                  ]
+                              }`,
+                          })
+                        : '-',
+            },
+            {
+                Header: <FormattedMessage id="app.Fuel" />,
+                id: 'fuel',
+                accessor: (v: Vehicle) =>
+                    v.fuel
+                        ? intl.formatMessage({
+                              id: `app.FuelType.${
+                                  FuelTypes[v.fuel as keyof typeof FuelTypes]
+                              }`,
+                          })
+                        : '-',
             },
             {
                 Header: <FormattedMessage id="app.Driver" />,

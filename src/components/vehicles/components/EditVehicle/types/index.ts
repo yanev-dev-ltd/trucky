@@ -1,4 +1,4 @@
-import { Vehicle } from '../../../types'
+import { Vehicle, VehicleFile } from '../../../types'
 export type EditVehicleProps = {
     vehicle: Vehicle | undefined
     edit: string | undefined
@@ -15,3 +15,12 @@ export type UploadProgress = {
     path: string
     progress: number
 }[]
+
+export type useEditVehicleResponse = {
+    saveVehicleField: (field: keyof Vehicle) => void
+    editedVehicle: Vehicle | undefined
+    setEditedVehicle: (vehicle: Vehicle | undefined) => void
+    reset: () => void
+    downloadFile: (f: VehicleFile) => void
+    deleteUploadedFile: (f: VehicleFile) => void
+}
