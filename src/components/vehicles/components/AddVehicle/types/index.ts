@@ -1,3 +1,4 @@
+import { MutableRefObject } from 'react'
 export type useAddVehicleProps = {
     open: boolean
     handleClose: () => void

@@ -9,6 +9,7 @@ const sx: Record<string, SxProps<Theme>> = {
         flex: 1,
         height: 'calc(100vh - 54px)',
         overflow: 'auto',
+        position: 'relative',
         '&::-webkit-scrollbar': {
             width: '5px',
         },

@@ -29,6 +29,7 @@ import {
     FormControlLabel,
     FormLabel,
     Tooltip,
+    Autocomplete,
 } from '@mui/material'
 import {
     Close,
@@ -322,39 +323,54 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     variant="outlined"
                                     sx={sx.select}
                                 >
-                                    <InputLabel id="type-label">
-                                        <FormattedMessage id="app.Type" />
-                                    </InputLabel>
-                                    <Select
-                                        labelId="type-label"
+                                    <Autocomplete
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label={
+                                                    <FormattedMessage id="app.Type" />
+                                                }
+                                            />
+                                        )}
                                         id="type"
-                                        value={editedVehicle?.type || ''}
-                                        onChange={(event) =>
+                                        disablePortal
+                                        value={
+                                            (editedVehicle?.type as keyof typeof VehicleTypes) ||
+                                            '-'
+                                        }
+                                        onChange={(
+                                            event: any,
+                                            newValue: string | null
+                                        ) =>
                                             setEditedVehicle({
                                                 ...vehicle,
-                                                type: event.target
-                                                    .value as keyof VehicleTypes,
+                                                type: newValue as keyof VehicleTypes,
                                             })
                                         }
-                                        label={
-                                            <FormattedMessage id="app.Type" />
+                                        getOptionLabel={(option) =>
+                                            intl.formatMessage({
+                                                id: `app.VehicleType.${
+                                                    VehicleTypes[
+                                                        option as keyof typeof VehicleTypes
+                                                    ]
+                                                }`,
+                                            })
                                         }
-                                    >
-                                        {!editedVehicle?.type && (
-                                            <MenuItem value={''} disabled>
-                                                &#8212;
-                                            </MenuItem>
-                                        )}
-                                        {vehiclesTypeKeys.map((key, i) => (
-                                            <MenuItem key={i} value={key}>
-                                                {
-                                                    <FormattedMessage
-                                                        id={`app.VehicleType.${VehicleTypes[key]}`}
-                                                    />
-                                                }
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
+                                        options={
+                                            !editedVehicle?.type
+                                                ? [
+                                                      '-',
+                                                      ...Object.keys(
+                                                          VehicleTypes
+                                                      ),
+                                                  ]
+                                                : Object.keys(VehicleTypes)
+                                        }
+                                        getOptionDisabled={(option) =>
+                                            option === '-'
+                                        }
+                                        disableClearable
+                                    />
                                 </FormControl>
                                 <Button
                                     color="primary"

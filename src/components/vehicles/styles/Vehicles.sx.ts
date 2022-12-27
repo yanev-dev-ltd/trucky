@@ -8,7 +8,8 @@ const sx: Record<string, SxProps<Theme>> = {
         padding: 2,
         display: 'flex',
         justifyContent: 'space-between',
-        gap: 2
+        alignItems: 'flex-start',
+        gap: 2,
     },
     loading: {
         display: 'flex',
@@ -19,17 +20,6 @@ const sx: Record<string, SxProps<Theme>> = {
     search: {
         width: 300
     },
-    scroll: {
-        '&::-webkit-scrollbar': {
-            width: '5px',
-        },
-        '&::-webkit-scrollbar-track': {
-            background: (theme) => theme.palette.background.default,
-        },
-        '&::-webkit-scrollbar-thumb': {
-            background: (theme) => theme.palette.text.secondary,
-        },
-    }
 }
 
 export default sx

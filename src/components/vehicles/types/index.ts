@@ -47,7 +47,10 @@ export enum VehicleTypes {
     CAR = 'Car',
     CARAVAN = 'Caravan',
     CEMENT_MIXER = 'CementMixer',
+    CRANE = 'Crane',
     DUMP_TRUCK = 'DumpTruck',
+    EXCAVATOR = 'Excavator',
+    FORKLIFT = 'Forklift',
     LIGHT_DUTY_TRUCK = 'LightDutyTruck',
     PICKUP_TRUCK = 'PickupTruck',
     ROAD_TRACTOR = 'RoadTractor',
@@ -65,5 +68,7 @@ export enum FuelTypes {
     METHANOL = 'Methanol',
     METHANE = 'Methane',
     KEROSINE = 'Kerosine',
+    HYDROGEN = 'Hydrogen',
+    HYBRID = 'Hybrid',
     ELECTRIC = 'Electric'
 }

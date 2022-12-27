@@ -6,6 +6,7 @@ import {
     Paper,
     IconButton,
     Button,
+    Tooltip,
 } from '@mui/material'
 import { Close, Add } from '@mui/icons-material'
 import LoadingButton from '../../../common/LoadingButton/LoadingButton'
@@ -26,14 +27,17 @@ const AddVehicle = () => {
 
     return (
         <>
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={<Add />}
-                onClick={handleAddVehicle}
-            >
-                <FormattedMessage id="app.addVehicle" />
-            </Button>
+            <Tooltip title="ctrl + N">
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<Add />}
+                    onClick={handleAddVehicle}
+                    style={{ marginLeft: 'auto' }}
+                >
+                    <FormattedMessage id="app.addVehicle" />
+                </Button>
+            </Tooltip>
             <Modal open={open}>
                 <Box sx={sx.wrap}>
                     <Paper sx={sx.modal}>

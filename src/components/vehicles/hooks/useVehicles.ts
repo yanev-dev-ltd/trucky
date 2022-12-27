@@ -11,7 +11,6 @@ const useVehicles =  ({ vehicleId, edit }:useVehicleProps): VehicleProps => {
     const vehicles = useSelector((state: RootState) => state.vehicles)
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.auth.user)
-    const [newVehicle, setNewVehicle] = useState<string | undefined>()
     
     useEffect(() => {
         if (user === 'loading' || user === 'anonymous') {

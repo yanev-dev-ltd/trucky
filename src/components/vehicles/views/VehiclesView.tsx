@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Table from '../../common/Table/Table'
 import { FormatListBulleted } from '@mui/icons-material'
@@ -29,6 +29,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
 }): JSX.Element => {
     const intl = useIntl()
     const [search, setSearch] = useState<string | boolean>(false)
+    const ref = useRef<HTMLInputElement | null>(null)
     const [filteredVehicles, setFilteredVehicles] =
         useState<Vehicle[]>(vehicles)
     useEffect(() => {
@@ -143,6 +144,17 @@ export const VehiclesView: React.FC<VehicleProps> = ({
         []
     )
 
+    useEffect(() => {
+        function handleKeyPress(event: KeyboardEvent) {
+            if (event.key === 's' && event.ctrlKey) {
+                event.preventDefault()
+                ref.current?.focus()
+            }
+        }
+        document.addEventListener('keydown', handleKeyPress)
+        return () => document.removeEventListener('keydown', handleKeyPress)
+    }, [])
+
     // TODO : end day of payment
 
     if (vehicles?.[0]?.key === 'loading') {
@@ -156,13 +168,16 @@ export const VehiclesView: React.FC<VehicleProps> = ({
     return (
         <Box>
             <Box sx={sx.header}>
-                <TextField
-                    variant="outlined"
-                    label={<FormattedMessage id="app.Search" />}
-                    size="small"
-                    onChange={(e) => setSearch(e.target.value)}
-                    sx={sx.search}
-                />
+                <Tooltip title="ctrl + S">
+                    <TextField
+                        variant="outlined"
+                        label={<FormattedMessage id="app.Search" />}
+                        size="small"
+                        onChange={(e) => setSearch(e.target.value)}
+                        sx={sx.search}
+                        inputRef={ref}
+                    />
+                </Tooltip>
                 <AddVehicle />
             </Box>
             {Array.isArray(vehicles) && filteredVehicles.length > 0 && (

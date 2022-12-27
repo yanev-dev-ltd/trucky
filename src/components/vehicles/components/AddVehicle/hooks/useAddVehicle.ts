@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback, useEffect, useRef, MutableRefObject } from 'react'
 import { db, auth } from '../../../../../services/firebase'
 import { ref, update, push } from 'firebase/database'
 import { useRouter } from 'next/router'
@@ -10,20 +10,20 @@ const useAddVehicle = (): useAddVehicleProps => {
     const [open, setOpen] = useState<boolean>(false)
     const [newVehicleName, setNewVehicleName] = useState<string | undefined>()
     const router = useRouter()
-    const handleAddVehicle = () => {
+    const handleAddVehicle = useCallback(() => {
         if (!auth.currentUser?.uid) return
         const postVehicleRef = ref(db, 'vehicles/' + auth.currentUser.uid)
         const newVehicleRef = push(postVehicleRef)
         setNewVehicleId(newVehicleRef?.key)
         setOpen(true)
-    }
+    },[auth.currentUser?.uid])
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setNewVehicleId(null)
         setOpen(false)
         setNewVehicleLoading(false)
         setNewVehicleName(undefined)
-    }
+    },[])
 
     const addVehicle = () => {
         if (!auth.currentUser?.uid || !newVehicleId) return
@@ -37,6 +37,17 @@ const useAddVehicle = (): useAddVehicleProps => {
             console.log(error)
         }
     }
+
+    useEffect(() => {
+        function handleKeyPress(event: KeyboardEvent) {
+            if (event.key === 'n' && event.ctrlKey) {
+                event.preventDefault()
+                handleAddVehicle()
+            }
+        }
+        document.addEventListener('keydown',handleKeyPress);
+        return () => document.removeEventListener("keydown", handleKeyPress)
+    }, [])
 
     return {
         open,
