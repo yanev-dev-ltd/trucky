@@ -230,7 +230,8 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     color="primary"
                                     type="submit"
                                     disabled={
-                                        vehicle.name === editedVehicle?.name
+                                        vehicle.name === editedVehicle?.name ||
+                                        !editedVehicle?.name
                                     }
                                 >
                                     <FormattedMessage id="app.Save" />
@@ -645,7 +646,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     </Tooltip>
                                 ) : (
                                     <Typography variant="h6" sx={sx.textWrap}>
-                                        {vehicle?.mileage}
+                                        {vehicle?.mileage || '-'}
                                     </Typography>
                                 )}
                                 <Typography>
@@ -759,7 +760,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     </Tooltip>
                                 ) : (
                                     <Typography variant="h6" sx={sx.textWrap}>
-                                        {currentDriver?.name}
+                                        {currentDriver?.name || '-'}
                                     </Typography>
                                 )}
                                 <Typography variant="caption" sx={sx.textWrap}>
