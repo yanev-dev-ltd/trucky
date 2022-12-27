@@ -40,4 +40,18 @@ export const theme = (mode: PaletteMode = PaletteMode.Light) => createTheme({
 			dark: red[700]
 		}
     },
+	components: {
+		MuiAutocomplete: {
+			styleOverrides: {
+				listbox: {
+					'&::-webkit-scrollbar': {
+						width: '5px',
+					},
+					'&::-webkit-scrollbar-thumb': {
+						background: '#999',
+					},
+				}
+			}
+		}
+	}
   })
