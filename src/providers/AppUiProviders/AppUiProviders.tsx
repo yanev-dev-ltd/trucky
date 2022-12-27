@@ -23,7 +23,11 @@ const AppUiProviders: React.FC<React.PropsWithChildren<unknown>> = ({
         }
     }, [settings])
     return (
-        <IntlProvider locale={settings?.locale || 'en'} messages={messages}>
+        <IntlProvider
+            locale={settings?.locale || 'en'}
+            key={settings?.locale}
+            messages={messages}
+        >
             <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={theme(settings?.theme || 'dark')}>
                     <SnackbarProvider maxSnack={5} autoHideDuration={5000}>
