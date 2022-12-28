@@ -12,6 +12,7 @@ const sx: Record<string, SxProps<Theme>> = {
         position: 'relative',
         '&::-webkit-scrollbar': {
             width: '5px',
+            height: '5px',
         },
         '&::-webkit-scrollbar-track': {
             background: (theme) => theme.palette.background.default,

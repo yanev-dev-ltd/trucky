@@ -88,8 +88,9 @@ export const VehiclesView: React.FC<VehicleProps> = ({
             {
                 Header: <FormattedMessage id="app.Name" />,
                 id: 'name',
-                accessor: (v: Vehicle) => <Overflow text={v.name || '-'} />,
-                maxWidth: 300,
+                accessor: (v: Vehicle) =>
+                    v.name ? <Overflow text={v.name} /> : '-',
+                maxWidth: 240,
             },
             {
                 Header: <FormattedMessage id="app.Type" />,
@@ -106,7 +107,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                             })}
                         />
                     ) : (
-                        <Overflow text={'-'} />
+                        '-'
                     ),
             },
             {
@@ -122,26 +123,26 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                             })}
                         />
                     ) : (
-                        <Overflow text={'-'} />
+                        '-'
                     ),
             },
             {
                 Header: <FormattedMessage id="app.Driver" />,
                 id: 'driver',
-                accessor: (v: Vehicle) => (
-                    <Overflow
-                        text={
-                            drivers.find((d) => d.id === v.driver)?.name || '-'
-                        }
-                    />
-                ),
+                accessor: (v: Vehicle) => {
+                    const driverName = drivers.find(
+                        (d) => d.id === v.driver
+                    )?.name
+                    return driverName ? <Overflow text={driverName} /> : '-'
+                },
                 maxWidth: 160,
             },
             {
                 Header: <FormattedMessage id="app.Route" />,
                 id: 'route',
-                accessor: (v: Vehicle) => <Overflow text={v.route || '-'} />,
-                maxWidth: 300,
+                accessor: (v: Vehicle) =>
+                    v.route ? <Overflow text={v.route} /> : '-',
+                maxWidth: 240,
             },
             {
                 Header: <FormattedMessage id="app.Details" />,
