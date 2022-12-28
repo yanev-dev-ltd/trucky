@@ -137,7 +137,14 @@ export function Table<T extends Record<string, unknown>>(
                             <TableRow {...row.getRowProps()}>
                                 {row.cells.map((cell, indx) => {
                                     return (
-                                        <TableCell {...cell.getCellProps()}>
+                                        <TableCell
+                                            {...cell.getCellProps({
+                                                style: {
+                                                    maxWidth:
+                                                        cell.column.maxWidth,
+                                                },
+                                            })}
+                                        >
                                             {cell.render('Cell')}
                                         </TableCell>
                                     )

@@ -6,7 +6,7 @@ const drivers = [
     },
     {
       id: 'two',
-      name: 'Georgi Georgiev',
+      name: 'Georgi GeorgievGeorgi GeorgievGeorgi GeorgievGeorgi GeorgievGeorgi GeorgievGeorgi Georgiev',
       phone: '+359 893 93 93 93'
     },
     {

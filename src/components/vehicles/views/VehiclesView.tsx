@@ -21,6 +21,7 @@ import drivers from '../../../api/drivers'
 import sx from '../styles/Vehicles.sx'
 import { Vehicle, VehicleProps, VehicleTypes, FuelTypes } from '../types'
 import { useIntl } from 'react-intl'
+import Overflow from '../../common/Overflow/Overflow'
 
 export const VehiclesView: React.FC<VehicleProps> = ({
     vehicles,
@@ -87,44 +88,60 @@ export const VehiclesView: React.FC<VehicleProps> = ({
             {
                 Header: <FormattedMessage id="app.Name" />,
                 id: 'name',
-                accessor: (v: Vehicle) => v.name,
+                accessor: (v: Vehicle) => <Overflow text={v.name || '-'} />,
+                maxWidth: 300,
             },
             {
                 Header: <FormattedMessage id="app.Type" />,
                 id: 'type',
                 accessor: (v: Vehicle) =>
-                    v.type
-                        ? intl.formatMessage({
-                              id: `app.VehicleType.${
-                                  VehicleTypes[
-                                      v.type as keyof typeof VehicleTypes
-                                  ]
-                              }`,
-                          })
-                        : '-',
+                    v.type ? (
+                        <Overflow
+                            text={intl.formatMessage({
+                                id: `app.VehicleType.${
+                                    VehicleTypes[
+                                        v.type as keyof typeof VehicleTypes
+                                    ]
+                                }`,
+                            })}
+                        />
+                    ) : (
+                        <Overflow text={'-'} />
+                    ),
             },
             {
                 Header: <FormattedMessage id="app.Fuel" />,
                 id: 'fuel',
                 accessor: (v: Vehicle) =>
-                    v.fuel
-                        ? intl.formatMessage({
-                              id: `app.FuelType.${
-                                  FuelTypes[v.fuel as keyof typeof FuelTypes]
-                              }`,
-                          })
-                        : '-',
+                    v.fuel ? (
+                        <Overflow
+                            text={intl.formatMessage({
+                                id: `app.FuelType.${
+                                    FuelTypes[v.fuel as keyof typeof FuelTypes]
+                                }`,
+                            })}
+                        />
+                    ) : (
+                        <Overflow text={'-'} />
+                    ),
             },
             {
                 Header: <FormattedMessage id="app.Driver" />,
                 id: 'driver',
-                accessor: (v: Vehicle) =>
-                    drivers.find((d) => d.id === v.driver)?.name || '-',
+                accessor: (v: Vehicle) => (
+                    <Overflow
+                        text={
+                            drivers.find((d) => d.id === v.driver)?.name || '-'
+                        }
+                    />
+                ),
+                maxWidth: 160,
             },
             {
                 Header: <FormattedMessage id="app.Route" />,
                 id: 'route',
-                accessor: (v: Vehicle) => v.route || '-',
+                accessor: (v: Vehicle) => <Overflow text={v.route || '-'} />,
+                maxWidth: 300,
             },
             {
                 Header: <FormattedMessage id="app.Details" />,
@@ -141,7 +158,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 ),
             },
         ],
-        []
+        [vehicles]
     )
 
     useEffect(() => {

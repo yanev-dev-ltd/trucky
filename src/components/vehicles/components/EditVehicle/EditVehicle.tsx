@@ -62,6 +62,7 @@ import { Service, VehicleFile, VehicleTypes, FuelTypes } from '../../types'
 import useEditVehicle from './hooks/useEditVehicle'
 import Upload from '../../../common/Upload/Upload'
 import Confirm from '../../../common/Confirm/Confirm'
+import Overflow from '../../../common/Overflow/Overflow'
 
 const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
     const intl = useIntl()
@@ -171,20 +172,10 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                 <Typography>
                                     <FormattedMessage id="app.Name" />
                                 </Typography>
-                                {vehicle?.name && vehicle.name.length > 40 ? (
-                                    <Tooltip title={vehicle.name}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={sx.textWrap}
-                                        >
-                                            {vehicle.name}
-                                        </Typography>
-                                    </Tooltip>
-                                ) : (
-                                    <Typography variant="h6" sx={sx.textWrap}>
-                                        {vehicle.name}
-                                    </Typography>
-                                )}
+                                <Overflow
+                                    text={vehicle?.name || '-'}
+                                    variant="h6"
+                                />
                                 <Tooltip
                                     title={<FormattedMessage id="app.Edit" />}
                                 >
@@ -634,21 +625,10 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                 <Typography sx={sx.textWrap}>
                                     <FormattedMessage id="app.Mileage" />
                                 </Typography>
-                                {vehicle?.mileage &&
-                                vehicle?.mileage.toString().length > 40 ? (
-                                    <Tooltip title={vehicle?.mileage}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={sx.textWrap}
-                                        >
-                                            {vehicle?.mileage}
-                                        </Typography>
-                                    </Tooltip>
-                                ) : (
-                                    <Typography variant="h6" sx={sx.textWrap}>
-                                        {vehicle?.mileage || '-'}
-                                    </Typography>
-                                )}
+                                <Overflow
+                                    text={vehicle?.mileage || '-'}
+                                    variant="h6"
+                                />
                                 <Typography>
                                     {vehicle.units === 'km' ? (
                                         <FormattedMessage id="app.Km" />
@@ -748,21 +728,10 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                 <Typography>
                                     <FormattedMessage id="app.Driver" />
                                 </Typography>
-                                {currentDriver?.name &&
-                                currentDriver?.name.length > 40 ? (
-                                    <Tooltip title={currentDriver?.name}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={sx.textWrap}
-                                        >
-                                            {currentDriver.name}
-                                        </Typography>
-                                    </Tooltip>
-                                ) : (
-                                    <Typography variant="h6" sx={sx.textWrap}>
-                                        {currentDriver?.name || '-'}
-                                    </Typography>
-                                )}
+                                <Overflow
+                                    text={currentDriver?.name || '-'}
+                                    variant="h6"
+                                />
                                 <Typography variant="caption" sx={sx.textWrap}>
                                     {currentDriver?.phone}
                                 </Typography>
@@ -1000,27 +969,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         </ListItemIcon>
                                         <ListItemText
                                             primary={
-                                                uf.name &&
-                                                uf.name.length > 30 ? (
-                                                    <Tooltip title={uf.name}>
-                                                        <Typography
-                                                            sx={sx.textWrap}
-                                                        >
-                                                            {uf.name.replaceAll(
-                                                                ' ',
-                                                                String.fromCharCode(
-                                                                    160
-                                                                )
-                                                            )}
-                                                        </Typography>
-                                                    </Tooltip>
-                                                ) : (
-                                                    <Typography
-                                                        sx={sx.textWrap}
-                                                    >
-                                                        {uf.name}
-                                                    </Typography>
-                                                )
+                                                <Overflow text={uf.name} />
                                             }
                                             secondary={formatRelative(
                                                 new Date(uf.date),
