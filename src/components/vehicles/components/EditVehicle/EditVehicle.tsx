@@ -667,14 +667,18 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         inputProps: {
                                             max: 999999999,
                                         },
+                                        endAdornment: (
+                                            <FormattedMessage
+                                                id={
+                                                    units === 'km'
+                                                        ? 'app.Km'
+                                                        : units === 'm'
+                                                        ? 'app.Mi'
+                                                        : 'app.Hrs'
+                                                }
+                                            />
+                                        ),
                                     }}
-                                    helperText={
-                                        units === 'km' ? (
-                                            <FormattedMessage id="app.Km" />
-                                        ) : (
-                                            <FormattedMessage id="app.Miles" />
-                                        )
-                                    }
                                 />
                                 <Button
                                     color="primary"
