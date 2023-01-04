@@ -15,7 +15,7 @@
     "@mui/icons-material": "^5.10.16",
     "@mui/material": "^5.10.16",
     "@mui/styles": "^5.10.16",
-    "@mui/x-date-pickers": "^5.0.9",
+    "@mui/x-date-pickers": "^5.0.12",
     "@reduxjs/toolkit": "^1.9.1",
     "@types/file-saver": "^2.0.5",
     "@types/react-detect-offline": "^2.4.1",

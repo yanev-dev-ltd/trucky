@@ -23,7 +23,6 @@ import {
     TableRow,
     Divider,
     TextField,
-    ListItemSecondaryAction,
     Radio,
     RadioGroup,
     FormControlLabel,
@@ -40,6 +39,7 @@ import {
     AddCircle,
     Visibility,
     Delete,
+    NotificationsActive,
 } from '@mui/icons-material'
 import { format, formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
@@ -49,20 +49,20 @@ import { FormattedMessage, useIntl } from 'react-intl'
 // import EditServiceDialog from './EditServiceDialog'
 // import NewServiceDialog from './NewServiceDialog'
 import LoadingButton from '../../../common/LoadingButton/LoadingButton'
-import { db, auth } from '../../../../services/firebase'
-import { ref, update } from 'firebase/database'
+import { auth } from '../../../../services/firebase'
 import sx from './styles/EditVehicle.sx'
 // import routes from '../../api/routes';
-import { serviceTypes } from '../../../../api/services'
 import drivers from '../../../../api/drivers'
 import { EditVehicleProps } from './types'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../store/store'
-import { Service, VehicleFile, VehicleTypes, FuelTypes } from '../../types'
+import { VehicleFile, VehicleTypes, FuelTypes, Service } from '../../types'
 import useEditVehicle from './hooks/useEditVehicle'
 import Upload from '../../../common/Upload/Upload'
 import Confirm from '../../../common/Confirm/Confirm'
 import Overflow from '../../../common/Overflow/Overflow'
+import NewService from './components/NewService/NewService'
+import EditService from './components/EditService/EditService'
 
 const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
     const intl = useIntl()
@@ -75,13 +75,12 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
         downloadFile,
         deleteUploadedFile,
         deleteVehicle,
+        addService,
+        service,
     } = useEditVehicle(vehicle)
     const { settings } = useSelector((state: RootState) => state.settings)
     // const [fuelRoute, setFuelRoute] = useState(routes[0]);
-    const [services, setServices] = useState(vehicle?.services || [])
-    const [editServiceOpen, setEditServiceOpen] = useState(false)
-    const [serviceId, setServiceId] = useState<number | boolean>(false)
-    const [newServiceOpen, setNewServiceOpen] = useState(false)
+    const [editService, setEditService] = useState<Service | undefined>()
     const [confirmDeleteFile, setConfirmDeleteFile] = useState<
         VehicleFile | undefined
     >()
@@ -98,43 +97,16 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
         }
     }, [settings?.locale])
 
-    const handleEditServiceOpen = useCallback((id: number | boolean) => {
-        setServiceId(id)
-        setEditServiceOpen(true)
+    const handleEditServiceOpen = useCallback((s: Service | undefined) => {
+        setEditService(s)
     }, [])
 
     const handleEditServiceClose = useCallback(() => {
-        setEditServiceOpen(false)
+        setEditService(undefined)
     }, [])
 
-    const handleNewServiceOpen = useCallback(() => {
-        setNewServiceOpen(true)
-    }, [])
-
-    const handleNewServiceClose = useCallback(() => {
-        setNewServiceOpen(false)
-    }, [])
-
-    const saveService = useCallback(
-        (s: Service) => {
-            if (!vehicle?.key || !auth?.currentUser?.uid) return
-            update(
-                ref(
-                    db,
-                    'vehicles/' + auth.currentUser.uid + '/' + vehicle?.key
-                ),
-                {
-                    services: s,
-                }
-            )
-        },
-        [vehicle?.key]
-    )
-
-    const vehiclesTypeKeys = Object.keys(VehicleTypes) as Array<
-        keyof typeof VehicleTypes
-    >
     const fuelKeys = Object.keys(FuelTypes) as Array<keyof typeof FuelTypes>
+    const units = editedVehicle?.units || settings.units || 'km'
 
     return (
         <Drawer
@@ -515,11 +487,12 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     <FormattedMessage id="app.Units" />
                                 </Typography>
                                 <Typography variant="h6">
-                                    {(vehicle.units || settings.units) ===
-                                    'm' ? (
+                                    {units === 'km' ? (
+                                        <FormattedMessage id="app.Kilometers" />
+                                    ) : units === 'm' ? (
                                         <FormattedMessage id="app.Miles" />
                                     ) : (
-                                        <FormattedMessage id="app.Km" />
+                                        <FormattedMessage id="app.Hours" />
                                     )}
                                 </Typography>
                             </>
@@ -559,11 +532,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                             aria-label="units"
                                             row
                                             name="units"
-                                            value={
-                                                editedVehicle?.units ||
-                                                settings.units ||
-                                                'km'
-                                            }
+                                            value={units}
                                             onChange={(event) =>
                                                 setEditedVehicle({
                                                     ...vehicle,
@@ -575,7 +544,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                                 value="km"
                                                 control={<Radio />}
                                                 label={
-                                                    <FormattedMessage id="app.Km" />
+                                                    <FormattedMessage id="app.Kilometers" />
                                                 }
                                             />
                                             <FormControlLabel
@@ -583,6 +552,13 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                                 control={<Radio />}
                                                 label={
                                                     <FormattedMessage id="app.Miles" />
+                                                }
+                                            />
+                                            <FormControlLabel
+                                                value="h"
+                                                control={<Radio />}
+                                                label={
+                                                    <FormattedMessage id="app.Hours" />
                                                 }
                                             />
                                         </RadioGroup>
@@ -625,17 +601,25 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                 <Typography sx={sx.textWrap}>
                                     <FormattedMessage id="app.Mileage" />
                                 </Typography>
-                                <Overflow
-                                    text={vehicle?.mileage || '-'}
-                                    variant="h6"
-                                />
-                                <Typography>
-                                    {vehicle.units === 'km' ? (
-                                        <FormattedMessage id="app.Km" />
-                                    ) : (
-                                        <FormattedMessage id="app.Miles" />
-                                    )}
-                                </Typography>
+                                <Box
+                                    display="flex"
+                                    alignItems="baseline"
+                                    gap={1}
+                                >
+                                    <Overflow
+                                        text={vehicle?.mileage || '-'}
+                                        variant="h6"
+                                    />
+                                    <Typography>
+                                        {units === 'km' ? (
+                                            <FormattedMessage id="app.Km" />
+                                        ) : units === 'm' ? (
+                                            <FormattedMessage id="app.Mi" />
+                                        ) : (
+                                            <FormattedMessage id="app.Hrs" />
+                                        )}
+                                    </Typography>
+                                </Box>
                             </>
                         )}
                         {edit === 'mileage' && (
@@ -685,7 +669,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         },
                                     }}
                                     helperText={
-                                        vehicle.units === 'km' ? (
+                                        units === 'km' ? (
                                             <FormattedMessage id="app.Km" />
                                         ) : (
                                             <FormattedMessage id="app.Miles" />
@@ -919,26 +903,6 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                     </Paper>
                     <Paper sx={sx.paper}>
                         <Box sx={sx.edit}>
-                            {/* <input
-                                type="file"
-                                id="document-upload"
-                                name="document-upload"
-                                multiple
-                                style={{ display: 'none' }}
-                                onChange={handleFilesUpload}
-                            />
-                            <Tooltip
-                                title={<FormattedMessage id="app.Upload" />}
-                            >
-                                <IconButton size="small">
-                                    <label
-                                        htmlFor="document-upload"
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        <CloudUpload />
-                                    </label>
-                                </IconButton>
-                            </Tooltip> */}
                             <Upload
                                 filepath={
                                     auth?.currentUser?.uid
@@ -960,28 +924,9 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                             {vehicle?.files &&
                                 vehicle?.files.length > 0 &&
                                 vehicle?.files.map((uf, i) => (
-                                    <ListItem key={i}>
-                                        <ListItemIcon
-                                            onClick={() => downloadFile(uf)}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            <InsertDriveFile />
-                                        </ListItemIcon>
-                                        <ListItemText
-                                            primary={
-                                                <Overflow text={uf.name} />
-                                            }
-                                            secondary={formatRelative(
-                                                new Date(uf.date),
-                                                new Date(),
-                                                { locale }
-                                            )}
-                                            onClick={() => downloadFile(uf)}
-                                            style={{
-                                                cursor: 'pointer',
-                                            }}
-                                        />
-                                        <ListItemSecondaryAction>
+                                    <ListItem
+                                        key={i}
+                                        secondaryAction={
                                             <IconButton
                                                 edge="end"
                                                 aria-label="delete"
@@ -991,7 +936,29 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                             >
                                                 <Delete />
                                             </IconButton>
-                                        </ListItemSecondaryAction>
+                                        }
+                                        disablePadding
+                                    >
+                                        <ListItemButton
+                                            onClick={() => downloadFile(uf)}
+                                        >
+                                            <ListItemIcon>
+                                                <InsertDriveFile />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                primary={
+                                                    <Overflow text={uf.name} />
+                                                }
+                                                secondary={formatRelative(
+                                                    new Date(uf.date),
+                                                    new Date(),
+                                                    { locale }
+                                                )}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                }}
+                                            />
+                                        </ListItemButton>
                                     </ListItem>
                                 ))}
                         </List>
@@ -1007,36 +974,20 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                 <FormattedMessage
                                     id="app.DeleteFileConfirm"
                                     values={{
-                                        file:
-                                            confirmDeleteFile &&
-                                            confirmDeleteFile?.name.length >
-                                                20 ? (
-                                                <Tooltip
-                                                    title={
-                                                        confirmDeleteFile?.name
-                                                    }
-                                                >
-                                                    <Typography
-                                                        sx={sx.textWrapSmall}
-                                                    >
-                                                        {confirmDeleteFile?.name.replaceAll(
-                                                            ' ',
-                                                            String.fromCharCode(
-                                                                160
-                                                            )
-                                                        )}
-                                                    </Typography>
-                                                </Tooltip>
-                                            ) : (
-                                                <Typography sx={sx.textWrap}>
-                                                    {confirmDeleteFile?.name}
-                                                </Typography>
-                                            ),
+                                        file: (
+                                            <Overflow
+                                                text={
+                                                    confirmDeleteFile?.name ||
+                                                    ''
+                                                }
+                                            />
+                                        ),
                                     }}
                                 />
                             }
                             type="warn"
                             submit={<FormattedMessage id="app.Delete" />}
+                            cancel={<FormattedMessage id="app.Cancel" />}
                         />
                         {(!vehicle?.files || vehicle?.files.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>
@@ -1051,84 +1002,110 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                             <FormattedMessage id="app.Service" />
                         </Typography>
                         <Box sx={sx.edit}>
-                            <Tooltip
-                                title={<FormattedMessage id="app.AddService" />}
-                                sx={sx.button}
-                            >
-                                <IconButton
-                                    size="small"
-                                    onClick={handleNewServiceOpen}
-                                >
-                                    <AddCircle />
-                                </IconButton>
-                            </Tooltip>
+                            <NewService
+                                addService={addService}
+                                driver={vehicle?.driver || ''}
+                                units={units}
+                            />
                         </Box>
-                        {/* <NewServiceDialog
-                            newServiceOpen={newServiceOpen}
-                            handleNewServiceClose={handleNewServiceClose}
-                            setServices={setServices}
-                            saveService={saveService}
-                        /> */}
-                        {services?.length > 0 && (
-                            <MuiTable size="small">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell sx={sx.smallCellHead}>
-                                            <FormattedMessage id="app.Date" />
-                                        </TableCell>
-                                        <TableCell sx={sx.smallCellHead}>
-                                            <FormattedMessage id="app.Type" />
-                                        </TableCell>
-                                        <TableCell sx={sx.smallCellHead}>
-                                            <FormattedMessage id="app.Cost" />
-                                        </TableCell>
-                                        <TableCell sx={sx.smallCellHead}>
-                                            &nbsp;
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {services.map((s, i) => (
-                                        <TableRow key={i}>
-                                            <TableCell sx={sx.smallCell}>
-                                                {format(
-                                                    new Date(+s.date),
-                                                    'dd/MM/yyyy'
-                                                )}
+                        {service && service.length > 0 && (
+                            <Box sx={sx.fixedHeight}>
+                                <MuiTable size="small" stickyHeader>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell sx={sx.smallCellHead}>
+                                                &nbsp;
                                             </TableCell>
-                                            <TableCell sx={sx.smallCell}>
-                                                {serviceTypes[s.type]}
+                                            <TableCell sx={sx.smallCellHead}>
+                                                <FormattedMessage id="app.Date" />
                                             </TableCell>
-                                            <TableCell sx={sx.smallCell}>
-                                                {s.cost}
+                                            <TableCell sx={sx.smallCellHead}>
+                                                <FormattedMessage id="app.Type" />
                                             </TableCell>
-                                            <TableCell
-                                                sx={sx.smallCell}
-                                                align="right"
-                                            >
-                                                <IconButton
-                                                    size="small"
-                                                    onClick={() =>
-                                                        handleEditServiceOpen(i)
-                                                    }
-                                                >
-                                                    <Visibility />
-                                                </IconButton>
+                                            <TableCell sx={sx.smallCellHead}>
+                                                <FormattedMessage id="app.Cost" />
+                                            </TableCell>
+                                            <TableCell sx={sx.smallCellHead}>
+                                                &nbsp;
                                             </TableCell>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </MuiTable>
+                                    </TableHead>
+                                    <TableBody>
+                                        {service.map((s, i) => (
+                                            <TableRow key={i}>
+                                                <TableCell sx={sx.smallCell}>
+                                                    {(s.reminderDate ||
+                                                        s.reminderMileage) && (
+                                                        <Tooltip
+                                                            title={
+                                                                s.reminderDate &&
+                                                                s.reminderMileage ? (
+                                                                    <FormattedMessage id="app.Service.AlarmDateAndMileage" />
+                                                                ) : s.reminderDate ? (
+                                                                    <FormattedMessage id="app.Service.AlarmDate" />
+                                                                ) : (
+                                                                    <FormattedMessage id="app.Service.AlarmMileage" />
+                                                                )
+                                                            }
+                                                        >
+                                                            <NotificationsActive />
+                                                        </Tooltip>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell sx={sx.smallCell}>
+                                                    {s.date &&
+                                                        format(
+                                                            new Date(+s.date),
+                                                            'dd/MM/yyyy'
+                                                        )}
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={sx.smallCell}
+                                                    style={{
+                                                        maxWidth: '160px',
+                                                    }}
+                                                >
+                                                    <Overflow
+                                                        text={s.type || ''}
+                                                    />
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={sx.smallCell}
+                                                    style={{
+                                                        maxWidth: '90px',
+                                                    }}
+                                                >
+                                                    <Overflow
+                                                        text={s.cost || ''}
+                                                    />
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={sx.smallCell}
+                                                    align="right"
+                                                >
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() =>
+                                                            handleEditServiceOpen(
+                                                                s
+                                                            )
+                                                        }
+                                                    >
+                                                        <Visibility />
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </MuiTable>
+                            </Box>
                         )}
-                        {/* <EditServiceDialog
-                            editServiceOpen={editServiceOpen}
+                        <EditService
                             handleEditServiceClose={handleEditServiceClose}
-                            setServices={setServices}
-                            saveService={saveService}
-                            service={services[serviceId]}
-                            serviceId={serviceId}
-                        /> */}
-                        {services.length === 0 && (
+                            service={editService}
+                            units={units}
+                        />
+                        {(!service || service.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>
                                 <Typography>
                                     <FormattedMessage id="app.NoService" />
@@ -1156,11 +1133,16 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                         message={
                             <FormattedMessage
                                 id="app.Deleting"
-                                values={{ name: vehicle.name }}
+                                values={{
+                                    name: (
+                                        <Overflow text={vehicle.name || ''} />
+                                    ),
+                                }}
                             />
                         }
                         type="warn"
                         submit={<FormattedMessage id="app.Delete" />}
+                        cancel={<FormattedMessage id="app.Cancel" />}
                     />
                 </Box>
             )}

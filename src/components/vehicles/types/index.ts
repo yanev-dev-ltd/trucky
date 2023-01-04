@@ -25,14 +25,21 @@ export type VehicleProps = {
 }
 
 export type Service = {
-    cost: number
-    date: number
-    driver: string
-    mileage: number
-    place: string
-    reminder: string
-    type: number
+    cost?: number | string | null
+    date?: number | null
+    driver?: string
+    mileage?: number | null
+    place?: string
+    reminderDate?: number | null
+    reminderMileage?: number | null
+    type?: string
+    part?: string
+    key?: string
+    vehicle?: string
 }
+
+
+export type Services = Service[]
 
 export type VehicleFile = {
     name: string

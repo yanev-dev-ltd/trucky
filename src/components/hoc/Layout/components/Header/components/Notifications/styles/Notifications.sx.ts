@@ -1,3 +1,4 @@
+import { BorderColor, BorderStyle } from '@mui/icons-material'
 import { SxProps, Theme } from '@mui/material'
 
 const sx: Record<string, SxProps<Theme>> = {
@@ -15,6 +16,9 @@ const sx: Record<string, SxProps<Theme>> = {
         borderRadius: 100,
         color: '#fff',
         fontWeight: 'bold',
+        borderColor: 'background.paper',
+        borderStyle: 'solid',
+        borderSize: '2px'
     },
     notificationsList: {
         width: 320,

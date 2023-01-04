@@ -15,6 +15,7 @@ const Confirm = ({
     isOpen,
     onCancel,
     onSubmit,
+    cancel,
     message,
     type,
     submit,
@@ -35,8 +36,13 @@ const Confirm = ({
                     <Close />
                 </IconButton>
             </DialogTitle>
-            {message && <DialogContent>{message}</DialogContent>}
+            {message && <DialogContent sx={sx.dialog}>{message}</DialogContent>}
             <DialogActions sx={sx.dialog}>
+                {cancel && (
+                    <Button onClick={onCancel} variant="text">
+                        {cancel}
+                    </Button>
+                )}
                 <Button
                     autoFocus
                     onClick={onSubmit}

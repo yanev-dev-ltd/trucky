@@ -13,7 +13,7 @@ import {
     Room,
     Receipt,
     AccountBox,
-    BarChart,
+    Build,
     Settings,
 } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
@@ -87,6 +87,22 @@ const Navigation = () => {
                     </ListItemIcon>
                     <Typography variant="inherit">
                         <FormattedMessage id="app.Routes" />
+                    </Typography>
+                </MenuItem>
+                <MenuItem
+                    component={Link}
+                    href="/service"
+                    sx={
+                        router.asPath.startsWith('/service')
+                            ? sx.itemCurrent
+                            : sx.item
+                    }
+                >
+                    <ListItemIcon>
+                        <Build fontSize="large" sx={sx.icon} />
+                    </ListItemIcon>
+                    <Typography variant="inherit">
+                        <FormattedMessage id="app.Service" />
                     </Typography>
                 </MenuItem>
                 <MenuItem

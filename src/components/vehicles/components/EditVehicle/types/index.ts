@@ -1,4 +1,4 @@
-import { Vehicle, VehicleFile } from '../../../types'
+import { Vehicle, VehicleFile, Service, Services } from '../../../types'
 export type EditVehicleProps = {
     vehicle: Vehicle | undefined
     edit: string | undefined
@@ -24,4 +24,6 @@ export type useEditVehicleResponse = {
     downloadFile: (f: VehicleFile) => void
     deleteUploadedFile: (f: VehicleFile) => void
     deleteVehicle: () => void
+    addService: (s: Service) => void
+    service: Services
 }

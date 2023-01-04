@@ -40,7 +40,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 {
                     name: 'driver',
                     getFn: (d) =>
-                        drivers.find((dr) => dr.id === d.driver)?.name || '',
+                        drivers.find((dr) => dr.id === d.driver)?.name || '-',
                 },
                 {
                     name: 'type',

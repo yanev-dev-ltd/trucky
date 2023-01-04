@@ -37,6 +37,13 @@
         ".read": "$uid === auth.uid"
       }
     },
+    "service": {
+      "$uid": {
+        ".write": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
+        ".read": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
+        ".indexOn": ["vehicle"]
+      }
+    },
     "time_notifications": {
       ".write": false,
       ".read": false

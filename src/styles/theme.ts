@@ -1,4 +1,5 @@
 import { createTheme, PaletteColor, PaletteColorOptions } from '@mui/material/styles'
+import type {} from '@mui/x-date-pickers/themeAugmentation'
 import { blue, red } from '@mui/material/colors';
 
 declare module '@mui/material/styles' {

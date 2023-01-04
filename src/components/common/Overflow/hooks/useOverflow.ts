@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useLayoutEffect, useRef } from 'react'
 
 const useOverflow = () => {
     const [isOverflow, setIsOverflow] = useState<boolean>(false)
     const ref = useRef<HTMLDivElement | null>(null)
-    useEffect(() => {
+    useLayoutEffect(() => {
         const isEllipsisActive = () => {
             ref.current && setIsOverflow(ref.current.clientWidth < ref.current.scrollWidth)
         }

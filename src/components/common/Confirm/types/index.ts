@@ -6,4 +6,5 @@ export type ConfirmProps = {
     message?: string | ReactNode
     type?: string
     submit?: string | ReactNode
+    cancel?: string | ReactNode
 }
