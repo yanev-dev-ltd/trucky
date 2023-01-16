@@ -9,7 +9,7 @@ const sx: Record<string, SxProps<Theme>> = {
     text: {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        paddingRight: 2
+        display: 'block'
     }
 }
 

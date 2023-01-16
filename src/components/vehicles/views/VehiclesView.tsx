@@ -11,6 +11,7 @@ import {
     Box,
     Typography,
     Tooltip,
+    InputAdornment,
 } from '@mui/material'
 
 import EditVehicle from '../components/EditVehicle/EditVehicle'
@@ -40,7 +41,9 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 {
                     name: 'driver',
                     getFn: (d) =>
-                        drivers.find((dr) => dr.id === d.driver)?.name || '-',
+                        drivers.find((dr) => dr.id === d.driver)?.name +
+                        ' ' +
+                        drivers.find((dr) => dr.id === d.driver)?.phone,
                 },
                 {
                     name: 'type',
@@ -130,10 +133,20 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 Header: <FormattedMessage id="app.Driver" />,
                 id: 'driver',
                 accessor: (v: Vehicle) => {
-                    const driverName = drivers.find(
-                        (d) => d.id === v.driver
-                    )?.name
-                    return driverName ? <Overflow text={driverName} /> : '-'
+                    const driver = drivers.find((d) => d.id === v.driver)
+                    return driver ? (
+                        <>
+                            <Overflow text={driver.name} />
+                            {driver?.phone && (
+                                <Overflow
+                                    variant="caption"
+                                    text={driver?.phone}
+                                />
+                            )}
+                        </>
+                    ) : (
+                        '-'
+                    )
                 },
                 maxWidth: 160,
             },
@@ -147,7 +160,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
             {
                 Header: <FormattedMessage id="app.Details" />,
                 id: 'details',
-                accessor: (v) => (
+                accessor: (v: Vehicle) => (
                     <Tooltip title={<FormattedMessage id="app.Details" />}>
                         <IconButton
                             component={Link}
@@ -186,16 +199,23 @@ export const VehiclesView: React.FC<VehicleProps> = ({
     return (
         <Box>
             <Box sx={sx.header}>
-                <Tooltip title="ctrl + S">
-                    <TextField
-                        variant="outlined"
-                        label={<FormattedMessage id="app.Search" />}
-                        size="small"
-                        onChange={(e) => setSearch(e.target.value)}
-                        sx={sx.search}
-                        inputRef={ref}
-                    />
-                </Tooltip>
+                <TextField
+                    variant="outlined"
+                    label={<FormattedMessage id="app.Search" />}
+                    size="small"
+                    onChange={(e) => setSearch(e.target.value)}
+                    sx={sx.search}
+                    inputRef={ref}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <Typography variant="caption">
+                                    ctrl + S
+                                </Typography>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
                 <AddVehicle />
             </Box>
             {Array.isArray(vehicles) && filteredVehicles.length > 0 && (

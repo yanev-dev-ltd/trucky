@@ -207,54 +207,52 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                         )}
                     </Paper>
                     <Paper sx={sx.paper}>
-                        <Typography>
-                            <FormattedMessage id="app.Type" />
-                        </Typography>
-                        <Typography variant="h6">
-                            {vehicle?.type ? (
-                                <FormattedMessage
-                                    id={`app.VehicleType.${
-                                        VehicleTypes[
-                                            vehicle?.type as keyof typeof VehicleTypes
-                                        ]
-                                    }`}
-                                />
-                            ) : (
-                                '-'
-                            )}
-                        </Typography>
-                    </Paper>
-                    <Paper sx={sx.paper}>
-                        <Typography>
-                            <FormattedMessage id="app.Fuel" />
-                        </Typography>
-                        <Typography variant="h6">
-                            {vehicle?.fuel ? (
-                                <FormattedMessage
-                                    id={`app.FuelType.${
-                                        FuelTypes[
-                                            vehicle?.fuel as keyof typeof FuelTypes
-                                        ]
-                                    }`}
-                                />
-                            ) : (
-                                '-'
-                            )}
-                        </Typography>
-                    </Paper>
-                    <Paper sx={sx.paper}>
-                        <Typography>
-                            <FormattedMessage id="app.Units" />
-                        </Typography>
-                        <Typography variant="h6">
-                            {editedVehicle?.units === 'km' ? (
-                                <FormattedMessage id="app.Kilometers" />
-                            ) : editedVehicle?.units === 'm' ? (
-                                <FormattedMessage id="app.Miles" />
-                            ) : (
-                                <FormattedMessage id="app.Hours" />
-                            )}
-                        </Typography>
+                        <MuiTable>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell sx={sx.smallCellHead}>
+                                        <FormattedMessage id="app.Type" />
+                                    </TableCell>
+                                    <TableCell sx={sx.smallCellHead}>
+                                        <FormattedMessage id="app.Fuel" />
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell sx={sx.smallCell}>
+                                        <Typography variant="h6">
+                                            {vehicle?.type ? (
+                                                <FormattedMessage
+                                                    id={`app.VehicleType.${
+                                                        VehicleTypes[
+                                                            vehicle?.type as keyof typeof VehicleTypes
+                                                        ]
+                                                    }`}
+                                                />
+                                            ) : (
+                                                '-'
+                                            )}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell sx={sx.smallCell}>
+                                        <Typography variant="h6">
+                                            {vehicle?.fuel ? (
+                                                <FormattedMessage
+                                                    id={`app.FuelType.${
+                                                        FuelTypes[
+                                                            vehicle?.fuel as keyof typeof FuelTypes
+                                                        ]
+                                                    }`}
+                                                />
+                                            ) : (
+                                                '-'
+                                            )}
+                                        </Typography>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </MuiTable>
                     </Paper>
                     <Paper sx={sx.paper}>
                         {edit !== 'mileage' && (

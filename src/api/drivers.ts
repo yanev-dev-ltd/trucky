@@ -2,7 +2,7 @@ const drivers = [
     {
       id: 'one',
       name: 'Georgi Milev',
-      phone: '+359 893 97 93 93'
+      phone: '+359 893 97 93 93 93 93 93 93'
     },
     {
       id: 'two',
