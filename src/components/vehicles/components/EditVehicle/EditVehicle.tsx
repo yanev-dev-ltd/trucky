@@ -23,12 +23,7 @@ import {
     TableRow,
     Divider,
     TextField,
-    Radio,
-    RadioGroup,
-    FormControlLabel,
-    FormLabel,
     Tooltip,
-    Autocomplete,
 } from '@mui/material'
 import {
     Close,
@@ -45,13 +40,10 @@ import { format, formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
-import { FormattedMessage, useIntl } from 'react-intl'
-// import EditServiceDialog from './EditServiceDialog'
-// import NewServiceDialog from './NewServiceDialog'
+import { FormattedMessage } from 'react-intl'
 import LoadingButton from '../../../common/LoadingButton/LoadingButton'
 import { auth } from '../../../../services/firebase'
 import sx from './styles/EditVehicle.sx'
-// import routes from '../../api/routes';
 import drivers from '../../../../api/drivers'
 import { EditVehicleProps } from './types'
 import { useSelector } from 'react-redux'
@@ -65,7 +57,6 @@ import NewService from './components/NewService/NewService'
 import EditService from './components/EditService/EditService'
 
 const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
-    const intl = useIntl()
     const router = useRouter()
     const {
         saveVehicleField,
@@ -79,7 +70,6 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
         service,
     } = useEditVehicle(vehicle)
     const { settings } = useSelector((state: RootState) => state.settings)
-    // const [fuelRoute, setFuelRoute] = useState(routes[0]);
     const [editService, setEditService] = useState<Service | undefined>()
     const [confirmDeleteFile, setConfirmDeleteFile] = useState<
         VehicleFile | undefined
@@ -104,9 +94,6 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
     const handleEditServiceClose = useCallback(() => {
         setEditService(undefined)
     }, [])
-
-    const fuelKeys = Object.keys(FuelTypes) as Array<keyof typeof FuelTypes>
-    const units = editedVehicle?.units || settings.units || 'km'
 
     return (
         <Drawer
@@ -220,364 +207,54 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                         )}
                     </Paper>
                     <Paper sx={sx.paper}>
-                        {edit !== 'type' && (
-                            <>
-                                <Tooltip
-                                    title={<FormattedMessage id="app.Edit" />}
-                                >
-                                    <IconButton
-                                        size="small"
-                                        sx={sx.edit}
-                                        onClick={() => {
-                                            router.push(
-                                                `/vehicles/${vehicle?.key}/type`
-                                            )
-                                            reset()
-                                        }}
-                                    >
-                                        <Edit />
-                                    </IconButton>
-                                </Tooltip>
-                                <Typography>
-                                    <FormattedMessage id="app.Type" />
-                                </Typography>
-                                <Typography variant="h6">
-                                    {vehicle?.type ? (
-                                        <FormattedMessage
-                                            id={`app.VehicleType.${
-                                                VehicleTypes[
-                                                    vehicle?.type as keyof typeof VehicleTypes
-                                                ]
-                                            }`}
-                                        />
-                                    ) : (
-                                        '-'
-                                    )}
-                                </Typography>
-                            </>
-                        )}
-                        {edit === 'type' && (
-                            <form
-                                onSubmit={(event) => {
-                                    event.preventDefault()
-                                    saveVehicleField('type')
-                                }}
-                            >
-                                <Typography>
-                                    <FormattedMessage id="app.Type" />
-                                </Typography>
-                                <Tooltip
-                                    title={<FormattedMessage id="app.Cancel" />}
-                                >
-                                    <IconButton
-                                        size="small"
-                                        sx={sx.edit}
-                                        onClick={() => {
-                                            reset()
-                                            router.push(
-                                                `/vehicles/${vehicle?.key}`
-                                            )
-                                        }}
-                                    >
-                                        <Close />
-                                    </IconButton>
-                                </Tooltip>
-                                <FormControl
-                                    fullWidth
-                                    variant="outlined"
-                                    sx={sx.select}
-                                >
-                                    <Autocomplete
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label={
-                                                    <FormattedMessage id="app.Type" />
-                                                }
-                                            />
-                                        )}
-                                        id="type"
-                                        disablePortal
-                                        value={
-                                            (editedVehicle?.type as keyof typeof VehicleTypes) ||
-                                            '-'
-                                        }
-                                        onChange={(
-                                            event: any,
-                                            newValue: string | null
-                                        ) =>
-                                            setEditedVehicle({
-                                                ...vehicle,
-                                                type: newValue as keyof VehicleTypes,
-                                            })
-                                        }
-                                        getOptionLabel={(option) =>
-                                            intl.formatMessage({
-                                                id: `app.VehicleType.${
-                                                    VehicleTypes[
-                                                        option as keyof typeof VehicleTypes
-                                                    ]
-                                                }`,
-                                            })
-                                        }
-                                        options={
-                                            !editedVehicle?.type
-                                                ? [
-                                                      '-',
-                                                      ...Object.keys(
-                                                          VehicleTypes
-                                                      ),
-                                                  ]
-                                                : Object.keys(VehicleTypes)
-                                        }
-                                        getOptionDisabled={(option) =>
-                                            option === '-'
-                                        }
-                                        disableClearable
-                                    />
-                                </FormControl>
-                                <Button
-                                    color="primary"
-                                    disabled={
-                                        !editedVehicle?.type ||
-                                        editedVehicle.type === vehicle.type
-                                    }
-                                    type="submit"
-                                >
-                                    <FormattedMessage id="app.Save" />
-                                </Button>
-                            </form>
-                        )}
+                        <Typography>
+                            <FormattedMessage id="app.Type" />
+                        </Typography>
+                        <Typography variant="h6">
+                            {vehicle?.type ? (
+                                <FormattedMessage
+                                    id={`app.VehicleType.${
+                                        VehicleTypes[
+                                            vehicle?.type as keyof typeof VehicleTypes
+                                        ]
+                                    }`}
+                                />
+                            ) : (
+                                '-'
+                            )}
+                        </Typography>
                     </Paper>
                     <Paper sx={sx.paper}>
-                        {edit !== 'fuel' && (
-                            <>
-                                <Tooltip
-                                    title={<FormattedMessage id="app.Edit" />}
-                                >
-                                    <IconButton
-                                        size="small"
-                                        sx={sx.edit}
-                                        onClick={() => {
-                                            router.push(
-                                                `/vehicles/${vehicle?.key}/fuel`
-                                            )
-                                            reset()
-                                        }}
-                                    >
-                                        <Edit />
-                                    </IconButton>
-                                </Tooltip>
-                                <Typography>
-                                    <FormattedMessage id="app.Fuel" />
-                                </Typography>
-                                <Typography variant="h6">
-                                    {vehicle?.fuel ? (
-                                        <FormattedMessage
-                                            id={`app.FuelType.${
-                                                FuelTypes[
-                                                    vehicle?.fuel as keyof typeof FuelTypes
-                                                ]
-                                            }`}
-                                        />
-                                    ) : (
-                                        '-'
-                                    )}
-                                </Typography>
-                            </>
-                        )}
-                        {edit === 'fuel' && (
-                            <form
-                                onSubmit={(event) => {
-                                    event.preventDefault()
-                                    saveVehicleField('fuel')
-                                }}
-                            >
-                                <Typography>
-                                    <FormattedMessage id="app.Fuel" />
-                                </Typography>
-                                <Tooltip
-                                    title={<FormattedMessage id="app.Cancel" />}
-                                >
-                                    <IconButton
-                                        size="small"
-                                        sx={sx.edit}
-                                        onClick={() => {
-                                            reset()
-                                            router.push(
-                                                `/vehicles/${vehicle?.key}`
-                                            )
-                                        }}
-                                    >
-                                        <Close />
-                                    </IconButton>
-                                </Tooltip>
-                                <FormControl
-                                    fullWidth
-                                    variant="outlined"
-                                    sx={sx.select}
-                                >
-                                    <InputLabel id="type-label">
-                                        <FormattedMessage id="app.Fuel" />
-                                    </InputLabel>
-                                    <Select
-                                        labelId="type-label"
-                                        id="type"
-                                        value={editedVehicle?.fuel || ''}
-                                        onChange={(event) =>
-                                            setEditedVehicle({
-                                                ...vehicle,
-                                                fuel: event.target
-                                                    .value as keyof FuelTypes,
-                                            })
-                                        }
-                                        label={
-                                            <FormattedMessage id="app.Fuel" />
-                                        }
-                                    >
-                                        {!editedVehicle?.fuel && (
-                                            <MenuItem value={''} disabled>
-                                                &#8212;
-                                            </MenuItem>
-                                        )}
-                                        {fuelKeys.map((key, i) => (
-                                            <MenuItem key={i} value={key}>
-                                                {
-                                                    <FormattedMessage
-                                                        id={`app.FuelType.${FuelTypes[key]}`}
-                                                    />
-                                                }
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                <Button
-                                    color="primary"
-                                    disabled={
-                                        !editedVehicle?.fuel ||
-                                        editedVehicle.fuel === vehicle.fuel
-                                    }
-                                    type="submit"
-                                >
-                                    <FormattedMessage id="app.Save" />
-                                </Button>
-                            </form>
-                        )}
+                        <Typography>
+                            <FormattedMessage id="app.Fuel" />
+                        </Typography>
+                        <Typography variant="h6">
+                            {vehicle?.fuel ? (
+                                <FormattedMessage
+                                    id={`app.FuelType.${
+                                        FuelTypes[
+                                            vehicle?.fuel as keyof typeof FuelTypes
+                                        ]
+                                    }`}
+                                />
+                            ) : (
+                                '-'
+                            )}
+                        </Typography>
                     </Paper>
                     <Paper sx={sx.paper}>
-                        {edit !== 'units' && (
-                            <>
-                                <Tooltip
-                                    title={<FormattedMessage id="app.Edit" />}
-                                >
-                                    <IconButton
-                                        size="small"
-                                        sx={sx.edit}
-                                        onClick={() => {
-                                            router.push(
-                                                `/vehicles/${vehicle?.key}/units`
-                                            )
-                                            reset()
-                                        }}
-                                    >
-                                        <Edit />
-                                    </IconButton>
-                                </Tooltip>
-                                <Typography>
-                                    <FormattedMessage id="app.Units" />
-                                </Typography>
-                                <Typography variant="h6">
-                                    {units === 'km' ? (
-                                        <FormattedMessage id="app.Kilometers" />
-                                    ) : units === 'm' ? (
-                                        <FormattedMessage id="app.Miles" />
-                                    ) : (
-                                        <FormattedMessage id="app.Hours" />
-                                    )}
-                                </Typography>
-                            </>
-                        )}
-                        {edit === 'units' && (
-                            <Box>
-                                <Tooltip
-                                    title={<FormattedMessage id="app.Cancel" />}
-                                >
-                                    <IconButton
-                                        size="small"
-                                        sx={sx.edit}
-                                        onClick={() => {
-                                            reset()
-                                            router.push(
-                                                `/vehicles/${vehicle?.key}`
-                                            )
-                                        }}
-                                    >
-                                        <Close />
-                                    </IconButton>
-                                </Tooltip>
-                                <form
-                                    onSubmit={(event) => {
-                                        event.preventDefault()
-                                        saveVehicleField('units')
-                                    }}
-                                >
-                                    <FormControl component="fieldset">
-                                        <FormLabel
-                                            component="legend"
-                                            sx={sx.paddingTop}
-                                        >
-                                            <FormattedMessage id="app.Units" />
-                                        </FormLabel>
-                                        <RadioGroup
-                                            aria-label="units"
-                                            row
-                                            name="units"
-                                            value={units}
-                                            onChange={(event) =>
-                                                setEditedVehicle({
-                                                    ...vehicle,
-                                                    units: event.target.value,
-                                                })
-                                            }
-                                        >
-                                            <FormControlLabel
-                                                value="km"
-                                                control={<Radio />}
-                                                label={
-                                                    <FormattedMessage id="app.Kilometers" />
-                                                }
-                                            />
-                                            <FormControlLabel
-                                                value="m"
-                                                control={<Radio />}
-                                                label={
-                                                    <FormattedMessage id="app.Miles" />
-                                                }
-                                            />
-                                            <FormControlLabel
-                                                value="h"
-                                                control={<Radio />}
-                                                label={
-                                                    <FormattedMessage id="app.Hours" />
-                                                }
-                                            />
-                                        </RadioGroup>
-                                    </FormControl>
-                                    <Box>
-                                        <Button
-                                            color="primary"
-                                            type="submit"
-                                            disabled={
-                                                editedVehicle?.units ===
-                                                vehicle.units
-                                            }
-                                        >
-                                            <FormattedMessage id="app.Save" />
-                                        </Button>
-                                    </Box>
-                                </form>
-                            </Box>
-                        )}
+                        <Typography>
+                            <FormattedMessage id="app.Units" />
+                        </Typography>
+                        <Typography variant="h6">
+                            {editedVehicle?.units === 'km' ? (
+                                <FormattedMessage id="app.Kilometers" />
+                            ) : editedVehicle?.units === 'm' ? (
+                                <FormattedMessage id="app.Miles" />
+                            ) : (
+                                <FormattedMessage id="app.Hours" />
+                            )}
+                        </Typography>
                     </Paper>
                     <Paper sx={sx.paper}>
                         {edit !== 'mileage' && (
@@ -611,9 +288,9 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         variant="h6"
                                     />
                                     <Typography>
-                                        {units === 'km' ? (
+                                        {editedVehicle?.units === 'km' ? (
                                             <FormattedMessage id="app.Km" />
-                                        ) : units === 'm' ? (
+                                        ) : editedVehicle?.units === 'm' ? (
                                             <FormattedMessage id="app.Mi" />
                                         ) : (
                                             <FormattedMessage id="app.Hrs" />
@@ -670,9 +347,11 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         endAdornment: (
                                             <FormattedMessage
                                                 id={
-                                                    units === 'km'
+                                                    editedVehicle?.units ===
+                                                    'km'
                                                         ? 'app.Km'
-                                                        : units === 'm'
+                                                        : editedVehicle?.units ===
+                                                          'm'
                                                         ? 'app.Mi'
                                                         : 'app.Hrs'
                                                 }
@@ -1009,7 +688,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                             <NewService
                                 addService={addService}
                                 driver={vehicle?.driver || ''}
-                                units={units}
+                                units={vehicle.units}
                             />
                         </Box>
                         {service && service.length > 0 && (
@@ -1107,7 +786,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                         <EditService
                             handleEditServiceClose={handleEditServiceClose}
                             service={editService}
-                            units={units}
+                            units={vehicle.units}
                         />
                         {(!service || service.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>

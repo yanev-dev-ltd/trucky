@@ -3,8 +3,14 @@ export type useAddVehicleProps = {
     open: boolean
     handleClose: () => void
     handleAddVehicle: () => void
-    setNewVehicleName: (name: string) => void
+    changeField: (field: string, value: string) => void
     addVehicle: () => void
-    newVehicleName: string | undefined
+    newVehicle: NewVehicle | undefined
     newVehicleLoading: boolean
+}
+export type NewVehicle = {
+    name?: string
+    type?: string
+    fuel?: string
+    units?: string
 }

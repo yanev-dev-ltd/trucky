@@ -23,7 +23,11 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     paddingBottom: {
         paddingBottom: 1
-    }
+    },
+    row: {
+        marginTop: 2,
+        marginBottom: 2
+    },
 }
 
 export default sx
