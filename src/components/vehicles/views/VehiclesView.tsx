@@ -107,34 +107,33 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 id: 'type',
                 accessor: (v: Vehicle) => (
                     <Box>
-                        {v.type ? (
-                            <Overflow
-                                text={intl.formatMessage({
-                                    id: `app.VehicleType.${
-                                        VehicleTypes[
-                                            v.type as keyof typeof VehicleTypes
-                                        ]
-                                    }`,
-                                })}
-                            />
-                        ) : (
-                            '-'
-                        )}
-                        <Typography variant="caption">
-                            {v.fuel ? (
-                                <Overflow
-                                    text={intl.formatMessage({
-                                        id: `app.FuelType.${
-                                            FuelTypes[
-                                                v.fuel as keyof typeof FuelTypes
-                                            ]
-                                        }`,
-                                    })}
-                                />
-                            ) : (
-                                '-'
-                            )}
-                        </Typography>
+                        <Overflow
+                            text={
+                                v.type
+                                    ? intl.formatMessage({
+                                          id: `app.VehicleType.${
+                                              VehicleTypes[
+                                                  v.type as keyof typeof VehicleTypes
+                                              ]
+                                          }`,
+                                      })
+                                    : '-'
+                            }
+                        />
+                        <Overflow
+                            text={
+                                v.fuel
+                                    ? intl.formatMessage({
+                                          id: `app.FuelType.${
+                                              FuelTypes[
+                                                  v.fuel as keyof typeof FuelTypes
+                                              ]
+                                          }`,
+                                      })
+                                    : '-'
+                            }
+                            variant="caption"
+                        />
                     </Box>
                 ),
             },
@@ -183,7 +182,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 maxWidth: 160,
             },
             {
-                Header: <FormattedMessage id="app.Route" />,
+                Header: <FormattedMessage id="app.LastRoute" />,
                 id: 'route',
                 accessor: (v: Vehicle) =>
                     v.route ? <Overflow text={v.route} /> : '-',
