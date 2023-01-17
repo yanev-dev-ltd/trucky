@@ -38,6 +38,8 @@ export const VehiclesView: React.FC<VehicleProps> = ({
         const fuse = new Fuse(vehicles, {
             keys: [
                 'name',
+                'mileage',
+                'route',
                 {
                     name: 'driver',
                     getFn: (d) =>
