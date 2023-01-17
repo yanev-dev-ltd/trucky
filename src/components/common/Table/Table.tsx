@@ -16,6 +16,7 @@ import {
     Menu,
     FormControlLabel,
     Checkbox,
+    Box,
 } from '@mui/material'
 import { useTable, useSortBy } from 'react-table'
 import sx from './styles/Table.sx'
@@ -98,17 +99,17 @@ export function Table<T extends Record<string, unknown>>(
                                     sx={sx.root}
                                 >
                                     {column.render('Header')}
-                                    <span>
+                                    <Box component="span">
                                         {column.isSorted ? (
                                             column.isSortedDesc ? (
-                                                <ArrowDropUp
+                                                <ArrowDropDown
                                                     fontSize="small"
                                                     style={{
                                                         marginBottom: '-5px',
                                                     }}
                                                 />
                                             ) : (
-                                                <ArrowDropDown
+                                                <ArrowDropUp
                                                     fontSize="small"
                                                     style={{
                                                         marginBottom: '-5px',
@@ -124,7 +125,7 @@ export function Table<T extends Record<string, unknown>>(
                                                 }}
                                             />
                                         )}
-                                    </span>
+                                    </Box>
                                 </TableCell>
                             ))}
                         </TableRow>

@@ -83,6 +83,9 @@ const AddVehicle = () => {
                                         changeField('name', e.target.value)
                                     }
                                     fullWidth
+                                    helperText={
+                                        <FormattedMessage id="app.NameExamples" />
+                                    }
                                 />
                             </Box>
                             <Box sx={sx.row}>

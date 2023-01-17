@@ -96,38 +96,70 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 maxWidth: 240,
             },
             {
-                Header: <FormattedMessage id="app.Type" />,
+                Header: (
+                    <Box component={'span'} sx={sx.multiLineHeader}>
+                        <FormattedMessage id="app.Type" />
+                        <Typography variant="caption">
+                            <FormattedMessage id="app.Fuel" />
+                        </Typography>
+                    </Box>
+                ),
                 id: 'type',
-                accessor: (v: Vehicle) =>
-                    v.type ? (
-                        <Overflow
-                            text={intl.formatMessage({
-                                id: `app.VehicleType.${
-                                    VehicleTypes[
-                                        v.type as keyof typeof VehicleTypes
-                                    ]
-                                }`,
-                            })}
-                        />
-                    ) : (
-                        '-'
-                    ),
+                accessor: (v: Vehicle) => (
+                    <Box>
+                        {v.type ? (
+                            <Overflow
+                                text={intl.formatMessage({
+                                    id: `app.VehicleType.${
+                                        VehicleTypes[
+                                            v.type as keyof typeof VehicleTypes
+                                        ]
+                                    }`,
+                                })}
+                            />
+                        ) : (
+                            '-'
+                        )}
+                        <Typography variant="caption">
+                            {v.fuel ? (
+                                <Overflow
+                                    text={intl.formatMessage({
+                                        id: `app.FuelType.${
+                                            FuelTypes[
+                                                v.fuel as keyof typeof FuelTypes
+                                            ]
+                                        }`,
+                                    })}
+                                />
+                            ) : (
+                                '-'
+                            )}
+                        </Typography>
+                    </Box>
+                ),
             },
             {
-                Header: <FormattedMessage id="app.Fuel" />,
-                id: 'fuel',
-                accessor: (v: Vehicle) =>
-                    v.fuel ? (
-                        <Overflow
-                            text={intl.formatMessage({
-                                id: `app.FuelType.${
-                                    FuelTypes[v.fuel as keyof typeof FuelTypes]
-                                }`,
-                            })}
-                        />
+                Header: <FormattedMessage id="app.Mileage" />,
+                id: 'mileage',
+                accessor: (v: Vehicle) => {
+                    return v.mileage ? (
+                        <Box display="flex" alignItems="baseline" gap={1}>
+                            <Overflow text={v?.mileage} />
+                            <Typography variant="caption">
+                                {v?.units === 'km' ? (
+                                    <FormattedMessage id="app.Km" />
+                                ) : v?.units === 'm' ? (
+                                    <FormattedMessage id="app.Mi" />
+                                ) : (
+                                    <FormattedMessage id="app.Hrs" />
+                                )}
+                            </Typography>
+                        </Box>
                     ) : (
                         '-'
-                    ),
+                    )
+                },
+                maxWidth: 160,
             },
             {
                 Header: <FormattedMessage id="app.Driver" />,

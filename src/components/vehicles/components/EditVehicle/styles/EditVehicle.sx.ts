@@ -103,6 +103,16 @@ const sx: Record<string, SxProps<Theme>> = {
         textOverflow: 'ellipsis',
         maxWidth: 340,
         overflow: 'hidden'
+    },
+    flex: {
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+    left: {
+        textAlign: 'left',
+    },
+    right: {
+        textAlign: 'right',
     }
 }
 

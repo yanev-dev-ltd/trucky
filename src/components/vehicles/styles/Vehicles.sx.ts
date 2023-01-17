@@ -20,6 +20,11 @@ const sx: Record<string, SxProps<Theme>> = {
     search: {
         width: 300
     },
+    multiLineHeader: {
+        display: 'flex',
+        flexDirection: 'column',
+        float: 'left',
+    },
 }
 
 export default sx

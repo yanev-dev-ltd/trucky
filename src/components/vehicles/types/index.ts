@@ -62,6 +62,7 @@ export enum VehicleTypes {
     PICKUP_TRUCK = 'PickupTruck',
     ROAD_TRACTOR = 'RoadTractor',
     SEMITRAILER = 'Semitrailer',
+    TAXI = 'Taxi',
     TRACTOR = 'Tractor',
     TRAILER = 'Trailer',
     TRUCK = 'Truck',
