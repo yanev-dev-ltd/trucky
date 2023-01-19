@@ -29,7 +29,7 @@ const useVehicles =  ({ vehicleId, edit }:useVehicleProps): VehicleProps => {
 
     useEffect(() => {
         function handleKeyPress(event: KeyboardEvent) {
-            if (event.key === '/') {
+            if (event.key === '/' && (event.target as HTMLElement)?.tagName.toUpperCase() !== 'INPUT' && (event.target as HTMLElement)?.tagName.toUpperCase() !== 'TEXTAREA') {
                 event.preventDefault()
                 searchRef.current?.focus()
             }
