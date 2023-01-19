@@ -22,6 +22,8 @@ import { useTable, useSortBy } from 'react-table'
 import sx from './styles/Table.sx'
 import { TableProps } from './types'
 
+// TODO: use react-virtualized
+
 type MouseState = {
     mouseX: number | null
     mouseY: number | null
