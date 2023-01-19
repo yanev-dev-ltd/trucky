@@ -89,42 +89,45 @@ export function Table<T extends Record<string, unknown>>(
                 {...props}
             >
                 <TableHead>
-                    {headerGroups.map((headerGroup, i) => (
+                    {headerGroups.map((headerGroup) => (
                         <TableRow {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column) => (
                                 <TableCell
                                     {...column.getHeaderProps(
                                         column.getSortByToggleProps()
                                     )}
-                                    sx={sx.root}
                                 >
-                                    {column.render('Header')}
-                                    <Box component="span">
-                                        {column.isSorted ? (
-                                            column.isSortedDesc ? (
-                                                <ArrowDropDown
-                                                    fontSize="small"
-                                                    style={{
-                                                        marginBottom: '-5px',
-                                                    }}
-                                                />
+                                    <Box sx={sx.root}>
+                                        {column.render('Header')}
+                                        <Box component="span" sx={sx.sort}>
+                                            {column.isSorted ? (
+                                                column.isSortedDesc ? (
+                                                    <ArrowDropDown
+                                                        fontSize="small"
+                                                        style={{
+                                                            marginBottom:
+                                                                '-5px',
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <ArrowDropUp
+                                                        fontSize="small"
+                                                        style={{
+                                                            marginBottom:
+                                                                '-5px',
+                                                        }}
+                                                    />
+                                                )
                                             ) : (
                                                 <ArrowDropUp
                                                     fontSize="small"
                                                     style={{
+                                                        visibility: 'hidden',
                                                         marginBottom: '-5px',
                                                     }}
                                                 />
-                                            )
-                                        ) : (
-                                            <ArrowDropUp
-                                                fontSize="small"
-                                                style={{
-                                                    visibility: 'hidden',
-                                                    marginBottom: '-5px',
-                                                }}
-                                            />
-                                        )}
+                                            )}
+                                        </Box>
                                     </Box>
                                 </TableCell>
                             ))}

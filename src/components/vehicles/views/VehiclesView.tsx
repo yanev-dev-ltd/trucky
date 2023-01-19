@@ -88,6 +88,13 @@ export const VehiclesView: React.FC<VehicleProps> = ({
             setFilteredVehicles(vehicles)
         }
     }, [search, vehicles])
+
+    const sortType = (a: any, b: any, id: string) => {
+        if (!a.original[id]) return 1
+        if (!b.original[id]) return -1
+        return a.original[id].localeCompare(b.original[id])
+    }
+
     const columns = useMemo(
         () => [
             {
@@ -96,6 +103,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 accessor: (v: Vehicle) =>
                     v.name ? <Overflow text={v.name} /> : '-',
                 maxWidth: 240,
+                sortType,
             },
             {
                 Header: (
@@ -138,6 +146,47 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                         />
                     </Box>
                 ),
+                sortType: (a: any, b: any, id: string) => {
+                    if (!a?.original[id]) return 1
+                    if (!b?.original[id]) return -1
+                    if (
+                        intl.formatMessage({
+                            id: `app.VehicleType.${
+                                VehicleTypes[
+                                    a?.original[id] as keyof typeof VehicleTypes
+                                ]
+                            }`,
+                        }) >
+                        intl.formatMessage({
+                            id: `app.VehicleType.${
+                                VehicleTypes[
+                                    b?.original[id] as keyof typeof VehicleTypes
+                                ]
+                            }`,
+                        })
+                    ) {
+                        return 1
+                    }
+                    if (
+                        intl.formatMessage({
+                            id: `app.VehicleType.${
+                                VehicleTypes[
+                                    a?.original[id] as keyof typeof VehicleTypes
+                                ]
+                            }`,
+                        }) <
+                        intl.formatMessage({
+                            id: `app.VehicleType.${
+                                VehicleTypes[
+                                    b?.original[id] as keyof typeof VehicleTypes
+                                ]
+                            }`,
+                        })
+                    ) {
+                        return -1
+                    }
+                    return 0
+                },
             },
             {
                 Header: <FormattedMessage id="app.Mileage" />,
@@ -161,6 +210,17 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                     )
                 },
                 maxWidth: 160,
+                sortType: (a: any, b: any, id: string) => {
+                    if (isNaN(+a.original[id])) return 1
+                    if (isNaN(+b.original[id])) return -1
+                    if (a.original[id] > b.original[id]) {
+                        return 1
+                    }
+                    if (a.original[id] < b.original[id]) {
+                        return -1
+                    }
+                    return 0
+                },
             },
             {
                 Header: <FormattedMessage id="app.Driver" />,
@@ -182,6 +242,23 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                     )
                 },
                 maxWidth: 160,
+                sortType: (a: any, b: any, id: string) => {
+                    const d1name = drivers.find(
+                        (d) => d.id === a?.original[id]
+                    )?.name
+                    const d2name = drivers.find(
+                        (d) => d.id === b?.original[id]
+                    )?.name
+                    if (!d1name) return 1
+                    if (!d2name) return -1
+                    if (d1name > d2name) {
+                        return 1
+                    }
+                    if (d1name < d2name) {
+                        return -1
+                    }
+                    return 0
+                },
             },
             {
                 Header: <FormattedMessage id="app.LastRoute" />,
@@ -189,6 +266,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                 accessor: (v: Vehicle) =>
                     v.route ? <Overflow text={v.route} /> : '-',
                 maxWidth: 240,
+                sortType,
             },
             {
                 Header: <FormattedMessage id="app.Details" />,
@@ -203,6 +281,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                         </IconButton>
                     </Tooltip>
                 ),
+                disableSortBy: true,
             },
         ],
         [vehicles]
