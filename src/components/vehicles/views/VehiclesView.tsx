@@ -13,7 +13,7 @@ import EditVehicle from '../components/EditVehicle/EditVehicle'
 import AddVehicle from '../components/AddVehicle/AddVehicle'
 
 import sx from '../styles/Vehicles.sx'
-import { Vehicle, VehicleProps } from '../types'
+import { Vehicles, VehicleProps } from '../types'
 import { FormattedMessage } from 'react-intl'
 
 export const VehiclesView: React.FC<VehicleProps> = ({
@@ -25,8 +25,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
     columns,
 }): JSX.Element => {
     const [search, setSearch] = useState<string | boolean>(false)
-    const [filteredVehicles, setFilteredVehicles] =
-        useState<Vehicle[]>(vehicles)
+    const [filteredVehicles, setFilteredVehicles] = useState<Vehicles>(vehicles)
     useEffect(() => {
         if (search && typeof search === 'string' && search.length >= 3) {
             const tempVehicles = fuse.search(search)

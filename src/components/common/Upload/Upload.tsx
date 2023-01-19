@@ -11,6 +11,7 @@ import {
     DialogActions,
     Button,
     Typography,
+    Box,
 } from '@mui/material'
 import { CloudUpload, InsertDriveFile, Close } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
@@ -32,7 +33,7 @@ const Upload = ({ filepath, dbpath, currentFiles }: UploadProps) => {
     })
 
     return (
-        <form>
+        <Box component="form">
             <input
                 type="file"
                 id="document-upload"
@@ -116,7 +117,7 @@ const Upload = ({ filepath, dbpath, currentFiles }: UploadProps) => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </form>
+        </Box>
     )
 }
 

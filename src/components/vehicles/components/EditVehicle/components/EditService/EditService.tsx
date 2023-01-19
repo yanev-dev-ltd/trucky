@@ -11,8 +11,6 @@ import {
     InputLabel,
     Button,
     TextField,
-    Tooltip,
-    IconButton,
 } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 
@@ -52,7 +50,7 @@ const EditService = ({
             maxWidth="sm"
         >
             <Box sx={sx.form}>
-                <form onSubmit={handleSubmit}>
+                <Box component="form" onSubmit={handleSubmit}>
                     <DialogTitle id="new-service-dialog-title">
                         <FormattedMessage id="app.EditService" />
                     </DialogTitle>
@@ -94,14 +92,16 @@ const EditService = ({
                                     <FormattedMessage
                                         id="app.ReminderInfo"
                                         values={{
-                                            units: intl.formatMessage({
-                                                id:
-                                                    units === 'km'
-                                                        ? 'app.Kilometers'
-                                                        : units === 'm'
-                                                        ? 'app.Miles'
-                                                        : 'app.Hours',
-                                            }),
+                                            units: intl
+                                                .formatMessage({
+                                                    id:
+                                                        units === 'km'
+                                                            ? 'app.Kilometers'
+                                                            : units === 'm'
+                                                            ? 'app.Miles'
+                                                            : 'app.Hours',
+                                                })
+                                                .toLowerCase(),
                                         }}
                                     />
                                 }
@@ -262,7 +262,7 @@ const EditService = ({
                             <FormattedMessage id="app.EditService" />
                         </Button>
                     </DialogActions>
-                </form>
+                </Box>
             </Box>
         </Dialog>
     )

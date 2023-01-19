@@ -71,7 +71,7 @@ const NewService = ({ addService, driver, units }: NewServiceProps) => {
                 maxWidth="sm"
             >
                 <Box sx={sx.form}>
-                    <form onSubmit={handleSubmit}>
+                    <Box component="form" onSubmit={handleSubmit}>
                         <DialogTitle id="new-service-dialog-title">
                             <FormattedMessage id="app.AddService" />
                         </DialogTitle>
@@ -113,14 +113,16 @@ const NewService = ({ addService, driver, units }: NewServiceProps) => {
                                         <FormattedMessage
                                             id="app.ReminderInfo"
                                             values={{
-                                                units: intl.formatMessage({
-                                                    id:
-                                                        units === 'km'
-                                                            ? 'app.Kilometers'
-                                                            : units === 'm'
-                                                            ? 'app.Miles'
-                                                            : 'app.Hours',
-                                                }),
+                                                units: intl
+                                                    .formatMessage({
+                                                        id:
+                                                            units === 'km'
+                                                                ? 'app.Kilometers'
+                                                                : units === 'm'
+                                                                ? 'app.Miles'
+                                                                : 'app.Hours',
+                                                    })
+                                                    .toLowerCase(),
                                             }}
                                         />
                                     }
@@ -249,7 +251,7 @@ const NewService = ({ addService, driver, units }: NewServiceProps) => {
                                 <FormattedMessage id="app.AddService" />
                             </Button>
                         </DialogActions>
-                    </form>
+                    </Box>
                 </Box>
             </Dialog>
         </>

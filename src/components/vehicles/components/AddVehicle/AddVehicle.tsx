@@ -54,7 +54,8 @@ const AddVehicle = () => {
             <Modal open={open}>
                 <Box sx={sx.wrap}>
                     <Paper sx={sx.modal}>
-                        <form
+                        <Box
+                            component="form"
                             onSubmit={(event) => {
                                 event.preventDefault()
                                 addVehicle()
@@ -229,7 +230,7 @@ const AddVehicle = () => {
                                     <FormattedMessage id="app.addVehicle" />
                                 </LoadingButton>
                             </Box>
-                        </form>
+                        </Box>
                     </Paper>
                 </Box>
             </Modal>

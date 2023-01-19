@@ -154,7 +154,8 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                             </>
                         )}
                         {edit === 'name' && (
-                            <form
+                            <Box
+                                component="form"
                                 onSubmit={(event) => {
                                     event.preventDefault()
                                     saveVehicleField('name')
@@ -206,7 +207,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                         <Close />
                                     </IconButton>
                                 </Tooltip>
-                            </form>
+                            </Box>
                         )}
                     </Paper>
                     <Paper sx={sx.paper}>
@@ -289,7 +290,8 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                             </>
                         )}
                         {edit === 'mileage' && (
-                            <form
+                            <Box
+                                component="form"
                                 onSubmit={(event) => {
                                     event.preventDefault()
                                     saveVehicleField('mileage')
@@ -359,7 +361,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                 >
                                     <FormattedMessage id="app.Save" />
                                 </Button>
-                            </form>
+                            </Box>
                         )}
                     </Paper>
                     <Paper sx={sx.paper}>
@@ -394,7 +396,8 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                             </>
                         )}
                         {edit === 'driver' && (
-                            <form
+                            <Box
+                                component="form"
                                 onSubmit={(event) => {
                                     event.preventDefault()
                                     saveVehicleField('driver')
@@ -458,7 +461,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                 >
                                     <FormattedMessage id="app.Save" />
                                 </Button>
-                            </form>
+                            </Box>
                         )}
                     </Paper>
                     <Paper sx={sx.paper}>
