@@ -36,8 +36,6 @@ export const VehiclesView: React.FC<VehicleProps> = ({
         }
     }, [search, vehicles])
 
-    // TODO : end day of payment
-
     if (vehicles?.[0]?.key === 'loading') {
         return (
             <Box sx={sx.loading}>
