@@ -25,6 +25,10 @@ const sx: Record<string, SxProps<Theme>> = {
         flexDirection: 'column',
         float: 'left',
     },
+    searchKey: {
+        paddingLeft: 1,
+        paddingRight: 1,
+    }
 }
 
 export default sx

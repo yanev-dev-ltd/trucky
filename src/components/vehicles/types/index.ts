@@ -1,3 +1,5 @@
+import Fuse from 'fuse.js'
+import { Column } from 'react-table'
 export type Vehicles = Vehicle[]
 
 export type Vehicle = {
@@ -22,6 +24,9 @@ export type VehicleProps = {
     vehicleId: string | undefined
     vehicles: Vehicles,
     edit: string | undefined
+    searchRef: React.MutableRefObject<HTMLInputElement | null>
+    fuse: Fuse<Vehicle>
+    columns: Column<Vehicle>[]
 }
 
 export type Service = {
