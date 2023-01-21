@@ -20,7 +20,7 @@ import Head from 'next/head'
 import sx from './styles/Notifications.sx'
 import useNotifications from './hooks/useNotifications'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../../../../../../store/store'
+import { RootState } from '@/store/store'
 import { NotificationItem } from './types'
 
 const unreadMsgs = [

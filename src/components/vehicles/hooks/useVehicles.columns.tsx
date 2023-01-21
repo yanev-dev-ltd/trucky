@@ -5,7 +5,7 @@ import { Vehicle, Vehicles, VehicleTypes, FuelTypes } from '../types'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Typography, Box, Tooltip, IconButton } from '@mui/material'
 import { FormatListBulleted } from '@mui/icons-material'
-import Overflow from '../../common/Overflow/Overflow'
+import Overflow from '@/components/common/Overflow/Overflow'
 import sx from '../styles/Vehicles.sx'
 import drivers from '../../../api/drivers'
 

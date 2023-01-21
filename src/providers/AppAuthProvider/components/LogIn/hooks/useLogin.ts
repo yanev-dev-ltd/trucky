@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react'
-import { auth } from '../../../../../services/firebase'
+import { auth } from '@/services/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FirebaseError } from '../../../types'
 import { useDispatch } from 'react-redux'

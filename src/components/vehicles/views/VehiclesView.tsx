@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import Table from '../../common/Table/Table'
+import Table from '@/components/common/Table/Table'
 import {
     TextField,
     CircularProgress,
@@ -9,8 +9,8 @@ import {
     Paper,
 } from '@mui/material'
 
-import EditVehicle from '../components/EditVehicle/EditVehicle'
-import AddVehicle from '../components/AddVehicle/AddVehicle'
+import EditVehicle from '@/components/vehicles/components/EditVehicle/EditVehicle'
+import AddVehicle from '@/components/vehicles/components/AddVehicle/AddVehicle'
 
 import sx from '../styles/Vehicles.sx'
 import { Vehicles, VehicleProps } from '../types'
@@ -88,7 +88,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
                     </Box>
                 )}
             <EditVehicle
-                vehicle={filteredVehicles.find((v) => v.key === vehicleId)}
+                vehicle={vehicles.find((v) => v.key === vehicleId)}
                 edit={edit}
             />
         </Box>

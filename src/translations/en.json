@@ -148,6 +148,7 @@
   "app.Saved.service": "The Service were saved.",
   "app.Saved.type": "The Type was saved.",
   "app.Saved.units": "The Units were saved.",
+  "app.Sort": "Sort",
   "app.stripe.": "Error",
   "app.stripe.account_already_exists": "The email address provided for the creation of a deferred account already has an account associated with it.",
   "app.stripe.account_country_invalid_address": "The country of the business address provided does not match the country of the account. Businesses must be located in the same country as the account.",

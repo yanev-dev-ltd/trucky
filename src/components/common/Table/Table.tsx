@@ -17,7 +17,9 @@ import {
     FormControlLabel,
     Checkbox,
     Box,
+    Tooltip,
 } from '@mui/material'
+import { useIntl } from 'react-intl'
 import { useTable, useSortBy } from 'react-table'
 import sx from './styles/Table.sx'
 import { TableProps } from './types'
@@ -37,6 +39,7 @@ const initialState = {
 export function Table<T extends Record<string, unknown>>(
     props: PropsWithChildren<TableProps<T>>
 ): ReactElement {
+    const intl = useIntl()
     const { columns, data, name } = props
     const { getTableProps, headerGroups, rows, prepareRow, allColumns } =
         useTable(
@@ -98,39 +101,52 @@ export function Table<T extends Record<string, unknown>>(
                                     {...column.getHeaderProps(
                                         column.getSortByToggleProps()
                                     )}
+                                    title={undefined}
                                 >
-                                    <Box sx={sx.root}>
-                                        {column.render('Header')}
-                                        <Box component="span" sx={sx.sort}>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <ArrowDropDown
-                                                        fontSize="small"
-                                                        style={{
-                                                            marginBottom:
-                                                                '-5px',
-                                                        }}
-                                                    />
+                                    <Tooltip
+                                        title={
+                                            column.canSort
+                                                ? intl.formatMessage({
+                                                      id: 'app.Sort',
+                                                  })
+                                                : undefined
+                                        }
+                                    >
+                                        <Box sx={sx.root}>
+                                            {column.render('Header')}
+                                            <Box component="span" sx={sx.sort}>
+                                                {column.isSorted ? (
+                                                    column.isSortedDesc ? (
+                                                        <ArrowDropDown
+                                                            fontSize="small"
+                                                            style={{
+                                                                marginBottom:
+                                                                    '-5px',
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <ArrowDropUp
+                                                            fontSize="small"
+                                                            style={{
+                                                                marginBottom:
+                                                                    '-5px',
+                                                            }}
+                                                        />
+                                                    )
                                                 ) : (
                                                     <ArrowDropUp
                                                         fontSize="small"
                                                         style={{
+                                                            visibility:
+                                                                'hidden',
                                                             marginBottom:
                                                                 '-5px',
                                                         }}
                                                     />
-                                                )
-                                            ) : (
-                                                <ArrowDropUp
-                                                    fontSize="small"
-                                                    style={{
-                                                        visibility: 'hidden',
-                                                        marginBottom: '-5px',
-                                                    }}
-                                                />
-                                            )}
+                                                )}
+                                            </Box>
                                         </Box>
-                                    </Box>
+                                    </Tooltip>
                                 </TableCell>
                             ))}
                         </TableRow>
@@ -140,7 +156,7 @@ export function Table<T extends Record<string, unknown>>(
                     {rows.map((row, i) => {
                         prepareRow(row)
                         return (
-                            <TableRow {...row.getRowProps()}>
+                            <TableRow {...row.getRowProps()} sx={sx.row}>
                                 {row.cells.map((cell, indx) => {
                                     return (
                                         <TableCell

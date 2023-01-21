@@ -1,7 +1,7 @@
 import LogIn from './components/LogIn/LogIn'
 import useAppAuthProvider from './hooks/useAppAuthProvider'
 import { Box, CircularProgress } from '@mui/material'
-import Layout from '../../components/hoc/Layout/Layout'
+import Layout from '@/components/hoc/Layout/Layout'
 import sx from './styles/AppAuthProvider.sx'
 
 const Authenticated: React.FC<React.PropsWithChildren<unknown>> = ({
