@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 18.x
       - run: yarn
-      - run: npx next build && npx next export
+      - run: yarn build && yarn deploy
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
