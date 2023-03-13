@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 18.x
       - run: yarn install
-      - run: npm install -g npx
+      - run: yarn
       - run: yarn build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
