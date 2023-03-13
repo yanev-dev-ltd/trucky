@@ -17,8 +17,7 @@ jobs:
           node-version: 18.x
       - run: yarn
       - run: yarn build
-        with:
-          args: deploy --only functions,hosting
+      - run: firebase deploy --only functions,hosting
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
