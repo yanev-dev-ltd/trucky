@@ -7,3 +7,7 @@ export type useHeaderProps = {
     handleFullscreen: () => void
     fullscreen: boolean
 }
+
+export type Header = {
+    id: string
+}

@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useHeaderProps } from '../types';
 
 const useHeader = (): useHeaderProps => {
     const [fullscreen, setFullscreen] = useState(false)
 
-    const handleFullscreen = () => {
+    const handleFullscreen = useCallback(() => {
         const body = document.querySelector('body')
         const fullscreenChange = () => {
             if (!document.fullscreenElement) {
@@ -12,7 +12,7 @@ const useHeader = (): useHeaderProps => {
             }
         }
         if (!document.fullscreenElement) {
-            body?.requestFullscreen();
+            body?.requestFullscreen()
             document.addEventListener('fullscreenchange', fullscreenChange)
             document.addEventListener('webkitfullscreenchange', fullscreenChange)
             document.addEventListener('mozfullscreenchange', fullscreenChange)
@@ -22,7 +22,7 @@ const useHeader = (): useHeaderProps => {
             document.exitFullscreen()
             setFullscreen(false)
         }
-    }
+    },[])
 
     return { handleFullscreen, fullscreen }
 }

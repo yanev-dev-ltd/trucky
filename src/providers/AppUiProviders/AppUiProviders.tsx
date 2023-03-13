@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, FC, PropsWithChildren } from 'react'
 import {
     ThemeProvider,
     StyledEngineProvider,
@@ -18,9 +18,7 @@ import SnackbarClose from './components/SnackbarClose/SnackbarClose'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
-const AppUiProviders: React.FC<React.PropsWithChildren<unknown>> = ({
-    children,
-}) => {
+const AppUiProviders: FC<PropsWithChildren<unknown>> = ({ children }) => {
     const settings = useSettings()
     const messages = useMemo(() => {
         switch (settings?.locale) {

@@ -11,7 +11,11 @@ import {
     ListItemAvatar,
     Avatar,
 } from '@mui/material'
-import { NotificationsActive, ReceiptLong } from '@mui/icons-material'
+import {
+    NotificationsActive,
+    ReceiptLong,
+    NotificationsNone,
+} from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import { formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
@@ -337,7 +341,11 @@ const Notifications = () => {
             </Head>
             <Tooltip title={<FormattedMessage id="app.Notifications" />}>
                 <IconButton onClick={handleClick} sx={sx.notifications}>
-                    <NotificationsActive />
+                    {Boolean(anchorEl) ? (
+                        <NotificationsActive />
+                    ) : (
+                        <NotificationsNone />
+                    )}
                     <Typography sx={sx.notificationsCount}>9+</Typography>
                 </IconButton>
             </Tooltip>

@@ -19,12 +19,15 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "public",
+    "source": ".",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ]
+    ],
+    "frameworksBackend": {
+      "region": "europe-west1"
+    }
   },
   "storage": {
     "rules": "storage.rules"
@@ -38,12 +41,15 @@
     },
     "singleProjectMode": true
   },
-  "headers": [ {
-    "source" : "**/*.*",
-    "headers" : [ {
-      "key" : "Access-Control-Allow-Origin",
-      "value" : "*"
-    } ]
-  } ]
-  
+  "headers": [
+    {
+      "source": "**/*.*",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    }
+  ]
 }

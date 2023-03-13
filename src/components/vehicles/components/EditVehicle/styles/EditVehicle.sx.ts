@@ -113,6 +113,12 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     right: {
         textAlign: 'right',
+    },
+    loading: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 2
     }
 }
 

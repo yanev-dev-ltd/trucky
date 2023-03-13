@@ -14,7 +14,7 @@ const drivers = [
       name: 'Dimitar Ivanov',
       phone: '+359 897 97 97 97'
     }
-  ];
+  ]
   
   export default drivers
   

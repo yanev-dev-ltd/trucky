@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/display-name */
-import React, { ComponentPropsWithoutRef, FC } from 'react'
+import { ComponentPropsWithoutRef, FC } from 'react'
 
 /**
  * Creates an implementation of a component using a View and a Controller hook

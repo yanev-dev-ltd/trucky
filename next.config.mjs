@@ -21,6 +21,7 @@ const config = {
   i18n: {
     locales: ['en', 'bg'],
     defaultLocale: 'en'
-  }
+  },
+  distDir: 'build'
 };
 export default config;

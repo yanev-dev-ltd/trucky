@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FC } from 'react'
 import Table from '@/components/common/Table/Table'
 import {
     TextField,
@@ -9,14 +9,16 @@ import {
     Paper,
 } from '@mui/material'
 
+import { Search } from '@mui/icons-material'
+
 import EditVehicle from '@/components/vehicles/components/EditVehicle/EditVehicle'
 import AddVehicle from '@/components/vehicles/components/AddVehicle/AddVehicle'
 
 import sx from '../styles/Vehicles.sx'
 import { Vehicles, VehicleProps } from '../types'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 
-export const VehiclesView: React.FC<VehicleProps> = ({
+export const VehiclesView: FC<VehicleProps> = ({
     vehicles,
     vehicleId,
     edit,
@@ -24,6 +26,7 @@ export const VehiclesView: React.FC<VehicleProps> = ({
     fuse,
     columns,
 }): JSX.Element => {
+    const intl = useIntl()
     const [search, setSearch] = useState<string | boolean>(false)
     const [filteredVehicles, setFilteredVehicles] = useState<Vehicles>(vehicles)
     useEffect(() => {
@@ -48,15 +51,20 @@ export const VehiclesView: React.FC<VehicleProps> = ({
             <Box sx={sx.header}>
                 <TextField
                     variant="outlined"
-                    label={<FormattedMessage id="app.Search" />}
+                    placeholder={intl.formatMessage({ id: 'app.Search' })}
                     size="small"
                     onChange={(e) => setSearch(e.target.value)}
                     sx={sx.search}
                     inputRef={searchRef}
                     InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <Search />
+                            </InputAdornment>
+                        ),
                         endAdornment: (
                             <InputAdornment position="end">
-                                <Paper sx={sx.searchKey}>
+                                <Paper sx={sx.searchKey} elevation={2}>
                                     <Typography variant="caption">/</Typography>
                                 </Paper>
                             </InputAdornment>

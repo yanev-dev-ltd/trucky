@@ -111,8 +111,15 @@ export function Table<T extends Record<string, unknown>>(
                                                   })
                                                 : undefined
                                         }
+                                        placement="bottom-start"
                                     >
-                                        <Box sx={sx.root}>
+                                        <Box
+                                            sx={
+                                                column.isSorted
+                                                    ? sx.sorted
+                                                    : sx.root
+                                            }
+                                        >
                                             {column.render('Header')}
                                             <Box component="span" sx={sx.sort}>
                                                 {column.isSorted ? (

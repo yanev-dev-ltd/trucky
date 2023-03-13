@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, SyntheticEvent } from 'react'
 import { auth } from '@/services/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FirebaseError } from '../../../types'
@@ -13,7 +13,7 @@ const useLogin = () => {
     const dispatch = useDispatch()
 
     const onSubmit = useCallback(
-        async (e: React.SyntheticEvent) => {
+        async (e: SyntheticEvent) => {
             e.preventDefault()
             setLoading(true)
             try {

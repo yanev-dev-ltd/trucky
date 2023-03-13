@@ -9,11 +9,19 @@ const sx: Record<string, SxProps<Theme>> = {
         flexWrap: 'nowrap',
         paddingRight: 1
     },
+    sorted: {
+        color: 'text.primary',
+        userSelect: 'none',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        flexWrap: 'nowrap',
+        paddingRight: 1
+    },
     row: {
         ':hover': {
             backgroundColor: 'action.hover',
         }
-    }
+    },
 }
 
 export default sx

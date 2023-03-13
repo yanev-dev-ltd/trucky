@@ -1,27 +1,27 @@
-import React from 'react'
+import { ReactNode, FC } from 'react'
 import { Box } from '@mui/material'
 import Navigation from './components/Navigation/Navigation'
 import Header from './components/Header/Header'
 import sx from './styles/Layout.sx'
 
 type useLayout = {
-    children: React.ReactNode
+    children: ReactNode
 }
 
 type LayoutProps = {
-    children: React.ReactNode
+    children: ReactNode
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }: useLayout) => {
-    return (<>
-        <Header />
-        <Box sx={sx.wrap}>
-          <Navigation />
-          <Box sx={sx.page}>
-            { children }
-          </Box>
-        </Box>
-    </>)
+const Layout: FC<LayoutProps> = ({ children }: useLayout) => {
+    return (
+        <>
+            <Header id="header" />
+            <Box sx={sx.wrap}>
+                <Navigation />
+                <Box sx={sx.page}>{children}</Box>
+            </Box>
+        </>
+    )
 }
 
 export default Layout

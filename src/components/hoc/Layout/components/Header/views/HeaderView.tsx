@@ -1,4 +1,3 @@
-import React from 'react'
 import { Box, IconButton, Tooltip } from '@mui/material'
 import { Fullscreen, FullscreenExit, Logout } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'

@@ -1,4 +1,4 @@
-import React, { useState, SyntheticEvent } from 'react'
+import { useState, SyntheticEvent } from 'react'
 import {
     Dialog,
     Box,
@@ -197,13 +197,13 @@ const EditService = ({
                                 <Select
                                     labelId="new-service-driver-label"
                                     id="new-service-driver"
-                                    value={editedService?.driver || ''}
+                                    value={editedService?.driver || '-'}
                                     onChange={(event) =>
                                         setField('driver', event.target.value)
                                     }
                                     label="Driver"
                                 >
-                                    <MenuItem key={0} value={''}>
+                                    <MenuItem key={0} value={'-'}>
                                         <FormattedMessage id="app.SelectDriver" />
                                     </MenuItem>
                                     {drivers.map((d, i) => (

@@ -18,7 +18,7 @@ const sx: Record<string, SxProps<Theme>> = {
         height: 'calc(100vh - 54px)',
     },
     search: {
-        width: 300
+        width: 300,
     },
     multiLineHeader: {
         display: 'flex',

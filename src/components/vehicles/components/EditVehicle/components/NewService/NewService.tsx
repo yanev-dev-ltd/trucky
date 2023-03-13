@@ -1,9 +1,4 @@
-import React, {
-    useState,
-    useCallback,
-    ChangeEvent,
-    SyntheticEvent,
-} from 'react'
+import { useState, useCallback, SyntheticEvent } from 'react'
 import {
     Dialog,
     Box,
@@ -217,7 +212,7 @@ const NewService = ({ addService, driver, units }: NewServiceProps) => {
                                     <Select
                                         labelId="new-service-driver-label"
                                         id="new-service-driver"
-                                        value={service.driver || driver || ''}
+                                        value={service.driver || driver || '-'}
                                         onChange={(event) =>
                                             setField(
                                                 'driver',
@@ -226,7 +221,7 @@ const NewService = ({ addService, driver, units }: NewServiceProps) => {
                                         }
                                         label="Driver"
                                     >
-                                        <MenuItem key={0} value={''}>
+                                        <MenuItem value={'-'}>
                                             <FormattedMessage id="app.SelectDriver" />
                                         </MenuItem>
                                         {drivers.map((d, i) => (

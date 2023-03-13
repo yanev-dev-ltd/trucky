@@ -24,6 +24,7 @@ import {
     Divider,
     TextField,
     Tooltip,
+    CircularProgress,
 } from '@mui/material'
 import {
     Close,
@@ -41,18 +42,18 @@ import { bg, enUS } from 'date-fns/locale'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import { FormattedMessage } from 'react-intl'
-import LoadingButton from '../../../common/LoadingButton/LoadingButton'
-import { auth } from '../../../../services/firebase'
+import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
+import { auth } from '@/services/firebase'
 import sx from './styles/EditVehicle.sx'
 import drivers from '../../../../api/drivers'
 import { EditVehicleProps } from './types'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../../../store/store'
+import { RootState } from '@/store/store'
 import { VehicleFile, VehicleTypes, FuelTypes, Service } from '../../types'
 import useEditVehicle from './hooks/useEditVehicle'
-import Upload from '../../../common/Upload/Upload'
-import Confirm from '../../../common/Confirm/Confirm'
-import Overflow from '../../../common/Overflow/Overflow'
+import Upload from '@/components/common/Upload/Upload'
+import Confirm from '@/components/common/Confirm/Confirm'
+import Overflow from '@/components/common/Overflow/Overflow'
 import NewService from './components/NewService/NewService'
 import EditService from './components/EditService/EditService'
 
@@ -520,7 +521,16 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                             <Tooltip
                                 title={<FormattedMessage id="app.AddRoute" />}
                             >
-                                <IconButton size="small" sx={sx.edit}>
+                                <IconButton
+                                    size="small"
+                                    sx={sx.edit}
+                                    onClick={() => {
+                                        router.push(
+                                            `/vehicles/${vehicle?.key}/add-route`
+                                        )
+                                        reset()
+                                    }}
+                                >
                                     <AddCircle />
                                 </IconButton>
                             </Tooltip>
@@ -683,98 +693,120 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                 units={vehicle.units}
                             />
                         </Box>
-                        {service && service.length > 0 && (
-                            <Box sx={sx.fixedHeight}>
-                                <MuiTable size="small" stickyHeader>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell sx={sx.smallCellHead}>
-                                                &nbsp;
-                                            </TableCell>
-                                            <TableCell sx={sx.smallCellHead}>
-                                                <FormattedMessage id="app.Date" />
-                                            </TableCell>
-                                            <TableCell sx={sx.smallCellHead}>
-                                                <FormattedMessage id="app.Type" />
-                                            </TableCell>
-                                            <TableCell sx={sx.smallCellHead}>
-                                                <FormattedMessage id="app.Cost" />
-                                            </TableCell>
-                                            <TableCell sx={sx.smallCellHead}>
-                                                &nbsp;
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {service.map((s, i) => (
-                                            <TableRow key={i}>
-                                                <TableCell sx={sx.smallCell}>
-                                                    {(s.reminderDate ||
-                                                        s.reminderMileage) && (
-                                                        <Tooltip
-                                                            title={
-                                                                s.reminderDate &&
-                                                                s.reminderMileage ? (
-                                                                    <FormattedMessage id="app.Service.AlarmDateAndMileage" />
-                                                                ) : s.reminderDate ? (
-                                                                    <FormattedMessage id="app.Service.AlarmDate" />
-                                                                ) : (
-                                                                    <FormattedMessage id="app.Service.AlarmMileage" />
+                        {service &&
+                            service.length > 0 &&
+                            (service?.[0]?.key === 'loading' ? (
+                                <Box sx={sx.loading}>
+                                    <CircularProgress />
+                                </Box>
+                            ) : (
+                                <Box sx={sx.fixedHeight}>
+                                    <MuiTable size="small" stickyHeader>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell
+                                                    sx={sx.smallCellHead}
+                                                >
+                                                    &nbsp;
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={sx.smallCellHead}
+                                                >
+                                                    <FormattedMessage id="app.Date" />
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={sx.smallCellHead}
+                                                >
+                                                    <FormattedMessage id="app.Type" />
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={sx.smallCellHead}
+                                                >
+                                                    <FormattedMessage id="app.Cost" />
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={sx.smallCellHead}
+                                                >
+                                                    &nbsp;
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {service.map((s, i) => (
+                                                <TableRow key={i}>
+                                                    <TableCell
+                                                        sx={sx.smallCell}
+                                                    >
+                                                        {(s.reminderDate ||
+                                                            s.reminderMileage) && (
+                                                            <Tooltip
+                                                                title={
+                                                                    s.reminderDate &&
+                                                                    s.reminderMileage ? (
+                                                                        <FormattedMessage id="app.Service.AlarmDateAndMileage" />
+                                                                    ) : s.reminderDate ? (
+                                                                        <FormattedMessage id="app.Service.AlarmDate" />
+                                                                    ) : (
+                                                                        <FormattedMessage id="app.Service.AlarmMileage" />
+                                                                    )
+                                                                }
+                                                            >
+                                                                <NotificationsActive />
+                                                            </Tooltip>
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell
+                                                        sx={sx.smallCell}
+                                                    >
+                                                        {s.date &&
+                                                            format(
+                                                                new Date(
+                                                                    +s.date
+                                                                ),
+                                                                'dd/MM/yyyy'
+                                                            )}
+                                                    </TableCell>
+                                                    <TableCell
+                                                        sx={sx.smallCell}
+                                                        style={{
+                                                            maxWidth: '160px',
+                                                        }}
+                                                    >
+                                                        <Overflow
+                                                            text={s.type || ''}
+                                                        />
+                                                    </TableCell>
+                                                    <TableCell
+                                                        sx={sx.smallCell}
+                                                        style={{
+                                                            maxWidth: '90px',
+                                                        }}
+                                                    >
+                                                        <Overflow
+                                                            text={s.cost || ''}
+                                                        />
+                                                    </TableCell>
+                                                    <TableCell
+                                                        sx={sx.smallCell}
+                                                        align="right"
+                                                    >
+                                                        <IconButton
+                                                            size="small"
+                                                            onClick={() =>
+                                                                handleEditServiceOpen(
+                                                                    s
                                                                 )
                                                             }
                                                         >
-                                                            <NotificationsActive />
-                                                        </Tooltip>
-                                                    )}
-                                                </TableCell>
-                                                <TableCell sx={sx.smallCell}>
-                                                    {s.date &&
-                                                        format(
-                                                            new Date(+s.date),
-                                                            'dd/MM/yyyy'
-                                                        )}
-                                                </TableCell>
-                                                <TableCell
-                                                    sx={sx.smallCell}
-                                                    style={{
-                                                        maxWidth: '160px',
-                                                    }}
-                                                >
-                                                    <Overflow
-                                                        text={s.type || ''}
-                                                    />
-                                                </TableCell>
-                                                <TableCell
-                                                    sx={sx.smallCell}
-                                                    style={{
-                                                        maxWidth: '90px',
-                                                    }}
-                                                >
-                                                    <Overflow
-                                                        text={s.cost || ''}
-                                                    />
-                                                </TableCell>
-                                                <TableCell
-                                                    sx={sx.smallCell}
-                                                    align="right"
-                                                >
-                                                    <IconButton
-                                                        size="small"
-                                                        onClick={() =>
-                                                            handleEditServiceOpen(
-                                                                s
-                                                            )
-                                                        }
-                                                    >
-                                                        <Visibility />
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </MuiTable>
-                            </Box>
-                        )}
+                                                            <Visibility />
+                                                        </IconButton>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </MuiTable>
+                                </Box>
+                            ))}
                         <EditService
                             handleEditServiceClose={handleEditServiceClose}
                             service={editService}
