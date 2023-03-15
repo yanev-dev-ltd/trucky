@@ -14,14 +14,14 @@ const config = {
     TRUCKY_MESSAGING_SENDER_ID: process.env.TRUCKY_MESSAGING_SENDER_ID || '',
     TRUCKY_APP_ID: process.env.TRUCKY_APP_ID || '',
     TRUCKY_MEASUREMENT_ID: process.env.TRUCKY_MEASUREMENT_ID || '',
-    TRUCKY_DATABASE_URL: process.env.TRUCKY_DATABASE_URL || ''
+    TRUCKY_DATABASE_URL: process.env.TRUCKY_DATABASE_URL || '',
+    TRUCKY_GOOGLE_MEPS_API_KEY: process.env.TRUCKY_GOOGLE_MEPS_API_KEY || ''
   },
   reactStrictMode: true,
   swcMinify: true,
   i18n: {
     locales: ['en', 'bg'],
     defaultLocale: 'en'
-  },
-  distDir: 'build'
+  }
 };
 export default config;

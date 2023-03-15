@@ -5,9 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
-    "lint": "next lint",
-    "start": "next start"
+    "dev": "next dev"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -25,7 +23,7 @@
     "file-saver": "^2.0.5",
     "firebase": "^9.14.0",
     "fuse.js": "^6.6.2",
-    "next": "^13.1.4",
+    "next": "^13.2.5-canary.2",
     "notistack": "^2.0.8",
     "react": "^18.2.0",
     "react-detect-offline": "^2.4.5",

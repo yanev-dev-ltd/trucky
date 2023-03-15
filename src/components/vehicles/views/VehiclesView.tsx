@@ -13,7 +13,6 @@ import { Search } from '@mui/icons-material'
 
 import EditVehicle from '@/components/vehicles/components/EditVehicle/EditVehicle'
 import AddVehicle from '@/components/vehicles/components/AddVehicle/AddVehicle'
-
 import sx from '../styles/Vehicles.sx'
 import { Vehicles, VehicleProps } from '../types'
 import { FormattedMessage, useIntl } from 'react-intl'
