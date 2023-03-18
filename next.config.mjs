@@ -15,7 +15,13 @@ const config = {
     TRUCKY_APP_ID: process.env.TRUCKY_APP_ID || '',
     TRUCKY_MEASUREMENT_ID: process.env.TRUCKY_MEASUREMENT_ID || '',
     TRUCKY_DATABASE_URL: process.env.TRUCKY_DATABASE_URL || '',
-    TRUCKY_GOOGLE_MEPS_API_KEY: process.env.TRUCKY_GOOGLE_MEPS_API_KEY || ''
+    TRUCKY_GOOGLE_MEPS_API_KEY: process.env.TRUCKY_GOOGLE_MEPS_API_KEY || '',
+    TRUCKY_HERE_USER_ID: process.env.TRUCKY_HERE_USER_ID || '',
+    TRUCKY_HERE_CLIENT_ID: process.env.TRUCKY_HERE_CLIENT_ID || '',
+    TRUCKY_HERE_ACCESS_KEY_ID: process.env.TRUCKY_HERE_ACCESS_KEY_ID || '',
+    TRUCKY_HERE_ACCESS_KEY_SECRET: process.env.TRUCKY_HERE_ACCESS_KEY_SECRET || '',
+    TRUCKY_HERE_TOKEN_ENDPOINT_URL: process.env.TRUCKY_HERE_TOKEN_ENDPOINT_URL || '',
+    TRUCKY_HERE_API_KEY: process.env.TRUCKY_HERE_API_KEY || ''
   },
   reactStrictMode: true,
   swcMinify: true,

@@ -56,6 +56,7 @@ import Confirm from '@/components/common/Confirm/Confirm'
 import Overflow from '@/components/common/Overflow/Overflow'
 import NewService from './components/NewService/NewService'
 import EditService from './components/EditService/EditService'
+import AddRoute from '@/components/routes/components/AddRoute/AddRoute'
 
 const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
     const router = useRouter()
@@ -534,6 +535,9 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     <AddCircle />
                                 </IconButton>
                             </Tooltip>
+                            {edit === 'add-route' && (
+                                <AddRoute vehicleId={vehicle?.key} />
+                            )}
                         </Box>
                         <List dense sx={sx.fixedHeight}>
                             <ListItemButton>
