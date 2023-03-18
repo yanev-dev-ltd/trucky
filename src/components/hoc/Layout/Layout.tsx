@@ -15,7 +15,7 @@ type LayoutProps = {
 const Layout: FC<LayoutProps> = ({ children }: useLayout) => {
     return (
         <>
-            <Header id="header" />
+            <Header />
             <Box sx={sx.wrap}>
                 <Navigation />
                 <Box sx={sx.page}>{children}</Box>
