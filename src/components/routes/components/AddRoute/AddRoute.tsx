@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
     Dialog,
     Box,
@@ -11,63 +11,41 @@ import {
     Button,
     IconButton,
     Tooltip,
+    Paper,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
 } from '@mui/material'
-import { Add } from '@mui/icons-material'
+import {
+    Add,
+    AddCircle,
+    Adjust,
+    ArrowDownward,
+    FileUpload,
+    LocalParking,
+    LocalGasStation,
+    Download,
+    Delete,
+    DragHandle,
+} from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import { useRouter } from 'next/router'
 import { AddRouteProps } from './types'
 import sx from './sx/AddRoute.sx'
 import useAddRoute from './hooks/useAddRoute'
 import allDrivers from '@/api/drivers'
+import LocationDialog from '../LocationDialog/LocationDialog'
+import { Location } from './types'
+import Overflow from '@/components/common/Overflow/Overflow'
+import { SortableList } from './components/SortableList/SortableList'
 
 const AddRoute = ({ vehicleId }: AddRouteProps) => {
-    const { route, changeField } = useAddRoute()
+    const { route, changeField, mapRef } = useAddRoute()
+    const [routeOpen, setRouteOpen] = useState<boolean>(false)
+    const [hoveredLocation, setHoveredLocation] = useState<number | undefined>()
     const router = useRouter()
-    const mapRef = useRef(null)
-    const [reload, setReload] = useState(false)
 
-    useLayoutEffect(() => {
-        // `mapRef.current` will be `undefined` when this hook first runs; edge case that
-        if (!mapRef.current && !reload) {
-            // some strange ref behavior needs to be reloaded
-            setReload(true)
-            return
-        }
-        const H = window.H
-        const platform = new H.service.Platform({
-            apikey: process.env.TRUCKY_HERE_API_KEY,
-        })
-        const defaultLayers = platform.createDefaultLayers()
-        const hMap = new H.Map(
-            mapRef.current,
-            defaultLayers.vector.normal.map,
-            {
-                center: { lat: 50, lng: 5 },
-                zoom: 4,
-                pixelRatio: window.devicePixelRatio || 1,
-            }
-        )
-
-        const behavior = new H.mapevents.Behavior(
-            new H.mapevents.MapEvents(hMap)
-        )
-
-        const ui = H.ui.UI.createDefault(hMap, defaultLayers)
-
-        const handleResize = () => {
-            hMap.getViewPort().resize()
-        }
-
-        window.addEventListener('resize', handleResize)
-
-        // This will act as a cleanup to run once this hook runs again.
-        // This includes when the component un-mounts
-        return () => {
-            hMap.dispose()
-            window.removeEventListener('resize', handleResize)
-            // console.log('here')
-        }
-    }, [mapRef, reload])
     return (
         <Dialog open fullScreen>
             <Box component="form">
@@ -127,7 +105,162 @@ const AddRoute = ({ vehicleId }: AddRouteProps) => {
                                 type="number"
                             />
                         </Box>
-                        <Box sx={sx.row}></Box>
+                        <Paper sx={sx.locations}>
+                            <Box sx={sx.locationsHeader}>
+                                <Typography>
+                                    <FormattedMessage id="app.Locations" />
+                                </Typography>
+                                <Tooltip
+                                    title={
+                                        <FormattedMessage id="app.AddLocation" />
+                                    }
+                                >
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => setRouteOpen(true)}
+                                    >
+                                        <AddCircle />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                            {(!route.locations ||
+                                route.locations.length === 0) && (
+                                <Box sx={sx.noLocations}>
+                                    <FormattedMessage id="app.NoLocations" />
+                                </Box>
+                            )}
+                            {route.locations && route.locations.length > 0 && (
+                                <SortableList
+                                    items={route.locations}
+                                    onChange={(locations: Location[]) =>
+                                        changeField('locations', locations)
+                                    }
+                                    renderItem={(location: Location) => {
+                                        const index =
+                                            route.locations &&
+                                            route.locations.findIndex(
+                                                (loc) => loc.id === location.id
+                                            )
+                                        return (
+                                            <SortableList.Item
+                                                id={location.id || ''}
+                                            >
+                                                <ListItem
+                                                    secondaryAction={
+                                                        <IconButton
+                                                            onClick={() =>
+                                                                changeField(
+                                                                    'locations',
+                                                                    route.locations?.filter(
+                                                                        (
+                                                                            l,
+                                                                            ind
+                                                                        ) =>
+                                                                            ind !==
+                                                                            index
+                                                                    )
+                                                                )
+                                                            }
+                                                        >
+                                                            <Delete />
+                                                        </IconButton>
+                                                    }
+                                                    disableGutters
+                                                    onMouseOver={() =>
+                                                        setHoveredLocation(
+                                                            index
+                                                        )
+                                                    }
+                                                    onMouseLeave={() =>
+                                                        setHoveredLocation(
+                                                            undefined
+                                                        )
+                                                    }
+                                                >
+                                                    <ListItemIcon sx={sx.icon}>
+                                                        {hoveredLocation ===
+                                                        index ? (
+                                                            <Box>
+                                                                <SortableList.DragHandle />
+                                                            </Box>
+                                                        ) : index === 0 ||
+                                                          index ===
+                                                              (route?.locations &&
+                                                                  route
+                                                                      ?.locations
+                                                                      .length -
+                                                                      1) ? (
+                                                            <Adjust />
+                                                        ) : (
+                                                            <ArrowDownward />
+                                                        )}
+                                                    </ListItemIcon>
+                                                    <ListItemText>
+                                                        <Overflow
+                                                            text={
+                                                                location.address ||
+                                                                ''
+                                                            }
+                                                        />
+                                                    </ListItemText>
+                                                    <Box sx={sx.icons}>
+                                                        {location.loading && (
+                                                            <Tooltip
+                                                                title={
+                                                                    <FormattedMessage id="app.Loading" />
+                                                                }
+                                                            >
+                                                                <FileUpload fontSize="small" />
+                                                            </Tooltip>
+                                                        )}
+                                                        {location.unloading && (
+                                                            <Tooltip
+                                                                title={
+                                                                    <FormattedMessage id="app.Unloading" />
+                                                                }
+                                                            >
+                                                                <Download fontSize="small" />
+                                                            </Tooltip>
+                                                        )}
+                                                        {location.parking && (
+                                                            <Tooltip
+                                                                title={
+                                                                    <FormattedMessage id="app.Parking" />
+                                                                }
+                                                            >
+                                                                <LocalParking fontSize="small" />
+                                                            </Tooltip>
+                                                        )}
+                                                        {location.refueling && (
+                                                            <Tooltip
+                                                                title={
+                                                                    <FormattedMessage id="app.Refueling" />
+                                                                }
+                                                            >
+                                                                <LocalGasStation fontSize="small" />
+                                                            </Tooltip>
+                                                        )}
+                                                    </Box>
+                                                </ListItem>
+                                            </SortableList.Item>
+                                        )
+                                    }}
+                                />
+                            )}
+                            <LocationDialog
+                                open={routeOpen}
+                                setOpen={setRouteOpen}
+                                addLocation={(location: Location | undefined) =>
+                                    location &&
+                                    changeField(
+                                        'locations',
+                                        route.locations
+                                            ? [...route.locations, location]
+                                            : [location]
+                                    )
+                                }
+                            />
+                        </Paper>
                     </Box>
                     <Box
                         ref={mapRef}
@@ -136,6 +269,7 @@ const AddRoute = ({ vehicleId }: AddRouteProps) => {
                             width: '100%',
                             flexGrow: 1,
                         }}
+                        id="map"
                     />
                 </DialogContent>
                 <DialogActions>

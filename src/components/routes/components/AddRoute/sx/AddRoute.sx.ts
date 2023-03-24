@@ -1,4 +1,3 @@
-import { Padding } from '@mui/icons-material'
 import { SxProps, Theme } from '@mui/material'
 
 const sx: Record<string, SxProps<Theme>> = {
@@ -20,6 +19,23 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     left: {
         marginRight: 'auto'
+    },
+    locations: {
+        padding: 1,
+    },
+    locationsHeader: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
+    noLocations: {
+        textAlign: 'center',
+        padding: 3
+    },
+    icons: {
+        width: '50px'
+    },
+    icon: {
+        minWidth: '30px'
     }
 }
 

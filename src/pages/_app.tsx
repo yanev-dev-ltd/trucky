@@ -27,6 +27,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
                 strategy="beforeInteractive"
                 src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"
             />
+            <Script
+                strategy="beforeInteractive"
+                src={`https://maps.googleapis.com/maps/api/js?key=${process.env.TRUCKY_GOOGLE_MEPS_API_KEY}&libraries=places`}
+            />
             <AppReduxProvider>
                 <AppUiProviders>
                     <AppAuthProvider>
