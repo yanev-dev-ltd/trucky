@@ -63,7 +63,7 @@ export function SortableList<T extends Location>({
                 setActive(null)
             }}
         >
-            <SortableContext items={items}>
+            <SortableContext items={items.map((i) => i.id || '')}>
                 {items.map((item) => (
                     <React.Fragment key={item.id}>
                         {renderItem(item)}
