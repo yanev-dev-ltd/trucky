@@ -6,7 +6,8 @@
       "@/utils/*": ["utils/*"],
       "@/services/*": ["services/*"],
       "@/store/*": ["store/*"],
-      "@/api/*": ["api/*"]
+      "@/api/*": ["api/*"],
+      "@/constants/*": ["constants/*"],
     },
     "target": "es5",
     "lib": [

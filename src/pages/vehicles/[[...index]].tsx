@@ -1,4 +1,3 @@
-import { Box } from '@mui/material'
 import { Vehicles as VehiclesComponent } from '../../components/vehicles/Vehicles'
 import { useRouter } from 'next/router'
 

@@ -11,3 +11,7 @@ export type useHeaderProps = {
 export type Header = {
     id: string
 }
+
+export type useHeader = unknown
+
+export type HeaderWrap = unknown
