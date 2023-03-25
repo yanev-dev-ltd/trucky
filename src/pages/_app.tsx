@@ -10,10 +10,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             <Script
                 strategy="beforeInteractive"
                 src="https://js.api.here.com/v3/3.1/mapsjs-core.js"
-                onLoad={() => {
-                    console.log('Script has loaded')
-                }}
-                onError={() => console.error('error')}
             />
             <Script
                 strategy="beforeInteractive"

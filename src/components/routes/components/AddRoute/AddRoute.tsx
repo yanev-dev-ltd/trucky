@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
     Dialog,
     Box,
@@ -12,7 +12,6 @@ import {
     IconButton,
     Tooltip,
     Paper,
-    List,
     ListItem,
     ListItemIcon,
     ListItemText,
@@ -27,7 +26,6 @@ import {
     LocalGasStation,
     Download,
     Delete,
-    DragHandle,
 } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import { useRouter } from 'next/router'
@@ -39,9 +37,10 @@ import LocationDialog from '../LocationDialog/LocationDialog'
 import { Location } from './types'
 import Overflow from '@/components/common/Overflow/Overflow'
 import { SortableList } from './components/SortableList/SortableList'
+import Map from '@/components/common/Map/Map'
 
 const AddRoute = ({ vehicleId }: AddRouteProps) => {
-    const { route, changeField, mapRef } = useAddRoute()
+    const { route, changeField } = useAddRoute()
     const [routeOpen, setRouteOpen] = useState<boolean>(false)
     const [hoveredLocation, setHoveredLocation] = useState<number | undefined>()
     const router = useRouter()
@@ -176,13 +175,12 @@ const AddRoute = ({ vehicleId }: AddRouteProps) => {
                                                             undefined
                                                         )
                                                     }
+                                                    sx={sx.listItem}
                                                 >
                                                     <ListItemIcon sx={sx.icon}>
                                                         {hoveredLocation ===
                                                         index ? (
-                                                            <Box>
-                                                                <SortableList.DragHandle />
-                                                            </Box>
+                                                            <SortableList.DragHandle />
                                                         ) : index === 0 ||
                                                           index ===
                                                               (route?.locations &&
@@ -195,14 +193,26 @@ const AddRoute = ({ vehicleId }: AddRouteProps) => {
                                                             <ArrowDownward />
                                                         )}
                                                     </ListItemIcon>
-                                                    <ListItemText>
-                                                        <Overflow
-                                                            text={
-                                                                location.address ||
-                                                                ''
-                                                            }
-                                                        />
-                                                    </ListItemText>
+                                                    <ListItemText
+                                                        sx={{
+                                                            maxWidth: '180px',
+                                                        }}
+                                                        primary={
+                                                            <Overflow
+                                                                text={
+                                                                    `(${
+                                                                        index !==
+                                                                            undefined &&
+                                                                        index +
+                                                                            1
+                                                                    }) ` +
+                                                                        location.address ||
+                                                                    ''
+                                                                }
+                                                            />
+                                                        }
+                                                        secondary="test"
+                                                    />
                                                     <Box sx={sx.icons}>
                                                         {location.loading && (
                                                             <Tooltip
@@ -262,14 +272,13 @@ const AddRoute = ({ vehicleId }: AddRouteProps) => {
                             />
                         </Paper>
                     </Box>
-                    <Box
-                        ref={mapRef}
+                    <Map
+                        locations={route.locations || []}
                         sx={{
                             height: 'calc(100vh - 53px)',
                             width: '100%',
                             flexGrow: 1,
                         }}
-                        id="map"
                     />
                 </DialogContent>
                 <DialogActions>

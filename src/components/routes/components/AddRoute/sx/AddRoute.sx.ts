@@ -36,7 +36,10 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     icon: {
         minWidth: '30px'
-    }
+    },
+    listItem: {
+        minHeight: '60px'
+    },
 }
 
 export default sx

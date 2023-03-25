@@ -82,7 +82,7 @@ const useLocationDialog = (parentLocation: Location | undefined, setOpen?: ((ope
         })
     }, [value, inputValue, fetch])
 
-    const changeField = (field: string, value: any) => {
+    const changeField = (field: keyof Location, value: any) => {
         setLocation((oldLocation) => oldLocation ? { ...oldLocation, [field]: value } : { [field]: value })
     }
 

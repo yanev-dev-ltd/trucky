@@ -6,7 +6,7 @@ import type {
 } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { DragHandle as DragHandleIcon } from '@mui/icons-material'
+import { DragIndicator } from '@mui/icons-material'
 import { Box } from '@mui/material'
 
 interface Props {
@@ -62,8 +62,13 @@ export function DragHandle() {
     const { attributes, listeners, ref } = useContext(SortableItemContext)
 
     return (
-        <Box {...attributes} {...listeners} ref={ref} sx={{ cursor: 'grab' }}>
-            <DragHandleIcon />
+        <Box
+            {...attributes}
+            {...listeners}
+            ref={ref}
+            sx={{ cursor: 'ns-resize', marginBottom: '-6px' }}
+        >
+            <DragIndicator />
         </Box>
     )
 }
