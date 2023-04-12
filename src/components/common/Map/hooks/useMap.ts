@@ -1,10 +1,14 @@
 import { useState, useRef, useLayoutEffect } from 'react'
 import { Location } from '@/components/routes/components/AddRoute/types'
 import svgMarker from '@/constants/marker'
+import { useSnackbar } from 'notistack'
+import { useIntl } from 'react-intl'
 
 const useMap = ({ locations }: { locations: Location[] }) => {
     const mapRef = useRef(null)
     const [reload, setReload] = useState(false)
+    const { enqueueSnackbar } = useSnackbar()
+    const intl = useIntl()
     
     useLayoutEffect(() => {
         // `mapRef.current` will be `undefined` when this hook first runs; edge case that
@@ -20,7 +24,7 @@ const useMap = ({ locations }: { locations: Location[] }) => {
         const defaultLayers = platform.createDefaultLayers()
         const hMap = new H.Map(
             mapRef.current,
-            defaultLayers.vector.normal.truck, // maptypes.vector.normal.map for cars
+            defaultLayers.vector.normal.truck, //TODO: maptypes.vector.normal.map for cars
             {
                 center: { lat: 50, lng: 5 },
                 zoom: 4,
@@ -46,7 +50,7 @@ const useMap = ({ locations }: { locations: Location[] }) => {
                     ),
                     marker = new H.map.Marker(
                         { lat: location.lat || 0, lng: location.lng || 0 },
-                        { icon: icon }
+                        { icon }
                     )
                 hMap.addObject(marker)
             })
@@ -54,7 +58,7 @@ const useMap = ({ locations }: { locations: Location[] }) => {
             const router = platform.getRoutingService()
             const origin = [...locations].shift()
             const destination = [...locations].pop()
-            if (origin && destination) {
+            if (origin && destination && origin !== destination) {
                 router.calculateRoute(
                     {
                         origin: `${origin?.lat},${origin?.lng}`,
@@ -71,7 +75,10 @@ const useMap = ({ locations }: { locations: Location[] }) => {
                     (result: any) => {
                         const sections = result?.routes[0]?.sections
                         const lineStrings: any[] = []
-                        if (!sections) alert('can not calculate route') // TODO: translate
+                        if (!sections) {
+                            enqueueSnackbar(intl.formatMessage({ id: 'app.CouldNotCalculateRoute'}), { variant: 'error', persist: true })
+                            return
+                        }
                         sections.forEach((section: any) => {
                             // convert Flexible Polyline encoded string to geometry
                             lineStrings.push(
@@ -94,7 +101,7 @@ const useMap = ({ locations }: { locations: Location[] }) => {
                         hMap.getViewModel().setLookAtData({ bounds })
                         hMap.addLayer(defaultLayers.vector.normal.trafficincidents)
                     },
-                    console.error
+                    () => enqueueSnackbar(intl.formatMessage({ id: 'app.Error.LoadingRoute'}), { variant: 'error', persist: true, preventDuplicate: true })
                 )
             }
         }

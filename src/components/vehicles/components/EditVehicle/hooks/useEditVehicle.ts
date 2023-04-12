@@ -46,7 +46,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         } catch (error) {
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.Error.saving',
-            }), { variant: 'error' })
+            }), { variant: 'error', persist: true })
         }
         router.push('/vehicles/' + vehicle.key)
     }, [editedVehicle])
@@ -84,7 +84,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
                 })
                 .catch(() => enqueueSnackbar(intl.formatMessage({
                     id: 'app.Error.deletingDocument',
-                }), { variant: 'error' }))
+                }), { variant: 'error', persist: true }))
         },
         [intl, vehicle]
     )
@@ -99,7 +99,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         } catch (error) {
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.DeletedVehicleError',
-            }), { variant: 'error' })
+            }), { variant: 'error', persist: true })
         }
         router.push('/vehicles')
         // TODO: delete the vehicle and write a function for clearing the db and storage
@@ -132,7 +132,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
                     intl.formatMessage({
                         id: 'app.Error.saving',
                     }),
-                    { variant: 'error' }
+                    { variant: 'error', persist: true }
                 )
             }
         },

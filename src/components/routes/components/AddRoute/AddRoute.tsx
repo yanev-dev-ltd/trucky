@@ -33,10 +33,10 @@ import { AddRouteProps } from './types'
 import sx from './sx/AddRoute.sx'
 import useAddRoute from './hooks/useAddRoute'
 import allDrivers from '@/api/drivers'
-import LocationDialog from '../LocationDialog/LocationDialog'
+import StopDialog from '../StopDialog/StopDialog'
 import { Location } from './types'
 import Overflow from '@/components/common/Overflow/Overflow'
-import { SortableList } from './components/SortableList/SortableList'
+import { SortableList } from '../../../common/SortableList/SortableList'
 import Map from '@/components/common/Map/Map'
 
 const AddRoute = ({ vehicleId }: AddRouteProps) => {
@@ -107,11 +107,11 @@ const AddRoute = ({ vehicleId }: AddRouteProps) => {
                         <Paper sx={sx.locations}>
                             <Box sx={sx.locationsHeader}>
                                 <Typography>
-                                    <FormattedMessage id="app.Locations" />
+                                    <FormattedMessage id="app.Stops" />
                                 </Typography>
                                 <Tooltip
                                     title={
-                                        <FormattedMessage id="app.AddLocation" />
+                                        <FormattedMessage id="app.AddStop" />
                                     }
                                 >
                                     <IconButton
@@ -125,7 +125,7 @@ const AddRoute = ({ vehicleId }: AddRouteProps) => {
                             {(!route.locations ||
                                 route.locations.length === 0) && (
                                 <Box sx={sx.noLocations}>
-                                    <FormattedMessage id="app.NoLocations" />
+                                    <FormattedMessage id="app.NoStops" />
                                 </Box>
                             )}
                             {route.locations && route.locations.length > 0 && (
@@ -257,7 +257,7 @@ const AddRoute = ({ vehicleId }: AddRouteProps) => {
                                     }}
                                 />
                             )}
-                            <LocationDialog
+                            <StopDialog
                                 open={routeOpen}
                                 setOpen={setRouteOpen}
                                 addLocation={(location: Location | undefined) =>

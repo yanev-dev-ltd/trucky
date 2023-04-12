@@ -106,7 +106,7 @@ const useUpload = ({filepath, dbpath, currentFiles}: UploadProps) => {
                 }
             )
             const count = uploadedFiles.filter((uf) => uf.url !== 'error').length
-            const errors = uploadedFiles.filter((uf) => uf.url === 'error').length
+            const errors = uploadedFiles.filter((uf) => uf.url === 'error').length // TODO: set error message
             enqueueSnackbar(intl.formatMessage({
                 id: count === 0 ? 'app.UploadedNoDocumentsSuccess' : count === 1 ? 'app.UploadedOneDocumentSuccess' : 'app.UploadedManyDocumentsSuccess',
             }, { count }), { variant: 'success' })

@@ -23,18 +23,18 @@ import {
     LocalGasStation,
     Download,
 } from '@mui/icons-material'
-import { LocationDialogProps, PlaceType } from './types'
+import { StopDialogProps, PlaceType } from './types'
 import parse from 'autosuggest-highlight/parse'
-import sx from './sx/LocationDialog.sx'
+import sx from './sx/StopDialog.sx'
 import { FormattedMessage } from 'react-intl'
-import useRouteDialog from './hooks/useLocationDialog'
+import useRouteDialog from './hooks/useStopDialog'
 
-const LocationDialog = ({
+const StopDialog = ({
     parentLocation,
     open,
     setOpen,
     addLocation,
-}: LocationDialogProps) => {
+}: StopDialogProps) => {
     const {
         loadingSuggestions,
         loadingLocation,
@@ -51,7 +51,7 @@ const LocationDialog = ({
     return (
         <Dialog open={open || false}>
             <DialogTitle sx={sx.header}>
-                <FormattedMessage id="app.AddLocation" />
+                <FormattedMessage id="app.AddStop" />
                 <IconButton onClick={handleClose}>
                     <Close />
                 </IconButton>
@@ -72,9 +72,7 @@ const LocationDialog = ({
                         filterSelectedOptions
                         defaultValue={{ description: location?.address }}
                         value={value}
-                        noOptionsText={
-                            <FormattedMessage id="app.NoLocations" />
-                        }
+                        noOptionsText={<FormattedMessage id="app.NoStops" />}
                         onChange={(event: any, newValue: PlaceType | null) => {
                             setOptions(
                                 newValue ? [newValue, ...options] : options
@@ -88,7 +86,7 @@ const LocationDialog = ({
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label={<FormattedMessage id="app.Location" />}
+                                label={<FormattedMessage id="app.Stop" />}
                                 fullWidth
                                 InputProps={{
                                     ...params.InputProps,
@@ -274,4 +272,4 @@ const LocationDialog = ({
     )
 }
 
-export default LocationDialog
+export default StopDialog

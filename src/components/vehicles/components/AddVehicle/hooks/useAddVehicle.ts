@@ -52,7 +52,7 @@ const useAddVehicle = (): useAddVehicleProps => {
             handleClose()
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.Error.AddingVehicle',
-            }), { variant: 'error' })
+            }), { variant: 'error', persist: true })
         } finally {
             setNewVehicleLoading(false)
         }
