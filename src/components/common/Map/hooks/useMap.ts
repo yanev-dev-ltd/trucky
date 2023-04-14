@@ -77,7 +77,6 @@ const useMap = ({ locations, setDistance, setToll, setFerry}: useMapProps) => {
                     (result: any) => {
                         const sections = result?.routes[0]?.sections
                         const lineStrings: any[] = []
-                        console.log(sections, locations)
                         const distance: number[] = []
                         const toll: number[] = []
                         const ferry: boolean[] = []
