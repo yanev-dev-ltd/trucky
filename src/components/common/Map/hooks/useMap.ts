@@ -77,7 +77,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry}: useMapProps) => {
                     (result: any) => {
                         const sections = result?.routes[0]?.sections
                         const lineStrings: any[] = []
-                        console.log(sections)
+                        console.log(sections, locations)
                         const distance: number[] = []
                         const toll: number[] = []
                         const ferry: boolean[] = []
@@ -92,11 +92,16 @@ const useMap = ({ locations, setDistance, setToll, setFerry}: useMapProps) => {
                                     section.polyline
                                 )
                             )
-                            if (section?.transport.mode !== 'ferry') {
+                            if (section.departure.place.originalLocation) {
                                 distance.push(Number(section?.travelSummary?.length))
                                 toll.push(Number(section?.travelSummary?.tolls?.total?.value))
                             } else {
-                                ferry[distance.length - 1 - ferry.length] = true
+                                distance[distance.length - 1] += Number(section?.travelSummary?.length)
+                                toll[toll.length - 1] += Number(section?.travelSummary?.tolls?.total?.value)
+                            }
+                            
+                            if (section?.transport.mode === 'ferry') {
+                                ferry[distance.length - 1] = true
                             }
                         })
 
