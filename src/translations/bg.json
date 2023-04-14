@@ -53,6 +53,7 @@
   "app.Error.deletingDocument": "Грешка при изтриването на документът.",
   "app.Error.LoadingRoute": "Грешка при зареждането на маршрута",
   "app.ExitFullscreen": "Изход от цял екран",
+  "app.FerryIncluded": "Включва ферибот, допалнителни такси може да се изискват.",
   "app.Fuel": "Гориво",
   "app.FuelType.Diesel": "Дизел",
   "app.FuelType.Electric": "Електричество",

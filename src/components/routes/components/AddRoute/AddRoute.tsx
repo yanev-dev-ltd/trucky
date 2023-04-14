@@ -26,6 +26,7 @@ import {
     LocalGasStation,
     Download,
     Delete,
+    DirectionsBoat,
 } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import { useRouter } from 'next/router'
@@ -40,8 +41,16 @@ import { SortableList } from '../../../common/SortableList/SortableList'
 import Map from '@/components/common/Map/Map'
 
 const AddRoute = ({ vehicleId, units }: AddRouteProps) => {
-    const { route, changeField, distance, setDistance, toll, setToll } =
-        useAddRoute()
+    const {
+        route,
+        changeField,
+        distance,
+        setDistance,
+        toll,
+        setToll,
+        ferry,
+        setFerry,
+    } = useAddRoute()
     const [routeOpen, setRouteOpen] = useState<boolean>(false)
     const [hoveredLocation, setHoveredLocation] = useState<number | undefined>()
     const router = useRouter()
@@ -240,9 +249,9 @@ const AddRoute = ({ vehicleId, units }: AddRouteProps) => {
                                                                         />
                                                                     </Typography>
                                                                 )}{' '}
-                                                                {toll[
-                                                                    index
-                                                                ] && (
+                                                                {Boolean(
+                                                                    toll[index]
+                                                                ) && (
                                                                     <Typography variant="caption">
                                                                         <FormattedMessage id="app.Toll" />
                                                                         :{' '}
@@ -255,6 +264,24 @@ const AddRoute = ({ vehicleId, units }: AddRouteProps) => {
                                                                         }
                                                                         €
                                                                     </Typography>
+                                                                )}
+                                                                {ferry[
+                                                                    index
+                                                                ] && (
+                                                                    <Tooltip
+                                                                        title={
+                                                                            <FormattedMessage id="app.FerryIncluded" />
+                                                                        }
+                                                                    >
+                                                                        <DirectionsBoat
+                                                                            fontSize="small"
+                                                                            sx={{
+                                                                                marginLeft: 1,
+                                                                                marginBottom:
+                                                                                    -0.7,
+                                                                            }}
+                                                                        />
+                                                                    </Tooltip>
                                                                 )}
                                                             </>
                                                         }
@@ -327,6 +354,7 @@ const AddRoute = ({ vehicleId, units }: AddRouteProps) => {
                         }}
                         setDistance={setDistance}
                         setToll={setToll}
+                        setFerry={setFerry}
                     />
                 </DialogContent>
                 <DialogActions>

@@ -53,6 +53,7 @@
   "app.Error.deletingDocument": "Error while deleting the document.",
   "app.Error.LoadingRoute": "Error while loading the route",
   "app.ExitFullscreen": "Exit Fullscreen",
+  "app.FerryIncluded": "Includes ferry boat, additional toll may be required.",
   "app.Fuel": "Fuel",
   "app.FuelType.Diesel": "Diesel",
   "app.FuelType.Electric": "Electric",

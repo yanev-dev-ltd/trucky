@@ -6,6 +6,7 @@ const useAddRoute = () => {
     const [route, setRoute] = useState<Route>({})
     const [distance, setDistance] = useState<number[]>([])
     const [toll, setToll] = useState<number[]>([])
+    const [ferry, setFerry] = useState<boolean[]>([])
     const changeField = (field: string, value: any) => {
         setRoute((oldRoute) => oldRoute ? { ...oldRoute, [field]: value } : { [field]: value })
     }
@@ -17,6 +18,8 @@ const useAddRoute = () => {
         setDistance,
         toll,
         setToll,
+        ferry,
+        setFerry,
     }
 }
 

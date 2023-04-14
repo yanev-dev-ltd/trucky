@@ -6,6 +6,9 @@ export type useMap = {
 
 export type useMapProps = {
     locations: Location[]
+    setDistance?: (distance: number[]) => void
+    setToll?: (toll: number[]) => void
+    setFerry?: (ferry: boolean[]) => void
 }
 
 export type MapProps = {
@@ -13,4 +16,5 @@ export type MapProps = {
     sx?: SxProps<Theme>
     setDistance?: (number: number[]) => void
     setToll?: (number: number[]) => void
+    setFerry?: (ferry: boolean[]) => void
 }
