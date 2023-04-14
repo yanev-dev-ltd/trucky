@@ -536,7 +536,10 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                 </IconButton>
                             </Tooltip>
                             {edit === 'add-route' && (
-                                <AddRoute vehicleId={vehicle?.key} />
+                                <AddRoute
+                                    vehicleId={vehicle?.key}
+                                    units={editedVehicle?.units}
+                                />
                             )}
                         </Box>
                         <List dense sx={sx.fixedHeight}>

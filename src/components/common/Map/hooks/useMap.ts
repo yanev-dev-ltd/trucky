@@ -4,7 +4,7 @@ import svgMarker from '@/constants/marker'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 
-const useMap = ({ locations }: { locations: Location[] }) => {
+const useMap = ({ locations, setDistance, setToll }: { locations: Location[], setDistance?: (distance: number[]) => void, setToll?: (toll: number[]) => void}) => {
     const mapRef = useRef(null)
     const [reload, setReload] = useState(false)
     const { enqueueSnackbar } = useSnackbar()
@@ -38,7 +38,7 @@ const useMap = ({ locations }: { locations: Location[] }) => {
             }
         )
         
-        const ui = H.ui.UI.createDefault(hMap, defaultLayers)
+        // const ui = H.ui.UI.createDefault(hMap, defaultLayers)
         const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(hMap))
 
         if(locations && locations.length > 0) {
@@ -55,26 +55,29 @@ const useMap = ({ locations }: { locations: Location[] }) => {
                 hMap.addObject(marker)
             })
     
-            const router = platform.getRoutingService()
+            const router = platform.getRoutingService(null, 8)
             const origin = [...locations].shift()
             const destination = [...locations].pop()
-            if (origin && destination && origin !== destination) {
+            if (origin && destination && (origin !== destination || locations.length > 2)) {
                 router.calculateRoute(
                     {
                         origin: `${origin?.lat},${origin?.lng}`,
                         destination: `${destination?.lat},${destination?.lng}`,
                         // defines multiple waypoints p
                         ...((locations && locations.length > 2) && {via: new H.service.Url.MultiValueQueryParameter([
-                            ...locations.filter((l, i) => i !== 0 || i !== (locations && locations.length - 1)).map((p) => `${p.lat},${p.lng}`),
+                            ...locations.filter((l, i) => i !== 0 && i !== (locations && locations.length - 1)).map((p) => `${p.lat},${p.lng}`),
                         ])}),
-                        // returns route shape as a polyline in response
-                        return: 'polyline',
+                        return: 'polyline,travelSummary,tolls',
+                        currency: 'EUR',
+                        'tolls[summaries]': 'total',
                         transportMode: 'truck',
                         spans: 'truckAttributes',
                     },
                     (result: any) => {
                         const sections = result?.routes[0]?.sections
                         const lineStrings: any[] = []
+                        const distance: number[] = []
+                        const toll: number[] = []
                         if (!sections) {
                             enqueueSnackbar(intl.formatMessage({ id: 'app.CouldNotCalculateRoute'}), { variant: 'error', persist: true })
                             return
@@ -86,7 +89,13 @@ const useMap = ({ locations }: { locations: Location[] }) => {
                                     section.polyline
                                 )
                             )
+                            distance.push(Number(section?.travelSummary?.length))
+                            toll.push(Number(section?.travelSummary?.tolls?.total?.value))
                         })
+
+                        setDistance && setDistance(distance)
+                        setToll && setToll(toll)
+
                         const multiLineString = new H.geo.MultiLineString(
                             lineStrings
                         )
@@ -99,7 +108,7 @@ const useMap = ({ locations }: { locations: Location[] }) => {
                         )
                         // zoom to polyline
                         hMap.getViewModel().setLookAtData({ bounds })
-                        hMap.addLayer(defaultLayers.vector.normal.trafficincidents)
+                        // hMap.addLayer(defaultLayers.vector.normal.trafficincidents)
                     },
                     () => enqueueSnackbar(intl.formatMessage({ id: 'app.Error.LoadingRoute'}), { variant: 'error', persist: true, preventDuplicate: true })
                 )

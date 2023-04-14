@@ -1862,6 +1862,11 @@
     protobufjs "^7.0.0"
     yargs "^16.2.0"
 
+"@here/maps-api-for-javascript@^1.40.0":
+  version "1.40.0"
+  resolved "https://repo.platform.here.com/artifactory/api/npm/maps-api-for-javascript/-/@here/maps-api-for-javascript-1.40.0.tgz#d71360a2590d823f51e871006a58ea81edd01e1a"
+  integrity sha1-1xNgolkNgj9R6HEAaljqge3QHho=
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.11.8.tgz"

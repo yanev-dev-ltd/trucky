@@ -39,8 +39,9 @@ import Overflow from '@/components/common/Overflow/Overflow'
 import { SortableList } from '../../../common/SortableList/SortableList'
 import Map from '@/components/common/Map/Map'
 
-const AddRoute = ({ vehicleId }: AddRouteProps) => {
-    const { route, changeField } = useAddRoute()
+const AddRoute = ({ vehicleId, units }: AddRouteProps) => {
+    const { route, changeField, distance, setDistance, toll, setToll } =
+        useAddRoute()
     const [routeOpen, setRouteOpen] = useState<boolean>(false)
     const [hoveredLocation, setHoveredLocation] = useState<number | undefined>()
     const router = useRouter()
@@ -136,10 +137,12 @@ const AddRoute = ({ vehicleId }: AddRouteProps) => {
                                     }
                                     renderItem={(location: Location) => {
                                         const index =
-                                            route.locations &&
-                                            route.locations.findIndex(
-                                                (loc) => loc.id === location.id
-                                            )
+                                            (route.locations &&
+                                                route.locations.findIndex(
+                                                    (loc) =>
+                                                        loc.id === location.id
+                                                )) ||
+                                            0
                                         return (
                                             <SortableList.Item
                                                 id={location.id || ''}
@@ -211,7 +214,50 @@ const AddRoute = ({ vehicleId }: AddRouteProps) => {
                                                                 }
                                                             />
                                                         }
-                                                        secondary="test"
+                                                        secondary={
+                                                            <>
+                                                                {distance[
+                                                                    index
+                                                                ] && (
+                                                                    <Typography variant="caption">
+                                                                        {Math.round(
+                                                                            (distance[
+                                                                                index
+                                                                            ] /
+                                                                                1000) *
+                                                                                (units ===
+                                                                                'm'
+                                                                                    ? 0.621371192
+                                                                                    : 1)
+                                                                        )}
+                                                                        <FormattedMessage
+                                                                            id={
+                                                                                units ===
+                                                                                'm'
+                                                                                    ? 'app.Mi'
+                                                                                    : 'app.Km'
+                                                                            }
+                                                                        />
+                                                                    </Typography>
+                                                                )}{' '}
+                                                                {toll[
+                                                                    index
+                                                                ] && (
+                                                                    <Typography variant="caption">
+                                                                        <FormattedMessage id="app.Toll" />
+                                                                        :{' '}
+                                                                        {
+                                                                            +toll[
+                                                                                index
+                                                                            ].toFixed(
+                                                                                2
+                                                                            )
+                                                                        }
+                                                                        €
+                                                                    </Typography>
+                                                                )}
+                                                            </>
+                                                        }
                                                     />
                                                     <Box sx={sx.icons}>
                                                         {location.loading && (
@@ -279,6 +325,8 @@ const AddRoute = ({ vehicleId }: AddRouteProps) => {
                             width: '100%',
                             flexGrow: 1,
                         }}
+                        setDistance={setDistance}
+                        setToll={setToll}
                     />
                 </DialogContent>
                 <DialogActions>

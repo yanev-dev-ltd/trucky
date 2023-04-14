@@ -11,4 +11,6 @@ export type useMapProps = {
 export type MapProps = {
     locations: Location[]
     sx?: SxProps<Theme>
+    setDistance?: (number: number[]) => void
+    setToll?: (number: number[]) => void
 }

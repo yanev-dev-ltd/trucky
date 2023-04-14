@@ -2,6 +2,7 @@ import { UniqueIdentifier } from '@dnd-kit/core'
 import { Driver } from '@/components/drivers/types'
 export type AddRouteProps = {
     vehicleId?: string
+    units?: string
 }
 
 export type Route = {

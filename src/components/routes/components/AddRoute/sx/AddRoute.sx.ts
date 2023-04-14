@@ -29,7 +29,7 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     noLocations: {
         textAlign: 'center',
-        padding: 3
+        padding: 2
     },
     icons: {
         width: '50px'
