@@ -12,6 +12,17 @@ const sx: Record<string, SxProps<Theme>> = {
         width: 420,
         backgroundColor: 'action.hover',
         padding: 1,
+        height: 'calc(100vh - 53px)',
+        overflow: 'auto',
+        '&::-webkit-scrollbar': {
+            width: '5px',
+        },
+        '&::-webkit-scrollbar-track': {
+            background: (theme) => theme.palette.background.default,
+        },
+        '&::-webkit-scrollbar-thumb': {
+            background: (theme) => theme.palette.text.secondary,
+        },
     },
     row: {
         marginTop: 1,
@@ -27,7 +38,18 @@ const sx: Record<string, SxProps<Theme>> = {
         display: 'flex',
         justifyContent: 'space-between'
     },
+    orders: {
+        padding: 1,
+    },
+    ordersHeader: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
     noLocations: {
+        textAlign: 'center',
+        padding: 2
+    },
+    noOrders: {
         textAlign: 'center',
         padding: 2
     },

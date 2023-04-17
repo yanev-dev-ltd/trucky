@@ -2,11 +2,12 @@ import { useState, useLayoutEffect, useRef } from 'react'
 import { Route } from '../types'
 
 
-const useAddRoute = () => {
+const useRoute = (routeId?: string) => {
     const [route, setRoute] = useState<Route>({})
     const [distance, setDistance] = useState<number[]>([])
     const [toll, setToll] = useState<number[]>([])
     const [ferry, setFerry] = useState<boolean[]>([])
+    const [noRoute, setNoRoute] = useState<boolean>(false)
     const changeField = (field: string, value: any) => {
         setRoute((oldRoute) => oldRoute ? { ...oldRoute, [field]: value } : { [field]: value })
     }
@@ -20,7 +21,9 @@ const useAddRoute = () => {
         setToll,
         ferry,
         setFerry,
+        setNoRoute,
+        noRoute,
     }
 }
 
-export default useAddRoute
+export default useRoute

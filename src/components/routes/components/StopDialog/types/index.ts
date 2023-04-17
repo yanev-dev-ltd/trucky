@@ -1,4 +1,4 @@
-import { Location } from '@/components/routes/components/AddRoute/types'
+import { Location } from '@/components/routes/components/Route/types'
 export type StopDialogProps = {
     parentLocation?: Location
     open?: boolean

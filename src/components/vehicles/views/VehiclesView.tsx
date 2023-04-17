@@ -24,6 +24,7 @@ export const VehiclesView: FC<VehicleProps> = ({
     searchRef,
     fuse,
     columns,
+    routeId,
 }): JSX.Element => {
     const intl = useIntl()
     const [search, setSearch] = useState<string | boolean>(false)
@@ -97,6 +98,7 @@ export const VehiclesView: FC<VehicleProps> = ({
             <EditVehicle
                 vehicle={vehicles.find((v) => v.key === vehicleId)}
                 edit={edit}
+                routeId={routeId}
             />
         </Box>
     )

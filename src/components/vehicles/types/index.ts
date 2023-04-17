@@ -19,6 +19,7 @@ export type Vehicle = {
 export type useVehicleProps = {
     vehicleId: string | undefined
     edit: string | undefined
+    routeId: string | undefined
 }
 
 export type VehicleProps = {
@@ -28,6 +29,7 @@ export type VehicleProps = {
     searchRef: MutableRefObject<HTMLInputElement | null>
     fuse: Fuse<Vehicle>
     columns: Column<Vehicle>[]
+    routeId: string | undefined
 }
 
 export type Service = {

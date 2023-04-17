@@ -17,11 +17,11 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             />
             <Script
                 strategy="beforeInteractive"
-                src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js"
+                src="https://js.api.here.com/v3/3.1/mapsjs-core-legacy.js"
             />
             <Script
                 strategy="beforeInteractive"
-                src="https://js.api.here.com/v3/3.1/mapsjs-core-legacy.js"
+                src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js"
             />
             <Script
                 strategy="beforeInteractive"

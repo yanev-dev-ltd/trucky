@@ -2,6 +2,7 @@ import { Vehicle, VehicleFile, Service, Services } from '../../../types'
 export type EditVehicleProps = {
     vehicle: Vehicle | undefined
     edit: string | undefined
+    routeId: string | undefined
 }
 
 export type Files = {

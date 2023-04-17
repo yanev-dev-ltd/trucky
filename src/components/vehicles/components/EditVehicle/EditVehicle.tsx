@@ -56,9 +56,9 @@ import Confirm from '@/components/common/Confirm/Confirm'
 import Overflow from '@/components/common/Overflow/Overflow'
 import NewService from './components/NewService/NewService'
 import EditService from './components/EditService/EditService'
-import AddRoute from '@/components/routes/components/AddRoute/AddRoute'
+import Route from '@/components/routes/components/Route/Route'
 
-const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
+const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     const router = useRouter()
     const {
         saveVehicleField,
@@ -527,7 +527,7 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     sx={sx.edit}
                                     onClick={() => {
                                         router.push(
-                                            `/vehicles/${vehicle?.key}/add-route`
+                                            `/vehicles/${vehicle?.key}/route`
                                         )
                                         reset()
                                     }}
@@ -535,15 +535,22 @@ const EditVehicle = ({ vehicle, edit }: EditVehicleProps) => {
                                     <AddCircle />
                                 </IconButton>
                             </Tooltip>
-                            {edit === 'add-route' && (
-                                <AddRoute
+                            {edit === 'route' && (
+                                <Route
                                     vehicleId={vehicle?.key}
                                     units={editedVehicle?.units}
+                                    routeId={routeId}
                                 />
                             )}
                         </Box>
                         <List dense sx={sx.fixedHeight}>
-                            <ListItemButton>
+                            <ListItemButton
+                                onClick={() =>
+                                    router.push(
+                                        `/vehicles/${vehicle?.key}/route/test`
+                                    )
+                                }
+                            >
                                 <ListItemText
                                     primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
                                     secondary="11/11/2020 - 12/11/2020"

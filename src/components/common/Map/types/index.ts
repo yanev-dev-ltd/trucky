@@ -1,4 +1,4 @@
-import { Location } from '@/components/routes/components/AddRoute/types'
+import { Location } from '@/components/routes/components/Route/types'
 import { SxProps, Theme } from '@mui/material'
 export type useMap = {
     locations: Location[]
@@ -9,6 +9,7 @@ export type useMapProps = {
     setDistance?: (distance: number[]) => void
     setToll?: (toll: number[]) => void
     setFerry?: (ferry: boolean[]) => void
+    setNoRoute?: (noRoute: boolean) => void
 }
 
 export type MapProps = {
@@ -17,4 +18,5 @@ export type MapProps = {
     setDistance?: (number: number[]) => void
     setToll?: (number: number[]) => void
     setFerry?: (ferry: boolean[]) => void
+    setNoRoute?: (noRoute: boolean) => void
 }
