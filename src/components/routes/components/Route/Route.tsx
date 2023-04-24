@@ -12,6 +12,7 @@ import {
     IconButton,
     Tooltip,
     Paper,
+    List,
     ListItem,
     ListItemIcon,
     ListItemText,
@@ -39,6 +40,8 @@ import { Location } from './types'
 import Overflow from '@/components/common/Overflow/Overflow'
 import { SortableList } from '../../../common/SortableList/SortableList'
 import Map from '@/components/common/Map/Map'
+import { OrderDialog } from '@/components/orders/components/OrderDialog/OrderDialog'
+import { Order } from '@/components/orders/types'
 
 const Route = ({ vehicleId, units, routeId }: RouteProps) => {
     const {
@@ -395,6 +398,30 @@ const Route = ({ vehicleId, units, routeId }: RouteProps) => {
                                         <FormattedMessage id="app.NoOrders" />
                                     </Box>
                                 )}
+                                {route.orders && route.orders.length > 0 && (
+                                    <List>
+                                        {route.orders.map((order, index) => {
+                                            return (
+                                                <ListItem
+                                                    key={index}
+                                                ></ListItem>
+                                            )
+                                        })}
+                                    </List>
+                                )}
+                                <OrderDialog
+                                    open={orderOpen}
+                                    setOpen={setOrderOpen}
+                                    addOrder={(order: Order | undefined) =>
+                                        order &&
+                                        changeField(
+                                            'orders',
+                                            route.orders
+                                                ? [...route.orders, order]
+                                                : [order]
+                                        )
+                                    }
+                                />
                             </Paper>
                         </Box>
                     </Box>
