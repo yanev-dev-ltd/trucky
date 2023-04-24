@@ -40,7 +40,7 @@ const useEditService = (service: Service | undefined) => {
         } catch (error) {
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.Error.saving',
-            }), { variant: 'error' })
+            }), { variant: 'error', persist: true })
         }
     }, [editedService])
 
@@ -54,7 +54,7 @@ const useEditService = (service: Service | undefined) => {
         } catch (error) {
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.DeletedServiceError',
-            }), { variant: 'error' })
+            }), { variant: 'error', persist: true })
         }
     }, [editedService?.key])
 

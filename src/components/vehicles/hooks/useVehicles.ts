@@ -9,7 +9,7 @@ import { VehicleProps, useVehicleProps } from '../types'
 import useVehiclesColumns from './useVehicles.columns'
 import useVehiclesFuse from './useVehicles.fuse'
 
-const useVehicles =  ({ vehicleId, edit }:useVehicleProps): VehicleProps => {
+const useVehicles =  ({ vehicleId, edit, routeId }:useVehicleProps): VehicleProps => {
     const vehicles = useSelector((state: RootState) => state.vehicles)
     const dispatch = useDispatch()
     const searchRef = useRef<HTMLInputElement | null>(null)
@@ -38,7 +38,7 @@ const useVehicles =  ({ vehicleId, edit }:useVehicleProps): VehicleProps => {
         return () => document.removeEventListener('keydown', handleKeyPress)
     }, [])
 
-    return { vehicles, vehicleId, edit, searchRef, fuse, columns }
+    return { vehicles, vehicleId, edit, searchRef, fuse, columns, routeId }
 }
 
 export default useVehicles

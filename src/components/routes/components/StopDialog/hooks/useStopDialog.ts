@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from 'react'
 import { debounce } from '@mui/material/utils'
 import { PlaceType } from '../types'
-import { Location } from '../../AddRoute/types'
+import { Location } from '../../Route/types'
 import { v4 as uuid } from 'uuid'
 
 const autocompleteService = { current: null }
-const useLocationDialog = (parentLocation: Location | undefined, setOpen?: ((open: boolean) => void) | undefined) => {
+const useStopDialog = (parentLocation: Location | undefined, setOpen?: ((open: boolean) => void) | undefined) => {
     const [loadingSuggestions, setLoadingSuggestions] = useState<boolean>(false)
     const [loadingLocation, setLoadingLocation] = useState<boolean>(false)
     const [value, setValue] = useState<PlaceType | null>(null)
@@ -111,4 +111,4 @@ const useLocationDialog = (parentLocation: Location | undefined, setOpen?: ((ope
     }
 }
 
-export default useLocationDialog
+export default useStopDialog

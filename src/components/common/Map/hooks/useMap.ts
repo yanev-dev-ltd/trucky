@@ -1,10 +1,16 @@
 import { useState, useRef, useLayoutEffect } from 'react'
-import { Location } from '@/components/routes/components/AddRoute/types'
+import { Location } from '@/components/routes/components/Route/types'
 import svgMarker from '@/constants/marker'
+import { useSnackbar, SnackbarKey } from 'notistack'
+import { useIntl } from 'react-intl'
+import { useMapProps } from '../types'
 
-const useMap = ({ locations }: { locations: Location[] }) => {
+const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMapProps) => {
     const mapRef = useRef(null)
+    const message = useRef<SnackbarKey>()
     const [reload, setReload] = useState(false)
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+    const intl = useIntl()
     
     useLayoutEffect(() => {
         // `mapRef.current` will be `undefined` when this hook first runs; edge case that
@@ -20,7 +26,7 @@ const useMap = ({ locations }: { locations: Location[] }) => {
         const defaultLayers = platform.createDefaultLayers()
         const hMap = new H.Map(
             mapRef.current,
-            defaultLayers.vector.normal.truck, // maptypes.vector.normal.map for cars
+            defaultLayers.vector.normal.truck, //TODO: maptypes.vector.normal.map for cars
             {
                 center: { lat: 50, lng: 5 },
                 zoom: 4,
@@ -34,7 +40,7 @@ const useMap = ({ locations }: { locations: Location[] }) => {
             }
         )
         
-        const ui = H.ui.UI.createDefault(hMap, defaultLayers)
+        // const ui = H.ui.UI.createDefault(hMap, defaultLayers)
         const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(hMap))
 
         if(locations && locations.length > 0) {
@@ -46,40 +52,66 @@ const useMap = ({ locations }: { locations: Location[] }) => {
                     ),
                     marker = new H.map.Marker(
                         { lat: location.lat || 0, lng: location.lng || 0 },
-                        { icon: icon }
+                        { icon }
                     )
                 hMap.addObject(marker)
             })
     
-            const router = platform.getRoutingService()
+            const router = platform.getRoutingService(null, 8)
             const origin = [...locations].shift()
             const destination = [...locations].pop()
-            if (origin && destination) {
+            if (origin) {
                 router.calculateRoute(
                     {
                         origin: `${origin?.lat},${origin?.lng}`,
                         destination: `${destination?.lat},${destination?.lng}`,
-                        // defines multiple waypoints p
+                        // defines multiple waypoints
                         ...((locations && locations.length > 2) && {via: new H.service.Url.MultiValueQueryParameter([
-                            ...locations.filter((l, i) => i !== 0 || i !== (locations && locations.length - 1)).map((p) => `${p.lat},${p.lng}`),
+                            ...locations.filter((l, i) => i !== 0 && i !== (locations && locations.length - 1)).map((p) => `${p.lat},${p.lng}`),
                         ])}),
-                        // returns route shape as a polyline in response
-                        return: 'polyline',
+                        return: 'polyline,travelSummary,tolls',
+                        currency: 'EUR',
+                        'tolls[summaries]': 'total',
                         transportMode: 'truck',
                         spans: 'truckAttributes',
                     },
                     (result: any) => {
                         const sections = result?.routes[0]?.sections
                         const lineStrings: any[] = []
-                        if (!sections) alert('can not calculate route') // TODO: translate
-                        sections.forEach((section: any) => {
+                        const distance: number[] = []
+                        const toll: number[] = []
+                        const ferry: boolean[] = []
+                        if (!sections) {
+                            setNoRoute && setNoRoute(true)
+                            message.current = enqueueSnackbar(intl.formatMessage({ id: 'app.CouldNotCalculateRoute'}), { variant: 'error', persist: true })
+                            return
+                        }
+                        setNoRoute && setNoRoute(false)
+                        closeSnackbar(message.current)
+                        sections.forEach((section: any, index: number) => {
                             // convert Flexible Polyline encoded string to geometry
                             lineStrings.push(
                                 H.geo.LineString.fromFlexiblePolyline(
                                     section.polyline
                                 )
                             )
+                            if (section.departure.place.originalLocation) {
+                                distance.push(Number(section?.travelSummary?.length))
+                                toll.push(Number(section?.travelSummary?.tolls?.total?.value))
+                            } else {
+                                distance[distance.length - 1] += Number(section?.travelSummary?.length)
+                                toll[toll.length - 1] += Number(section?.travelSummary?.tolls?.total?.value)
+                            }
+                            
+                            if (section?.transport.mode === 'ferry') {
+                                ferry[distance.length - 1] = true
+                            }
                         })
+
+                        setDistance && setDistance(distance)
+                        setToll && setToll(toll)
+                        setFerry && setFerry(ferry)
+
                         const multiLineString = new H.geo.MultiLineString(
                             lineStrings
                         )
@@ -88,13 +120,17 @@ const useMap = ({ locations }: { locations: Location[] }) => {
                         hMap.addObject(
                             new H.map.Polyline(multiLineString, {
                                 style: { lineWidth: 5 },
+                                arrows: { fillColor: 'white', frequency: 2, width: 0.8, length: 0.7 }
                             })
                         )
                         // zoom to polyline
                         hMap.getViewModel().setLookAtData({ bounds })
-                        hMap.addLayer(defaultLayers.vector.normal.trafficincidents)
+                        // hMap.addLayer(defaultLayers.vector.normal.trafficincidents)
                     },
-                    console.error
+                    () => {
+                        setNoRoute && setNoRoute(true)
+                        message.current = enqueueSnackbar(intl.formatMessage({ id: 'app.Error.LoadingRoute'}), { variant: 'error', persist: true, preventDuplicate: true })
+                    }
                 )
             }
         }
