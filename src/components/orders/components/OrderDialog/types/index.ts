@@ -5,6 +5,7 @@ export type useOrderDialogProps = {
     setOpen: (value: boolean) => void
     addOrder?: (order: Order) => void
     order?: Order
+    isNew?: boolean
 }
 
 export type OrderDialogProps = {
@@ -12,5 +13,5 @@ export type OrderDialogProps = {
     setOpen: (value: boolean) => void
     addOrder?: (order: Order) => void
     order?: Order
-    isNew: boolean
+    isNew?: boolean
 }
