@@ -151,19 +151,24 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                     const drivers = allDrivers.filter((d) =>
                         v.drivers?.find((dr) => dr === d.id)
                     )
-                    return drivers
-                        ? drivers.map((d) => (
-                              <Box>
-                                  <Overflow text={d.name} />
-                                  {d?.phone && (
-                                      <Overflow
-                                          variant="caption"
-                                          text={d?.phone}
-                                      />
-                                  )}
-                              </Box>
-                          ))
-                        : '-'
+                    console.log(drivers)
+                    return !drivers || drivers.length === 0 ? (
+                        '-'
+                    ) : drivers.length === 1 ? (
+                        <Box>
+                            <Overflow text={drivers[0].name} />
+                            {drivers[0]?.phone && (
+                                <Overflow
+                                    variant="caption"
+                                    text={drivers[0]?.phone}
+                                />
+                            )}
+                        </Box>
+                    ) : (
+                        <Overflow
+                            text={drivers.map((d) => d.name).join(', ')}
+                        />
+                    )
                 },
                 maxWidth: 160,
             },

@@ -394,7 +394,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                             (dr) => dr.id === d
                                         )
                                         return (
-                                            <Box>
+                                            <Box key={driver?.id}>
                                                 <Overflow
                                                     text={driver?.name || '-'}
                                                     variant="h6"
