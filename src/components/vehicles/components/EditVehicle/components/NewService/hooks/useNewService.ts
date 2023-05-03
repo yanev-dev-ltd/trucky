@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { Service } from '../../../../../types'
 
 const useNewService = () => {
     const [service, setService] = useState<Service>({
         cost: null,
         date: new Date().getTime(),
-        driver: '',
+        drivers: [],
         mileage: null,
         place: '',
         reminderDate: null,
@@ -18,7 +18,7 @@ const useNewService = () => {
         setService({
             cost: null,
             date: new Date().getTime(),
-            driver: '',
+            drivers: [],
             mileage: null,
             place: '',
             reminderDate: null,
@@ -28,7 +28,7 @@ const useNewService = () => {
         })
     }
 
-    const setField = useCallback((field: string, value: string | number | null) => {
+    const setField = useCallback((field: string, value: string | number | null | string[]) => {
         setService((oldService) => {
             return {...oldService, [field]: value}
         })

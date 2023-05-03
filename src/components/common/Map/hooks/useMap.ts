@@ -9,6 +9,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
     const mapRef = useRef(null)
     const message = useRef<SnackbarKey>()
     const [reload, setReload] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const intl = useIntl()
     
@@ -61,6 +62,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
             const origin = [...locations].shift()
             const destination = [...locations].pop()
             if (origin) {
+                setLoading && setLoading(true)
                 router.calculateRoute(
                     {
                         origin: `${origin?.lat},${origin?.lng}`,
@@ -81,6 +83,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
                         const distance: number[] = []
                         const toll: number[] = []
                         const ferry: boolean[] = []
+                        setLoading && setLoading(false)
                         if (!sections) {
                             setNoRoute && setNoRoute(true)
                             message.current = enqueueSnackbar(intl.formatMessage({ id: 'app.CouldNotCalculateRoute'}), { variant: 'error', persist: true })
@@ -130,6 +133,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
                     () => {
                         setNoRoute && setNoRoute(true)
                         message.current = enqueueSnackbar(intl.formatMessage({ id: 'app.Error.LoadingRoute'}), { variant: 'error', persist: true, preventDuplicate: true })
+                        setLoading && setLoading(false)
                     }
                 )
             }
@@ -149,7 +153,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
         }
     }, [mapRef, reload, locations])
 
-    return { mapRef }
+    return { mapRef, loading }
 }
 
 export default useMap

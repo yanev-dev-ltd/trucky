@@ -4,9 +4,7 @@ import {
     Box,
     DialogContent,
     Typography,
-    FormControl,
     TextField,
-    Autocomplete,
     DialogActions,
     Button,
     IconButton,
@@ -18,7 +16,6 @@ import {
     ListItemText,
 } from '@mui/material'
 import {
-    Add,
     AddCircle,
     Adjust,
     ArrowDownward,
@@ -34,7 +31,6 @@ import { useRouter } from 'next/router'
 import { RouteProps } from './types'
 import sx from './sx/Route.sx'
 import useRoute from './hooks/useRoute'
-import allDrivers from '@/api/drivers'
 import StopDialog from '../StopDialog/StopDialog'
 import { Location } from './types'
 import Overflow from '@/components/common/Overflow/Overflow'
@@ -42,6 +38,7 @@ import { SortableList } from '../../../common/SortableList/SortableList'
 import Map from '@/components/common/Map/Map'
 import { OrderDialog } from '@/components/orders/components/OrderDialog/OrderDialog'
 import { Order } from '@/components/orders/types'
+import { DriversSelect } from '@/components/common/DriversSelect/DriversSelect'
 
 const Route = ({ vehicleId, units, routeId }: RouteProps) => {
     const {
@@ -71,39 +68,13 @@ const Route = ({ vehicleId, units, routeId }: RouteProps) => {
                                 id={routeId ? 'app.EditRoute' : 'app.AddRoute'}
                             />
                         </Typography>
-                        <Box
-                            sx={sx.row}
-                            display="flex"
-                            gap={1}
-                            alignItems="flex-start"
-                        >
-                            <FormControl fullWidth variant="outlined">
-                                <Autocomplete
-                                    id="drivers"
-                                    multiple
-                                    options={allDrivers}
-                                    getOptionLabel={(option) => option.name}
-                                    onChange={(_, values) =>
-                                        changeField('drivers', values)
-                                    }
-                                    groupBy={(option) => option.name.charAt(0)}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label={
-                                                <FormattedMessage id="app.Drivers" />
-                                            }
-                                        />
-                                    )}
-                                />
-                            </FormControl>
-                            <Tooltip
-                                title={<FormattedMessage id="app.AddDriver" />}
-                            >
-                                <IconButton sx={{ marginTop: 1 }}>
-                                    <Add />
-                                </IconButton>
-                            </Tooltip>
+                        <Box sx={sx.row}>
+                            <DriversSelect
+                                drivers={route.drivers || []}
+                                setDrivers={(drivers) =>
+                                    changeField('drivers', drivers)
+                                }
+                            />
                         </Box>
                         <Box sx={sx.row}>
                             <TextField
@@ -209,7 +180,11 @@ const Route = ({ vehicleId, units, routeId }: RouteProps) => {
                                                                 sx={sx.icon}
                                                             >
                                                                 {hoveredLocation ===
-                                                                index ? (
+                                                                    index &&
+                                                                route.locations &&
+                                                                route.locations
+                                                                    .length >
+                                                                    1 ? (
                                                                     <SortableList.DragHandle />
                                                                 ) : index ===
                                                                       0 ||
@@ -225,10 +200,6 @@ const Route = ({ vehicleId, units, routeId }: RouteProps) => {
                                                                 )}
                                                             </ListItemIcon>
                                                             <ListItemText
-                                                                sx={{
-                                                                    maxWidth:
-                                                                        '180px',
-                                                                }}
                                                                 primary={
                                                                     <Overflow
                                                                         text={
@@ -251,15 +222,17 @@ const Route = ({ vehicleId, units, routeId }: RouteProps) => {
                                                                             ]
                                                                         ) && (
                                                                             <Typography variant="caption">
-                                                                                {Math.round(
+                                                                                {(
                                                                                     (distance[
                                                                                         index
                                                                                     ] /
                                                                                         1000) *
-                                                                                        (units ===
-                                                                                        'm'
-                                                                                            ? 0.621371192
-                                                                                            : 1)
+                                                                                    (units ===
+                                                                                    'm'
+                                                                                        ? 0.621371192
+                                                                                        : 1)
+                                                                                ).toFixed(
+                                                                                    1
                                                                                 )}
                                                                                 <FormattedMessage
                                                                                     id={
@@ -312,44 +285,53 @@ const Route = ({ vehicleId, units, routeId }: RouteProps) => {
                                                                     </>
                                                                 }
                                                             />
-                                                            <Box sx={sx.icons}>
-                                                                {location.loading && (
-                                                                    <Tooltip
-                                                                        title={
-                                                                            <FormattedMessage id="app.Loading" />
-                                                                        }
-                                                                    >
-                                                                        <FileUpload fontSize="small" />
-                                                                    </Tooltip>
-                                                                )}
-                                                                {location.unloading && (
-                                                                    <Tooltip
-                                                                        title={
-                                                                            <FormattedMessage id="app.Unloading" />
-                                                                        }
-                                                                    >
-                                                                        <Download fontSize="small" />
-                                                                    </Tooltip>
-                                                                )}
-                                                                {location.parking && (
-                                                                    <Tooltip
-                                                                        title={
-                                                                            <FormattedMessage id="app.Parking" />
-                                                                        }
-                                                                    >
-                                                                        <LocalParking fontSize="small" />
-                                                                    </Tooltip>
-                                                                )}
-                                                                {location.refueling && (
-                                                                    <Tooltip
-                                                                        title={
-                                                                            <FormattedMessage id="app.Refueling" />
-                                                                        }
-                                                                    >
-                                                                        <LocalGasStation fontSize="small" />
-                                                                    </Tooltip>
-                                                                )}
-                                                            </Box>
+                                                            {(location.loading ||
+                                                                location.unloading ||
+                                                                location.parking ||
+                                                                location.refueling) && (
+                                                                <Box
+                                                                    sx={
+                                                                        sx.icons
+                                                                    }
+                                                                >
+                                                                    {location.loading && (
+                                                                        <Tooltip
+                                                                            title={
+                                                                                <FormattedMessage id="app.Loading" />
+                                                                            }
+                                                                        >
+                                                                            <FileUpload fontSize="small" />
+                                                                        </Tooltip>
+                                                                    )}
+                                                                    {location.unloading && (
+                                                                        <Tooltip
+                                                                            title={
+                                                                                <FormattedMessage id="app.Unloading" />
+                                                                            }
+                                                                        >
+                                                                            <Download fontSize="small" />
+                                                                        </Tooltip>
+                                                                    )}
+                                                                    {location.parking && (
+                                                                        <Tooltip
+                                                                            title={
+                                                                                <FormattedMessage id="app.Parking" />
+                                                                            }
+                                                                        >
+                                                                            <LocalParking fontSize="small" />
+                                                                        </Tooltip>
+                                                                    )}
+                                                                    {location.refueling && (
+                                                                        <Tooltip
+                                                                            title={
+                                                                                <FormattedMessage id="app.Refueling" />
+                                                                            }
+                                                                        >
+                                                                            <LocalGasStation fontSize="small" />
+                                                                        </Tooltip>
+                                                                    )}
+                                                                </Box>
+                                                            )}
                                                         </ListItem>
                                                     </SortableList.Item>
                                                 )
@@ -384,18 +366,31 @@ const Route = ({ vehicleId, units, routeId }: RouteProps) => {
                                             <FormattedMessage id="app.AddOrder" />
                                         }
                                     >
-                                        <IconButton
-                                            size="small"
-                                            onClick={() => setOrderOpen(true)}
-                                        >
-                                            <AddCircle />
-                                        </IconButton>
+                                        <Box component="span">
+                                            <IconButton
+                                                size="small"
+                                                onClick={() =>
+                                                    setOrderOpen(true)
+                                                }
+                                                disabled={
+                                                    !route.locations ||
+                                                    route.locations.length < 2
+                                                }
+                                            >
+                                                <AddCircle />
+                                            </IconButton>
+                                        </Box>
                                     </Tooltip>
                                 </Box>
                                 {(!route.orders ||
                                     route.orders.length === 0) && (
                                     <Box sx={sx.noOrders}>
-                                        <FormattedMessage id="app.NoOrders" />
+                                        {!route.locations ||
+                                        route.locations.length < 2 ? (
+                                            <FormattedMessage id="app.OrderNeedsStops" />
+                                        ) : (
+                                            <FormattedMessage id="app.NoOrders" />
+                                        )}
                                     </Box>
                                 )}
                                 {route.orders && route.orders.length > 0 && (

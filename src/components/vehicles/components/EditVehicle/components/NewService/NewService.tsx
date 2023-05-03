@@ -18,13 +18,13 @@ import { AddCircle } from '@mui/icons-material'
 
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
-import drivers from '../../../../../../api/drivers'
 
 import sx from './styles/NewService.sx'
 import { NewServiceProps } from './types'
 import useNewService from './hooks/useNewService'
+import { DriversSelect } from '@/components/common/DriversSelect/DriversSelect'
 
-const NewService = ({ addService, driver, units }: NewServiceProps) => {
+const NewService = ({ addService, drivers, units }: NewServiceProps) => {
     const intl = useIntl()
     const [newServiceOpen, setNewServiceOpen] = useState(false)
     const { setField, service, reset } = useNewService()
@@ -204,32 +204,15 @@ const NewService = ({ addService, driver, units }: NewServiceProps) => {
                                 />
                             </Box>
                             <Box sx={sx.row}>
-                                <FormControl fullWidth variant="outlined">
-                                    <InputLabel id="new-service-driver-label">
-                                        <FormattedMessage id="app.Driver" />
-                                    </InputLabel>
-                                    <Select
-                                        labelId="new-service-driver-label"
-                                        id="new-service-driver"
-                                        value={service.driver || driver || '-'}
-                                        onChange={(event) =>
-                                            setField(
-                                                'driver',
-                                                event.target.value
-                                            )
-                                        }
-                                        label="Driver"
-                                    >
-                                        <MenuItem value={'-'}>
-                                            <FormattedMessage id="app.SelectDriver" />
-                                        </MenuItem>
-                                        {drivers.map((d, i) => (
-                                            <MenuItem key={i} value={d.id}>
-                                                {d.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
+                                <DriversSelect
+                                    drivers={service.drivers || []}
+                                    setDrivers={(drivers) =>
+                                        setField(
+                                            'drivers',
+                                            drivers.map((dr) => dr.id)
+                                        )
+                                    }
+                                />
                             </Box>
                         </DialogContent>
                         <DialogActions>
@@ -240,7 +223,7 @@ const NewService = ({ addService, driver, units }: NewServiceProps) => {
                                 type="submit"
                                 color="primary"
                                 variant="contained"
-                                disabled={!service.type || !service.mileage}
+                                disabled={!service.type}
                             >
                                 <FormattedMessage id="app.AddService" />
                             </Button>

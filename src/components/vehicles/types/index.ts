@@ -5,7 +5,7 @@ export type Vehicles = Vehicle[]
 
 export type Vehicle = {
     key: string
-    driver?: string
+    drivers?: string[]
     mileage?: number
     name?: string
     type?: keyof VehicleTypes
@@ -35,7 +35,7 @@ export type VehicleProps = {
 export type Service = {
     cost?: number | string | null
     date?: number | null
-    driver?: string
+    drivers?: string[]
     mileage?: number | null
     place?: string
     reminderDate?: number | null

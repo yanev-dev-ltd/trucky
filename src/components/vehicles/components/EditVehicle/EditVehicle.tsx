@@ -45,7 +45,7 @@ import { FormattedMessage } from 'react-intl'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { auth } from '@/services/firebase'
 import sx from './styles/EditVehicle.sx'
-import drivers from '../../../../api/drivers'
+import allDrivers from '@/api/drivers'
 import { EditVehicleProps } from './types'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
@@ -57,6 +57,7 @@ import Overflow from '@/components/common/Overflow/Overflow'
 import NewService from './components/NewService/NewService'
 import EditService from './components/EditService/EditService'
 import Route from '@/components/routes/components/Route/Route'
+import { DriversSelect } from '@/components/common/DriversSelect/DriversSelect'
 
 const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     const router = useRouter()
@@ -78,7 +79,6 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     >()
     const [confirmDeleteVehicle, setConfirmDeleteVehicle] =
         useState<boolean>(false)
-    const currentDriver = drivers.find((d) => d.id === vehicle?.driver)
 
     const locale = useMemo(() => {
         switch (settings?.locale) {
@@ -367,7 +367,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                         )}
                     </Paper>
                     <Paper sx={sx.paper}>
-                        {edit !== 'driver' && (
+                        {edit !== 'drivers' && (
                             <>
                                 <Tooltip
                                     title={<FormattedMessage id="app.Edit" />}
@@ -377,7 +377,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                         sx={sx.edit}
                                         onClick={() => {
                                             router.push(
-                                                `/vehicles/${vehicle?.key}/driver`
+                                                `/vehicles/${vehicle?.key}/drivers`
                                             )
                                             reset()
                                         }}
@@ -386,27 +386,40 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                     </IconButton>
                                 </Tooltip>
                                 <Typography>
-                                    <FormattedMessage id="app.Driver" />
+                                    <FormattedMessage id="app.Drivers" />
                                 </Typography>
-                                <Overflow
-                                    text={currentDriver?.name || '-'}
-                                    variant="h6"
-                                />
-                                <Typography variant="caption" sx={sx.textWrap}>
-                                    {currentDriver?.phone}
-                                </Typography>
+                                {vehicle.drivers &&
+                                    vehicle.drivers.map((d) => {
+                                        const driver = allDrivers.find(
+                                            (dr) => dr.id === d
+                                        )
+                                        return (
+                                            <Box>
+                                                <Overflow
+                                                    text={driver?.name || '-'}
+                                                    variant="h6"
+                                                />
+                                                <Typography
+                                                    variant="caption"
+                                                    sx={sx.textWrap}
+                                                >
+                                                    {driver?.phone}
+                                                </Typography>
+                                            </Box>
+                                        )
+                                    })}
                             </>
                         )}
-                        {edit === 'driver' && (
+                        {edit === 'drivers' && (
                             <Box
                                 component="form"
                                 onSubmit={(event) => {
                                     event.preventDefault()
-                                    saveVehicleField('driver')
+                                    saveVehicleField('drivers')
                                 }}
                             >
                                 <Typography>
-                                    <FormattedMessage id="app.Driver" />
+                                    <FormattedMessage id="app.Drivers" />
                                 </Typography>
                                 <Tooltip
                                     title={<FormattedMessage id="app.Cancel" />}
@@ -424,43 +437,16 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                         <Close />
                                     </IconButton>
                                 </Tooltip>
-                                <FormControl
-                                    fullWidth
-                                    variant="outlined"
-                                    sx={sx.select}
-                                >
-                                    <InputLabel id="driver-label">
-                                        <FormattedMessage id="app.Driver" />
-                                    </InputLabel>
-                                    <Select
-                                        labelId="driver-label"
-                                        id="driver"
-                                        value={editedVehicle?.driver || ''}
-                                        onChange={(event) => {
-                                            setEditedVehicle({
-                                                ...vehicle,
-                                                driver:
-                                                    event.target.value || '',
-                                            })
-                                        }}
-                                        label={
-                                            <FormattedMessage id="app.Driver" />
-                                        }
-                                    >
-                                        {drivers.map((d) => (
-                                            <MenuItem key={d.id} value={d.id}>
-                                                {d.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                <Button
-                                    color="primary"
-                                    disabled={
-                                        editedVehicle?.driver === vehicle.driver
+                                <DriversSelect
+                                    drivers={editedVehicle?.drivers || []}
+                                    setDrivers={(drivers) =>
+                                        setEditedVehicle({
+                                            ...vehicle,
+                                            drivers: drivers.map((d) => d.id),
+                                        })
                                     }
-                                    type="submit"
-                                >
+                                />
+                                <Button color="primary" type="submit">
                                     <FormattedMessage id="app.Save" />
                                 </Button>
                             </Box>
@@ -703,7 +689,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                         <Box sx={sx.edit}>
                             <NewService
                                 addService={addService}
-                                driver={vehicle?.driver || ''}
+                                drivers={vehicle?.drivers || []}
                                 units={vehicle.units}
                             />
                         </Box>

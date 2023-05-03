@@ -10,6 +10,7 @@ export type useMapProps = {
     setToll?: (toll: number[]) => void
     setFerry?: (ferry: boolean[]) => void
     setNoRoute?: (noRoute: boolean) => void
+    setLoading?: (loading: boolean) => void
 }
 
 export type MapProps = {
@@ -19,4 +20,5 @@ export type MapProps = {
     setToll?: (number: number[]) => void
     setFerry?: (ferry: boolean[]) => void
     setNoRoute?: (noRoute: boolean) => void
+    setLoading?: (loading: boolean) => void
 }

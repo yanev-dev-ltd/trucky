@@ -54,14 +54,38 @@ const sx: Record<string, SxProps<Theme>> = {
         padding: 2
     },
     icons: {
-        width: '50px'
+        maxWidth: '48px',
+        minWidth: '48px',
+        padding: 0,
+        gap: 0,
+        display: 'flex',
+        flexWrap: 'wrap',
+        ' svg': {
+            width: 20,
+            height: 20
+        }
     },
     icon: {
         minWidth: '30px'
     },
     listItem: {
-        minHeight: '60px'
+        minHeight: '60px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        gap: 0,
     },
+    loading: {
+        position: 'absolute',
+        zIndex: 99999999,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(255,255,255, .6)'
+    }
 }
 
 export default sx

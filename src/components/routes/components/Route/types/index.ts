@@ -8,7 +8,7 @@ export type RouteProps = {
 }
 
 export type Route = {
-    drivers?: Driver[]
+    drivers?: string[]
     fuelConsumption?: number
     locations?: Location[]
     orders?: Order[]

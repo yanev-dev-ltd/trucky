@@ -11,7 +11,7 @@ const useEditService = (service: Service | undefined) => {
     const { enqueueSnackbar } = useSnackbar()
     useEffect(() => setEditedService(service), [service])
 
-    const setField = useCallback((field: string, value: string | number | null) => {
+    const setField = useCallback((field: string, value: string | number | null | string[]) => {
         setEditedService((oldService) => {
             return {...oldService, [field]: value}
         })
@@ -23,7 +23,7 @@ const useEditService = (service: Service | undefined) => {
             update(ref(db, 'service/' + auth?.currentUser?.uid + '/' + editedService?.key), {
                 cost: editedService.cost || '',
                 date: editedService.date || '',
-                driver: editedService.driver || '',
+                drivers: editedService.drivers || [],
                 place: editedService.place || '',
                 reminderDate: editedService.reminderDate || '',
                 reminderMileage: editedService.reminderMileage || '',

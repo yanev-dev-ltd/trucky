@@ -16,7 +16,6 @@ import { Delete } from '@mui/icons-material'
 
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
-import drivers from '../../../../../../api/drivers'
 
 import sx from './styles/EditService.sx'
 import { EditServiceProps } from './types'
@@ -24,6 +23,8 @@ import useEditService from './hooks/useEditService'
 import LoadingButton from '../../../../../common/LoadingButton/LoadingButton'
 import Confirm from '../../../../../common/Confirm/Confirm'
 import Overflow from '../../../../../common/Overflow/Overflow'
+import allDrivers from '@/api/drivers'
+import { DriversSelect } from '@/components/common/DriversSelect/DriversSelect'
 
 const EditService = ({
     service,
@@ -190,29 +191,15 @@ const EditService = ({
                             />
                         </Box>
                         <Box sx={sx.row}>
-                            <FormControl fullWidth variant="outlined">
-                                <InputLabel id="new-service-driver-label">
-                                    <FormattedMessage id="app.Driver" />
-                                </InputLabel>
-                                <Select
-                                    labelId="new-service-driver-label"
-                                    id="new-service-driver"
-                                    value={editedService?.driver || '-'}
-                                    onChange={(event) =>
-                                        setField('driver', event.target.value)
-                                    }
-                                    label="Driver"
-                                >
-                                    <MenuItem key={0} value={'-'}>
-                                        <FormattedMessage id="app.SelectDriver" />
-                                    </MenuItem>
-                                    {drivers.map((d, i) => (
-                                        <MenuItem key={i} value={d.id}>
-                                            {d.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                            <DriversSelect
+                                drivers={editedService?.drivers || []}
+                                setDrivers={(drivers) =>
+                                    setField(
+                                        'drivers',
+                                        drivers.map((dr) => dr.id)
+                                    )
+                                }
+                            />
                         </Box>
                     </DialogContent>
                     <DialogActions>
@@ -255,9 +242,7 @@ const EditService = ({
                             type="submit"
                             color="primary"
                             variant="contained"
-                            disabled={
-                                !editedService?.type || !editedService?.mileage
-                            }
+                            disabled={!editedService?.type}
                         >
                             <FormattedMessage id="app.EditService" />
                         </Button>
