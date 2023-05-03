@@ -37,14 +37,12 @@ const DriversSelectView = ({
                 id="drivers"
                 multiple
                 options={allDrivers as Driver[]}
-                value={
-                    allDrivers.filter((d) =>
-                        drivers?.find((dr) => dr === d.id)
-                    ) || []
-                }
+                value={allDrivers.filter((d) =>
+                    drivers?.find((dr) => dr === d.id)
+                )}
                 getOptionLabel={(option) => option.name}
                 onChange={(_, values) => {
-                    setDrivers(values)
+                    setDrivers(values.map((d) => d.id))
                 }}
                 renderOption={(props, option) => (
                     <li

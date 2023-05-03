@@ -40,7 +40,7 @@ import { OrderDialog } from '@/components/orders/components/OrderDialog/OrderDia
 import { Order } from '@/components/orders/types'
 import { DriversSelect } from '@/components/common/DriversSelect/DriversSelect'
 
-const Route = ({ vehicleId, units, routeId }: RouteProps) => {
+const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
     const {
         route,
         changeField,
@@ -52,7 +52,7 @@ const Route = ({ vehicleId, units, routeId }: RouteProps) => {
         setFerry,
         noRoute,
         setNoRoute,
-    } = useRoute(routeId)
+    } = useRoute(routeId, drivers)
     const [routeOpen, setRouteOpen] = useState<boolean>(false)
     const [orderOpen, setOrderOpen] = useState<boolean>(false)
     const [hoveredLocation, setHoveredLocation] = useState<number | undefined>()

@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Route } from '../types'
 
 
-const useRoute = (routeId?: string) => {
-    const [route, setRoute] = useState<Route>({})
+const useRoute = (routeId?: string, drivers?: string[]) => {
+    const [route, setRoute] = useState<Route>({ drivers })
     const [distance, setDistance] = useState<number[]>([])
     const [toll, setToll] = useState<number[]>([])
     const [ferry, setFerry] = useState<boolean[]>([])

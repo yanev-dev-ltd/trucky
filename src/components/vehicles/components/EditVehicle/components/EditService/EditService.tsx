@@ -194,10 +194,7 @@ const EditService = ({
                             <DriversSelect
                                 drivers={editedService?.drivers || []}
                                 setDrivers={(drivers) =>
-                                    setField(
-                                        'drivers',
-                                        drivers.map((dr) => dr.id)
-                                    )
+                                    setField('drivers', drivers)
                                 }
                             />
                         </Box>

@@ -388,26 +388,27 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 <Typography>
                                     <FormattedMessage id="app.Drivers" />
                                 </Typography>
-                                {vehicle.drivers &&
-                                    vehicle.drivers.map((d) => {
-                                        const driver = allDrivers.find(
-                                            (dr) => dr.id === d
-                                        )
-                                        return (
-                                            <Box key={driver?.id}>
-                                                <Overflow
-                                                    text={driver?.name || '-'}
-                                                    variant="h6"
-                                                />
-                                                <Typography
-                                                    variant="caption"
-                                                    sx={sx.textWrap}
-                                                >
-                                                    {driver?.phone}
-                                                </Typography>
-                                            </Box>
-                                        )
-                                    })}
+                                {vehicle.drivers
+                                    ? vehicle.drivers.map((d) => {
+                                          const driver = allDrivers.find(
+                                              (dr) => dr.id === d
+                                          )
+                                          return (
+                                              <Box key={driver?.id}>
+                                                  <Overflow
+                                                      text={driver?.name || '-'}
+                                                      variant="h6"
+                                                  />
+                                                  <Typography
+                                                      variant="caption"
+                                                      sx={sx.textWrap}
+                                                  >
+                                                      {driver?.phone}
+                                                  </Typography>
+                                              </Box>
+                                          )
+                                      })
+                                    : '-'}
                             </>
                         )}
                         {edit === 'drivers' && (
@@ -442,7 +443,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                     setDrivers={(drivers) =>
                                         setEditedVehicle({
                                             ...vehicle,
-                                            drivers: drivers.map((d) => d.id),
+                                            drivers,
                                         })
                                     }
                                 />
@@ -526,6 +527,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                     vehicleId={vehicle?.key}
                                     units={editedVehicle?.units}
                                     routeId={routeId}
+                                    drivers={editedVehicle?.drivers}
                                 />
                             )}
                         </Box>

@@ -207,10 +207,7 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
                                 <DriversSelect
                                     drivers={service.drivers || []}
                                     setDrivers={(drivers) =>
-                                        setField(
-                                            'drivers',
-                                            drivers.map((dr) => dr.id)
-                                        )
+                                        setField('drivers', drivers)
                                     }
                                 />
                             </Box>

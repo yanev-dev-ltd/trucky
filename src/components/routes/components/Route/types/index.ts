@@ -5,6 +5,7 @@ export type RouteProps = {
     vehicleId?: string
     units?: string
     routeId?: string
+    drivers?: string[]
 }
 
 export type Route = {
