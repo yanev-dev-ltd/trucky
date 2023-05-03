@@ -151,7 +151,6 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                     const drivers = allDrivers.filter((d) =>
                         v.drivers?.find((dr) => dr === d.id)
                     )
-                    console.log(drivers)
                     return !drivers || drivers.length === 0 ? (
                         '-'
                     ) : drivers.length === 1 ? (
