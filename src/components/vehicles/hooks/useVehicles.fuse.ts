@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js'
 import { useIntl } from 'react-intl'
-import drivers from '../../../api/drivers'
+import allDrivers from '@/api/drivers'
 import { Vehicle, VehicleTypes, FuelTypes, Vehicles } from '../types'
 
 const useVehiclesFuse = (vehicles: Vehicles) => {
@@ -11,11 +11,12 @@ const useVehiclesFuse = (vehicles: Vehicles) => {
             'mileage',
             'route',
             {
-                name: 'driver',
+                name: 'drivers',
                 getFn: (d: Vehicle) =>
-                    drivers.find((dr) => dr.id === d.driver)?.name +
-                    ' ' +
-                    drivers.find((dr) => dr.id === d.driver)?.phone,
+                d.drivers ? d.drivers.map((dId) => {
+                        const dr = allDrivers.find((driver) => driver.id === dId)
+                        return `${dr?.name} ${dr?.phone}`
+                    }).join(', ') : '-'
             },
             {
                 name: 'type',

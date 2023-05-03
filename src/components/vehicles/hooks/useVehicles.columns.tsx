@@ -7,7 +7,7 @@ import { Typography, Box, Tooltip, IconButton } from '@mui/material'
 import { FormatListBulleted } from '@mui/icons-material'
 import Overflow from '@/components/common/Overflow/Overflow'
 import sx from '../styles/Vehicles.sx'
-import drivers from '../../../api/drivers'
+import allDrivers from '@/api/drivers'
 
 const useVehiclesColumns = (vehicles: Vehicles) => {
     const intl = useIntl()
@@ -145,42 +145,27 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                 },
             },
             {
-                Header: <FormattedMessage id="app.Driver" />,
-                id: 'driver',
+                Header: <FormattedMessage id="app.Drivers" />,
+                id: 'drivers',
                 accessor: (v: Vehicle) => {
-                    const driver = drivers.find((d) => d.id === v.driver)
-                    return driver ? (
-                        <>
-                            <Overflow text={driver.name} />
-                            {driver?.phone && (
-                                <Overflow
-                                    variant="caption"
-                                    text={driver?.phone}
-                                />
-                            )}
-                        </>
-                    ) : (
-                        '-'
+                    const drivers = allDrivers.filter((d) =>
+                        v.drivers?.find((dr) => dr === d.id)
                     )
+                    return drivers
+                        ? drivers.map((d) => (
+                              <Box>
+                                  <Overflow text={d.name} />
+                                  {d?.phone && (
+                                      <Overflow
+                                          variant="caption"
+                                          text={d?.phone}
+                                      />
+                                  )}
+                              </Box>
+                          ))
+                        : '-'
                 },
                 maxWidth: 160,
-                sortType: (a: any, b: any, id: string) => {
-                    const d1name = drivers.find(
-                        (d) => d.id === a?.original[id]
-                    )?.name
-                    const d2name = drivers.find(
-                        (d) => d.id === b?.original[id]
-                    )?.name
-                    if (!d1name) return 1
-                    if (!d2name) return -1
-                    if (d1name > d2name) {
-                        return 1
-                    }
-                    if (d1name < d2name) {
-                        return -1
-                    }
-                    return 0
-                },
             },
             {
                 Header: <FormattedMessage id="app.LastRoute" />,
