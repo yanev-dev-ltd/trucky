@@ -12,10 +12,6 @@ import {
     ListItemIcon,
     ListItemText,
     ListSubheader,
-    FormControl,
-    Select,
-    MenuItem,
-    InputLabel,
     Table as MuiTable,
     TableBody,
     TableCell,
@@ -57,7 +53,7 @@ import Overflow from '@/components/common/Overflow/Overflow'
 import NewService from './components/NewService/NewService'
 import EditService from './components/EditService/EditService'
 import Route from '@/components/routes/components/Route/Route'
-import { DriversSelect } from '@/components/common/DriversSelect/DriversSelect'
+import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 
 const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     const router = useRouter()
@@ -391,10 +387,10 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 {vehicle.drivers
                                     ? vehicle.drivers.map((d) => {
                                           const driver = allDrivers.find(
-                                              (dr) => dr.id === d
+                                              (dr) => dr.key === d
                                           )
                                           return (
-                                              <Box key={driver?.id}>
+                                              <Box key={driver?.key}>
                                                   <Overflow
                                                       text={driver?.name || '-'}
                                                       variant="h6"
@@ -446,6 +442,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                             drivers,
                                         })
                                     }
+                                    sx={sx.select}
                                 />
                                 <Button color="primary" type="submit">
                                     <FormattedMessage id="app.Save" />

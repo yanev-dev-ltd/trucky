@@ -29,7 +29,7 @@ import {
 import { FormattedMessage } from 'react-intl'
 import { useRouter } from 'next/router'
 import { RouteProps } from './types'
-import sx from './sx/Route.sx'
+import sx from './styles/Route.sx'
 import useRoute from './hooks/useRoute'
 import StopDialog from '../StopDialog/StopDialog'
 import { Location } from './types'
@@ -38,7 +38,7 @@ import { SortableList } from '../../../common/SortableList/SortableList'
 import Map from '@/components/common/Map/Map'
 import { OrderDialog } from '@/components/orders/components/OrderDialog/OrderDialog'
 import { Order } from '@/components/orders/types'
-import { DriversSelect } from '@/components/common/DriversSelect/DriversSelect'
+import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 
 const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
     const {

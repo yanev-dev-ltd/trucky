@@ -14,7 +14,7 @@ const useVehiclesFuse = (vehicles: Vehicles) => {
                 name: 'drivers',
                 getFn: (d: Vehicle) =>
                 d.drivers ? d.drivers.map((dId) => {
-                        const dr = allDrivers.find((driver) => driver.id === dId)
+                        const dr = allDrivers.find((driver) => driver.key === dId)
                         return `${dr?.name} ${dr?.phone}`
                     }).join(', ') : '-'
             },

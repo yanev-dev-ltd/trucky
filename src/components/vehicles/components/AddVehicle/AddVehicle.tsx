@@ -58,6 +58,13 @@ const AddVehicle = () => {
                             component="form"
                             onSubmit={(event) => {
                                 event.preventDefault()
+                                if (
+                                    !newVehicle?.name ||
+                                    !newVehicle?.type ||
+                                    !newVehicle?.fuel ||
+                                    !newVehicle?.units
+                                )
+                                    return
                                 addVehicle()
                             }}
                         >

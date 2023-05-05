@@ -24,7 +24,7 @@ import LoadingButton from '../../../../../common/LoadingButton/LoadingButton'
 import Confirm from '../../../../../common/Confirm/Confirm'
 import Overflow from '../../../../../common/Overflow/Overflow'
 import allDrivers from '@/api/drivers'
-import { DriversSelect } from '@/components/common/DriversSelect/DriversSelect'
+import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 
 const EditService = ({
     service,

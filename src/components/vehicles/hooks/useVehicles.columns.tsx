@@ -149,7 +149,7 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                 id: 'drivers',
                 accessor: (v: Vehicle) => {
                     const drivers = allDrivers.filter((d) =>
-                        v.drivers?.find((dr) => dr === d.id)
+                        v.drivers?.find((dr) => dr === d.key)
                     )
                     return !drivers || drivers.length === 0 ? (
                         '-'
@@ -165,11 +165,14 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                         </Box>
                     ) : (
                         <Overflow
-                            text={drivers.map((d) => d.name).join(', ')}
+                            text={drivers
+                                .map((d) => `${d.name} (${d.phone})`)
+                                .join(', ')}
                         />
                     )
                 },
                 maxWidth: 160,
+                disableSortBy: true,
             },
             {
                 Header: <FormattedMessage id="app.LastRoute" />,

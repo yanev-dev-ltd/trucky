@@ -3,20 +3,14 @@ import {
     Box,
     DialogContent,
     Typography,
-    TextField,
-    Autocomplete,
     DialogActions,
     DialogTitle,
     Button,
-    Grid,
-    CircularProgress,
     IconButton,
-    Checkbox,
-    FormControlLabel,
 } from '@mui/material'
 import { Close, Delete } from '@mui/icons-material'
 import type { OrderDialogProps } from '../types'
-import sx from '../sx/OrderDialog.sx'
+import sx from '../styles/OrderDialog.sx'
 import { FormattedMessage } from 'react-intl'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 

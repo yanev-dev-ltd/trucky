@@ -22,7 +22,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import sx from './styles/NewService.sx'
 import { NewServiceProps } from './types'
 import useNewService from './hooks/useNewService'
-import { DriversSelect } from '@/components/common/DriversSelect/DriversSelect'
+import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 
 const NewService = ({ addService, drivers, units }: NewServiceProps) => {
     const intl = useIntl()
