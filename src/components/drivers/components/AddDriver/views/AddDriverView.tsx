@@ -20,7 +20,7 @@ const AddDriverView = ({
     newDriverLoading,
 }: AddDriverProps) => {
     return (
-        <Modal open={open}>
+        <Modal open={Boolean(open)}>
             <Box sx={sx.wrap}>
                 <Paper sx={sx.modal}>
                     <Box display="flex" justifyContent="space-between">

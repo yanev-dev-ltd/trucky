@@ -1,10 +1,12 @@
 import Fuse from 'fuse.js'
 import { useIntl } from 'react-intl'
-import allDrivers from '@/api/drivers'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 import { Vehicle, VehicleTypes, FuelTypes, Vehicles } from '../types'
 
 const useVehiclesFuse = (vehicles: Vehicles) => {
     const intl = useIntl()
+    const allDrivers = useSelector((state: RootState) => state.drivers)
     const fuse: Fuse<Vehicle> = new Fuse(vehicles, {
         keys: [
             'name',

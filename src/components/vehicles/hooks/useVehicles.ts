@@ -4,6 +4,7 @@ import { ref, onValue } from 'firebase/database'
 import { RootState } from '@/store/store'
 import { db, auth } from '@/services/firebase'
 import { setVehicles } from '../redux'
+import { setDrivers } from '../../drivers/redux'
 import { snapshotToArray } from '@/utils/globalUtils'
 import { VehicleProps, useVehicleProps } from '../types'
 import useVehiclesColumns from './useVehicles.columns'
@@ -24,7 +25,14 @@ const useVehicles =  ({ vehicleId, edit, routeId }:useVehicleProps): VehicleProp
             const snp = snapshot.val()
             dispatch(setVehicles(snp ? snapshotToArray(snp) : []))
         })
-        return () => unsubscribe()
+        const unsubscribeDrivers = onValue(ref(db, 'drivers/' + auth.currentUser?.uid), (snapshot) => {
+            const snp = snapshot.val()
+            dispatch(setDrivers(snp ? snapshotToArray(snp) : []))
+        })
+        return () => {
+            unsubscribe()
+            unsubscribeDrivers()
+        } 
     }, [auth.currentUser?.uid])
 
     useEffect(() => {

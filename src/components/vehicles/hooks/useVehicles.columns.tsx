@@ -7,10 +7,12 @@ import { Typography, Box, Tooltip, IconButton } from '@mui/material'
 import { FormatListBulleted } from '@mui/icons-material'
 import Overflow from '@/components/common/Overflow/Overflow'
 import sx from '../styles/Vehicles.sx'
-import allDrivers from '@/api/drivers'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 
 const useVehiclesColumns = (vehicles: Vehicles) => {
     const intl = useIntl()
+    const allDrivers = useSelector((state: RootState) => state.drivers)
     const sortType = (a: any, b: any, id: string) => {
         if (!a.original[id]) return 1
         if (!b.original[id]) return -1
@@ -155,7 +157,7 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                         '-'
                     ) : drivers.length === 1 ? (
                         <Box>
-                            <Overflow text={drivers[0].name} />
+                            <Overflow text={drivers[0]?.name || '-'} />
                             {drivers[0]?.phone && (
                                 <Overflow
                                     variant="caption"
@@ -165,9 +167,7 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                         </Box>
                     ) : (
                         <Overflow
-                            text={drivers
-                                .map((d) => `${d.name} (${d.phone})`)
-                                .join(', ')}
+                            text={drivers.map((d) => d.name).join(', ')}
                         />
                     )
                 },

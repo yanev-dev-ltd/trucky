@@ -23,7 +23,7 @@ const DriversSelectView = ({
     sx,
 }: DriversSelectProps) => {
     const intl = useIntl()
-    const [open, setOpen] = useState<boolean>(false)
+    const [open, setOpen] = useState<boolean | string>(false)
     return (
         <>
             <FormControl fullWidth variant="outlined">
@@ -68,7 +68,7 @@ const DriversSelectView = ({
                                         startIcon={<AddCircle />}
                                         onClick={(e) => {
                                             e.stopPropagation()
-                                            setOpen(true)
+                                            setOpen(option.name || true)
                                         }}
                                         fullWidth
                                         variant="outlined"

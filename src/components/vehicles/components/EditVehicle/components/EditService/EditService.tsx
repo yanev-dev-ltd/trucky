@@ -5,10 +5,6 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl,
-    Select,
-    MenuItem,
-    InputLabel,
     Button,
     TextField,
 } from '@mui/material'
@@ -23,7 +19,8 @@ import useEditService from './hooks/useEditService'
 import LoadingButton from '../../../../../common/LoadingButton/LoadingButton'
 import Confirm from '../../../../../common/Confirm/Confirm'
 import Overflow from '../../../../../common/Overflow/Overflow'
-import allDrivers from '@/api/drivers'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 
 const EditService = ({
@@ -32,6 +29,7 @@ const EditService = ({
     units,
 }: EditServiceProps) => {
     const intl = useIntl()
+    const allDrivers = useSelector((state: RootState) => state.drivers)
     const [confirmDeleteService, setConfirmDeleteService] =
         useState<boolean>(false)
     const { editedService, setField, saveService, deleteService } =

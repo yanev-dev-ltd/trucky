@@ -41,7 +41,6 @@ import { FormattedMessage } from 'react-intl'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { auth } from '@/services/firebase'
 import sx from './styles/EditVehicle.sx'
-import allDrivers from '@/api/drivers'
 import { EditVehicleProps } from './types'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
@@ -68,6 +67,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         addService,
         service,
     } = useEditVehicle(vehicle)
+    const allDrivers = useSelector((state: RootState) => state.drivers)
     const { settings } = useSelector((state: RootState) => state.settings)
     const [editService, setEditService] = useState<Service | undefined>()
     const [confirmDeleteFile, setConfirmDeleteFile] = useState<
@@ -399,7 +399,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                                       variant="caption"
                                                       sx={sx.textWrap}
                                                   >
-                                                      {driver?.phone}
+                                                      {driver?.phone || '-'}
                                                   </Typography>
                                               </Box>
                                           )
@@ -412,7 +412,6 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 component="form"
                                 onSubmit={(event) => {
                                     event.preventDefault()
-                                    saveVehicleField('drivers')
                                 }}
                             >
                                 <Typography>
@@ -444,7 +443,10 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                     }
                                     sx={sx.select}
                                 />
-                                <Button color="primary" type="submit">
+                                <Button
+                                    color="primary"
+                                    onClick={() => saveVehicleField('drivers')}
+                                >
                                     <FormattedMessage id="app.Save" />
                                 </Button>
                             </Box>

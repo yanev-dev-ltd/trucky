@@ -21,7 +21,6 @@ const useDriversColumns = (drivers: Driver[]) => {
                 id: 'name',
                 accessor: (d: Driver) =>
                     d.name ? <Overflow text={d.name} /> : '-',
-                maxWidth: 240,
                 sortType,
             },
             {
@@ -29,7 +28,6 @@ const useDriversColumns = (drivers: Driver[]) => {
                 id: 'phone',
                 accessor: (d: Driver) =>
                     d.phone ? <Overflow text={d.phone} /> : '-',
-                maxWidth: 240,
                 sortType,
             },
             {
@@ -37,7 +35,6 @@ const useDriversColumns = (drivers: Driver[]) => {
                 id: 'address',
                 accessor: (d: Driver) =>
                     d.address ? <Overflow text={d.address} /> : '-',
-                maxWidth: 240,
                 sortType,
             },
             {

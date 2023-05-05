@@ -17,6 +17,7 @@ const useAddDriver = ({ onSave, setOpen, open }: useAddDriverProps) => {
             setNewDriverLoading(false)
             setNewDriver({})
         }
+        if (typeof open === 'string') changeField('name', open)
     }, [open])
 
     const save = useCallback(() => {
@@ -26,9 +27,9 @@ const useAddDriver = ({ onSave, setOpen, open }: useAddDriverProps) => {
             const postDriverRef = ref(db, 'drivers/' + auth.currentUser.uid)
             const newDriverRef = push(postDriverRef)
             update(ref(db, 'drivers/' + auth.currentUser.uid + '/' + newDriverRef.key), newDriver)
-            onSave && onSave(newDriverRef.key || '')
+            onSave && newDriverRef.key && onSave(newDriverRef.key)
             enqueueSnackbar(intl.formatMessage({
-                id: 'app.DriverSaved',
+                id: 'app.DriverAdded',
             }), { variant: 'success' })
         } catch (error) {
             enqueueSnackbar(intl.formatMessage({
