@@ -12,6 +12,7 @@ import useVehiclesFuse from './useVehicles.fuse'
 
 const useVehicles =  ({ vehicleId, edit, routeId }:useVehicleProps): VehicleProps => {
     const vehicles = useSelector((state: RootState) => state.vehicles)
+    const drivers = useSelector((state: RootState) => state.drivers)
     const dispatch = useDispatch()
     const searchRef = useRef<HTMLInputElement | null>(null)
     const { columns } = useVehiclesColumns(vehicles)
@@ -46,7 +47,7 @@ const useVehicles =  ({ vehicleId, edit, routeId }:useVehicleProps): VehicleProp
         return () => document.removeEventListener('keydown', handleKeyPress)
     }, [])
 
-    return { vehicles, vehicleId, edit, searchRef, fuse, columns, routeId }
+    return { vehicles, vehicleId, edit, searchRef, fuse, columns, routeId, drivers }
 }
 
 export default useVehicles

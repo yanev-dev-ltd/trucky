@@ -390,18 +390,20 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                               (dr) => dr.key === d
                                           )
                                           return (
-                                              <Box key={driver?.key}>
-                                                  <Overflow
-                                                      text={driver?.name || '-'}
-                                                      variant="h6"
-                                                  />
-                                                  <Typography
-                                                      variant="caption"
-                                                      sx={sx.textWrap}
-                                                  >
-                                                      {driver?.phone || '-'}
-                                                  </Typography>
-                                              </Box>
+                                              driver?.name && (
+                                                  <Box key={driver?.key}>
+                                                      <Overflow
+                                                          text={driver.name}
+                                                          variant="h6"
+                                                      />
+                                                      <Typography
+                                                          variant="caption"
+                                                          sx={sx.textWrap}
+                                                      >
+                                                          {driver?.phone || '-'}
+                                                      </Typography>
+                                                  </Box>
+                                              )
                                           )
                                       })
                                     : '-'}

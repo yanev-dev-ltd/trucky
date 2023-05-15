@@ -1,6 +1,7 @@
 import { MutableRefObject } from 'react'
 import Fuse from 'fuse.js'
 import { Column } from 'react-table'
+import { Driver } from '@/components/drivers/types'
 export type Vehicles = Vehicle[]
 
 export type Vehicle = {
@@ -30,6 +31,7 @@ export type VehicleProps = {
     fuse: Fuse<Vehicle>
     columns: Column<Vehicle>[]
     routeId: string | undefined
+    drivers: Driver[]
 }
 
 export type Service = {

@@ -198,7 +198,7 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                 disableSortBy: true,
             },
         ],
-        [vehicles]
+        [vehicles, allDrivers]
     )
 
     return { columns }

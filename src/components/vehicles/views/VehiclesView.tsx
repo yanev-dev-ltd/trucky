@@ -25,6 +25,7 @@ export const VehiclesView: FC<VehicleProps> = ({
     fuse,
     columns,
     routeId,
+    drivers,
 }): JSX.Element => {
     const intl = useIntl()
     const [search, setSearch] = useState<string | boolean>(false)
@@ -38,7 +39,7 @@ export const VehiclesView: FC<VehicleProps> = ({
         }
     }, [search, vehicles])
 
-    if (vehicles?.[0]?.key === 'loading') {
+    if (vehicles?.[0]?.key === 'loading' || drivers?.[0]?.key === 'loading') {
         return (
             <Box sx={sx.loading}>
                 <CircularProgress />

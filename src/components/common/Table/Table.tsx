@@ -4,6 +4,7 @@ import {
     ReactElement,
     PropsWithChildren,
     MouseEvent,
+    forwardRef,
 } from 'react'
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material'
 import {
@@ -21,6 +22,7 @@ import {
 } from '@mui/material'
 import { useIntl } from 'react-intl'
 import { useTable, useSortBy } from 'react-table'
+import { TableVirtuoso } from 'react-virtuoso'
 import sx from './styles/Table.sx'
 import { TableProps } from './types'
 
@@ -40,15 +42,21 @@ export function Table<T extends Record<string, unknown>>(
     props: PropsWithChildren<TableProps<T>>
 ): ReactElement {
     const intl = useIntl()
-    const { columns, data, name } = props
-    const { getTableProps, headerGroups, rows, prepareRow, allColumns } =
-        useTable(
-            {
-                columns,
-                data,
-            },
-            useSortBy
-        )
+    const { columns, data, name, height = 'calc(100vh - 126px)' } = props
+    const {
+        getTableProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        allColumns,
+        getTableBodyProps,
+    } = useTable(
+        {
+            columns,
+            data,
+        },
+        useSortBy
+    )
     const [mouseState, setMouseState] = useState<MouseState>(initialState)
 
     const handleClick = (event: MouseEvent) => {
@@ -87,7 +95,132 @@ export function Table<T extends Record<string, unknown>>(
                     </MenuItem>
                 ))}
             </Menu>
-            <MuiTable
+            <TableVirtuoso
+                style={{ height }}
+                totalCount={rows.length}
+                useWindowScroll
+                components={{
+                    Table: ({ style, ...props }) => (
+                        <MuiTable
+                            {...getTableProps()}
+                            {...props}
+                            style={{
+                                ...style,
+                                width: '100%',
+                                tableLayout: 'fixed',
+                            }}
+                            onContextMenu={handleClick}
+                        />
+                    ),
+                    TableBody: forwardRef(({ style, ...props }, ref) => (
+                        <TableBody
+                            {...getTableBodyProps()}
+                            {...props}
+                            ref={ref}
+                        />
+                    )),
+                    TableRow: (props) => {
+                        const index = props['data-index']
+                        const row = rows[index]
+                        return (
+                            <TableRow
+                                {...props}
+                                {...row.getRowProps()}
+                                sx={sx.row}
+                            />
+                        )
+                    },
+                    TableHead,
+                }}
+                fixedHeaderContent={() => {
+                    return headerGroups.map((headerGroup) => (
+                        <TableRow {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                <TableCell
+                                    {...column.getHeaderProps(
+                                        column.getSortByToggleProps()
+                                    )}
+                                    sx={{
+                                        backgroundColor: 'background.default',
+                                        boxShadow: (theme) =>
+                                            `inset 0px -1px 0 0 ${theme.palette.divider}`,
+                                    }}
+                                >
+                                    <Tooltip
+                                        title={
+                                            column.canSort
+                                                ? intl.formatMessage({
+                                                      id: 'app.Sort',
+                                                  })
+                                                : undefined
+                                        }
+                                        placement="bottom-start"
+                                    >
+                                        <Box
+                                            sx={
+                                                column.isSorted
+                                                    ? sx.sorted
+                                                    : sx.root
+                                            }
+                                        >
+                                            {column.render('Header')}
+                                            <Box component="span" sx={sx.sort}>
+                                                {column.isSorted ? (
+                                                    column.isSortedDesc ? (
+                                                        <ArrowDropDown
+                                                            fontSize="small"
+                                                            style={{
+                                                                marginBottom:
+                                                                    '-5px',
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <ArrowDropUp
+                                                            fontSize="small"
+                                                            style={{
+                                                                marginBottom:
+                                                                    '-5px',
+                                                            }}
+                                                        />
+                                                    )
+                                                ) : (
+                                                    <ArrowDropUp
+                                                        fontSize="small"
+                                                        style={{
+                                                            visibility:
+                                                                'hidden',
+                                                            marginBottom:
+                                                                '-5px',
+                                                        }}
+                                                    />
+                                                )}
+                                            </Box>
+                                        </Box>
+                                    </Tooltip>
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    ))
+                }}
+                itemContent={(index, user) => {
+                    const row = rows[index]
+                    prepareRow(row)
+                    return row.cells.map((cell) => {
+                        return (
+                            <TableCell
+                                {...cell.getCellProps({
+                                    style: {
+                                        maxWidth: cell.column.maxWidth,
+                                    },
+                                })}
+                            >
+                                {cell.render('Cell')}
+                            </TableCell>
+                        )
+                    })
+                }}
+            />
+            {/* <MuiTable
                 {...getTableProps()}
                 onContextMenu={handleClick}
                 id={name}
@@ -182,7 +315,7 @@ export function Table<T extends Record<string, unknown>>(
                         )
                     })}
                 </TableBody>
-            </MuiTable>
+            </MuiTable> */}
         </>
     )
 }

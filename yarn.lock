@@ -8620,6 +8620,11 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-virtuoso@^4.3.6:
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/react-virtuoso/-/react-virtuoso-4.3.6.tgz#d13c1fef41f3b9de7e0c5a7675b572fbc4f3e7f1"
+  integrity sha512-t2yzA9QKwMrcECLytVfZcBZMusuQ9Ahgt62SL8uC/sYm9Sk/h14sYTJC0MVO6CAtl3BzKiLKSC79Vp+W3KOXMg==
+
 react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
