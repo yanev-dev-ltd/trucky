@@ -99,6 +99,7 @@ export function Table<T extends Record<string, unknown>>(
                 style={{ height }}
                 totalCount={rows.length}
                 useWindowScroll
+                overscan={90000}
                 components={{
                     Table: ({ style, ...props }) => (
                         <MuiTable
@@ -109,6 +110,7 @@ export function Table<T extends Record<string, unknown>>(
                                 width: '100%',
                                 tableLayout: 'fixed',
                             }}
+                            id={name}
                             onContextMenu={handleClick}
                         />
                     ),

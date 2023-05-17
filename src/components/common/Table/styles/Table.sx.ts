@@ -20,7 +20,7 @@ const sx: Record<string, SxProps<Theme>> = {
     row: {
         ':hover': {
             backgroundColor: 'action.hover',
-        }
+        },
     },
 }
 
