@@ -5,10 +5,6 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl,
-    Select,
-    MenuItem,
-    InputLabel,
     Button,
     TextField,
     Tooltip,
@@ -27,7 +23,7 @@ import { DriversSelect } from '@/components/drivers/components/DriversSelect/Dri
 const NewService = ({ addService, drivers, units }: NewServiceProps) => {
     const intl = useIntl()
     const [newServiceOpen, setNewServiceOpen] = useState(false)
-    const { setField, service, reset } = useNewService()
+    const { setField, service, reset } = useNewService(drivers)
 
     const handleNewServiceOpen = useCallback(() => {
         setNewServiceOpen(true)

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, ChangeEvent } from 'react'
+import { useState, useCallback, useEffect, ChangeEvent, useRef } from 'react'
 import { db, storage } from '../../../../services/firebase'
 import { ref, update } from 'firebase/database'
 import {
@@ -17,6 +17,7 @@ const useUpload = ({filepath, dbpath, currentFiles}: UploadProps) => {
     const [uploadProgress, setUploadProgress] = useState<number[]>([])
     const [uploadError, setUploadError] = useState<string[]>([])
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
+    const readyRef = useRef(true)
     const { enqueueSnackbar } = useSnackbar()
     const handleAddFiles = useCallback( 
         (event: ChangeEvent<HTMLInputElement>) => {
@@ -89,6 +90,7 @@ const useUpload = ({filepath, dbpath, currentFiles}: UploadProps) => {
                                     },
                                 ]
                             })
+                            readyRef.current = true
                         }
                     )
                 }
@@ -98,7 +100,7 @@ const useUpload = ({filepath, dbpath, currentFiles}: UploadProps) => {
     }, [files, filepath])
 
     useEffect(() => {
-        if (files.length > 0 && files.length === uploadedFiles.length) {
+        if (files.length > 0 && files.length === uploadedFiles.length && readyRef.current) {
             update(
                 ref(db, dbpath),
                 {
@@ -106,11 +108,19 @@ const useUpload = ({filepath, dbpath, currentFiles}: UploadProps) => {
                 }
             )
             const count = uploadedFiles.filter((uf) => uf.url !== 'error').length
-            const errors = uploadedFiles.filter((uf) => uf.url === 'error').length // TODO: set error message
-            enqueueSnackbar(intl.formatMessage({
-                id: count === 0 ? 'app.UploadedNoDocumentsSuccess' : count === 1 ? 'app.UploadedOneDocumentSuccess' : 'app.UploadedManyDocumentsSuccess',
-            }, { count }), { variant: 'success' })
-            if (errors === 0) clearFiles()
+            const errors = uploadedFiles.filter((uf) => uf.url === 'error').length
+            if (count > 0) {
+                enqueueSnackbar(intl.formatMessage({
+                    id: count === 1 ? 'app.UploadedOneDocumentSuccess' : 'app.UploadedManyDocumentsSuccess',
+                }, { count }), { variant: 'success' })
+            }
+            if (errors > 0) {
+                enqueueSnackbar(intl.formatMessage({
+                    id: errors === 1 ? 'app.UploadedOneDocumentError' : 'app.UploadedManyDocumentsError',
+                }, { errors }), { variant: 'error' })
+            } 
+            clearFiles()   
+            readyRef.current = false
         }
     }, [uploadedFiles, files, currentFiles])
     const clearFiles = useCallback(() => {

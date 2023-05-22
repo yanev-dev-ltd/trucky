@@ -1,11 +1,12 @@
 import { useState, useCallback } from 'react'
 import { Service } from '../../../../../types'
+import { Driver } from '@/components/drivers/types'
 
-const useNewService = () => {
+const useNewService = (drivers: string[]) => {
     const [service, setService] = useState<Service>({
         cost: null,
         date: new Date().getTime(),
-        drivers: [],
+        drivers: drivers,
         mileage: null,
         place: '',
         reminderDate: null,
@@ -18,7 +19,7 @@ const useNewService = () => {
         setService({
             cost: null,
             date: new Date().getTime(),
-            drivers: [],
+            drivers: drivers,
             mileage: null,
             place: '',
             reminderDate: null,
