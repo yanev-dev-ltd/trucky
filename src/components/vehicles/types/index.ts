@@ -2,6 +2,7 @@ import { MutableRefObject } from 'react'
 import Fuse from 'fuse.js'
 import { Column } from 'react-table'
 import { Driver } from '@/components/drivers/types'
+import { UploadedFile } from '@/components/common/Upload/types'
 export type Vehicles = Vehicle[]
 
 export type Vehicle = {
@@ -13,7 +14,7 @@ export type Vehicle = {
     fuel?: keyof FuelTypes
     units?: string
     route?: string
-    files?: VehicleFile[]
+    files?: UploadedFile[]
     services?: Service[]
 }
 
@@ -48,15 +49,7 @@ export type Service = {
     vehicle?: string
 }
 
-
 export type Services = Service[]
-
-export type VehicleFile = {
-    name: string
-    path: string
-    url: string
-    date: number
-}
 
 export enum VehicleTypes {
     BULLDOZER = 'Bulldozer',

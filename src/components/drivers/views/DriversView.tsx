@@ -14,9 +14,11 @@ import sx from '../styles/Drivers.sx'
 import { Driver, DriversProps } from '../types'
 import { FormattedMessage, useIntl } from 'react-intl'
 import AddDriverWithButton from '../components/AddDriverWithButton/AddDriverWithButton'
+import { EditDriver } from '../components/EditDriver/EditDriver'
 
 export const DriversView: FC<DriversProps> = ({
     drivers,
+    edit,
     driverId,
     searchRef,
     fuse,
@@ -33,6 +35,7 @@ export const DriversView: FC<DriversProps> = ({
             setFilteredDrivers(drivers)
         }
     }, [search, drivers])
+    const driver = drivers.find((v) => v.key === driverId)
 
     if (drivers?.[0]?.key === 'loading') {
         return (
@@ -90,11 +93,7 @@ export const DriversView: FC<DriversProps> = ({
                     </Typography>
                 </Box>
             )}
-            {/* <EditVehicle
-                vehicle={vehicles.find((v) => v.key === vehicleId)}
-                edit={edit}
-                routeId={routeId}
-            /> */}
+            {driver && <EditDriver driver={driver} edit={edit} />}
         </Box>
     )
 }

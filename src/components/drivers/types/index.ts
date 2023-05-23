@@ -1,6 +1,7 @@
 import { ReactNode, MutableRefObject } from 'react'
 import Fuse from 'fuse.js'
 import { Column } from 'react-table'
+import { UploadedFile } from '@/components/common/Upload/types'
 
 export type Driver = {
     key: string
@@ -8,14 +9,17 @@ export type Driver = {
     phone?: string
     address?: string
     new?: ReactNode
+    files?: UploadedFile[]
 }
 
 export type useDriversProps = {
     driverId: string | undefined
+    edit?: string | undefined
 }
 
 export type DriversProps = {
     driverId: string | undefined
+    edit?: string | undefined
     drivers: Driver[],
     searchRef: MutableRefObject<HTMLInputElement | null>
     fuse: Fuse<Driver>

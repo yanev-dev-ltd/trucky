@@ -44,7 +44,8 @@ import sx from './styles/EditVehicle.sx'
 import { EditVehicleProps } from './types'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import { VehicleFile, VehicleTypes, FuelTypes, Service } from '../../types'
+import { VehicleTypes, FuelTypes, Service } from '../../types'
+import { UploadedFile } from '@/components/common/Upload/types'
 import useEditVehicle from './hooks/useEditVehicle'
 import Upload from '@/components/common/Upload/Upload'
 import Confirm from '@/components/common/Confirm/Confirm'
@@ -71,7 +72,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     const { settings } = useSelector((state: RootState) => state.settings)
     const [editService, setEditService] = useState<Service | undefined>()
     const [confirmDeleteFile, setConfirmDeleteFile] = useState<
-        VehicleFile | undefined
+        UploadedFile | undefined
     >()
     const [confirmDeleteVehicle, setConfirmDeleteVehicle] =
         useState<boolean>(false)

@@ -7,5 +7,9 @@ export default function Drivers(): JSX.Element {
         router.isReady && router.query.index && router.query.index.length > 0
             ? router.query.index[0]
             : undefined
-    return <DriversComponent driverId={driverId} />
+    const edit =
+        router.isReady && router.query.index && router.query.index.length > 1
+            ? router.query.index[1]
+            : undefined
+    return <DriversComponent driverId={driverId} edit={edit} />
 }

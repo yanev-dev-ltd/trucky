@@ -7,7 +7,8 @@ import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { saveAs } from 'file-saver'
 import { ref as storageRef, deleteObject, getBlob } from 'firebase/storage'
-import { VehicleFile, Service } from '../../../types'
+import { Service } from '../../../types'
+import { UploadedFile } from '@/components/common/Upload/types'
 import { useEditVehicleResponse } from '../types'
 import { useSelector, useDispatch } from 'react-redux'
 import { snapshotToArray } from '../../../../../utils/globalUtils'
@@ -55,12 +56,12 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         setEditedVehicle(vehicle)
     }, [setEditedVehicle, vehicle])
 
-    const downloadFile = useCallback(async (f: VehicleFile) => {
+    const downloadFile = useCallback(async (f: UploadedFile) => {
         saveAs(await getBlob(storageRef(storage, f.path)), f.name)
     }, [])
 
     const deleteUploadedFile = useCallback(
-        (f: VehicleFile) => {
+        (f: UploadedFile) => {
             if (!vehicle || !vehicle.key || !auth?.currentUser?.uid || !vehicle?.files) return
             const desertRef = storageRef(storage, f.path)
             deleteObject(desertRef)

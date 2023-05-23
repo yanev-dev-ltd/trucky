@@ -9,7 +9,7 @@ import { DriversProps, useDriversProps } from '../types'
 import useDriversFuse from './useDrivers.fuse'
 import useDriversColumns from './useDrivers.columns'
 
-const useDrivers = ({ driverId }: useDriversProps): DriversProps => {
+const useDrivers = ({ driverId, edit }: useDriversProps): DriversProps => {
     const drivers = useSelector((state: RootState) => state.drivers)
     const dispatch = useDispatch()
     const searchRef = useRef<HTMLInputElement | null>(null)
@@ -38,7 +38,7 @@ const useDrivers = ({ driverId }: useDriversProps): DriversProps => {
         return () => document.removeEventListener('keydown', handleKeyPress)
     }, [])
 
-    return { drivers, driverId, searchRef, fuse, columns }
+    return { drivers, driverId, searchRef, fuse, columns, edit }
 }
 
 export default useDrivers
