@@ -11,28 +11,11 @@ import {
     ListItemButton,
     ListItemIcon,
     ListItemText,
-    ListSubheader,
-    Table as MuiTable,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
     Divider,
     TextField,
     Tooltip,
-    CircularProgress,
 } from '@mui/material'
-import {
-    Close,
-    Edit,
-    ArrowDownward,
-    Adjust,
-    InsertDriveFile,
-    AddCircle,
-    Visibility,
-    Delete,
-    NotificationsActive,
-} from '@mui/icons-material'
+import { Close, Edit, InsertDriveFile, Delete } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 import sx from '../styles/EditDriver.sx'
 import NextLink from 'next/link'
