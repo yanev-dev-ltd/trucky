@@ -93,7 +93,7 @@ export const DriversView: FC<DriversProps> = ({
                     </Typography>
                 </Box>
             )}
-            {driver && <EditDriver driver={driver} edit={edit} />}
+            <EditDriver driver={driver || { key: '' }} edit={edit} />
         </Box>
     )
 }

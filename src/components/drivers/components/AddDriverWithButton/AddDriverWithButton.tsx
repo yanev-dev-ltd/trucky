@@ -33,6 +33,7 @@ const AddDriverWithButton = () => {
                 open={open}
                 setOpen={setOpen}
                 onSave={() => setOpen(false)}
+                redirectToEdit
             />
         </>
     )

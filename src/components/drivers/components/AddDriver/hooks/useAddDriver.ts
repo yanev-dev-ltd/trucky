@@ -1,16 +1,17 @@
 import { useCallback, useState, useEffect } from 'react'
 import { useAddDriverProps } from '../types'
-import { Driver } from '../../../types'
 import { db, auth } from '@/services/firebase'
 import { ref, update, push } from 'firebase/database'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
+import { useRouter } from 'next/router'
 
-const useAddDriver = ({ onSave, setOpen, open }: useAddDriverProps) => {
+const useAddDriver = ({ onSave, setOpen, open, redirectToEdit }: useAddDriverProps) => {
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
     const [newDriver, setNewDriver] = useState({})
     const [newDriverLoading, setNewDriverLoading] = useState<boolean>(false)
+    const router = useRouter()
     useEffect(() => {
         if (!auth.currentUser?.uid) return
         if (!open) {
@@ -31,6 +32,7 @@ const useAddDriver = ({ onSave, setOpen, open }: useAddDriverProps) => {
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.DriverAdded',
             }), { variant: 'success' })
+            redirectToEdit && router.push(`/drivers/${newDriverRef.key}`)
         } catch (error) {
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.Error.AddingDriver',

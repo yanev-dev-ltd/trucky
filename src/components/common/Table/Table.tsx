@@ -84,16 +84,21 @@ export function Table<T extends Record<string, unknown>>(
                         : undefined
                 }
             >
-                {allColumns.map((column) => (
-                    <MenuItem key={column.id}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox {...column.getToggleHiddenProps()} />
-                            }
-                            label={column.Header as ReactNode}
-                        />
-                    </MenuItem>
-                ))}
+                {allColumns.map((column) => {
+                    if (column.id === 'details') return null
+                    return (
+                        <MenuItem key={column.id}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        {...column.getToggleHiddenProps()}
+                                    />
+                                }
+                                label={column.Header as ReactNode}
+                            />
+                        </MenuItem>
+                    )
+                })}
             </Menu>
             <TableVirtuoso
                 style={{ height }}

@@ -6,6 +6,7 @@ export type useAddDriverProps = {
     changeField?: (field: string, value: string) => void
     newDriver?: NewDriver | undefined
     newDriverLoading?: boolean
+    redirectToEdit?: boolean
 }
 
 export type AddDriverProps = {
