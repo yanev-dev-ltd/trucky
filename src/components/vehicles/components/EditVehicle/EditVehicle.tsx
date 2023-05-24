@@ -63,7 +63,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         setEditedVehicle,
         reset,
         downloadFile,
-        deleteUploadedFile,
+        deleteFile,
         deleteVehicle,
         addService,
         service,
@@ -655,7 +655,11 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                             onCancel={() => setConfirmDeleteFile(undefined)}
                             onSubmit={() => {
                                 confirmDeleteFile &&
-                                    deleteUploadedFile(confirmDeleteFile)
+                                    deleteFile(
+                                        confirmDeleteFile,
+                                        `vehicles/${auth?.currentUser?.uid}/${vehicle.key}`,
+                                        vehicle?.files || []
+                                    )
                                 setConfirmDeleteFile(undefined)
                             }}
                             isOpen={Boolean(confirmDeleteFile)}

@@ -12,6 +12,6 @@ export type EditDriverProps = {
     setEditedDriver: (driver: Driver | undefined) => void
     editedDriver: Driver | undefined
     downloadFile: (f: UploadedFile) => void
-    deleteUploadedFile: (f: UploadedFile) => void
+    deleteFile: (f: UploadedFile, dbpath: string, files: UploadedFile[]) => void
     deleteDriver: () => void
 }

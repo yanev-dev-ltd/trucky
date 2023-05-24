@@ -1,19 +1,17 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Vehicle } from '../../../types'
-import { db, auth, storage } from '../../../../../services/firebase'
+import { db, auth } from '@/services/firebase'
 import { ref, update, remove, push, set, onValue, equalTo, orderByChild, query } from 'firebase/database'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
-import { saveAs } from 'file-saver'
-import { ref as storageRef, deleteObject, getBlob } from 'firebase/storage'
 import { Service } from '../../../types'
-import { UploadedFile } from '@/components/common/Upload/types'
 import { useEditVehicleResponse } from '../types'
 import { useSelector, useDispatch } from 'react-redux'
-import { snapshotToArray } from '../../../../../utils/globalUtils'
-import { RootState } from '../../../../../store/store'
+import { snapshotToArray } from '@/utils/globalUtils'
+import { RootState } from '@/store/store'
 import { setVehicleService } from '../redux'
+import useFiles from '@/hooks/useFiles'
 
 const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse => {
     const [editedVehicle, setEditedVehicle] = useState<Vehicle | undefined>(vehicle)
@@ -22,6 +20,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
     const intl = useIntl()
     const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
+    const { downloadFile, deleteFile } = useFiles()
     useEffect(() => setEditedVehicle(vehicle), [vehicle])
 
     useEffect(() => {
@@ -56,39 +55,6 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         setEditedVehicle(vehicle)
     }, [setEditedVehicle, vehicle])
 
-    const downloadFile = useCallback(async (f: UploadedFile) => {
-        saveAs(await getBlob(storageRef(storage, f.path)), f.name)
-    }, [])
-
-    const deleteUploadedFile = useCallback(
-        (f: UploadedFile) => {
-            if (!vehicle || !vehicle.key || !auth?.currentUser?.uid || !vehicle?.files) return
-            const desertRef = storageRef(storage, f.path)
-            deleteObject(desertRef)
-                .then(() => {
-                    const files = vehicle?.files
-                        ? vehicle?.files.filter((uf) => uf.path !== f.path)
-                        : []
-                    update(
-                        ref(
-                            db,
-                            'vehicles/' +
-                                auth?.currentUser?.uid +
-                                '/' +
-                                vehicle.key
-                        ),
-                        { files }
-                    )
-                    enqueueSnackbar(intl.formatMessage({
-                        id: 'app.DeletedDocumentSuccess',
-                    }), { variant: 'success' })
-                })
-                .catch(() => enqueueSnackbar(intl.formatMessage({
-                    id: 'app.Error.deletingDocument',
-                }), { variant: 'error', persist: true }))
-        },
-        [intl, vehicle]
-    )
 
     const deleteVehicle = useCallback(() => {
         if (!vehicle?.key || !auth?.currentUser?.uid) return
@@ -140,7 +106,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         [vehicle?.key]
     )
 
-    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteUploadedFile, deleteVehicle, addService, service }
+    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteFile, deleteVehicle, addService, service }
 }
 
 export default useEditVehicle

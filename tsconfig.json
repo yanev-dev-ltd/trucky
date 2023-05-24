@@ -8,6 +8,7 @@
       "@/store/*": ["store/*"],
       "@/api/*": ["api/*"],
       "@/constants/*": ["constants/*"],
+      "@/hooks/*": ["hooks/*"],
     },
     "target": "es5",
     "lib": [

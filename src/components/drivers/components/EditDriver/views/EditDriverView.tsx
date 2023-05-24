@@ -40,7 +40,7 @@ const EditDriverView = ({
     setEditedDriver,
     editedDriver,
     downloadFile,
-    deleteUploadedFile,
+    deleteFile,
     deleteDriver,
 }: EditDriverProps) => {
     const router = useRouter()
@@ -403,7 +403,11 @@ const EditDriverView = ({
                             onCancel={() => setConfirmDeleteFile(undefined)}
                             onSubmit={() => {
                                 confirmDeleteFile &&
-                                    deleteUploadedFile(confirmDeleteFile)
+                                    deleteFile(
+                                        confirmDeleteFile,
+                                        `drivers/${auth?.currentUser?.uid}/${driver.key}`,
+                                        driver.files || []
+                                    )
                                 setConfirmDeleteFile(undefined)
                             }}
                             isOpen={Boolean(confirmDeleteFile)}
