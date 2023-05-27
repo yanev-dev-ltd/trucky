@@ -209,6 +209,7 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                                                                 index +
                                                                                     1
                                                                             }) ` +
+                                                                                `[${location.code}] ` +
                                                                                 location.address ||
                                                                             ''
                                                                         }

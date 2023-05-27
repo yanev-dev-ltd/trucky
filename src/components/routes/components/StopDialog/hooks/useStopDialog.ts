@@ -61,8 +61,14 @@ const useStopDialog = (parentLocation: Location | undefined, setOpen?: ((open: b
                             (window as any).google.maps.GeocoderStatus.OK
                         ) {
                             setLocation((oldLocation) => {
+                                const code = []
+                                const postalCode = result[0]?.address_components[result[0].address_components.length - 1]?.short_name
+                                code.push(postalCode)
+                                if (!isNaN(+postalCode)) code.push(result[0]?.address_components[result[0].address_components.length - 2]?.short_name)
+                                else code.unshift(result[0]?.address_components[0]?.short_name)
                                 return {
                                     ...oldLocation,
+                                    code: code.reverse().join(' '),
                                     address: value.description,
                                     lat: result[0].geometry.location.lat(),
                                     lng: result[0].geometry.location.lng(),

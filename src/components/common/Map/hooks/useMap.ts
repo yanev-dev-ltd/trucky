@@ -57,7 +57,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
                     )
                 hMap.addObject(marker)
             })
-    
+
             const router = platform.getRoutingService(null, 8)
             const origin = [...locations].shift()
             const destination = [...locations].pop()
@@ -71,11 +71,10 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
                         ...((locations && locations.length > 2) && {via: new H.service.Url.MultiValueQueryParameter([
                             ...locations.filter((l, i) => i !== 0 && i !== (locations && locations.length - 1)).map((p) => `${p.lat},${p.lng}`),
                         ])}),
-                        return: 'polyline,travelSummary,tolls',
+                        return: 'polyline,travelSummary,tolls,routeLabels',
                         currency: 'EUR',
                         'tolls[summaries]': 'total',
-                        transportMode: 'truck',
-                        spans: 'truckAttributes',
+                        transportMode: 'truck', //TODO: change to cars if needed
                     },
                     (result: any) => {
                         const sections = result?.routes[0]?.sections

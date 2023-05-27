@@ -9,7 +9,7 @@ const sx: Record<string, SxProps<Theme>> = {
         flexDirection: 'row',
     },
     info: {
-        width: 420,
+        width: 520,
         backgroundColor: 'action.hover',
         padding: 1,
         height: 'calc(100vh - 53px)',

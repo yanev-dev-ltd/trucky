@@ -24,4 +24,5 @@ export type Location = {
     parking?: boolean,
     refueling?: boolean
     id?: UniqueIdentifier
+    code?: string
 }
