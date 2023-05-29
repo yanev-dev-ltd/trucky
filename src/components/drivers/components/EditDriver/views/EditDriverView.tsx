@@ -15,8 +15,6 @@ import {
     TextField,
     Tooltip,
 } from '@mui/material'
-import TextareaAutosize from '@mui/base/TextareaAutosize'
-import { styled } from '@mui/system'
 import { Close, Edit, InsertDriveFile, Delete } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 import sx from '../styles/EditDriver.sx'
@@ -33,24 +31,7 @@ import { RootState } from '@/store/store'
 import { formatRelative } from 'date-fns'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { EditDriverProps } from '../types'
-
-const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
-    width: '100%',
-    padding: '12px',
-    fontFamily: 'Roboto',
-    borderRadius: '12px 12px 0 12px',
-    color:
-        theme.palette.mode === 'dark'
-            ? theme.palette.grey[300]
-            : theme.palette.grey[900],
-    background:
-        theme.palette.mode === 'dark' ? theme.palette.grey[900] : '#fff',
-    border: `1px solid ${
-        theme.palette.mode === 'dark'
-            ? theme.palette.grey[700]
-            : theme.palette.grey[200]
-    }`,
-}))
+import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 
 const EditDriverView = ({
     driver,
@@ -431,7 +412,7 @@ const EditDriverView = ({
                                         <Close />
                                     </IconButton>
                                 </Tooltip>
-                                <StyledTextarea
+                                <TextareaAutoSize
                                     value={editedDriver?.notes || ''}
                                     onChange={(event) =>
                                         setEditedDriver({

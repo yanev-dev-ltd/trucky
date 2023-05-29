@@ -22,7 +22,6 @@ import {
     Tooltip,
     CircularProgress,
 } from '@mui/material'
-import TextareaAutosize from '@mui/base/TextareaAutosize'
 import {
     Close,
     Edit,
@@ -34,7 +33,6 @@ import {
     Delete,
     NotificationsActive,
 } from '@mui/icons-material'
-import { styled } from '@mui/system'
 import { format, formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
 import { useRouter } from 'next/router'
@@ -56,24 +54,7 @@ import NewService from './components/NewService/NewService'
 import EditService from './components/EditService/EditService'
 import Route from '@/components/routes/components/Route/Route'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
-
-const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
-    width: '100%',
-    padding: '12px',
-    fontFamily: 'Roboto',
-    borderRadius: '12px 12px 0 12px',
-    color:
-        theme.palette.mode === 'dark'
-            ? theme.palette.grey[300]
-            : theme.palette.grey[900],
-    background:
-        theme.palette.mode === 'dark' ? theme.palette.grey[900] : '#fff',
-    border: `1px solid ${
-        theme.palette.mode === 'dark'
-            ? theme.palette.grey[700]
-            : theme.palette.grey[200]
-    }`,
-}))
+import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 
 const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     const router = useRouter()
@@ -783,7 +764,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                         <Close />
                                     </IconButton>
                                 </Tooltip>
-                                <StyledTextarea
+                                <TextareaAutoSize
                                     value={editedVehicle?.notes || ''}
                                     onChange={(event) =>
                                         setEditedVehicle({
