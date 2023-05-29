@@ -5,6 +5,7 @@ const TextareaAutoSize = styled(TextareaAutosize)(({ theme }) => ({
     padding: '12px',
     fontFamily: 'Roboto',
     borderRadius: '12px 12px 0 12px',
+    resize: 'vertical',
     color:
         theme.palette.mode === 'dark'
             ? theme.palette.grey[300]
