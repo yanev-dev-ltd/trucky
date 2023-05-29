@@ -51,9 +51,7 @@ const StopDialog = ({
     return (
         <Dialog open={open || false}>
             <DialogTitle sx={sx.header}>
-                <Typography variant="h6">
-                    <FormattedMessage id="app.AddStop" />
-                </Typography>
+                <FormattedMessage id="app.AddStop" />
                 <IconButton onClick={handleClose}>
                     <Close />
                 </IconButton>

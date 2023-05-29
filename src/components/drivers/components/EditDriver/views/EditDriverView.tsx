@@ -15,6 +15,8 @@ import {
     TextField,
     Tooltip,
 } from '@mui/material'
+import TextareaAutosize from '@mui/base/TextareaAutosize'
+import { styled } from '@mui/system'
 import { Close, Edit, InsertDriveFile, Delete } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 import sx from '../styles/EditDriver.sx'
@@ -31,6 +33,24 @@ import { RootState } from '@/store/store'
 import { formatRelative } from 'date-fns'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { EditDriverProps } from '../types'
+
+const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
+    width: '100%',
+    padding: '12px',
+    fontFamily: 'Roboto',
+    borderRadius: '12px 12px 0 12px',
+    color:
+        theme.palette.mode === 'dark'
+            ? theme.palette.grey[300]
+            : theme.palette.grey[900],
+    background:
+        theme.palette.mode === 'dark' ? theme.palette.grey[900] : '#fff',
+    border: `1px solid ${
+        theme.palette.mode === 'dark'
+            ? theme.palette.grey[700]
+            : theme.palette.grey[200]
+    }`,
+}))
 
 const EditDriverView = ({
     driver,
@@ -335,6 +355,94 @@ const EditDriverView = ({
                                         <Close />
                                     </IconButton>
                                 </Tooltip>
+                            </Box>
+                        )}
+                    </Paper>
+                    <Paper sx={sx.paper}>
+                        {edit !== 'notes' && (
+                            <>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/drivers/${driver?.key}/notes`
+                                            )
+                                            reset()
+                                        }}
+                                    >
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip>
+                                <Typography>
+                                    <FormattedMessage id="app.Notes" />
+                                </Typography>
+                                {driver.notes && (
+                                    <Typography
+                                        sx={{
+                                            whiteSpace: 'pre-line',
+                                            wordBreak: 'break-all',
+                                        }}
+                                        mt={2}
+                                    >
+                                        {driver.notes}
+                                    </Typography>
+                                )}
+                                {!driver.notes && (
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        mb={2}
+                                    >
+                                        <Typography>
+                                            <FormattedMessage id="app.NoNotes" />
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </>
+                        )}
+                        {edit === 'notes' && (
+                            <Box
+                                component="form"
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                    saveDriverField('notes')
+                                }}
+                            >
+                                <Typography mb={2}>
+                                    <FormattedMessage id="app.Notes" />
+                                </Typography>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/drivers/${driver?.key}`
+                                            )
+                                        }}
+                                    >
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
+                                <StyledTextarea
+                                    value={editedDriver?.notes || ''}
+                                    onChange={(event) =>
+                                        setEditedDriver({
+                                            ...driver,
+                                            notes: event.target.value,
+                                        })
+                                    }
+                                />
+                                <Button color="primary" type="submit">
+                                    <FormattedMessage id="app.Save" />
+                                </Button>
                             </Box>
                         )}
                     </Paper>

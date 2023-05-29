@@ -22,6 +22,7 @@ import {
     Tooltip,
     CircularProgress,
 } from '@mui/material'
+import TextareaAutosize from '@mui/base/TextareaAutosize'
 import {
     Close,
     Edit,
@@ -33,6 +34,7 @@ import {
     Delete,
     NotificationsActive,
 } from '@mui/icons-material'
+import { styled } from '@mui/system'
 import { format, formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
 import { useRouter } from 'next/router'
@@ -54,6 +56,24 @@ import NewService from './components/NewService/NewService'
 import EditService from './components/EditService/EditService'
 import Route from '@/components/routes/components/Route/Route'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
+
+const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
+    width: '100%',
+    padding: '12px',
+    fontFamily: 'Roboto',
+    borderRadius: '12px 12px 0 12px',
+    color:
+        theme.palette.mode === 'dark'
+            ? theme.palette.grey[300]
+            : theme.palette.grey[900],
+    background:
+        theme.palette.mode === 'dark' ? theme.palette.grey[900] : '#fff',
+    border: `1px solid ${
+        theme.palette.mode === 'dark'
+            ? theme.palette.grey[700]
+            : theme.palette.grey[200]
+    }`,
+}))
 
 const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     const router = useRouter()
@@ -687,6 +707,94 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 <Typography>
                                     <FormattedMessage id="app.NoDocuments" />
                                 </Typography>
+                            </Box>
+                        )}
+                    </Paper>
+                    <Paper sx={sx.paper}>
+                        {edit !== 'notes' && (
+                            <>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}/notes`
+                                            )
+                                            reset()
+                                        }}
+                                    >
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip>
+                                <Typography>
+                                    <FormattedMessage id="app.Notes" />
+                                </Typography>
+                                {vehicle.notes && (
+                                    <Typography
+                                        sx={{
+                                            whiteSpace: 'pre-line',
+                                            wordBreak: 'break-all',
+                                        }}
+                                        mt={2}
+                                    >
+                                        {vehicle.notes}
+                                    </Typography>
+                                )}
+                                {!vehicle.notes && (
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        mb={2}
+                                    >
+                                        <Typography>
+                                            <FormattedMessage id="app.NoNotes" />
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </>
+                        )}
+                        {edit === 'notes' && (
+                            <Box
+                                component="form"
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                    saveVehicleField('notes')
+                                }}
+                            >
+                                <Typography mb={2}>
+                                    <FormattedMessage id="app.Notes" />
+                                </Typography>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}`
+                                            )
+                                        }}
+                                    >
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
+                                <StyledTextarea
+                                    value={editedVehicle?.notes || ''}
+                                    onChange={(event) =>
+                                        setEditedVehicle({
+                                            ...vehicle,
+                                            notes: event.target.value,
+                                        })
+                                    }
+                                />
+                                <Button color="primary" type="submit">
+                                    <FormattedMessage id="app.Save" />
+                                </Button>
                             </Box>
                         )}
                     </Paper>

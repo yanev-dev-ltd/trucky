@@ -16,6 +16,7 @@ export type Vehicle = {
     route?: string
     files?: UploadedFile[]
     services?: Service[]
+    notes?: string
 }
 
 export type useVehicleProps = {

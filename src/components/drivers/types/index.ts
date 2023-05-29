@@ -10,6 +10,7 @@ export type Driver = {
     address?: string
     new?: ReactNode
     files?: UploadedFile[]
+    notes?: string
 }
 
 export type useDriversProps = {
