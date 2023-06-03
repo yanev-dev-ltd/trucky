@@ -17,6 +17,8 @@ import { SnackbarProvider } from 'notistack'
 import SnackbarClose from './components/SnackbarClose/SnackbarClose'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import bg from 'date-fns/locale/bg'
+import en from 'date-fns/locale/en-US'
 
 const AppUiProviders: FC<PropsWithChildren<unknown>> = ({ children }) => {
     const settings = useSettings()
@@ -27,7 +29,15 @@ const AppUiProviders: FC<PropsWithChildren<unknown>> = ({ children }) => {
             default:
                 return messagesEn
         }
-    }, [settings])
+    }, [settings.locale])
+    const adapterLocale = useMemo(() => {
+        switch (settings?.locale) {
+            case 'bg':
+                return bg
+            default:
+                return en
+        }
+    }, [settings.locale])
     return (
         <IntlProvider
             locale={settings?.locale || 'en'}
@@ -43,7 +53,10 @@ const AppUiProviders: FC<PropsWithChildren<unknown>> = ({ children }) => {
                             <SnackbarClose id={snackbarId} />
                         )}
                     >
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <LocalizationProvider
+                            dateAdapter={AdapterDateFns}
+                            adapterLocale={adapterLocale}
+                        >
                             <CssBaseline />
                             <Online>{children}</Online>
                             <Offline>

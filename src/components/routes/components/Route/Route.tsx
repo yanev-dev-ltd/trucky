@@ -26,7 +26,8 @@ import {
     Delete,
     DirectionsBoat,
 } from '@mui/icons-material'
-import { FormattedMessage } from 'react-intl'
+import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { useRouter } from 'next/router'
 import { RouteProps } from './types'
 import sx from './styles/Route.sx'
@@ -53,6 +54,7 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
         noRoute,
         setNoRoute,
     } = useRoute(routeId, drivers)
+    const intl = useIntl()
     const [routeOpen, setRouteOpen] = useState<boolean>(false)
     const [orderOpen, setOrderOpen] = useState<boolean>(false)
     const [hoveredLocation, setHoveredLocation] = useState<number | undefined>()
@@ -74,6 +76,56 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                 setDrivers={(drivers) =>
                                     changeField('drivers', drivers)
                                 }
+                            />
+                        </Box>
+                        <Box sx={sx.row}>
+                            <DesktopDateTimePicker
+                                label={
+                                    <FormattedMessage id="app.StartDateAndHour" />
+                                }
+                                inputFormat="dd/MM/yyyy HH:mm"
+                                ampm={false}
+                                value={route?.startDate || null}
+                                onChange={(d: Date | null) =>
+                                    d && changeField('startDate', d.getTime())
+                                }
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        fullWidth
+                                        inputProps={{
+                                            ...params.inputProps,
+                                            placeholder: intl.formatMessage({
+                                                id: 'app.dd/MM/yyyy HH:mm',
+                                            }),
+                                        }}
+                                    />
+                                )}
+                            />
+                        </Box>
+                        <Box sx={sx.row}>
+                            <DesktopDateTimePicker
+                                label={
+                                    <FormattedMessage id="app.EndDateAndHour" />
+                                }
+                                inputFormat="dd/MM/yyyy HH:mm"
+                                value={route?.endDate || null}
+                                onChange={(d: Date | null) =>
+                                    d && changeField('endDate', d.getTime())
+                                }
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        fullWidth
+                                        inputProps={{
+                                            ...params.inputProps,
+                                            placeholder:
+                                                intl.formatMessage({
+                                                    id: 'app.dd/MM/yyyy HH:mm',
+                                                }) || '',
+                                        }}
+                                    />
+                                )}
                             />
                         </Box>
                         <Box sx={sx.row}>
@@ -452,7 +504,9 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                             route.locations.length < 2 ||
                             !route.drivers ||
                             route.drivers.length === 0 ||
-                            noRoute
+                            noRoute ||
+                            !route.endDate ||
+                            !route.startDate
                         }
                     >
                         <FormattedMessage

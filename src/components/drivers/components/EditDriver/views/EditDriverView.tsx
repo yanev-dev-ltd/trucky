@@ -462,15 +462,18 @@ const EditDriverView = ({
                                     <FormattedMessage id="app.Notes" />
                                 </Typography>
                                 {driver.notes && (
-                                    <Typography
-                                        sx={{
-                                            whiteSpace: 'pre-line',
-                                            wordBreak: 'break-all',
-                                        }}
-                                        mt={2}
-                                    >
-                                        {driver.notes}
-                                    </Typography>
+                                    <Box sx={sx.fixedHeight}>
+                                        <Typography
+                                            sx={{
+                                                whiteSpace: 'pre-line',
+                                                wordBreak: 'break-all',
+                                                fontSize: 14,
+                                            }}
+                                            mt={2}
+                                        >
+                                            {driver.notes}
+                                        </Typography>
+                                    </Box>
                                 )}
                                 {!driver.notes && (
                                     <Box
@@ -520,6 +523,7 @@ const EditDriverView = ({
                                             notes: event.target.value,
                                         })
                                     }
+                                    maxRows={16}
                                 />
                                 <Button color="primary" type="submit">
                                     <FormattedMessage id="app.Save" />

@@ -144,6 +144,12 @@ const EditService = ({
                                         helperText={
                                             <FormattedMessage id="app.ReminderInfoDate" />
                                         }
+                                        inputProps={{
+                                            placeholder:
+                                                intl.formatMessage({
+                                                    id: 'app.dd/MM/yyyy',
+                                                }) || '',
+                                        }}
                                     />
                                 )}
                                 disablePast
@@ -160,7 +166,16 @@ const EditService = ({
                                     d && setField('date', d?.getTime())
                                 }
                                 renderInput={(params) => (
-                                    <TextField {...params} fullWidth />
+                                    <TextField
+                                        {...params}
+                                        fullWidth
+                                        inputProps={{
+                                            placeholder:
+                                                intl.formatMessage({
+                                                    id: 'app.dd/MM/yyyy',
+                                                }) || '',
+                                        }}
+                                    />
                                 )}
                             />
                         </Box>

@@ -119,7 +119,7 @@ const sx: Record<string, SxProps<Theme>> = {
         justifyContent: 'center',
         alignItems: 'center',
         padding: 2
-    }
+    },
 }
 
 export default sx

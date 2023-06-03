@@ -714,15 +714,18 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                     <FormattedMessage id="app.Notes" />
                                 </Typography>
                                 {vehicle.notes && (
-                                    <Typography
-                                        sx={{
-                                            whiteSpace: 'pre-line',
-                                            wordBreak: 'break-all',
-                                        }}
-                                        mt={2}
-                                    >
-                                        {vehicle.notes}
-                                    </Typography>
+                                    <Box sx={sx.fixedHeight}>
+                                        <Typography
+                                            sx={{
+                                                whiteSpace: 'pre-line',
+                                                wordBreak: 'break-all',
+                                                fontSize: 14,
+                                            }}
+                                            mt={2}
+                                        >
+                                            {vehicle.notes}
+                                        </Typography>
+                                    </Box>
                                 )}
                                 {!vehicle.notes && (
                                     <Box
@@ -772,6 +775,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                             notes: event.target.value,
                                         })
                                     }
+                                    maxRows={16}
                                 />
                                 <Button color="primary" type="submit">
                                     <FormattedMessage id="app.Save" />

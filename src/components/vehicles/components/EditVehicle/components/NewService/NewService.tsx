@@ -157,6 +157,13 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
                                             helperText={
                                                 <FormattedMessage id="app.ReminderInfoDate" />
                                             }
+                                            inputProps={{
+                                                ...params.inputProps,
+                                                placeholder:
+                                                    intl.formatMessage({
+                                                        id: 'app.dd/MM/yyyy',
+                                                    }) || '',
+                                            }}
                                         />
                                     )}
                                     disablePast
@@ -171,7 +178,17 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
                                         d && setField('date', d?.getTime())
                                     }
                                     renderInput={(params) => (
-                                        <TextField {...params} fullWidth />
+                                        <TextField
+                                            {...params}
+                                            fullWidth
+                                            inputProps={{
+                                                ...params.inputProps,
+                                                placeholder:
+                                                    intl.formatMessage({
+                                                        id: 'app.dd/MM/yyyy',
+                                                    }) || '',
+                                            }}
+                                        />
                                     )}
                                 />
                             </Box>

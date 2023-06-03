@@ -2,7 +2,7 @@ import TextareaAutosize from '@mui/base/TextareaAutosize'
 import { styled } from '@mui/system'
 const TextareaAutoSize = styled(TextareaAutosize)(({ theme }) => ({
     width: '100%',
-    padding: '12px',
+    padding: '14px',
     fontFamily: 'Roboto',
     borderRadius: '12px 12px 0 12px',
     resize: 'vertical',

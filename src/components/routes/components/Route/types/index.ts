@@ -13,6 +13,8 @@ export type Route = {
     fuelConsumption?: number
     locations?: Location[]
     orders?: Order[]
+    startDate?: number
+    endDate?: number
 }
 
 export type Location = {
