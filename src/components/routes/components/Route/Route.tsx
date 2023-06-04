@@ -53,6 +53,7 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
         setFerry,
         noRoute,
         setNoRoute,
+        clearRoute,
     } = useRoute(routeId, drivers)
     const intl = useIntl()
     const [routeOpen, setRouteOpen] = useState<boolean>(false)
@@ -186,7 +187,7 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                                 const index =
                                                     (route.locations &&
                                                         route.locations.findIndex(
-                                                            (loc) =>
+                                                            (loc: Location) =>
                                                                 loc.id ===
                                                                 location.id
                                                         )) ||
@@ -203,8 +204,8 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                                                             'locations',
                                                                             route.locations?.filter(
                                                                                 (
-                                                                                    l,
-                                                                                    ind
+                                                                                    l: Location,
+                                                                                    ind: number
                                                                                 ) =>
                                                                                     ind !==
                                                                                     index
@@ -448,13 +449,15 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                 )}
                                 {route.orders && route.orders.length > 0 && (
                                     <List>
-                                        {route.orders.map((order, index) => {
-                                            return (
-                                                <ListItem
-                                                    key={index}
-                                                ></ListItem>
-                                            )
-                                        })}
+                                        {route.orders.map(
+                                            (order: Order, index: number) => {
+                                                return (
+                                                    <ListItem
+                                                        key={index}
+                                                    ></ListItem>
+                                                )
+                                            }
+                                        )}
                                     </List>
                                 )}
                                 <OrderDialog
@@ -491,7 +494,10 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                         <FormattedMessage id="app.Print" />
                     </Button>
                     <Button
-                        onClick={() => router.push(`/vehicles/${vehicleId}`)}
+                        onClick={() => {
+                            clearRoute()
+                            router.push(`/vehicles/${vehicleId}`)
+                        }}
                     >
                         <FormattedMessage id="app.Cancel" />
                     </Button>
