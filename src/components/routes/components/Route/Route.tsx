@@ -40,6 +40,7 @@ import Map from '@/components/common/Map/Map'
 import { OrderDialog } from '@/components/orders/components/OrderDialog/OrderDialog'
 import { Order } from '@/components/orders/types'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
+import Confirm from '@/components/common/Confirm/Confirm'
 
 const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
     const {
@@ -58,6 +59,7 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
     const intl = useIntl()
     const [routeOpen, setRouteOpen] = useState<boolean>(false)
     const [orderOpen, setOrderOpen] = useState<boolean>(false)
+    const [deleteLocation, setDeleteLocation] = useState<number | null>(null)
     const [hoveredLocation, setHoveredLocation] = useState<number | undefined>()
     const router = useRouter()
 
@@ -200,16 +202,8 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                                             secondaryAction={
                                                                 <IconButton
                                                                     onClick={() =>
-                                                                        changeField(
-                                                                            'locations',
-                                                                            route.locations?.filter(
-                                                                                (
-                                                                                    l: Location,
-                                                                                    ind: number
-                                                                                ) =>
-                                                                                    ind !==
-                                                                                    index
-                                                                            )
+                                                                        setDeleteLocation(
+                                                                            index
                                                                         )
                                                                     }
                                                                 >
@@ -405,6 +399,51 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                                 ? [...route.locations, location]
                                                 : [location]
                                         )
+                                    }
+                                />
+                                <Confirm
+                                    onCancel={() => setDeleteLocation(null)}
+                                    onSubmit={() => {
+                                        changeField(
+                                            'locations',
+                                            route.locations?.filter(
+                                                (l: Location, ind: number) =>
+                                                    ind !== deleteLocation
+                                            )
+                                        )
+                                        setDeleteLocation(null)
+                                    }}
+                                    isOpen={deleteLocation !== null}
+                                    message={
+                                        <FormattedMessage
+                                            id="app.Deleting"
+                                            values={{
+                                                name: (
+                                                    <Overflow
+                                                        text={
+                                                            `[${
+                                                                route.locations[
+                                                                    deleteLocation ||
+                                                                        0
+                                                                ]?.code
+                                                            }] ${
+                                                                route.locations[
+                                                                    deleteLocation ||
+                                                                        0
+                                                                ]?.address
+                                                            }` || ''
+                                                        }
+                                                    />
+                                                ),
+                                            }}
+                                        />
+                                    }
+                                    type="warn"
+                                    submit={
+                                        <FormattedMessage id="app.Delete" />
+                                    }
+                                    cancel={
+                                        <FormattedMessage id="app.Cancel" />
                                     }
                                 />
                             </Paper>

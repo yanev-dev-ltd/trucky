@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Route } from '../types'
+import { useState, useCallback } from 'react'
 import useLocalStorage from '@/hooks/useLocalStorage'
 
 
@@ -10,12 +9,12 @@ const useRoute = (routeId?: string, drivers?: string[]) => {
     const [ferry, setFerry] = useState<boolean[]>([])
     const [noRoute, setNoRoute] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
-    const changeField = (field: string, value: any) => {
+    const changeField = useCallback((field: string, value: any) => {
         setRoute(route ? { ...route, [field]: value } : { [field]: value })
-    }
-    const clearRoute = () => {
+    }, [])
+    const clearRoute = useCallback(() => {
         setRoute({})
-    }
+    }, [])
 
     return {
         route,
