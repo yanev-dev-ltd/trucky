@@ -11,7 +11,6 @@ import {
     ListItemButton,
     ListItemIcon,
     ListItemText,
-    ListSubheader,
     Table as MuiTable,
     TableBody,
     TableCell,
@@ -25,8 +24,6 @@ import {
 import {
     Close,
     Edit,
-    ArrowDownward,
-    Adjust,
     InsertDriveFile,
     AddCircle,
     Visibility,
@@ -68,6 +65,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         deleteVehicle,
         addService,
         service,
+        routes,
     } = useEditVehicle(vehicle)
     const allDrivers = useSelector((state: RootState) => state.drivers)
     const { settings } = useSelector((state: RootState) => state.settings)
@@ -457,7 +455,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                         )}
                     </Paper>
                     <Paper sx={sx.paper}>
-                        <Tooltip title={<FormattedMessage id="app.Edit" />}>
+                        {/* <Tooltip title={<FormattedMessage id="app.Edit" />}>
                             <IconButton size="small" sx={sx.edit}>
                                 <Edit />
                             </IconButton>
@@ -504,10 +502,10 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                             <ListItem sx={sx.listText}>
                                 <ListItemText primary="240" />
                             </ListItem>
-                        </List>
+                        </List> */}
                         <Box sx={sx.relative}>
                             <Typography>
-                                <FormattedMessage id="app.AllRoutes" />
+                                <FormattedMessage id="app.Routes" />
                             </Typography>
                             <Tooltip
                                 title={<FormattedMessage id="app.AddRoute" />}
@@ -535,61 +533,57 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                             )}
                         </Box>
                         <List dense sx={sx.fixedHeight}>
-                            <ListItemButton
-                                onClick={() =>
-                                    router.push(
-                                        `/vehicles/${vehicle?.key}/route/test`
-                                    )
-                                }
-                            >
-                                <ListItemText
-                                    primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
-                                    secondary="11/11/2020 - 12/11/2020"
-                                />
-                            </ListItemButton>
-                            <ListItemButton>
-                                <ListItemText
-                                    primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
-                                    secondary="11/11/2020 - 12/11/2020"
-                                />
-                            </ListItemButton>
-                            <ListItemButton>
-                                <ListItemText
-                                    primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
-                                    secondary="11/11/2020 - 12/11/2020"
-                                />
-                            </ListItemButton>
-                            <ListItemButton>
-                                <ListItemText
-                                    primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
-                                    secondary="11/11/2020 - 12/11/2020"
-                                />
-                            </ListItemButton>
-                            <ListItemButton>
-                                <ListItemText
-                                    primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
-                                    secondary="11/11/2020 - 12/11/2020"
-                                />
-                            </ListItemButton>
-                            <ListItemButton>
-                                <ListItemText
-                                    primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
-                                    secondary="11/11/2020 - 12/11/2020"
-                                />
-                            </ListItemButton>
-                            <ListItemButton>
-                                <ListItemText
-                                    primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
-                                    secondary="11/11/2020 - 12/11/2020"
-                                />
-                            </ListItemButton>
-                            <ListItemButton>
-                                <ListItemText
-                                    primary="Sevlievo, BG > Sofia, BG > Sevlievo, BG"
-                                    secondary="11/11/2020 - 12/11/2020"
-                                />
-                            </ListItemButton>
+                            {routes.map((route) => (
+                                <ListItem key={route.key} disablePadding>
+                                    <ListItemButton
+                                        onClick={() =>
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}/route/${route.key}`
+                                            )
+                                        }
+                                    >
+                                        <ListItemText
+                                            primary={
+                                                <Overflow
+                                                    text={
+                                                        (route?.locations &&
+                                                            route.locations
+                                                                .map(
+                                                                    (
+                                                                        location
+                                                                    ) =>
+                                                                        location.code
+                                                                )
+                                                                .join(' → ')) ||
+                                                        ''
+                                                    }
+                                                />
+                                            }
+                                            secondary={`${
+                                                route.startDate &&
+                                                format(
+                                                    new Date(+route.startDate),
+                                                    'dd/MM/yyyy HH:mm'
+                                                )
+                                            } - ${
+                                                route.endDate &&
+                                                format(
+                                                    new Date(+route.endDate),
+                                                    'dd/MM/yyyy HH:mm'
+                                                )
+                                            }`}
+                                        />
+                                    </ListItemButton>
+                                </ListItem>
+                            ))}
                         </List>
+                        {(!routes || routes.length === 0) && (
+                            <Box display="flex" justifyContent="center" mb={2}>
+                                <Typography>
+                                    <FormattedMessage id="app.NoRoutes" />
+                                </Typography>
+                            </Box>
+                        )}
                     </Paper>
                     <Paper sx={sx.paper}>
                         <Box sx={sx.edit}>

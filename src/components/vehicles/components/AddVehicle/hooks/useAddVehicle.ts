@@ -1,10 +1,10 @@
-import { useState, useCallback, useEffect, useRef, MutableRefObject } from 'react'
-import { db, auth } from '../../../../../services/firebase'
+import { useState, useCallback, useEffect } from 'react'
+import { db, auth } from '@/services/firebase'
 import { ref, update, push } from 'firebase/database'
 import { useRouter } from 'next/router'
 import { useAddVehicleProps, NewVehicle } from '../types'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../../../../store/store'
+import { RootState } from '@/store/store'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 

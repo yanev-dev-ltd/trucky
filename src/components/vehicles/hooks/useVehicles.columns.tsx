@@ -174,14 +174,14 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                 maxWidth: 160,
                 disableSortBy: true,
             },
-            {
-                Header: <FormattedMessage id="app.LastRoute" />,
-                id: 'route',
-                accessor: (v: Vehicle) =>
-                    v.route ? <Overflow text={v.route} /> : '-',
-                maxWidth: 240,
-                sortType,
-            },
+            // {
+            //     Header: <FormattedMessage id="app.LastRoute" />,
+            //     id: 'route',
+            //     accessor: (v: Vehicle) =>
+            //         v.route ? <Overflow text={v.route} /> : '-',
+            //     maxWidth: 240,
+            //     sortType,
+            // },
             {
                 Header: <FormattedMessage id="app.Details" />,
                 id: 'details',

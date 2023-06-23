@@ -44,6 +44,13 @@
         ".indexOn": ["vehicle"]
       }
     },
+    "orders": {
+      "$uid": {
+        ".write": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
+        ".read": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
+        ".indexOn": ["vehicle", "route"]
+      }
+    },
     "time_notifications": {
       ".write": false,
       ".read": false

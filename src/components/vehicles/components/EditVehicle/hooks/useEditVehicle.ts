@@ -11,11 +11,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import { snapshotToArray } from '@/utils/globalUtils'
 import { RootState } from '@/store/store'
 import { setVehicleService } from '../redux'
+import { setRoutes } from '../../../../routes/redux'
 import useFiles from '@/hooks/useFiles'
 
 const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse => {
     const [editedVehicle, setEditedVehicle] = useState<Vehicle | undefined>(vehicle)
     const service = useSelector((state: RootState) => state.vehicleService)
+    const routes = useSelector((state: RootState) => state.routes)
     const router = useRouter()
     const intl = useIntl()
     const dispatch = useDispatch()
@@ -27,11 +29,21 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         if (!auth.currentUser?.uid || !vehicle?.key) {
             return
         }
-        const unsubscribe = onValue(query(ref(db, 'service/' + auth.currentUser?.uid), orderByChild('vehicle'), equalTo(vehicle.key)), (snapshot) => {
+        const unsubscribeService = onValue(query(ref(db, 'service/' + auth.currentUser?.uid), orderByChild('vehicle'), equalTo(vehicle.key)), (snapshot) => {
             const snp = snapshot.val()
             dispatch(setVehicleService(snp ? snapshotToArray(snp).sort((a,b) => b.date - a.date) : []))
         })
-        return () => unsubscribe()
+        const unsubscribeRoutes = onValue(query(ref(db, 'routes/' + auth.currentUser?.uid), orderByChild('vehicle'), equalTo(vehicle.key)), (snapshot) => {
+            const snp = snapshot.val()
+            dispatch(setRoutes(snp ? snapshotToArray(snp).sort(
+                (a, b) =>
+                    +(b.endDate || 0) - +(a.endDate || 0)
+            ) : []))
+        })
+        return () => {
+            unsubscribeService()
+            unsubscribeRoutes()
+        }
     }, [auth.currentUser?.uid, vehicle?.key])
 
     const saveVehicleField = useCallback((field: keyof Vehicle) => {
@@ -106,7 +118,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         [vehicle?.key]
     )
 
-    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteFile, deleteVehicle, addService, service }
+    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteFile, deleteVehicle, addService, service, routes }
 }
 
 export default useEditVehicle

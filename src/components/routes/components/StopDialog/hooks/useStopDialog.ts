@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { debounce } from '@mui/material/utils'
 import { PlaceType } from '../types'
-import { Location } from '../../Route/types'
+import { Location } from '../../../types'
 import { v4 as uuid } from 'uuid'
 
 const autocompleteService = { current: null }

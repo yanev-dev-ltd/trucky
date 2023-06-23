@@ -59,22 +59,6 @@ const Navigation = () => {
                 </MenuItem>
                 <MenuItem
                     component={Link}
-                    href="/orders"
-                    sx={
-                        router.asPath.startsWith('/orders')
-                            ? sx.itemCurrent
-                            : sx.item
-                    }
-                >
-                    <ListItemIcon>
-                        <ListAlt fontSize="large" sx={sx.icon} />
-                    </ListItemIcon>
-                    <Typography variant="inherit">
-                        <FormattedMessage id="app.Orders" />
-                    </Typography>
-                </MenuItem>
-                <MenuItem
-                    component={Link}
                     href="/routes"
                     sx={
                         router.asPath.startsWith('/routes')
@@ -87,6 +71,22 @@ const Navigation = () => {
                     </ListItemIcon>
                     <Typography variant="inherit">
                         <FormattedMessage id="app.Routes" />
+                    </Typography>
+                </MenuItem>
+                <MenuItem
+                    component={Link}
+                    href="/orders"
+                    sx={
+                        router.asPath.startsWith('/orders')
+                            ? sx.itemCurrent
+                            : sx.item
+                    }
+                >
+                    <ListItemIcon>
+                        <ListAlt fontSize="large" sx={sx.icon} />
+                    </ListItemIcon>
+                    <Typography variant="inherit">
+                        <FormattedMessage id="app.Orders" />
                     </Typography>
                 </MenuItem>
                 <MenuItem
@@ -105,7 +105,7 @@ const Navigation = () => {
                         <FormattedMessage id="app.Service" />
                     </Typography>
                 </MenuItem>
-                <MenuItem
+                {/* <MenuItem
                     component={Link}
                     href="/invoices"
                     sx={
@@ -120,7 +120,7 @@ const Navigation = () => {
                     <Typography variant="inherit">
                         <FormattedMessage id="app.Invoices" />
                     </Typography>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem
                     component={Link}
                     href="/clients"

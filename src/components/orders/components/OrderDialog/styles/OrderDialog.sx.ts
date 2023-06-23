@@ -2,7 +2,7 @@ import { SxProps, Theme } from '@mui/material'
 
 const sx: Record<string, SxProps<Theme>> = {
     header: {
-        width: 520,
+        width: 600,
         display: 'flex',
         justifyContent: 'space-between',
     },
@@ -19,11 +19,15 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     actionsRight: {
         display: 'flex',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
     },
     gap: {
         display: 'flex',
         gap: 1
+    },
+    row: {
+        marginTop: 1,
+        marginBottom: 1,
     }
 }
 

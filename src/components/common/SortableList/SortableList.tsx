@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Location } from '@/components/routes/components/Route/types'
+import { Location } from '@/components/routes/types'
 import type { ReactNode } from 'react'
 import {
     DndContext,

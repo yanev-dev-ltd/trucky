@@ -1,5 +1,5 @@
 import { useState, useRef, useLayoutEffect } from 'react'
-import { Location } from '@/components/routes/components/Route/types'
+import { Location } from '@/components/routes/types'
 import svgMarker from '@/constants/marker'
 import { useSnackbar, SnackbarKey } from 'notistack'
 import { useIntl } from 'react-intl'

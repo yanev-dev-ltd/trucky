@@ -10,14 +10,18 @@ const Overflow = ({ text, variant = 'body2' }: OverflowProps) => {
             {isOverflow ? (
                 <Tooltip title={text}>
                     <Typography sx={sx.text} variant={variant}>
-                        {text
-                            .toString()
-                            .replaceAll(' ', String.fromCharCode(160))}
+                        {text &&
+                            text
+                                .toString()
+                                .replaceAll(' ', String.fromCharCode(160))}
                     </Typography>
                 </Tooltip>
             ) : (
                 <Typography variant={variant}>
-                    {text.toString().replaceAll(' ', String.fromCharCode(160))}
+                    {text &&
+                        text
+                            .toString()
+                            .replaceAll(' ', String.fromCharCode(160))}
                 </Typography>
             )}
         </Box>

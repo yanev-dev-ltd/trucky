@@ -1,5 +1,6 @@
 import { Vehicle, Service, Services } from '../../../types'
 import { UploadedFile } from '@/components/common/Upload/types'
+import { Route } from '../../../../routes/types'
 export type EditVehicleProps = {
     vehicle: Vehicle | undefined
     edit: string | undefined
@@ -16,4 +17,5 @@ export type useEditVehicleResponse = {
     deleteVehicle: () => void
     addService: (s: Service) => void
     service: Services
+    routes: Route[]
 }

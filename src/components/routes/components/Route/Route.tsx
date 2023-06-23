@@ -14,6 +14,7 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
+    ListItemButton,
 } from '@mui/material'
 import {
     AddCircle,
@@ -25,15 +26,16 @@ import {
     Download,
     Delete,
     DirectionsBoat,
+    LocalShipping,
 } from '@mui/icons-material'
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useRouter } from 'next/router'
-import { RouteProps } from './types'
+import { RouteProps } from '../../types'
 import sx from './styles/Route.sx'
 import useRoute from './hooks/useRoute'
 import StopDialog from '../StopDialog/StopDialog'
-import { Location } from './types'
+import { Location } from '../../types'
 import Overflow from '@/components/common/Overflow/Overflow'
 import { SortableList } from '../../../common/SortableList/SortableList'
 import Map from '@/components/common/Map/Map'
@@ -55,17 +57,35 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
         noRoute,
         setNoRoute,
         clearRoute,
-    } = useRoute(routeId, drivers)
+        saveRoute,
+    } = useRoute(routeId, drivers, vehicleId)
     const intl = useIntl()
     const [routeOpen, setRouteOpen] = useState<boolean>(false)
-    const [orderOpen, setOrderOpen] = useState<boolean>(false)
+    const [orderOpen, setOrderOpen] = useState<number | null>(null)
     const [deleteLocation, setDeleteLocation] = useState<number | null>(null)
+    const [deleteOrder, setDeleteOrder] = useState<number | null>(null)
     const [hoveredLocation, setHoveredLocation] = useState<number | undefined>()
     const router = useRouter()
 
     return (
         <Dialog open fullScreen>
-            <Box component="form">
+            <Box
+                component="form"
+                onSubmit={(event) => {
+                    event.preventDefault()
+                    if (
+                        !route?.locations ||
+                        route.locations.length < 2 ||
+                        !route.drivers ||
+                        route.drivers.length === 0 ||
+                        noRoute ||
+                        !route.endDate ||
+                        !route.startDate
+                    )
+                        return
+                    saveRoute()
+                }}
+            >
                 <DialogContent sx={sx.dialog}>
                     <Box sx={sx.info}>
                         <Typography variant="h6">
@@ -75,7 +95,7 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                         </Typography>
                         <Box sx={sx.row}>
                             <DriversSelect
-                                drivers={route.drivers || []}
+                                drivers={route?.drivers || []}
                                 setDrivers={(drivers) =>
                                     changeField('drivers', drivers)
                                 }
@@ -137,7 +157,7 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                     <FormattedMessage id="app.FuelConsumption" />
                                 }
                                 variant="outlined"
-                                value={route.fuelConsumption || ''}
+                                value={route?.fuelConsumption || ''}
                                 onChange={(event) =>
                                     changeField(
                                         'fuelConsumption',
@@ -177,12 +197,14 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                     route.locations.length > 0 && (
                                         <SortableList
                                             items={route.locations}
-                                            onChange={(locations: Location[]) =>
+                                            onChange={(
+                                                locations: Location[]
+                                            ) => {
                                                 changeField(
                                                     'locations',
                                                     locations
                                                 )
-                                            }
+                                            }}
                                             renderItem={(
                                                 location: Location
                                             ) => {
@@ -206,15 +228,35 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                                                             index
                                                                         )
                                                                     }
+                                                                    disabled={
+                                                                        route.orders &&
+                                                                        route.orders.some(
+                                                                            (
+                                                                                order: Order
+                                                                            ) =>
+                                                                                order
+                                                                                    ?.startStop
+                                                                                    ?.code ===
+                                                                                    location.code ||
+                                                                                order
+                                                                                    ?.endStop
+                                                                                    ?.code ===
+                                                                                    location.code
+                                                                        )
+                                                                    }
                                                                 >
                                                                     <Delete />
                                                                 </IconButton>
                                                             }
                                                             disableGutters
                                                             onMouseOver={() =>
-                                                                setHoveredLocation(
-                                                                    index
-                                                                )
+                                                                !route.orders ||
+                                                                (route.orders
+                                                                    .length ===
+                                                                    0 &&
+                                                                    setHoveredLocation(
+                                                                        index
+                                                                    ))
                                                             }
                                                             onMouseLeave={() =>
                                                                 setHoveredLocation(
@@ -393,12 +435,10 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                         location: Location | undefined
                                     ) =>
                                         location &&
-                                        changeField(
-                                            'locations',
-                                            route.locations
-                                                ? [...route.locations, location]
-                                                : [location]
-                                        )
+                                        changeField('locations', [
+                                            ...(route.locations || []),
+                                            location,
+                                        ])
                                     }
                                 />
                                 <Confirm
@@ -422,11 +462,13 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                                     <Overflow
                                                         text={
                                                             `[${
+                                                                route.locations &&
                                                                 route.locations[
                                                                     deleteLocation ||
                                                                         0
                                                                 ]?.code
                                                             }] ${
+                                                                route.locations &&
                                                                 route.locations[
                                                                     deleteLocation ||
                                                                         0
@@ -462,9 +504,7 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                         <Box component="span">
                                             <IconButton
                                                 size="small"
-                                                onClick={() =>
-                                                    setOrderOpen(true)
-                                                }
+                                                onClick={() => setOrderOpen(-1)}
                                                 disabled={
                                                     !route.locations ||
                                                     route.locations.length < 2
@@ -476,7 +516,11 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                     </Tooltip>
                                 </Box>
                                 {(!route.orders ||
-                                    route.orders.length === 0) && (
+                                    route.orders.length === 0 ||
+                                    route.orders.every(
+                                        (order: Order) =>
+                                            order.shouldDelete === true
+                                    )) && (
                                     <Box sx={sx.noOrders}>
                                         {!route.locations ||
                                         route.locations.length < 2 ? (
@@ -490,10 +534,51 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                     <List>
                                         {route.orders.map(
                                             (order: Order, index: number) => {
+                                                if (order.shouldDelete)
+                                                    return null
                                                 return (
                                                     <ListItem
                                                         key={index}
-                                                    ></ListItem>
+                                                        secondaryAction={
+                                                            <IconButton
+                                                                edge="end"
+                                                                aria-label="delete"
+                                                                onClick={() =>
+                                                                    setDeleteOrder(
+                                                                        index
+                                                                    )
+                                                                }
+                                                            >
+                                                                <Delete />
+                                                            </IconButton>
+                                                        }
+                                                        disablePadding
+                                                    >
+                                                        <ListItemIcon
+                                                            sx={sx.icon}
+                                                        >
+                                                            <LocalShipping />
+                                                        </ListItemIcon>
+                                                        <ListItemButton
+                                                            onClick={() => {
+                                                                setOrderOpen(
+                                                                    index
+                                                                )
+                                                            }}
+                                                            disableGutters
+                                                        >
+                                                            <ListItemText
+                                                                primary={
+                                                                    <Overflow
+                                                                        text={
+                                                                            order.reference ||
+                                                                            ''
+                                                                        }
+                                                                    />
+                                                                }
+                                                            />
+                                                        </ListItemButton>
+                                                    </ListItem>
                                                 )
                                             }
                                         )}
@@ -504,12 +589,89 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                     setOpen={setOrderOpen}
                                     addOrder={(order: Order | undefined) =>
                                         order &&
+                                        changeField('orders', [
+                                            ...(route?.orders || []),
+                                            order,
+                                        ])
+                                    }
+                                    editOrder={(order: Order | undefined) =>
+                                        order &&
+                                        typeof orderOpen === 'number' &&
                                         changeField(
                                             'orders',
-                                            route.orders
-                                                ? [...route.orders, order]
-                                                : [order]
+                                            route.orders.map(
+                                                (o: Order, i: number) =>
+                                                    i === orderOpen ? order : o
+                                            )
                                         )
+                                    }
+                                    deleteOrder={() => {
+                                        changeField(
+                                            'orders',
+                                            route.orders?.map(
+                                                (l: Location, ind: number) =>
+                                                    ind === orderOpen
+                                                        ? {
+                                                              key: l.key,
+                                                              shouldDelete:
+                                                                  true,
+                                                          }
+                                                        : l
+                                            )
+                                        )
+                                    }}
+                                    locations={route.locations}
+                                    date={route.startDate}
+                                    order={
+                                        typeof orderOpen === 'number' &&
+                                        orderOpen >= 0 &&
+                                        route.orders[orderOpen]
+                                    }
+                                    routeId={route.key}
+                                    vehicleId={vehicleId}
+                                />
+                                <Confirm
+                                    onCancel={() => setDeleteOrder(null)}
+                                    onSubmit={() => {
+                                        changeField(
+                                            'orders',
+                                            route.orders?.map(
+                                                (l: Location, ind: number) =>
+                                                    ind === deleteOrder
+                                                        ? {
+                                                              key: l.key,
+                                                              shouldDelete:
+                                                                  true,
+                                                          }
+                                                        : l
+                                            )
+                                        )
+                                        setDeleteOrder(null)
+                                    }}
+                                    isOpen={deleteOrder !== null}
+                                    message={
+                                        <FormattedMessage
+                                            id="app.Deleting"
+                                            values={{
+                                                name: (
+                                                    <Overflow
+                                                        text={
+                                                            route.orders &&
+                                                            route.orders[
+                                                                deleteOrder || 0
+                                                            ]?.reference
+                                                        }
+                                                    />
+                                                ),
+                                            }}
+                                        />
+                                    }
+                                    type="warn"
+                                    submit={
+                                        <FormattedMessage id="app.Delete" />
+                                    }
+                                    cancel={
+                                        <FormattedMessage id="app.Cancel" />
                                     }
                                 />
                             </Paper>
@@ -535,7 +697,9 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                     <Button
                         onClick={() => {
                             clearRoute()
-                            router.push(`/vehicles/${vehicleId}`)
+                            router.push(
+                                vehicleId ? `/vehicles/${vehicleId}` : '/routes'
+                            )
                         }}
                     >
                         <FormattedMessage id="app.Cancel" />

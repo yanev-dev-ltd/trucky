@@ -1,5 +1,4 @@
 import { UniqueIdentifier } from '@dnd-kit/core'
-import { Driver } from '@/components/drivers/types'
 import { Order } from '@/components/orders/types'
 export type RouteProps = {
     vehicleId?: string
@@ -9,12 +8,15 @@ export type RouteProps = {
 }
 
 export type Route = {
+    key?: string
     drivers?: string[]
     fuelConsumption?: number
     locations?: Location[]
     orders?: Order[]
     startDate?: number
     endDate?: number
+    distance?: number[]
+    toll?: number[]
 }
 
 export type Location = {
@@ -27,4 +29,9 @@ export type Location = {
     refueling?: boolean
     id?: UniqueIdentifier
     code?: string
+    key?: string
+}
+
+export type Update = {
+    [x: string]: any
 }

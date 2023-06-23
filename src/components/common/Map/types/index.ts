@@ -1,4 +1,4 @@
-import { Location } from '@/components/routes/components/Route/types'
+import { Location } from '@/components/routes/types'
 import { SxProps, Theme } from '@mui/material'
 export type useMap = {
     locations: Location[]
