@@ -2,8 +2,8 @@ import type { Order } from '@/components/orders/types'
 import type { Location } from '@/components/routes/types'
 
 export type useOrderDialogProps = {
-    open?: number | null
-    setOpen: (value: number | null) => void
+    open?: number | boolean
+    setOpen: (value: number | boolean) => void
     addOrder?: (order: Order) => void
     editOrder?: (order: Order) => void
     order?: Order

@@ -27,7 +27,7 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
             setNewOrder(order)
         } else {
             if (!auth.currentUser?.uid) {
-                setOpen(null)
+                setOpen(false)
                 setNewOrder(undefined)
                 return
             }

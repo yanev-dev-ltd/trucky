@@ -61,7 +61,7 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
     } = useRoute(routeId, drivers, vehicleId)
     const intl = useIntl()
     const [routeOpen, setRouteOpen] = useState<boolean>(false)
-    const [orderOpen, setOrderOpen] = useState<number | null>(null)
+    const [orderOpen, setOrderOpen] = useState<number | boolean>(false)
     const [deleteLocation, setDeleteLocation] = useState<number | null>(null)
     const [deleteOrder, setDeleteOrder] = useState<number | null>(null)
     const [hoveredLocation, setHoveredLocation] = useState<number | undefined>()
