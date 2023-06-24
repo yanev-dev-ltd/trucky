@@ -18,6 +18,7 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
     const [ferry, setFerry] = useState<boolean[]>([])
     const [noRoute, setNoRoute] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
+    const [deleteRouteOpen, setDeleteRouteOpen] = useState<boolean>(false)
     const router = useRouter()
 
     const changeField = useCallback((field: string, value: any) => {
@@ -29,6 +30,7 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
         setToll([])
         setFerry([])
         setNoRoute(false)
+        setDeleteRouteOpen(false)
     }, [])
     useEffect(() => {
         if (!routeId && !Boolean(route.drivers)) {
@@ -86,6 +88,30 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
         }
     }, [route, auth.currentUser?.uid, vehicleId, routeId])
 
+    const deleteRoute = useCallback(async () => {
+        if (!auth.currentUser?.uid) return
+        const { key, orders } = route
+        const updates: Update = {}
+        updates['/routes/' + auth.currentUser.uid + '/' + key as keyof Update] = {}
+        if (orders)
+            for (const order of orders) {
+                const { key: orderKey } = order
+                updates['/orders/' + auth.currentUser.uid + '/' + orderKey as keyof Update] = {}
+            }
+        try {
+            await update(ref(db), updates)
+            enqueueSnackbar(intl.formatMessage({
+                id: 'app.RouteDeleted',
+            }), { variant: 'success' })
+            clearRoute()
+            vehicleId ? router.push(`/vehicles/${vehicleId}`) : router.push('/routes')
+        } catch (e) {
+            enqueueSnackbar(intl.formatMessage({
+                id: 'app.Error.DeletingRoute',
+            }), { variant: 'error', persist: true })
+        }
+    }, [])
+
     return {
         route,
         changeField,
@@ -100,7 +126,10 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
         loading,
         setLoading,
         clearRoute,
-        saveRoute
+        saveRoute,
+        deleteRoute,
+        setDeleteRouteOpen,
+        deleteRouteOpen
     }
 }
 

@@ -29,6 +29,7 @@ import {
     Visibility,
     Delete,
     NotificationsActive,
+    Route as RouteIcon,
 } from '@mui/icons-material'
 import { format, formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
@@ -542,6 +543,9 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                             )
                                         }
                                     >
+                                        <ListItemIcon>
+                                            <RouteIcon />
+                                        </ListItemIcon>
                                         <ListItemText
                                             primary={
                                                 <Overflow

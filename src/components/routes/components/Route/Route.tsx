@@ -27,6 +27,7 @@ import {
     Delete,
     DirectionsBoat,
     LocalShipping,
+    Print,
 } from '@mui/icons-material'
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker'
 import { FormattedMessage, useIntl } from 'react-intl'
@@ -43,6 +44,7 @@ import { OrderDialog } from '@/components/orders/components/OrderDialog/OrderDia
 import { Order } from '@/components/orders/types'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 import Confirm from '@/components/common/Confirm/Confirm'
+import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 
 const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
     const {
@@ -58,6 +60,9 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
         setNoRoute,
         clearRoute,
         saveRoute,
+        deleteRoute,
+        setDeleteRouteOpen,
+        deleteRouteOpen,
     } = useRoute(routeId, drivers, vehicleId)
     const intl = useIntl()
     const [routeOpen, setRouteOpen] = useState<boolean>(false)
@@ -691,37 +696,83 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button sx={sx.left} variant="outlined">
-                        <FormattedMessage id="app.Print" />
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            clearRoute()
-                            router.push(
-                                vehicleId ? `/vehicles/${vehicleId}` : '/routes'
-                            )
-                        }}
-                    >
-                        <FormattedMessage id="app.Cancel" />
-                    </Button>
-                    <Button
-                        type="submit"
-                        color="primary"
-                        variant="contained"
-                        disabled={
-                            !route?.locations ||
-                            route.locations.length < 2 ||
-                            !route.drivers ||
-                            route.drivers.length === 0 ||
-                            noRoute ||
-                            !route.endDate ||
-                            !route.startDate
-                        }
-                    >
-                        <FormattedMessage
-                            id={routeId ? 'app.EditRoute' : 'app.AddRoute'}
+                    <Box sx={sx.actions}>
+                        <LoadingButton
+                            sx={sx.warn}
+                            startIcon={<Delete />}
+                            color="secondary"
+                            fullWidth
+                            onClick={() => setDeleteRouteOpen(true)}
+                        >
+                            <FormattedMessage id="app.DeleteRoute" />
+                        </LoadingButton>
+                        <Confirm
+                            onCancel={() => setDeleteRouteOpen(false)}
+                            onSubmit={deleteRoute}
+                            isOpen={deleteRouteOpen}
+                            message={
+                                <FormattedMessage
+                                    id="app.Deleting"
+                                    values={{
+                                        name: (
+                                            <Overflow
+                                                text={
+                                                    route?.locations
+                                                        ? route?.locations
+                                                              .map(
+                                                                  (
+                                                                      location: Location
+                                                                  ) =>
+                                                                      location.code
+                                                              )
+                                                              .join(' → ')
+                                                        : ''
+                                                }
+                                            />
+                                        ),
+                                    }}
+                                />
+                            }
+                            type="warn"
+                            submit={<FormattedMessage id="app.Delete" />}
+                            cancel={<FormattedMessage id="app.Cancel" />}
                         />
-                    </Button>
+                        <LoadingButton variant="outlined" startIcon={<Print />}>
+                            <FormattedMessage id="app.Print" />
+                        </LoadingButton>
+                    </Box>
+                    <Box display="flex" gap={1}>
+                        <Button
+                            onClick={() => {
+                                clearRoute()
+                                router.push(
+                                    vehicleId
+                                        ? `/vehicles/${vehicleId}`
+                                        : '/routes'
+                                )
+                            }}
+                        >
+                            <FormattedMessage id="app.Cancel" />
+                        </Button>
+                        <Button
+                            type="submit"
+                            color="primary"
+                            variant="contained"
+                            disabled={
+                                !route?.locations ||
+                                route.locations.length < 2 ||
+                                !route.drivers ||
+                                route.drivers.length === 0 ||
+                                noRoute ||
+                                !route.endDate ||
+                                !route.startDate
+                            }
+                        >
+                            <FormattedMessage
+                                id={routeId ? 'app.EditRoute' : 'app.AddRoute'}
+                            />
+                        </Button>
+                    </Box>
                 </DialogActions>
             </Box>
         </Dialog>

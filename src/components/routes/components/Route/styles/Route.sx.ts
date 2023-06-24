@@ -29,7 +29,24 @@ const sx: Record<string, SxProps<Theme>> = {
         marginBottom: 1,
     },
     left: {
-        marginRight: 'auto'
+        marginRight: 'auto',
+        display: 'flex',
+        gap: 1
+    },
+    warn: {
+        backgroundColor: 'danger.main',
+        color: '#fff',
+        width: 'auto',
+        '&:hover': {
+            backgroundColor: 'danger.dark'
+        }
+    },
+    actions: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        gap: 1,
+        marginRight: 'auto',
+        flexGrow: 1
     },
     locations: {
         padding: 1,
