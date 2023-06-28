@@ -44,7 +44,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
         // const ui = H.ui.UI.createDefault(hMap, defaultLayers)
         const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(hMap))
 
-        if(locations && locations.length > 0) {
+        if(locations && locations.length > 1) {
             locations.map((location: Location, index: number) => {
                 const icon = new H.map.Icon(
                         svgMarker

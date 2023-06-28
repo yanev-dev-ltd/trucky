@@ -83,7 +83,8 @@ const sx: Record<string, SxProps<Theme>> = {
         }
     },
     icon: {
-        minWidth: '30px'
+        minWidth: '30px',
+        marginLeft: 1
     },
     listItem: {
         minHeight: '60px',

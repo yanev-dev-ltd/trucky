@@ -32,8 +32,12 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
         setNoRoute(false)
         setDeleteRouteOpen(false)
     }, [])
+
     useEffect(() => {
-        if (!routeId && !Boolean(route.drivers)) {
+        return () => clearRoute()
+    }, [])
+    useEffect(() => {
+        if (!routeId && !Boolean(route.drivers) && drivers && drivers.length > 0) {
             setRoute({ drivers })
         }
     }, [drivers, routeId, route])

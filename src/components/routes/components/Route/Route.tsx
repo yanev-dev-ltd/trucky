@@ -26,7 +26,7 @@ import {
     Download,
     Delete,
     DirectionsBoat,
-    LocalShipping,
+    ListAlt,
     Print,
 } from '@mui/icons-material'
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker'
@@ -256,9 +256,15 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                                             disableGutters
                                                             onMouseOver={() =>
                                                                 !route.orders ||
-                                                                (route.orders
+                                                                route.orders
                                                                     .length ===
-                                                                    0 &&
+                                                                    0 ||
+                                                                (route.orders.every(
+                                                                    (
+                                                                        order: Order
+                                                                    ) =>
+                                                                        order.shouldDelete
+                                                                ) &&
                                                                     setHoveredLocation(
                                                                         index
                                                                     ))
@@ -559,11 +565,6 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                                         }
                                                         disablePadding
                                                     >
-                                                        <ListItemIcon
-                                                            sx={sx.icon}
-                                                        >
-                                                            <LocalShipping />
-                                                        </ListItemIcon>
                                                         <ListItemButton
                                                             onClick={() => {
                                                                 setOrderOpen(
@@ -572,6 +573,11 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                                             }}
                                                             disableGutters
                                                         >
+                                                            <ListItemIcon
+                                                                sx={sx.icon}
+                                                            >
+                                                                <ListAlt />
+                                                            </ListItemIcon>
                                                             <ListItemText
                                                                 primary={
                                                                     <Overflow
