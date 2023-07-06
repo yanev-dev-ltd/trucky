@@ -12,6 +12,12 @@
         ".read": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'"
       }
     },
+    "clients": {
+      "$uid": {
+        ".write": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
+        ".read": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'"
+      }
+    },
     "routes": {
       "$uid": {
         ".write": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
