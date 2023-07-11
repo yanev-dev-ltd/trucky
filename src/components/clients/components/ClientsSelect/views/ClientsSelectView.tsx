@@ -49,6 +49,7 @@ const ClientsSelectView = ({
                                       }
                                     : undefined),
                             }}
+                            key={option.key}
                         >
                             {option.new ? (
                                 <Box

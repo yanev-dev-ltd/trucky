@@ -10,4 +10,5 @@ export type Order = {
     vehicle?: string
     route?: string
     shouldDelete?: boolean
+    clients?: string[]
 }

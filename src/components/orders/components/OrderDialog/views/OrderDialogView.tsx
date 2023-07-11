@@ -24,6 +24,7 @@ import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 import Confirm from '@/components/common/Confirm/Confirm'
 import Overflow from '@/components/common/Overflow/Overflow'
+import { ClientsSelect } from '@/components/clients/components/ClientsSelect/ClientsSelect'
 
 const OrderDialogView = ({
     open,
@@ -197,6 +198,14 @@ const OrderDialogView = ({
                                     ),
                                 }}
                                 type="number"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <ClientsSelect
+                                clients={order?.clients || []}
+                                setClients={(clients) =>
+                                    changeField('clients', clients)
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>

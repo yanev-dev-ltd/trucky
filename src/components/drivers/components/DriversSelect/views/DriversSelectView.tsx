@@ -49,6 +49,7 @@ const DriversSelectView = ({
                                       }
                                     : undefined),
                             }}
+                            key={option.key}
                         >
                             {option.new ? (
                                 <Box

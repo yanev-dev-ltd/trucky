@@ -12,7 +12,7 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
         setNewOrder({ ...newOrder, [field]: value })
     }, [newOrder])
     useEffect(() => {
-        changeField(
+        if (!order?.reference) changeField(
             'reference',
             `${format(
                 date || new Date(),
@@ -21,11 +21,14 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
                 newOrder?.startStop?.code || intl.formatMessage({ id: 'app.StartStop'})
             }] - [${newOrder?.endStop?.code || intl.formatMessage({ id: 'app.EndStop'})}]`
         )
-    }, [newOrder?.startStop, newOrder?.endStop])
+    }, [newOrder?.startStop, newOrder?.endStop, order?.reference])
+
     useEffect(() => {
-        if (order) {
-            setNewOrder(order)
-        } else {
+        if (!newOrder?.key) setNewOrder(order)
+    }, [order, newOrder])
+
+    useEffect(() => {
+        if (!order && !newOrder?.key) {
             if (!auth.currentUser?.uid) {
                 setOpen(false)
                 setNewOrder(undefined)
