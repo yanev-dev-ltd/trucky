@@ -4,7 +4,7 @@ import type { Order } from '@/components/orders/types'
 import { format } from 'date-fns'
 import { useIntl } from 'react-intl'
 import { db, auth } from '@/services/firebase'
-import { ref, update, push } from 'firebase/database'
+import { ref, push } from 'firebase/database'
 const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder, locations, date, routeId, vehicleId }: useOrderDialogProps) => {
     const intl = useIntl()
     const [newOrder, setNewOrder] = useState<Order>()

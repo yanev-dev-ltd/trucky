@@ -23,7 +23,7 @@ const ClientsSelectView = ({
     sx,
 }: ClientsSelectProps) => {
     const intl = useIntl()
-    const [open, setOpen] = useState<boolean | string>(false)
+    const [openAddClient, setOpenAddClient] = useState<boolean | string>(false)
     return (
         <>
             <FormControl fullWidth variant="outlined">
@@ -69,7 +69,9 @@ const ClientsSelectView = ({
                                         startIcon={<AddCircle />}
                                         onClick={(e) => {
                                             e.stopPropagation()
-                                            setOpen(option.name || true)
+                                            setOpenAddClient(
+                                                option.name || true
+                                            )
                                         }}
                                         fullWidth
                                         variant="outlined"
@@ -135,8 +137,8 @@ const ClientsSelectView = ({
                 />
             </FormControl>
             <AddClient
-                open={open}
-                setOpen={setOpen}
+                open={openAddClient}
+                setOpen={setOpenAddClient}
                 onSave={(clientId) =>
                     setClients(
                         Array.isArray(clients)

@@ -35,6 +35,7 @@ const AddDriverView = ({
                         component="form"
                         onSubmit={(event) => {
                             event.preventDefault()
+                            event.stopPropagation()
                             if (!newDriver?.name) return
                             save()
                         }}

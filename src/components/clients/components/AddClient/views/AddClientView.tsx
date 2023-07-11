@@ -35,6 +35,7 @@ const AddClientView = ({
                         component="form"
                         onSubmit={(event) => {
                             event.preventDefault()
+                            event.stopPropagation()
                             if (!newClient?.name) return
                             save()
                         }}
