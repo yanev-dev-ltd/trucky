@@ -104,5 +104,3 @@ export const VehiclesView: FC<VehicleProps> = ({
         </Box>
     )
 }
-
-export default VehiclesView

@@ -41,7 +41,7 @@ const OrderDialogView = ({
     const intl = useIntl()
     const [showDeleteOrder, setShowDeleteOrder] = useState(false)
     return (
-        <Dialog open={typeof open === 'number' ? true : Boolean(open)}>
+        <Dialog open={typeof open === 'number' && open >= 0}>
             <DialogTitle sx={sx.header}>
                 {isNew ? (
                     <FormattedMessage id="app.AddOrder" />

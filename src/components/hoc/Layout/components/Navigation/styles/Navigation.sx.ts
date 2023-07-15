@@ -3,7 +3,8 @@ import { SxProps, Theme } from '@mui/material'
 const sx: Record<string, SxProps<Theme>> = {
     root: {
       height: 'calc(100vh - 54px)',
-      marginRight: '1px'
+      marginRight: '1px',
+      borderRadius: 0
     },
     list: {
       padding: 0,
@@ -11,7 +12,8 @@ const sx: Record<string, SxProps<Theme>> = {
       paddingTop: 2,
       height: 'calc(100vh - 54px)',
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      minWidth: '120px'
     },
     item: {
       display: 'flex',
