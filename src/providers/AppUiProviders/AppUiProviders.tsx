@@ -6,12 +6,12 @@ import {
     Box,
     Typography,
 } from '@mui/material'
-import { theme } from '../../styles/theme'
 import messagesEn from '../../translations/en.json'
 import messagesBg from '../../translations/bg.json'
 import { IntlProvider, FormattedMessage } from 'react-intl'
 import { Offline, Online } from 'react-detect-offline'
 import useSettings from '../../hooks/useSettings'
+import useTheme from '../../hooks/useTheme'
 import sx from './styles/AppUiProviders.sx'
 import { SnackbarProvider } from 'notistack'
 import SnackbarClose from './components/SnackbarClose/SnackbarClose'
@@ -19,9 +19,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import bg from 'date-fns/locale/bg'
 import en from 'date-fns/locale/en-US'
+import dynamic from 'next/dynamic'
 
 const AppUiProviders: FC<PropsWithChildren<unknown>> = ({ children }) => {
     const settings = useSettings()
+    const { theme } = useTheme()
     const messages = useMemo(() => {
         switch (settings?.locale) {
             case 'bg':
@@ -38,14 +40,16 @@ const AppUiProviders: FC<PropsWithChildren<unknown>> = ({ children }) => {
                 return en
         }
     }, [settings.locale])
+
     return (
-        <IntlProvider
-            locale={settings?.locale || 'en'}
-            key={settings?.locale}
-            messages={messages}
-        >
-            <StyledEngineProvider injectFirst>
-                <ThemeProvider theme={theme(settings?.theme || 'dark')}>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider key={settings.theme} theme={theme(settings.theme)}>
+                <CssBaseline />
+                <IntlProvider
+                    locale={settings?.locale || 'en'}
+                    key={settings?.locale}
+                    messages={messages}
+                >
                     <SnackbarProvider
                         maxSnack={5}
                         autoHideDuration={10000}
@@ -57,7 +61,6 @@ const AppUiProviders: FC<PropsWithChildren<unknown>> = ({ children }) => {
                             dateAdapter={AdapterDateFns}
                             adapterLocale={adapterLocale}
                         >
-                            <CssBaseline />
                             <Online>{children}</Online>
                             <Offline>
                                 <Box sx={sx.container}>
@@ -68,10 +71,13 @@ const AppUiProviders: FC<PropsWithChildren<unknown>> = ({ children }) => {
                             </Offline>
                         </LocalizationProvider>
                     </SnackbarProvider>
-                </ThemeProvider>
-            </StyledEngineProvider>
-        </IntlProvider>
+                </IntlProvider>
+            </ThemeProvider>
+        </StyledEngineProvider>
     )
 }
 
-export default AppUiProviders
+// needed to set the correct theme
+export default dynamic(() => Promise.resolve(AppUiProviders), {
+    ssr: false,
+})

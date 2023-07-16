@@ -6,6 +6,7 @@ import vehicleServiceReducer from '../components/vehicles/components/EditVehicle
 import driversReducer from '../components/drivers/redux'
 import routesReducer from '../components/routes/redux'
 import clientsReducer from '../components/clients/redux'
+import cardReducer from '../components/settings/components/Payment/redux'
 
 const reducer = {
     auth: authReducer,
@@ -15,6 +16,7 @@ const reducer = {
     drivers: driversReducer,
     routes: routesReducer,
     clients: clientsReducer,
+    card: cardReducer
 }
 
 const store = configureStore({

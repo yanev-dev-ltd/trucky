@@ -18,7 +18,7 @@ const useHeader = (props: useHeader): useHeaderProps => {
             document.addEventListener('webkitfullscreenchange', fullscreenChange)
             document.addEventListener('mozfullscreenchange', fullscreenChange)
             document.addEventListener('MSFullscreenChange', fullscreenChange)
-            setFullscreen(true);
+            setFullscreen(true)
         } else {
             document.exitFullscreen()
             setFullscreen(false)

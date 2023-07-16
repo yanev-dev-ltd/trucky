@@ -1,7 +1,8 @@
-import { PaletteMode } from '../styles/theme'
+import { PaletteMode } from '../types/theme'
+import { StripeConstructorOptions } from '@stripe/stripe-js'
 
 export type Settings = {
     theme: PaletteMode
-    locale: string
+    locale: StripeConstructorOptions["locale"]
     units: string
 }

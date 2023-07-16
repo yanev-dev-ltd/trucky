@@ -24,9 +24,9 @@ const useAppAuthProvider = () => {
         if (user === 'loading' || user === 'anonymous') {
             return
         }
-        const unsubscribe = onValue(ref(db, 'stripe_customers/' + user), (snapshot) => {
+        const unsubscribe = onValue(ref(db, 'stripe_customers/' + user + '/status'), (snapshot) => {
             const snp = snapshot.val()
-            if (snp?.status) setSubscription(snp.status)
+            setSubscription(snp)
         })
         return () => unsubscribe()
     }, [user])

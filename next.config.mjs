@@ -21,7 +21,8 @@ const config = {
     TRUCKY_HERE_ACCESS_KEY_ID: process.env.TRUCKY_HERE_ACCESS_KEY_ID || '',
     TRUCKY_HERE_ACCESS_KEY_SECRET: process.env.TRUCKY_HERE_ACCESS_KEY_SECRET || '',
     TRUCKY_HERE_TOKEN_ENDPOINT_URL: process.env.TRUCKY_HERE_TOKEN_ENDPOINT_URL || '',
-    TRUCKY_HERE_API_KEY: process.env.TRUCKY_HERE_API_KEY || ''
+    TRUCKY_HERE_API_KEY: process.env.TRUCKY_HERE_API_KEY || '',
+    TRUCKY_STRIPE_API_KEY: process.env.TRUCKY_STRIPE_API_KEY || ''
   },
   reactStrictMode: true,
   swcMinify: true,
