@@ -34,5 +34,5 @@
     "incremental": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs", "src/components/common/LoadingButton/types"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "functions"]
 }
