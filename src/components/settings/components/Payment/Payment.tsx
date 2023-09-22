@@ -45,7 +45,9 @@ const Payment = () => {
                                 <TableCell>
                                     <FormattedMessage id="app.CardNumber" />
                                 </TableCell>
-                                <TableCell>&nbsp;</TableCell>
+                                <TableCell align="right">
+                                    <FormattedMessage id="app.Actions" />
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

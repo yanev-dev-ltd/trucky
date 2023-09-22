@@ -21,7 +21,8 @@
     "routes": {
       "$uid": {
         ".write": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
-        ".read": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'"
+        ".read": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
+          ".indexOn": ["status", "vehicle"]
       }
     },
     "stripe_customers": {
@@ -47,7 +48,7 @@
       "$uid": {
         ".write": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
         ".read": "$uid === auth.uid && root.child('stripe_customers/' + auth.uid + '/status').val() === 'active'",
-        ".indexOn": ["vehicle"]
+        ".indexOn": ["vehicle", "route"]
       }
     },
     "orders": {

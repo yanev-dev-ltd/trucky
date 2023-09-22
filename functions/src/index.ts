@@ -1,3 +1,5 @@
+import * as functions from "firebase-functions";
+
 // import * as functions from "firebase-functions";
 
 // // Start writing functions
@@ -7,4 +9,9 @@
 //   functions.logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
-export {};
+exports.makeUnpaid = functions
+    .database
+    .ref("/routes/{userId}/{routeId}")
+    .onCreate((snapshot: any) => {
+      return snapshot.ref.child("status").set("UNPAID");
+    });

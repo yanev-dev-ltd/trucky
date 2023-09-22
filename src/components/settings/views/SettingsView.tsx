@@ -14,12 +14,14 @@ import {
     Palette,
     OneK,
     DeleteForever,
+    Receipt,
 } from '@mui/icons-material'
 import { SettingsViewProps } from '../types'
 import sx from '../styles/Settings.sx'
 import Link from 'next/link'
 import { FormattedMessage } from 'react-intl'
 import Payment from '../components/Payment/Payment'
+import Invoices from '../components/Invoices/Invoices'
 import Language from '../components/Language/Language'
 import Theme from '../components/Theme/Theme'
 import Units from '../components/Units/Units'
@@ -30,6 +32,8 @@ export const SettingsView = ({ section }: SettingsViewProps) => {
         switch (section) {
             case 'payment':
                 return <Payment />
+            case 'invoices':
+                return <Invoices />
             case 'language':
                 return <Language />
             case 'theme':
@@ -57,6 +61,18 @@ export const SettingsView = ({ section }: SettingsViewProps) => {
                         </ListItemIcon>
                         <ListItemText>
                             <FormattedMessage id="app.Payment" />
+                        </ListItemText>
+                    </MenuItem>
+                    <MenuItem
+                        component={Link}
+                        href={'/settings/invoices'}
+                        sx={section === 'invoices' ? sx.active : undefined}
+                    >
+                        <ListItemIcon>
+                            <Receipt fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>
+                            <FormattedMessage id="app.Invoices" />
                         </ListItemText>
                     </MenuItem>
                     <MenuItem
