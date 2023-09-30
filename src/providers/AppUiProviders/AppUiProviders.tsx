@@ -31,7 +31,7 @@ const AppUiProviders: FC<PropsWithChildren<unknown>> = ({ children }) => {
             default:
                 return messagesEn
         }
-    }, [settings.locale])
+    }, [settings?.locale])
     const adapterLocale = useMemo(() => {
         switch (settings?.locale) {
             case 'bg':
@@ -39,11 +39,11 @@ const AppUiProviders: FC<PropsWithChildren<unknown>> = ({ children }) => {
             default:
                 return en
         }
-    }, [settings.locale])
+    }, [settings?.locale])
 
     return (
         <StyledEngineProvider injectFirst>
-            <ThemeProvider key={settings.theme} theme={theme(settings.theme)}>
+            <ThemeProvider key={settings?.theme} theme={theme(settings?.theme)}>
                 <CssBaseline />
                 <IntlProvider
                     locale={settings?.locale || 'en'}

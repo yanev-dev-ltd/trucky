@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { ref, onValue } from 'firebase/database'
+import { ref, onValue, update } from 'firebase/database'
 import { RootState } from '@/store/store'
 import { db, auth } from '@/services/firebase'
-import { setCard } from '../redux'
-import { loadStripe, Stripe } from '@stripe/stripe-js'
+import { setStripe } from '../redux'
+import { loadStripe } from '@stripe/stripe-js'
 
 const usePayment = () => {
     const dispatch = useDispatch()
-    const card = useSelector((state: RootState) => state.card)
+    const stripe = useSelector((state: RootState) => state.stripe)
     const [formOpened, setFormOpened] = useState(false)
     const { settings } = useSelector((state: RootState) => state.settings)
     const { locale } = settings
@@ -18,15 +18,17 @@ const usePayment = () => {
         }
         const unsubscribe = onValue(ref(db, 'stripe_customers/' + auth.currentUser?.uid + '/card'), (snapshot) => {
             const snp = snapshot.val()
-            dispatch(setCard({
-                brand: snp.brand,
-                country: snp.country,
-                email: snp.email,
-                exp_month: snp.exp_month,
-                exp_year: snp.exp_year,
-                last4: snp.last4,
-                name: snp.name,
-                phone: snp.phone,
+            dispatch(setStripe({
+                card: snp ? {
+                    brand: snp.brand,
+                    country: snp.country,
+                    email: snp.email,
+                    exp_month: snp.exp_month,
+                    exp_year: snp.exp_year,
+                    last4: snp.last4,
+                    name: snp.name,
+                    phone: snp.phone,
+                } : undefined,
             }))
         })
         return () => {
@@ -45,10 +47,14 @@ const usePayment = () => {
     }
 
     const deleteCard = () => {
-        console.log('delete card')
+        if (!auth.currentUser?.uid) return
+        update(ref(db, 'stripe_customers/' + auth.currentUser.uid), {
+            payment_method_id: null,
+            card: null
+        })
     }
 
-    return { card, stripePromise, handleFormOpen, handleFormClose, formOpened, deleteCard }
+    return { stripe, stripePromise, handleFormOpen, handleFormClose, formOpened, deleteCard }
 }
 
 export default usePayment

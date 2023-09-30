@@ -1,18 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Card } from '../types'
+import { Stripe } from '../types'
 
-const initialState: Card = { loading: true }
+const initialState: Stripe = { loading: true }
 
 
-export const cardSlice = createSlice({
-    name: 'cardService',
+export const stripeSlice = createSlice({
+    name: 'stripeService',
     initialState,
     reducers: {
-      setCard: (state, action: PayloadAction<Card>) => {
+      setStripe: (state, action: PayloadAction<Stripe>) => {
         return action.payload
       },
     },
   })
 
-  export const { setCard } = cardSlice.actions
-  export default cardSlice.reducer
+  export const { setStripe } = stripeSlice.actions
+  export default stripeSlice.reducer

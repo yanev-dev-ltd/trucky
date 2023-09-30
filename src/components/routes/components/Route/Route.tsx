@@ -715,15 +715,17 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                 </DialogContent>
                 <DialogActions>
                     <Box sx={sx.actions}>
-                        <LoadingButton
-                            sx={sx.warn}
-                            startIcon={<Delete />}
-                            color="secondary"
-                            fullWidth
-                            onClick={() => setDeleteRouteOpen(true)}
-                        >
-                            <FormattedMessage id="app.DeleteRoute" />
-                        </LoadingButton>
+                        {routeId && (
+                            <LoadingButton
+                                sx={sx.warn}
+                                startIcon={<Delete />}
+                                color="secondary"
+                                fullWidth
+                                onClick={() => setDeleteRouteOpen(true)}
+                            >
+                                <FormattedMessage id="app.DeleteRoute" />
+                            </LoadingButton>
+                        )}
                         <Confirm
                             onCancel={() => setDeleteRouteOpen(false)}
                             onSubmit={deleteRoute}

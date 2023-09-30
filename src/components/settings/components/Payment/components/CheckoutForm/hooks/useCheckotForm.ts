@@ -43,7 +43,6 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
             })
 
             if (error) {
-                // console.log('[error]', error);
                 setCardError(
                     error.code === 'parameter_invalid_empty'
                         ? error.param
@@ -53,17 +52,16 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
                     setCardError(undefined)
                 }, 10000)
             } else {
-                // setCard({
-                //   email: paymentMethod?.billing_details?.email,
-                //   phone: paymentMethod?.billing_details?.phone,
-                //   name: paymentMethod?.billing_details?.name,
-                //   number: paymentMethod?.card?.last4
-                // });
                 setLoading(true)
                 update(ref(db, 'stripe_customers/' + auth.currentUser.uid), {
                     payment_method_id: paymentMethod.id,
+                    card: {
+                        ...paymentMethod.card,
+                        name: paymentMethod.billing_details.name,
+                        phone: paymentMethod.billing_details.phone,
+                        email: paymentMethod.billing_details.email
+                    }
                 })
-                // window.alert('Payment method added.');
                 setLoading(false)
                 handleFormClose()
             }

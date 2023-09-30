@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
     Box,
     TableContainer,
@@ -16,19 +17,21 @@ import sx from './styles/Payment.sx'
 import { FormattedMessage } from 'react-intl'
 import { Elements } from '@stripe/react-stripe-js'
 import CheckoutForm from './components/CheckoutForm/CheckoutForm'
+import Confirm from '@/components/common/Confirm/Confirm'
 
 const Payment = () => {
     const {
-        card,
+        stripe,
         stripePromise,
         handleFormOpen,
         handleFormClose,
         formOpened,
         deleteCard,
     } = usePayment()
+    const [confirmDeleteCard, setConfirmDeleteCard] = useState(false)
     return (
         <Box>
-            {card && (
+            {stripe.card && (
                 <TableContainer component={Paper}>
                     <Table sx={sx.table} aria-label="credit card table">
                         <TableHead>
@@ -52,16 +55,31 @@ const Payment = () => {
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                <TableCell>{card.name}</TableCell>
-                                <TableCell>{card.phone}</TableCell>
-                                <TableCell>{card.email}</TableCell>
+                                <TableCell>{stripe.card.name}</TableCell>
+                                <TableCell>{stripe.card.phone}</TableCell>
+                                <TableCell>{stripe.card.email}</TableCell>
                                 <TableCell>
-                                    ••••&nbsp;••••&nbsp;••••&nbsp;{card.last4}
+                                    ••••&nbsp;••••&nbsp;••••&nbsp;
+                                    {stripe.card.last4}
+                                    <Box>
+                                        <Typography variant="caption">
+                                            <FormattedMessage id="app.Expires" />{' '}
+                                            <FormattedMessage
+                                                id={
+                                                    'app.MonthShort.' +
+                                                    stripe.card.exp_month
+                                                }
+                                            />{' '}
+                                            {stripe.card.exp_year}
+                                        </Typography>
+                                    </Box>
                                 </TableCell>
                                 <TableCell align="right">
                                     <Button
                                         color="primary"
-                                        onClick={deleteCard}
+                                        onClick={() =>
+                                            setConfirmDeleteCard(true)
+                                        }
                                         variant="contained"
                                     >
                                         <FormattedMessage id="app.Delete" />
@@ -72,12 +90,12 @@ const Payment = () => {
                     </Table>
                 </TableContainer>
             )}
-            {card ? null : (
+            {stripe.card ? null : (
                 <Typography sx={sx.padding}>
                     <FormattedMessage id="app.NoCreditCard" />
                 </Typography>
             )}
-            {card ? null : (
+            {stripe.card ? null : (
                 <Button
                     onClick={handleFormOpen}
                     color="primary"
@@ -93,6 +111,17 @@ const Payment = () => {
                     </Elements>
                 </Paper>
             </Modal>
+            <Confirm
+                onCancel={() => setConfirmDeleteCard(false)}
+                onSubmit={() => {
+                    deleteCard()
+                    setConfirmDeleteCard(false)
+                }}
+                isOpen={Boolean(confirmDeleteCard)}
+                type="warn"
+                submit={<FormattedMessage id="app.Delete" />}
+                cancel={<FormattedMessage id="app.Cancel" />}
+            />
         </Box>
     )
 }
