@@ -34,7 +34,16 @@
   },
   "emulators": {
     "functions": {
+      "host": "localhost",
       "port": 5001
+    },
+    "database": {
+      "host": "localhost",
+      "port": 9001
+    },
+    "auth": {
+      "host": "localhost",
+      "port": 9099
     },
     "ui": {
       "enabled": false

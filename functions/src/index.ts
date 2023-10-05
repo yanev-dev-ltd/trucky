@@ -1,11 +1,17 @@
 import {
-  onDocumentWritten,
-  onDocumentCreated,
-} from "firebase-functions/v2/firestore";
-// import {onSchedule} from "firebase-functions/v2/scheduler";
+  onValueWritten,
+  onValueCreated,
+} from "firebase-functions/v2/database";
+import {onSchedule} from "firebase-functions/v2/scheduler";
 import Stripe from "stripe";
-import * as admin from "firebase-admin";
+import {getDatabase} from "firebase-admin/database";
+import {getAuth} from "firebase-admin/auth";
+import {initializeApp} from "firebase-admin/app";
 import {setGlobalOptions} from "firebase-functions/v2";
+
+const app = initializeApp();
+const db = getDatabase(app);
+const auth = getAuth(app);
 
 setGlobalOptions({region: "europe-west1", maxInstances: 10});
 
@@ -13,89 +19,96 @@ const stripe = new Stripe(process.env.STRIPE_KEY || "", {
   apiVersion: "2023-08-16",
 });
 
-admin.initializeApp();
-
-export const makeUnpaid = onDocumentCreated(
-    {document: "routes/{userId}/{routeId}", region: "europe-west1"},
+export const makeUnpaid = onValueCreated(
+    "/routes/{userId}/{routeId}",
     (event) => event.data?.ref.update({
       status: "UNPAID",
       created: new Date().getTime(),
     }));
 
-export const addPaymentMethod = onDocumentWritten(
+export const addPaymentMethod = onValueWritten(
     "/stripe_customers/{userId}",
     async (event) => {
-      const prevData = event.data?.before.data();
-      const data = event.data?.after.data();
+      const prevData = event.data?.before.val();
+      const data = event.data?.after.val();
       if (data?.payment_method_id && !prevData?.payment_method_id) {
         await stripe.paymentMethods.attach(
             data.payment_method_id,
             {customer: data.customer_id}
         );
+        await stripe.customers.update(
+            data.customer_id,
+            {
+              invoice_settings: {
+                default_payment_method: data.payment_method_id,
+              }});
       } else if (!data?.payment_method_id && prevData?.payment_method_id) {
+        await stripe.customers.update(
+            data.customer_id,
+            {
+              invoice_settings: {
+                default_payment_method: undefined,
+              }});
         await stripe.paymentMethods.detach(prevData.payment_method_id);
       }
-      return null;
+      return new Promise((resolve) => resolve(true));
     });
 
-// type E<T> = {
-//     [K in keyof T]: [K, T[K]];
-//   }[keyof T][];
+type E<T> = {
+    [K in keyof T]: [K, T[K]];
+  }[keyof T][];
 
-// export const createInvoice = onSchedule(
-//     "every 1 minute",
-//     async () => {
-//       const db = admin.database();
-//       const auth = admin.auth();
-//       const ref = db.ref("/routes");
-//       ref
-//           .once("value")
-//           .then(async (snapshot) => {
-//             const routes = snapshot.val();
-//             auth.listUsers().then(async (users) => {
-//               users.users.forEach(async (user) => {
-//               const stripeUser: any = db.ref("/stripe_customers/"+user.uid);
-//                 const userVal = stripeUser.val();
-//                 let products = 0;
-//                 const unpaid: { [key: string]: string } = {};
-//                 for (
-//                   const
-//                     [k, v]
-//                   of
-//                     Object.entries(routes[user.uid]) as E<typeof routes>) {
-//                   const status = v.status;
-//                   if (status === "UNPAID") {
-//                     products++;
-//                     unpaid[user.uid + "/" + k + "/status"] = "PAID";
-//                   }
-//                 }
-//                 if (products > 0) {
-//                   const invoice = await stripe.invoices.create({
-//                     customer: userVal.customer_id,
-//                   });
-//                   await stripe.invoiceItems.create({
-//                     customer: userVal.customer_id,
-//                     amount: 20,
-//                     quantity: products,
-//                     invoice: invoice.id,
-//                   });
-//                   const pay = await stripe.invoices.pay(
-//                       invoice.id,
-//                       {
-//                         payment_method: userVal.payment_method_id,
-//                       }
-//                   );
-//                   if (pay.status === "paid") {
-//                     db.ref("/routes").update(unpaid);
-//                     stripeUser.child("status").update("active");
-//                   } else {
-//                     stripeUser.child("status").update("inactive");
-//                   }
-//                 } else {
-//                   stripeUser.child("status").update("active");
-//                 }
-//               });
-//             });
-//           });
-//       return new Promise((resolve) => resolve());
-//     });
+export const createInvoice = onSchedule(
+    "0 0 1 * *", // * * * * * - every minute for testing
+    () => {
+      const ref = db.ref("/routes");
+      ref
+          .once("value", (snapshot) => {
+            const routes = snapshot.val();
+            auth.listUsers().then((users) => {
+              users.users.forEach(async (user) => {
+                const stripeUser = db.ref("/stripe_customers/" + user.uid);
+                stripeUser.once("value", async (userValue) => {
+                  const userVal = userValue.val();
+                  let products = 0;
+                  const unpaid: { [key: string]: string } = {};
+                  for (
+                    const [k, v]
+                    of Object.entries(routes[user.uid]) as E<typeof routes>) {
+                    if (v.status === "UNPAID") {
+                      products++;
+                      unpaid[user.uid + "/" + k + "/status"] = "PAID";
+                    }
+                  }
+                  if (products > 0) {
+                    try {
+                      const invoice = await stripe.invoices.create({
+                        customer: userVal.customer_id,
+                        currency: "eur",
+                      });
+                      await stripe.invoiceItems.create({
+                        customer: userVal.customer_id,
+                        price: "price_1NtE3MCW2lhHJV8B1XaHJs0m",
+                        quantity: products,
+                        invoice: invoice.id,
+                        currency: "eur",
+                      });
+                      const pay = await stripe.invoices.pay(invoice.id);
+                      if (pay.status === "paid") {
+                        ref.update(unpaid);
+                        stripeUser.child("status").update("active");
+                      } else {
+                        stripeUser.child("status").update("inactive");
+                      }
+                    } catch (e) {
+                      e && stripeUser.child("error").set(JSON.stringify(e));
+                    }
+                  } else {
+                    stripeUser.child("status").update("active");
+                  }
+                });
+              });
+            }).catch((e) =>
+              db.ref("/errors/listUsers").set(JSON.stringify(e)));
+          });
+    });
