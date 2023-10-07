@@ -4,14 +4,11 @@ import { ref, onValue, update } from 'firebase/database'
 import { RootState } from '@/store/store'
 import { db, auth } from '@/services/firebase'
 import { setStripe } from '../redux'
-import { loadStripe } from '@stripe/stripe-js'
 
 const usePayment = () => {
     const dispatch = useDispatch()
     const stripe = useSelector((state: RootState) => state.stripe)
     const [formOpened, setFormOpened] = useState(false)
-    const { settings } = useSelector((state: RootState) => state.settings)
-    const { locale } = settings
     useEffect(() => {
         if (!auth.currentUser?.uid) {
             return
@@ -36,8 +33,6 @@ const usePayment = () => {
         } 
     }, [auth.currentUser?.uid])
 
-    const stripePromise = locale && process.env.TRUCKY_STRIPE_API_KEY ? loadStripe(process.env.TRUCKY_STRIPE_API_KEY, { locale }) : null
-
     const handleFormOpen = () => {
         setFormOpened(true)
     }
@@ -54,7 +49,7 @@ const usePayment = () => {
         })
     }
 
-    return { stripe, stripePromise, handleFormOpen, handleFormClose, formOpened, deleteCard }
+    return { stripe, handleFormOpen, handleFormClose, formOpened, deleteCard }
 }
 
 export default usePayment

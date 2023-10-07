@@ -7,6 +7,7 @@ import driversReducer from '../components/drivers/redux'
 import routesReducer from '../components/routes/redux'
 import clientsReducer from '../components/clients/redux'
 import stripeReducer from '../components/settings/components/Payment/redux'
+import receiptsReducer from '../components/settings/components/Invoices/redux'
 
 const reducer = {
     auth: authReducer,
@@ -16,7 +17,8 @@ const reducer = {
     drivers: driversReducer,
     routes: routesReducer,
     clients: clientsReducer,
-    stripe: stripeReducer
+    stripe: stripeReducer,
+    receipts: receiptsReducer,
 }
 
 const store = configureStore({

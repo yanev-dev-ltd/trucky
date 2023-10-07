@@ -81,34 +81,67 @@ export const createInvoice = onSchedule(
                     }
                   }
                   if (products > 0) {
+                    const invoice = await stripe.invoices.create({
+                      customer: userVal.customer_id,
+                      currency: "eur",
+                    });
+                    await stripe.invoiceItems.create({
+                      customer: userVal.customer_id,
+                      price: "price_1NtE3MCW2lhHJV8B1XaHJs0m",
+                      quantity: products,
+                      invoice: invoice.id,
+                      currency: "eur",
+                    });
                     try {
-                      const invoice = await stripe.invoices.create({
-                        customer: userVal.customer_id,
-                        currency: "eur",
-                      });
-                      await stripe.invoiceItems.create({
-                        customer: userVal.customer_id,
-                        price: "price_1NtE3MCW2lhHJV8B1XaHJs0m",
-                        quantity: products,
-                        invoice: invoice.id,
-                        currency: "eur",
-                      });
                       const pay = await stripe.invoices.pay(invoice.id);
                       if (pay.status === "paid") {
+                        if (typeof pay?.charge === "string") {
+                          const charge = await stripe
+                              .charges.retrieve(pay?.charge);
+                          db
+                              .ref(`/receipts/${user.uid}`)
+                              .push({
+                                receipt:
+                                  charge.receipt_url?.split("?")[0] + "/pdf" ||
+                                  charge.receipt_url,
+                                date: new Date().getTime(),
+                                amount_due: pay.amount_due,
+                                amount_paid: pay.amount_paid,
+                                invoice: invoice.id,
+                                status: "Payed"});
+                        }
                         ref.update(unpaid);
                         stripeUser.child("status").update("active");
                       } else {
+                        db
+                            .ref(`/receipts/${user.uid}`)
+                            .push({
+                              receipt: null,
+                              date: new Date().getTime(),
+                              amount_due: pay.amount_due,
+                              amount_paid: pay.amount_paid,
+                              invoice: invoice.id,
+                              status: "Declined"});
                         stripeUser.child("status").update("inactive");
                       }
                     } catch (e) {
-                      e && stripeUser.child("error").set(JSON.stringify(e));
+                      e && Object.keys(e).length > 0 &&
+                      db
+                          .ref(`/receipts/${user.uid}`)
+                          .push({
+                            receipt: null,
+                            date: new Date().getTime(),
+                            amount_due: products * 20,
+                            amount_paid: products * 20,
+                            invoice: invoice.id,
+                            status: "Declined"});
+                      stripeUser.child("status").update("inactive");
                     }
                   } else {
                     stripeUser.child("status").update("active");
                   }
                 });
               });
-            }).catch((e) =>
-              db.ref("/errors/listUsers").set(JSON.stringify(e)));
+            });
           });
     });

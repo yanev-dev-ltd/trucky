@@ -15,19 +15,12 @@ import {
 import usePayment from './hooks/usePayment'
 import sx from './styles/Payment.sx'
 import { FormattedMessage } from 'react-intl'
-import { Elements } from '@stripe/react-stripe-js'
 import CheckoutForm from './components/CheckoutForm/CheckoutForm'
 import Confirm from '@/components/common/Confirm/Confirm'
 
 const Payment = () => {
-    const {
-        stripe,
-        stripePromise,
-        handleFormOpen,
-        handleFormClose,
-        formOpened,
-        deleteCard,
-    } = usePayment()
+    const { stripe, handleFormOpen, handleFormClose, formOpened, deleteCard } =
+        usePayment()
     const [confirmDeleteCard, setConfirmDeleteCard] = useState(false)
     return (
         <Box>
@@ -106,9 +99,7 @@ const Payment = () => {
             )}
             <Modal open={formOpened} onClose={handleFormClose}>
                 <Paper sx={sx.modal}>
-                    <Elements stripe={stripePromise}>
-                        <CheckoutForm handleFormClose={handleFormClose} />
-                    </Elements>
+                    <CheckoutForm handleFormClose={handleFormClose} />
                 </Paper>
             </Modal>
             <Confirm

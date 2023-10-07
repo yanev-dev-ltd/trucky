@@ -26,12 +26,17 @@ import Language from '../components/Language/Language'
 import Theme from '../components/Theme/Theme'
 import Units from '../components/Units/Units'
 import Delete from '../components/Delete/Delete'
+import { Elements, ElementsConsumer } from '@stripe/react-stripe-js'
 
-export const SettingsView = ({ section }: SettingsViewProps) => {
+export const SettingsView = ({ section, stripePromise }: SettingsViewProps) => {
     const component = useMemo(() => {
         switch (section) {
             case 'payment':
-                return <Payment />
+                return (
+                    <Elements stripe={stripePromise}>
+                        <Payment />
+                    </Elements>
+                )
             case 'invoices':
                 return <Invoices />
             case 'language':

@@ -1,4 +1,4 @@
-import { Box, IconButton, Tooltip } from '@mui/material'
+import { Box, IconButton, Tooltip, Typography } from '@mui/material'
 import { Fullscreen, FullscreenExit, Logout } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import Link from 'next/link'
@@ -8,15 +8,25 @@ import sx from '../styles/Header.sx'
 import Image from 'next/image'
 import { HeaderProps } from '../types'
 import Notifications from '../components/Notifications/Notifications'
+import useSubscription from '@/hooks/useSubscription'
 
 export const HeaderView = ({
     handleFullscreen,
     fullscreen,
 }: HeaderProps): JSX.Element => {
+    const { subscription } = useSubscription()
     return (
         <Box sx={sx.header}>
             <Box sx={sx.logo}>
-                <Link href="/">
+                <Link
+                    href={
+                        subscription === 'inactive'
+                            ? '/settings'
+                            : subscription === 'active'
+                            ? '/'
+                            : '/custom'
+                    }
+                >
                     <Image
                         src="/icons/logo.svg"
                         alt="Trucky.one - manage your fleet"
@@ -26,6 +36,19 @@ export const HeaderView = ({
                     />
                 </Link>
             </Box>
+            {subscription === 'inactive' && (
+                <Link
+                    href="/settings/invoices"
+                    style={{
+                        color: '#fff',
+                        textDecoration: 'none',
+                    }}
+                >
+                    <Typography sx={sx.message}>
+                        <FormattedMessage id="app.PaymentNeeded" />
+                    </Typography>
+                </Link>
+            )}
             <Box sx={sx.buttons}>
                 <Tooltip
                     title={

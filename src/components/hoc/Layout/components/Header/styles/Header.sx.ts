@@ -36,6 +36,11 @@ const sx: Record<string, SxProps<Theme>> = {
     buttons: {
         display: 'flex',
         gap: 1,
+    },
+    message: {
+        backgroundColor: 'primary.main',
+        padding: '3px 6px',
+        borderRadius: '6px',
     }
 }
 

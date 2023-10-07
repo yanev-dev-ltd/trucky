@@ -7,7 +7,7 @@ import sx from './styles/CheckoutForm.sx'
 import { CardElement } from '@stripe/react-stripe-js'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { CheckoutFormProps } from './types/index'
-import useCheckoutForm from './hooks/useCheckotForm'
+import useCheckoutForm from './hooks/useCheckoutForm'
 
 const CheckoutForm = ({ handleFormClose }: CheckoutFormProps) => {
     const intl = useIntl()

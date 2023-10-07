@@ -1,15 +1,15 @@
 import { RootState } from '../../../store/store'
-import { auth, db } from '../../../services/firebase'
+import { auth } from '../../../services/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { login, logout } from '../../AppAuthProvider/redux'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { ref, onValue } from 'firebase/database'
+import useSubscription from '@/hooks/useSubscription'
 
 const useAppAuthProvider = () => {
     const dispatch = useDispatch()
+    const { subscription } = useSubscription()
     const user = useSelector((state: RootState) => state.auth.user)
-    const [subscription, setSubscription] = useState<string>('')
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user?.uid) {
@@ -20,16 +20,7 @@ const useAppAuthProvider = () => {
         })
         return () => unsubscribe()
     }, [])
-    useEffect(() => {
-        if (user === 'loading' || user === 'anonymous') {
-            return
-        }
-        const unsubscribe = onValue(ref(db, 'stripe_customers/' + user + '/status'), (snapshot) => {
-            const snp = snapshot.val()
-            setSubscription(snp)
-        })
-        return () => unsubscribe()
-    }, [user])
+    
     return { user, subscription }
 }
 

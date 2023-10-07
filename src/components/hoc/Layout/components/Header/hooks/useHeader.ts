@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { useHeaderProps, useHeader } from '../types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// @typescript-eslint/no-unused-vars
 const useHeader = (props: useHeader): useHeaderProps => {
     const [fullscreen, setFullscreen] = useState(false)
 

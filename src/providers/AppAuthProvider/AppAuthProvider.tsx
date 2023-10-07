@@ -4,9 +4,21 @@ import useAppAuthProvider from './hooks/useAppAuthProvider'
 import { Box, CircularProgress } from '@mui/material'
 import Layout from '@/components/hoc/Layout/Layout'
 import sx from './styles/AppAuthProvider.sx'
+import { useRouter } from 'next/router'
 
 const Authenticated: FC<PropsWithChildren<unknown>> = ({ children }) => {
     const { user, subscription } = useAppAuthProvider()
+    const router = useRouter()
+    if (
+        user !== 'anonymous' &&
+        user !== 'loading' &&
+        user !== '' &&
+        subscription !== 'active' &&
+        subscription !== '' &&
+        !router.asPath.startsWith('/settings')
+    ) {
+        router.push('/settings/invoices')
+    }
 
     if (
         user === 'loading' ||
@@ -20,30 +32,10 @@ const Authenticated: FC<PropsWithChildren<unknown>> = ({ children }) => {
         )
     }
 
-    if (
-        user !== 'anonymous' &&
-        user !== 'loading' &&
-        subscription === 'active'
-    ) {
+    if (user !== 'anonymous' && user !== 'loading') {
         return <Layout>{children}</Layout>
     }
 
-    if (
-        user !== 'anonymous' &&
-        user !== 'loading' &&
-        user !== '' &&
-        subscription !== 'active' &&
-        subscription !== ''
-    ) {
-        return <Box sx={sx.container}>Inactive</Box>
-        //   return (
-        //     <Elements stripe={stripePromise}>
-        //       <Box p={1}>
-        //         <Typography color='error'><FormattedMessage id={`app.stripe.${subscription}`} /></Typography>
-        //         <CheckoutForm />
-        //       </Box>
-        //     </Elements>)
-    }
     return <LogIn />
 }
 

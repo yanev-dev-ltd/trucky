@@ -65,6 +65,17 @@
     "milage_notifications": {
       ".write": false,
       ".read": false
+    },
+    "users": {
+      ".write": false,
+      ".read": false
+    },
+    "receipts": {
+      "$uid": {
+        ".write": false,
+        ".read": "$uid === auth.uid",
+        ".indexOn": ["date"]
+      }
     }
   }
 }

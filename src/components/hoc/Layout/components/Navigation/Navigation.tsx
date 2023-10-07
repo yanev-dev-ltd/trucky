@@ -11,7 +11,6 @@ import {
     People,
     ListAlt,
     Room,
-    Receipt,
     AccountBox,
     Build,
     Settings,
@@ -19,9 +18,11 @@ import {
 import { FormattedMessage } from 'react-intl'
 import sx from './styles/Navigation.sx'
 import { useRouter } from 'next/router'
+import useSubscription from '@/hooks/useSubscription'
 
 const Navigation = () => {
     const router = useRouter()
+    const { subscription } = useSubscription()
     return (
         <Paper sx={sx.root}>
             <MenuList sx={sx.list}>
@@ -33,6 +34,7 @@ const Navigation = () => {
                             ? sx.itemCurrent
                             : sx.item
                     }
+                    disabled={subscription === 'inactive'}
                 >
                     <ListItemIcon>
                         <LocalShipping fontSize="large" sx={sx.icon} />
@@ -49,6 +51,7 @@ const Navigation = () => {
                             ? sx.itemCurrent
                             : sx.item
                     }
+                    disabled={subscription === 'inactive'}
                 >
                     <ListItemIcon>
                         <People fontSize="large" sx={sx.icon} />
@@ -65,6 +68,7 @@ const Navigation = () => {
                             ? sx.itemCurrent
                             : sx.item
                     }
+                    disabled={subscription === 'inactive'}
                 >
                     <ListItemIcon>
                         <Room fontSize="large" sx={sx.icon} />
@@ -81,6 +85,7 @@ const Navigation = () => {
                             ? sx.itemCurrent
                             : sx.item
                     }
+                    disabled={subscription === 'inactive'}
                 >
                     <ListItemIcon>
                         <ListAlt fontSize="large" sx={sx.icon} />
@@ -97,6 +102,7 @@ const Navigation = () => {
                             ? sx.itemCurrent
                             : sx.item
                     }
+                    disabled={subscription === 'inactive'}
                 >
                     <ListItemIcon>
                         <Build fontSize="large" sx={sx.icon} />
@@ -129,6 +135,7 @@ const Navigation = () => {
                             ? sx.itemCurrent
                             : sx.item
                     }
+                    disabled={subscription === 'inactive'}
                 >
                     <ListItemIcon>
                         <AccountBox fontSize="large" sx={sx.icon} />
