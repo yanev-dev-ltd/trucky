@@ -5,5 +5,5 @@ export type useSettingsProps = {
 
 export type SettingsViewProps = {
     section?: string;
-    stripePromise: Promise<Stripe | null>
+    stripePromise: Promise<Stripe | null> | null;
 }

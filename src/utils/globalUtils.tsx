@@ -1,4 +1,4 @@
-/* @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/display-name */
 import { ComponentPropsWithoutRef, FC } from 'react'
 
