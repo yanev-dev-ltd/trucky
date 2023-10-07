@@ -39,7 +39,7 @@ const initialState = {
 }
 
 export function Table<T extends Record<string, unknown>>(
-    props: any
+    props: PropsWithChildren<TableProps<T>>
 ): ReactElement {
     const intl = useIntl()
     const { columns, data, name, height = 'calc(100vh - 126px)' } = props
