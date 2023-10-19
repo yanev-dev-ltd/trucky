@@ -515,11 +515,8 @@ const EditClientView = ({
                                         ? `user/${auth?.currentUser?.uid}/clients`
                                         : undefined
                                 }
-                                dbpath={
-                                    auth?.currentUser?.uid
-                                        ? `clients/${auth.currentUser.uid}/${client?.key}`
-                                        : undefined
-                                }
+                                dbpath="clients"
+                                dbkey={client?.key}
                                 currentFiles={client?.files || []}
                             />
                         </Box>
@@ -578,7 +575,8 @@ const EditClientView = ({
                                 confirmDeleteFile &&
                                     deleteFile(
                                         confirmDeleteFile,
-                                        `clients/${auth?.currentUser?.uid}/${client.key}`,
+                                        'clients',
+                                        client.key,
                                         client.files || []
                                     )
                                 setConfirmDeleteFile(undefined)

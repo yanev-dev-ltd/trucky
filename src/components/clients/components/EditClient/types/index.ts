@@ -12,6 +12,6 @@ export type EditClientProps = {
     setEditedClient: (client: Client | undefined) => void
     editedClient: Client | undefined
     downloadFile: (f: UploadedFile) => void
-    deleteFile: (f: UploadedFile, dbpath: string, files: UploadedFile[]) => void
+    deleteFile: (f: UploadedFile, dbpath: string, dbkey: string, files: UploadedFile[]) => void
     deleteClient: () => void
 }

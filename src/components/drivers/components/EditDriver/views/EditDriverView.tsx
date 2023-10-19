@@ -347,11 +347,8 @@ const EditDriverView = ({
                                         ? `user/${auth?.currentUser?.uid}/drivers`
                                         : undefined
                                 }
-                                dbpath={
-                                    auth?.currentUser?.uid
-                                        ? `drivers/${auth.currentUser.uid}/${driver?.key}`
-                                        : undefined
-                                }
+                                dbpath="drivers"
+                                dbkey={driver?.key}
                                 currentFiles={driver?.files || []}
                             />
                         </Box>
@@ -406,7 +403,8 @@ const EditDriverView = ({
                                 confirmDeleteFile &&
                                     deleteFile(
                                         confirmDeleteFile,
-                                        `drivers/${auth?.currentUser?.uid}/${driver.key}`,
+                                        'drivers',
+                                        driver?.key,
                                         driver.files || []
                                     )
                                 setConfirmDeleteFile(undefined)
