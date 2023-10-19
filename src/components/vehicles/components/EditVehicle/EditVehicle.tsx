@@ -67,6 +67,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         addService,
         service,
         routes,
+        files,
     } = useEditVehicle(vehicle)
     const allDrivers = useSelector((state: RootState) => state.drivers)
     const { settings } = useSelector((state: RootState) => state.settings)
@@ -456,54 +457,6 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                         )}
                     </Paper>
                     <Paper sx={sx.paper}>
-                        {/* <Tooltip title={<FormattedMessage id="app.Edit" />}>
-                            <IconButton size="small" sx={sx.edit}>
-                                <Edit />
-                            </IconButton>
-                        </Tooltip>
-                        <Typography>
-                            <FormattedMessage id="app.LastRoute" />
-                        </Typography>
-                        <List sx={sx.select} dense>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <Adjust />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary="Sevlievo, BG"
-                                    secondary="11/11/2020"
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <ArrowDownward />
-                                </ListItemIcon>
-                                <ListItemText primary="Sofia, BG" />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <Adjust />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary="Sevlievo, BG"
-                                    secondary="12/11/2020"
-                                />
-                            </ListItem>
-                        </List>
-                        <List dense sx={sx.flexList}>
-                            <ListSubheader sx={sx.listLabel}>
-                                <FormattedMessage id="app.Distance" />:
-                            </ListSubheader>
-                            <ListItem sx={sx.listText}>
-                                <ListItemText primary="1200" />
-                            </ListItem>
-                            <ListSubheader sx={sx.listLabel}>
-                                <FormattedMessage id="app.Fuel" />:
-                            </ListSubheader>
-                            <ListItem sx={sx.listText}>
-                                <ListItemText primary="240" />
-                            </ListItem>
-                        </List> */}
                         <Box sx={sx.relative}>
                             <Typography>
                                 <FormattedMessage id="app.Routes" />
@@ -534,52 +487,64 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                             )}
                         </Box>
                         <List dense sx={sx.fixedHeight}>
-                            {routes.map((route) => (
-                                <ListItem key={route.key} disablePadding>
-                                    <ListItemButton
-                                        onClick={() =>
-                                            router.push(
-                                                `/vehicles/${vehicle?.key}/route/${route.key}`
-                                            )
-                                        }
-                                    >
-                                        <ListItemIcon>
-                                            <RouteIcon />
-                                        </ListItemIcon>
-                                        <ListItemText
-                                            primary={
-                                                <Overflow
-                                                    text={
-                                                        (route?.locations &&
-                                                            route.locations
-                                                                .map(
-                                                                    (
-                                                                        location
-                                                                    ) =>
-                                                                        location.code
-                                                                )
-                                                                .join(' → ')) ||
-                                                        ''
-                                                    }
-                                                />
+                            {routes?.[0]?.key === 'loading' ? (
+                                <Box sx={sx.loading}>
+                                    <CircularProgress />
+                                </Box>
+                            ) : (
+                                routes.map((route) => (
+                                    <ListItem key={route.key} disablePadding>
+                                        <ListItemButton
+                                            onClick={() =>
+                                                router.push(
+                                                    `/vehicles/${vehicle?.key}/route/${route.key}`
+                                                )
                                             }
-                                            secondary={`${
-                                                route.startDate &&
-                                                format(
-                                                    new Date(+route.startDate),
-                                                    'dd/MM/yyyy HH:mm'
-                                                )
-                                            } - ${
-                                                route.endDate &&
-                                                format(
-                                                    new Date(+route.endDate),
-                                                    'dd/MM/yyyy HH:mm'
-                                                )
-                                            }`}
-                                        />
-                                    </ListItemButton>
-                                </ListItem>
-                            ))}
+                                        >
+                                            <ListItemIcon>
+                                                <RouteIcon />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                primary={
+                                                    <Overflow
+                                                        text={
+                                                            (route?.locations &&
+                                                                route.locations
+                                                                    .map(
+                                                                        (
+                                                                            location
+                                                                        ) =>
+                                                                            location.code
+                                                                    )
+                                                                    .join(
+                                                                        ' → '
+                                                                    )) ||
+                                                            ''
+                                                        }
+                                                    />
+                                                }
+                                                secondary={`${
+                                                    route.startDate &&
+                                                    format(
+                                                        new Date(
+                                                            +route.startDate
+                                                        ),
+                                                        'dd/MM/yyyy HH:mm'
+                                                    )
+                                                } - ${
+                                                    route.endDate &&
+                                                    format(
+                                                        new Date(
+                                                            +route.endDate
+                                                        ),
+                                                        'dd/MM/yyyy HH:mm'
+                                                    )
+                                                }`}
+                                            />
+                                        </ListItemButton>
+                                    </ListItem>
+                                ))
+                            )}
                         </List>
                         {(!routes || routes.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>
@@ -597,21 +562,18 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                         ? `user/${auth?.currentUser?.uid}/vehicles`
                                         : undefined
                                 }
-                                dbpath={
-                                    auth?.currentUser?.uid
-                                        ? `vehicles/${auth.currentUser.uid}/${vehicle?.key}`
-                                        : undefined
-                                }
-                                currentFiles={vehicle?.files || []}
+                                dbpath="vehicles"
+                                dbkey={vehicle.key}
+                                currentFiles={files || []}
                             />
                         </Box>
                         <Typography>
                             <FormattedMessage id="app.Documents" />
                         </Typography>
                         <List dense sx={sx.fixedHeight}>
-                            {vehicle?.files &&
-                                vehicle?.files.length > 0 &&
-                                vehicle?.files.map((uf, i) => (
+                            {files &&
+                                files.length > 0 &&
+                                files.map((uf, i) => (
                                     <ListItem
                                         key={i}
                                         secondaryAction={
@@ -656,8 +618,9 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 confirmDeleteFile &&
                                     deleteFile(
                                         confirmDeleteFile,
-                                        `vehicles/${auth?.currentUser?.uid}/${vehicle.key}`,
-                                        vehicle?.files || []
+                                        'vehicles',
+                                        vehicle.key,
+                                        files || []
                                     )
                                 setConfirmDeleteFile(undefined)
                             }}
@@ -681,7 +644,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                             submit={<FormattedMessage id="app.Delete" />}
                             cancel={<FormattedMessage id="app.Cancel" />}
                         />
-                        {(!vehicle?.files || vehicle?.files.length === 0) && (
+                        {(!files || files.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>
                                 <Typography>
                                     <FormattedMessage id="app.NoDocuments" />

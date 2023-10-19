@@ -14,7 +14,7 @@ export type Vehicle = {
     fuel?: keyof FuelTypes
     units?: string
     route?: string
-    files?: UploadedFile[]
+    files?: string
     services?: Service[]
     notes?: string
 }
@@ -47,7 +47,8 @@ export type Service = {
     type?: string
     part?: string
     key?: string
-    vehicle?: string
+    vehicleId?: string
+    userId?: string
 }
 
 export type Services = Service[]

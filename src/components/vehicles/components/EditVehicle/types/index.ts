@@ -13,9 +13,10 @@ export type useEditVehicleResponse = {
     setEditedVehicle: (vehicle: Vehicle | undefined) => void
     reset: () => void
     downloadFile: (f: UploadedFile) => void
-    deleteFile: (f: UploadedFile, dbpath: string, files: UploadedFile[]) => void
+    deleteFile: (f: UploadedFile, dbpath: string, dbkey: string, files: UploadedFile[]) => void
     deleteVehicle: () => void
     addService: (s: Service) => void
     service: Services
     routes: Route[]
+    files: UploadedFile[]
 }

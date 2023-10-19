@@ -1,18 +1,18 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Vehicle } from '../../../types'
-import { db, auth } from '@/services/firebase'
-import { ref, update, remove, push, set, onValue, equalTo, orderByChild, query } from 'firebase/database'
+import { auth, firestore } from '@/services/firebase'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { Service } from '../../../types'
 import { useEditVehicleResponse } from '../types'
 import { useSelector, useDispatch } from 'react-redux'
-import { snapshotToArray } from '@/utils/globalUtils'
 import { RootState } from '@/store/store'
 import { setVehicleService } from '../redux'
 import { setRoutes } from '../../../../routes/redux'
 import useFiles from '@/hooks/useFiles'
+import { Route } from '../../../../routes/types'
+import { collection, deleteDoc, updateDoc, addDoc, doc, where, query, onSnapshot } from 'firebase/firestore'
 
 const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse => {
     const [editedVehicle, setEditedVehicle] = useState<Vehicle | undefined>(vehicle)
@@ -24,34 +24,38 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
     const { enqueueSnackbar } = useSnackbar()
     const { downloadFile, deleteFile } = useFiles()
     useEffect(() => setEditedVehicle(vehicle), [vehicle])
+    const files = JSON.parse(editedVehicle?.files || '[]')
 
     useEffect(() => {
         if (!auth.currentUser?.uid || !vehicle?.key) {
             return
         }
-        const unsubscribeService = onValue(query(ref(db, 'service/' + auth.currentUser?.uid), orderByChild('vehicle'), equalTo(vehicle.key)), (snapshot) => {
-            const snp = snapshot.val()
-            dispatch(setVehicleService(snp ? snapshotToArray(snp).sort((a,b) => b.date - a.date) : []))
-        })
-        const unsubscribeRoutes = onValue(query(ref(db, 'routes/' + auth.currentUser?.uid), orderByChild('vehicle'), equalTo(vehicle.key)), (snapshot) => {
-            const snp = snapshot.val()
-            dispatch(setRoutes(snp ? snapshotToArray(snp).sort(
-                (a, b) =>
-                    +(b.endDate || 0) - +(a.endDate || 0)
-            ) : []))
-        })
+        const qs = query(collection(firestore, 'services'), where('vehicleId', '==', vehicle?.key))
+        const unsubscribeService = onSnapshot(qs, (querySnapshot) => {
+            const service: Service[] = []
+            querySnapshot.forEach((doc) => {
+                service.push({key: doc.id, ...doc.data()})
+            })
+            dispatch(setVehicleService(service))
+        }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))
+        const qr = query(collection(firestore, 'routes'), where('vehicleId', '==', vehicle?.key))
+        const unsubscribeRoutes = onSnapshot(qr, (querySnapshot) => {
+            const routes: Route[] = []
+            querySnapshot.forEach((doc) => {
+                routes.push({key: doc.id, ...doc.data()})
+            })
+            dispatch(setRoutes(routes))
+        }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))
         return () => {
             unsubscribeService()
             unsubscribeRoutes()
         }
     }, [auth.currentUser?.uid, vehicle?.key])
 
-    const saveVehicleField = useCallback((field: keyof Vehicle) => {
+    const saveVehicleField = useCallback(async (field: keyof Vehicle) => {
         if (!vehicle?.key || !auth?.currentUser?.uid) return
         try {
-            update(ref(db, 'vehicles/' + auth?.currentUser?.uid + '/' + vehicle.key), {
-                [field]: editedVehicle?.[field],
-            })
+            await updateDoc(doc(firestore, 'vehicles', vehicle.key), { [field]: editedVehicle?.[field]})
             enqueueSnackbar(intl.formatMessage({
                 id: `app.Saved.${field}`,
             }), { variant: 'success' })
@@ -68,10 +72,10 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
     }, [setEditedVehicle, vehicle])
 
 
-    const deleteVehicle = useCallback(() => {
+    const deleteVehicle = useCallback(async () => {
         if (!vehicle?.key || !auth?.currentUser?.uid) return
         try {
-            remove(ref(db, 'vehicles/' + auth.currentUser.uid + '/' + vehicle?.key))
+            await deleteDoc(doc(firestore, 'vehicles', vehicle?.key))
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.DeletedVehicleSuccess',
             }), { variant: 'success' })
@@ -85,21 +89,10 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
     }, [vehicle?.key])
 
     const addService = useCallback(
-        (s: Service) => {
+        async (s: Service) => {
             if (!vehicle?.key || !auth?.currentUser?.uid) return
             try {
-                const postServiceRef = ref(db, 'service/' + auth.currentUser.uid)
-                const newServiceRef = push(postServiceRef)
-                set(
-                    ref(
-                        db,
-                        'service/' + auth.currentUser.uid + '/' + newServiceRef.key
-                    ),
-                    {
-                        ...s,
-                        vehicle: vehicle?.key
-                    }
-                )
+                await addDoc(collection(firestore, 'services'), { ...s, userId: auth.currentUser.uid, vehicleId: vehicle?.key})
                 enqueueSnackbar(
                     intl.formatMessage({
                         id: 'app.Saved.service',
@@ -118,7 +111,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         [vehicle?.key]
     )
 
-    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteFile, deleteVehicle, addService, service, routes }
+    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteFile, deleteVehicle, addService, service, routes, files }
 }
 
 export default useEditVehicle

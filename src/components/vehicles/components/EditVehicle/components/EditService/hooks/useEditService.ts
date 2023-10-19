@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
-import { ref, update, remove } from 'firebase/database'
-import { db, auth } from '../../../../../../../services/firebase'
+import { auth, firestore } from '../../../../../../../services/firebase'
 import { Service } from '../../../../../types'
+import { deleteDoc, updateDoc, doc } from 'firebase/firestore'
 
 const useEditService = (service: Service | undefined) => {
     const [editedService, setEditedService] = useState(service)
@@ -17,10 +17,10 @@ const useEditService = (service: Service | undefined) => {
         })
     }, [])
 
-    const saveService = useCallback(() => {
+    const saveService = useCallback(async () => {
         if (!auth?.currentUser?.uid || !editedService?.key) return
         try {
-            update(ref(db, 'service/' + auth?.currentUser?.uid + '/' + editedService?.key), {
+            await updateDoc(doc(firestore, 'services', editedService?.key), {
                 cost: editedService.cost || '',
                 date: editedService.date || '',
                 drivers: editedService.drivers || [],
@@ -29,7 +29,8 @@ const useEditService = (service: Service | undefined) => {
                 reminderMileage: editedService.reminderMileage || '',
                 type: editedService.type,
                 part: editedService.part || '',
-                vehicle: editedService.vehicle
+                vehicleId: editedService.vehicleId,
+                userId: auth?.currentUser?.uid
             })
             enqueueSnackbar(
                 intl.formatMessage({
@@ -44,10 +45,10 @@ const useEditService = (service: Service | undefined) => {
         }
     }, [editedService])
 
-    const deleteService = useCallback(() => {
+    const deleteService = useCallback(async () => {
         if (!editedService?.key || !auth?.currentUser?.uid) return
         try {
-            remove(ref(db, 'service/' + auth.currentUser.uid + '/' + editedService?.key))
+            await deleteDoc(doc(firestore, 'services', editedService?.key))
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.DeletedServiceSuccess',
             }), { variant: 'success' })

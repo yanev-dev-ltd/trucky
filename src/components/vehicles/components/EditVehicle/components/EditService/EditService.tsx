@@ -40,7 +40,6 @@ const EditService = ({
         saveService && saveService()
         handleEditServiceClose()
     }
-
     return (
         <Dialog
             open={Boolean(service)}
@@ -133,7 +132,9 @@ const EditService = ({
                                     <FormattedMessage id="app.ReminderDate" />
                                 }
                                 inputFormat="dd/MM/yyyy"
-                                value={editedService?.reminderDate || null}
+                                value={
+                                    Number(editedService?.reminderDate) || null
+                                }
                                 onChange={(d: Date | null) =>
                                     d && setField('reminderDate', d.getTime())
                                 }
@@ -144,7 +145,11 @@ const EditService = ({
                                         helperText={
                                             <FormattedMessage id="app.ReminderInfoDate" />
                                         }
+                                        InputLabelProps={{
+                                            shrink: !!editedService?.reminderDate,
+                                        }}
                                         inputProps={{
+                                            ...params.inputProps,
                                             placeholder:
                                                 intl.formatMessage({
                                                     id: 'app.dd/MM/yyyy',
@@ -159,9 +164,7 @@ const EditService = ({
                             <DesktopDatePicker
                                 label={<FormattedMessage id="app.Date" />}
                                 inputFormat="dd/MM/yyyy"
-                                value={
-                                    editedService?.date || new Date().getTime()
-                                }
+                                value={editedService?.date || null}
                                 onChange={(d: Date | null) =>
                                     d && setField('date', d?.getTime())
                                 }
@@ -169,7 +172,11 @@ const EditService = ({
                                     <TextField
                                         {...params}
                                         fullWidth
+                                        InputLabelProps={{
+                                            shrink: !!editedService?.date,
+                                        }}
                                         inputProps={{
+                                            ...params.inputProps,
                                             placeholder:
                                                 intl.formatMessage({
                                                     id: 'app.dd/MM/yyyy',

@@ -3,6 +3,7 @@ import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
 import { FirebaseOptions, getApp, initializeApp } from 'firebase/app'
 import { getDatabase } from 'firebase/database'
+import { getFirestore } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { getStorage } from 'firebase/storage'
 
@@ -30,3 +31,4 @@ const app = createFirebaseApp(firebaseConfig)
 export const db = getDatabase(app)
 export const auth = getAuth(app)
 export const storage = getStorage(app)
+export const firestore = getFirestore(app)

@@ -1,6 +1,7 @@
 export type UploadProps = {
     filepath: string | undefined
-    dbpath: string | undefined
+    dbpath: string
+    dbkey: string
     currentFiles: UploadedFile[]
 }
 

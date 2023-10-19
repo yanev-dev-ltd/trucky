@@ -1,12 +1,12 @@
 import { useState, useCallback, useEffect } from 'react'
-import { db, auth } from '@/services/firebase'
-import { ref, update, push } from 'firebase/database'
+import { auth, firestore } from '@/services/firebase'
 import { useRouter } from 'next/router'
 import { useAddVehicleProps, NewVehicle } from '../types'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
+import { collection, addDoc } from 'firebase/firestore'
 
 const useAddVehicle = (): useAddVehicleProps => {
     const intl = useIntl()
@@ -19,14 +19,10 @@ const useAddVehicle = (): useAddVehicleProps => {
     const router = useRouter()
     const handleAddVehicle = useCallback(() => {
         if (!auth.currentUser?.uid) return
-        const postVehicleRef = ref(db, 'vehicles/' + auth.currentUser.uid)
-        const newVehicleRef = push(postVehicleRef)
-        setNewVehicleId(newVehicleRef?.key)
         setOpen(true)
     },[auth.currentUser?.uid])
 
     const handleClose = useCallback(() => {
-        setNewVehicleId(null)
         setOpen(false)
         setNewVehicleLoading(false)
         setNewVehicle({ units: settings.units || 'km' })
@@ -38,13 +34,13 @@ const useAddVehicle = (): useAddVehicleProps => {
         })
     }, [])
 
-    const addVehicle = () => {
-        if (!auth.currentUser?.uid || !newVehicleId || !newVehicle?.name || !newVehicle?.type || !newVehicle?.fuel || !newVehicle?.units) return
+    const addVehicle = async () => {
+        if (!auth.currentUser?.uid || !newVehicle?.name || !newVehicle?.type || !newVehicle?.fuel || !newVehicle?.units) return
         setNewVehicleLoading(true)
         try {
-            update(ref(db, 'vehicles/' + auth.currentUser.uid + '/' + newVehicleId), newVehicle)
+            const refDoc = await addDoc(collection(firestore, 'vehicles'), { ...newVehicle, userId: auth.currentUser.uid })
             handleClose()
-            router.push('/vehicles/' + newVehicleId)
+            router.push('/vehicles/' + refDoc.id)
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.VehicleAdded',
             }), { variant: 'success' })

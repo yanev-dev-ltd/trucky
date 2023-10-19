@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { ref, onValue } from 'firebase/database'
 import { RootState } from '@/store/store'
-import { db, auth } from '@/services/firebase'
+import { firestore, auth } from '@/services/firebase'
 import { setVehicles } from '../redux'
 import { setDrivers } from '../../drivers/redux'
-import { snapshotToArray } from '@/utils/globalUtils'
-import { VehicleProps, useVehicleProps } from '../types'
+import { VehicleProps, useVehicleProps, Vehicle } from '../types'
 import useVehiclesColumns from './useVehicles.columns'
 import useVehiclesFuse from './useVehicles.fuse'
+import { collection, query, where, onSnapshot } from 'firebase/firestore'
+import { Driver } from '@/components/drivers/types'
 
 const useVehicles =  ({ vehicleId, edit, routeId }:useVehicleProps): VehicleProps => {
     const vehicles = useSelector((state: RootState) => state.vehicles)
@@ -22,13 +22,21 @@ const useVehicles =  ({ vehicleId, edit, routeId }:useVehicleProps): VehicleProp
         if (!auth.currentUser?.uid) {
             return
         }
-        const unsubscribe = onValue(ref(db, 'vehicles/' + auth.currentUser?.uid), (snapshot) => {
-            const snp = snapshot.val()
-            dispatch(setVehicles(snp ? snapshotToArray(snp) : []))
+        const q = query(collection(firestore, 'vehicles'), where('userId', '==', auth.currentUser?.uid))
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const vehicles: Vehicle[] = []
+            querySnapshot.forEach((doc) => {
+                vehicles.push({key: doc.id, ...doc.data()})
+            })
+            dispatch(setVehicles(vehicles))
         })
-        const unsubscribeDrivers = onValue(ref(db, 'drivers/' + auth.currentUser?.uid), (snapshot) => {
-            const snp = snapshot.val()
-            dispatch(setDrivers(snp ? snapshotToArray(snp) : []))
+        const qd = query(collection(firestore, 'drivers'), where('userId', '==', auth.currentUser?.uid))
+        const unsubscribeDrivers = onSnapshot(qd, (querySnapshot) => {
+            const drivers: Driver[] = []
+            querySnapshot.forEach((doc) => {
+                drivers.push({key: doc.id, ...doc.data()})
+            })
+            dispatch(setDrivers(drivers))
         })
         return () => {
             unsubscribe()

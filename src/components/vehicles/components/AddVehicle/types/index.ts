@@ -13,4 +13,5 @@ export type NewVehicle = {
     type?: string
     fuel?: string
     units?: string
+    userId?: string
 }

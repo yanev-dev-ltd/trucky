@@ -18,7 +18,7 @@ import { FormattedMessage } from 'react-intl'
 import useUpload from './hooks/useUpload'
 import { UploadProps } from './types'
 import sx from './styles/Upload.sx'
-const Upload = ({ filepath, dbpath, currentFiles }: UploadProps) => {
+const Upload = ({ filepath, dbpath, dbkey, currentFiles }: UploadProps) => {
     const {
         files,
         clearFiles,
@@ -29,6 +29,7 @@ const Upload = ({ filepath, dbpath, currentFiles }: UploadProps) => {
     } = useUpload({
         filepath,
         dbpath,
+        dbkey,
         currentFiles,
     })
 
