@@ -515,7 +515,9 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                         <Box component="span">
                                             <IconButton
                                                 size="small"
-                                                onClick={() => setOrderOpen(-1)}
+                                                onClick={() =>
+                                                    setOrderOpen(true)
+                                                }
                                                 disabled={
                                                     !route.locations ||
                                                     route.locations.length < 2
@@ -595,64 +597,62 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                         )}
                                     </List>
                                 )}
-                                {typeof orderOpen === 'number' &&
-                                    orderOpen >= 0 && (
-                                        <OrderDialog
-                                            open={orderOpen}
-                                            setOpen={setOrderOpen}
-                                            addOrder={(
-                                                order: Order | undefined
-                                            ) =>
-                                                order &&
-                                                changeField('orders', [
-                                                    ...(route?.orders || []),
-                                                    order,
-                                                ])
-                                            }
-                                            editOrder={(
-                                                order: Order | undefined
-                                            ) =>
-                                                order &&
-                                                typeof orderOpen === 'number' &&
-                                                changeField(
-                                                    'orders',
-                                                    route.orders.map(
-                                                        (o: Order, i: number) =>
-                                                            i === orderOpen
-                                                                ? order
-                                                                : o
-                                                    )
+                                {(typeof orderOpen === 'number' ||
+                                    orderOpen === true) && (
+                                    <OrderDialog
+                                        open={orderOpen}
+                                        setOpen={setOrderOpen}
+                                        addOrder={(order: Order | undefined) =>
+                                            order &&
+                                            changeField('orders', [
+                                                ...(route?.orders || []),
+                                                order,
+                                            ])
+                                        }
+                                        editOrder={(order: Order | undefined) =>
+                                            order &&
+                                            typeof orderOpen === 'number' &&
+                                            changeField(
+                                                'orders',
+                                                route.orders.map(
+                                                    (o: Order, i: number) =>
+                                                        i === orderOpen
+                                                            ? order
+                                                            : o
                                                 )
-                                            }
-                                            deleteOrder={() => {
-                                                changeField(
-                                                    'orders',
-                                                    route.orders?.map(
-                                                        (
-                                                            l: Location,
-                                                            ind: number
-                                                        ) =>
-                                                            ind === orderOpen
-                                                                ? {
-                                                                      key: l.key,
-                                                                      shouldDelete:
-                                                                          true,
-                                                                  }
-                                                                : l
-                                                    )
+                                            )
+                                        }
+                                        deleteOrder={() => {
+                                            changeField(
+                                                'orders',
+                                                route.orders?.map(
+                                                    (
+                                                        l: Location,
+                                                        ind: number
+                                                    ) =>
+                                                        typeof orderOpen ===
+                                                            'number' &&
+                                                        ind === orderOpen
+                                                            ? {
+                                                                  key: l.key,
+                                                                  shouldDelete:
+                                                                      true,
+                                                              }
+                                                            : l
                                                 )
-                                            }}
-                                            locations={route.locations}
-                                            date={route.startDate}
-                                            order={
-                                                typeof orderOpen === 'number' &&
-                                                orderOpen >= 0 &&
-                                                route.orders[orderOpen]
-                                            }
-                                            routeId={route.key}
-                                            vehicleId={vehicleId}
-                                        />
-                                    )}
+                                            )
+                                        }}
+                                        locations={route.locations}
+                                        date={route.startDate}
+                                        order={
+                                            typeof orderOpen === 'number' &&
+                                            orderOpen >= 0 &&
+                                            route.orders[orderOpen]
+                                        }
+                                        routeId={route.key}
+                                        vehicleId={vehicleId}
+                                    />
+                                )}
                                 <Confirm
                                     onCancel={() => setDeleteOrder(null)}
                                     onSubmit={() => {

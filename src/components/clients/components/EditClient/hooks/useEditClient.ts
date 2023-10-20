@@ -4,8 +4,8 @@ import { Client } from '@/components/clients/types'
 import { useRouter } from 'next/router'
 import { useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack'
-import { db, auth } from '@/services/firebase'
-import { ref, update } from 'firebase/database'
+import { firestore, auth } from '@/services/firebase'
+import { updateDoc, doc } from 'firebase/firestore'
 import useFiles from '@/hooks/useFiles'
 
 const useEditClient = ({ client, edit }: useEditClientProps) : EditClientProps => {
@@ -16,12 +16,10 @@ const useEditClient = ({ client, edit }: useEditClientProps) : EditClientProps =
     const { downloadFile, deleteFile } = useFiles()
     useEffect(() => setEditedClient(client), [client])
 
-    const saveClientField = useCallback((field: keyof Client) => {
+    const saveClientField = useCallback(async (field: keyof Client) => {
         if (!client?.key || !auth?.currentUser?.uid) return
         try {
-            update(ref(db, 'clients/' + auth?.currentUser?.uid + '/' + client.key), {
-                [field]: editedClient?.[field],
-            })
+            await updateDoc(doc(firestore, 'clients', client.key), { [field]: editedClient?.[field]})
             enqueueSnackbar(intl.formatMessage({
                 id: `app.Saved.${field}`,
             }), { variant: 'success' })

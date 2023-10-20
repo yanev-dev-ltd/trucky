@@ -21,8 +21,9 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
             return
         }
         const H = window.H
+        
         const platform = new H.service.Platform({
-            apikey: process.env.TRUCKY_HERE_API_KEY
+            apikey: process.env.TRUCKY_HERE_API_KEY || ''
         })
         const defaultLayers = platform.createDefaultLayers()
         const hMap = new H.Map(
@@ -78,7 +79,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
                     },
                     (result: any) => {
                         const sections = result?.routes[0]?.sections
-                        const lineStrings: any[] = []
+                        const lineStrings: unknown[] = []
                         const distance: number[] = []
                         const toll: number[] = []
                         const ferry: boolean[] = []
@@ -90,7 +91,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
                         }
                         setNoRoute && setNoRoute(false)
                         closeSnackbar(message.current)
-                        sections.forEach((section: any, index: number) => {
+                        sections.forEach((section: any) => {
                             // convert Flexible Polyline encoded string to geometry
                             lineStrings.push(
                                 H.geo.LineString.fromFlexiblePolyline(

@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from 'react'
 import { useAddDriverProps } from '../types'
-import { db, auth } from '@/services/firebase'
-import { ref, update, push } from 'firebase/database'
+import { firestore, auth } from '@/services/firebase'
+import { collection, addDoc } from 'firebase/firestore'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { useRouter } from 'next/router'
@@ -21,19 +21,18 @@ const useAddDriver = ({ onSave, setOpen, open, redirectToEdit }: useAddDriverPro
         if (typeof open === 'string') changeField('name', open)
     }, [open])
 
-    const save = useCallback(() => {
+    const save = useCallback(async () => {
         if (!auth.currentUser?.uid) return
         setNewDriverLoading(true)
         try {
-            const postDriverRef = ref(db, 'drivers/' + auth.currentUser.uid)
-            const newDriverRef = push(postDriverRef)
-            update(ref(db, 'drivers/' + auth.currentUser.uid + '/' + newDriverRef.key), newDriver)
-            onSave && newDriverRef.key && onSave(newDriverRef.key)
+            const docRef = await addDoc(collection(firestore, 'drivers'), { ...newDriver, userId: auth.currentUser?.uid })
+            onSave && docRef.id && onSave(docRef.id)
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.DriverAdded',
             }), { variant: 'success' })
-            redirectToEdit && router.push(`/drivers/${newDriverRef.key}`)
+            redirectToEdit && router.push(`/drivers/${docRef.id}`)
         } catch (error) {
+            console.log(error)
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.Error.AddingDriver',
             }), { variant: 'error', persist: true })

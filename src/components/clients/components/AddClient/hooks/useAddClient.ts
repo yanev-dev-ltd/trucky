@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from 'react'
 import { useAddClientProps } from '../types'
-import { db, auth } from '@/services/firebase'
-import { ref, update, push } from 'firebase/database'
+import { firestore, auth } from '@/services/firebase'
+import { collection, addDoc, doc } from 'firebase/firestore'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { useRouter } from 'next/router'
@@ -21,18 +21,16 @@ const useAddClient = ({ onSave, setOpen, open, redirectToEdit }: useAddClientPro
         if (typeof open === 'string') changeField('name', open)
     }, [open])
 
-    const save = useCallback(() => {
+    const save = useCallback(async () => {
         if (!auth.currentUser?.uid) return
         setNewClientLoading(true)
         try {
-            const postClientRef = ref(db, 'clients/' + auth.currentUser.uid)
-            const newClientRef = push(postClientRef)
-            update(ref(db, 'clients/' + auth.currentUser.uid + '/' + newClientRef.key), newClient)
-            onSave && newClientRef.key && onSave(newClientRef.key)
+            const docRef = await addDoc(collection(firestore, 'clients'), { ...newClient, userId: auth.currentUser?.uid })
+            onSave && docRef.id && onSave(docRef.id)
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.ClientAdded',
             }), { variant: 'success' })
-            redirectToEdit && router.push(`/clients/${newClientRef.key}`)
+            redirectToEdit && router.push(`/clients/${docRef.id}`)
         } catch (error) {
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.Error.AddingClient',

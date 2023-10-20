@@ -9,7 +9,7 @@ export type Driver = {
     phone?: string
     address?: string
     new?: ReactNode
-    files?: UploadedFile[]
+    files?: string
     notes?: string
 }
 

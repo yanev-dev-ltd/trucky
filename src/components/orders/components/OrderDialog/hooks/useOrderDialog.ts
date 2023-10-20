@@ -3,8 +3,8 @@ import type { useOrderDialogProps } from '../types'
 import type { Order } from '@/components/orders/types'
 import { format } from 'date-fns'
 import { useIntl } from 'react-intl'
-import { db, auth } from '@/services/firebase'
-import { ref, push } from 'firebase/database'
+import { firestore, auth } from '@/services/firebase'
+import { doc,  collection } from 'firebase/firestore'
 const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder, locations, date, routeId, vehicleId }: useOrderDialogProps) => {
     const intl = useIntl()
     const [newOrder, setNewOrder] = useState<Order>()
@@ -35,9 +35,8 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
                 return
             }
             if (!newOrder?.key) {
-                const postOrderRef = ref(db, 'orders/' + auth.currentUser.uid)
-                const newOrderRef = push(postOrderRef)
-                if (newOrderRef.key) setNewOrder({ ...newOrder, key: newOrderRef.key, vehicle: vehicleId, route: routeId })
+                const newOrderRef = doc(collection(firestore, 'routes')).id
+                if (newOrderRef) setNewOrder({ ...newOrder, key: newOrderRef, vehicleId, routeId, userId: auth.currentUser.uid})
             }
 
         }

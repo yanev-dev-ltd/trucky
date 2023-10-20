@@ -4,9 +4,9 @@ import { Driver } from '@/components/drivers/types'
 import { useRouter } from 'next/router'
 import { useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack'
-import { db, auth } from '@/services/firebase'
-import { ref, update } from 'firebase/database'
+import { firestore, auth } from '@/services/firebase'
 import useFiles from '@/hooks/useFiles'
+import { updateDoc, doc } from 'firebase/firestore'
 
 const useEditDriver = ({ driver, edit }: useEditDriverProps) : EditDriverProps => {
     const [editedDriver, setEditedDriver] = useState<Driver | undefined>(driver)
@@ -16,12 +16,10 @@ const useEditDriver = ({ driver, edit }: useEditDriverProps) : EditDriverProps =
     const { downloadFile, deleteFile } = useFiles()
     useEffect(() => setEditedDriver(driver), [driver])
 
-    const saveDriverField = useCallback((field: keyof Driver) => {
+    const saveDriverField = useCallback(async (field: keyof Driver) => {
         if (!driver?.key || !auth?.currentUser?.uid) return
         try {
-            update(ref(db, 'drivers/' + auth?.currentUser?.uid + '/' + driver.key), {
-                [field]: editedDriver?.[field],
-            })
+            await updateDoc(doc(firestore, 'drivers', driver.key), { [field]: editedDriver?.[field]})
             enqueueSnackbar(intl.formatMessage({
                 id: `app.Saved.${field}`,
             }), { variant: 'success' })

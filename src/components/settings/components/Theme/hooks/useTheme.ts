@@ -1,11 +1,11 @@
 import { useCallback, ChangeEvent } from 'react'
-import { db, auth } from '@/services/firebase'
-import { ref, update } from 'firebase/database'
+import { firestore, auth } from '@/services/firebase'
+import { updateDoc, doc } from 'firebase/firestore'
 
 const useTheme = () => {
-    const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
         if (!auth?.currentUser?.uid) return
-        update(ref(db, 'settings/' + auth.currentUser.uid), { theme: (event.target as HTMLInputElement).value })
+        await updateDoc(doc(firestore, 'settings', auth.currentUser.uid), { theme: (event.target as HTMLInputElement).value })
     }, [])
 
     return { handleChange }

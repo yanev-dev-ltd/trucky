@@ -7,8 +7,9 @@ export type Order = {
     weight?: number
     type?: string
     notes?: string
-    vehicle?: string
-    route?: string
+    vehicleId?: string
+    routeId?: string
+    userId?: string
     shouldDelete?: boolean
     clients?: string[]
 }

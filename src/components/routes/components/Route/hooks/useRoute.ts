@@ -1,12 +1,11 @@
 import { useState, useCallback, useEffect } from 'react'
 import useLocalStorage from '@/hooks/useLocalStorage'
-import { db, auth } from '@/services/firebase'
-import { ref, update, push, onValue, query, orderByChild, equalTo, get } from 'firebase/database'
+import { auth, firestore } from '@/services/firebase'
+import { writeBatch, doc, onSnapshot, collection, query, where, getDocs } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
-import { Update } from '../../../types'
-import { snapshotToArray } from '@/utils/globalUtils'
+import { Order } from '@/components/orders/types'
 
 
 const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
@@ -48,37 +47,37 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
             vehicleId ? router.push(`/vehicles/${vehicleId}`) : router.push('/routes')
             return
         }
-        if (!routeId && !route.key) {
-            const postRouteRef = ref(db, 'routes/' + auth.currentUser.uid)
-            const newRouteRef = push(postRouteRef)
-            setRoute({ ...route, key: newRouteRef.key, vehicle: vehicleId })
-        }
     }, [route, auth.currentUser?.uid, routeId])
 
     useEffect(() => {
         if (!routeId) return
-        const routeRef = ref(db, 'routes/' + auth.currentUser?.uid + '/' + routeId)
-        
-        const unsubscribe = onValue(routeRef, (snapshot) => {
-            const data = snapshot.val()
-            const ordersRef = query(ref(db, 'orders/' + auth.currentUser?.uid), orderByChild('route'), equalTo(snapshot.key))
-            get(ordersRef).then((snapshotOrder) => setRoute({ ...data, key: routeId, orders: snapshotOrder.val() ? snapshotToArray(snapshotOrder.val()) : []}))
+
+        const unsub = onSnapshot(doc(firestore, 'routes', routeId), async (doc) => {
+            const q = query(collection(firestore, 'orders'), where('routeId', "==", routeId))
+            const querySnapshot = await getDocs(q)
+            const orders: Order[] = []
+            querySnapshot.forEach((docOrder) => {
+                orders.push({ key: docOrder.id, ...docOrder.data()})
+            })
+            setRoute({ key: doc.id, ...doc.data(), orders })
         })
-        return () => unsubscribe()
+        return () => unsub()
     }, [routeId])
 
     const saveRoute = useCallback(async () => {
         if (!auth.currentUser?.uid) return
         const { key, orders, ...routeData} = route
-        const updates: Update = {}
-        updates['/routes/' + auth.currentUser.uid + '/' + key as keyof Update] = { ...routeData, distance, toll, ferry }
+        const batch = writeBatch(firestore)
+        const routeRef = key ? doc(firestore, 'routes', key) : doc(collection(firestore, 'routes'))
+        batch.set(routeRef, { ...routeData, distance, toll, ferry, userId: auth.currentUser.uid, vehicleId })
         if (orders)
             for (const order of orders) {
+                const orderRef = order.key ? doc(firestore, 'orders', order.key) : doc(collection(firestore, 'orders'))
                 const { key: orderKey, shouldDelete, ...orderData } = order
-                updates['/orders/' + auth.currentUser.uid + '/' + orderKey as keyof Update] = shouldDelete ? {} : { ...orderData, route: key }
+                batch.set(orderRef, { ...orderData, routeId: key })
             }
         try {
-            await update(ref(db), updates)
+            await batch.commit()
             enqueueSnackbar(intl.formatMessage({
                 id: routeId ? 'app.RouteEdited' : 'app.RouteAdded',
             }), { variant: 'success' })
@@ -94,16 +93,18 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
 
     const deleteRoute = useCallback(async () => {
         if (!auth.currentUser?.uid) return
+        const batch = writeBatch(firestore)
         const { key, orders } = route
-        const updates: Update = {}
-        updates['/routes/' + auth.currentUser.uid + '/' + key as keyof Update] = {}
+        const routeRef = doc(firestore, 'routes', routeId || key)
+        batch.delete(routeRef)
         if (orders)
             for (const order of orders) {
                 const { key: orderKey } = order
-                updates['/orders/' + auth.currentUser.uid + '/' + orderKey as keyof Update] = {}
+                const orderRef = doc(firestore, 'orders', orderKey)
+                batch.delete(orderRef)
             }
         try {
-            await update(ref(db), updates)
+            await batch.commit()
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.RouteDeleted',
             }), { variant: 'success' })

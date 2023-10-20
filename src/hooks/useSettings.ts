@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { ref, onValue } from 'firebase/database'
 import { RootState } from '@/store/store'
 import { setSettings } from '../redux/settings'
-import { db } from '@/services/firebase'
+import { firestore } from '@/services/firebase'
 import useLocalStorage from './useLocalStorage'
+import { doc, onSnapshot } from "firebase/firestore"
 
 const useSettings = () => {
     const settings = useSelector((state: RootState) => state.settings)
@@ -16,10 +16,10 @@ const useSettings = () => {
         if (user === 'loading' || user === 'anonymous') {
             return
         }
-        const unsubscribe = onValue(ref(db, 'settings/' + user), (snapshot) => {
-            const snp = snapshot.val()
-            setSettingsStorage(snp)
-            dispatch(setSettings(snp))
+        const unsubscribe = onSnapshot(doc(firestore, 'settings', user), (doc) => {
+            const data = doc.data()
+            data && setSettingsStorage(data)
+            dispatch(setSettings(data || settingsStorage))
         })
         return () => unsubscribe()
     }, [user])

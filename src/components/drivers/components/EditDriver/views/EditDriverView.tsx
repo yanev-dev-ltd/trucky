@@ -59,6 +59,7 @@ const EditDriverView = ({
                 return enUS
         }
     }, [settings?.locale])
+    const files: UploadedFile[] = JSON.parse(driver?.files || '[]')
 
     return (
         <Drawer
@@ -349,16 +350,16 @@ const EditDriverView = ({
                                 }
                                 dbpath="drivers"
                                 dbkey={driver?.key}
-                                currentFiles={driver?.files || []}
+                                currentFiles={files || []}
                             />
                         </Box>
                         <Typography>
                             <FormattedMessage id="app.Documents" />
                         </Typography>
                         <List dense sx={sx.fixedHeight}>
-                            {driver?.files &&
-                                driver?.files.length > 0 &&
-                                driver?.files.map((uf, i) => (
+                            {files &&
+                                files.length > 0 &&
+                                files.map((uf, i) => (
                                     <ListItem
                                         key={i}
                                         secondaryAction={
@@ -405,7 +406,7 @@ const EditDriverView = ({
                                         confirmDeleteFile,
                                         'drivers',
                                         driver?.key,
-                                        driver.files || []
+                                        files || []
                                     )
                                 setConfirmDeleteFile(undefined)
                             }}
@@ -429,7 +430,7 @@ const EditDriverView = ({
                             submit={<FormattedMessage id="app.Delete" />}
                             cancel={<FormattedMessage id="app.Cancel" />}
                         />
-                        {(!driver?.files || driver?.files.length === 0) && (
+                        {(!files || files.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>
                                 <Typography>
                                     <FormattedMessage id="app.NoDocuments" />

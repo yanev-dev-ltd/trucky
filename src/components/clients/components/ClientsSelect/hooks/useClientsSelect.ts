@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { ref, onValue } from 'firebase/database'
 import { useClientsSelectProps } from '../types'
+import { Client } from '@/components/clients/types'
 import { RootState } from '@/store/store'
-import { db, auth } from '@/services/firebase'
+import { firestore, auth } from '@/services/firebase'
 import { setClients as setClientsRedux } from '@/components/clients/redux'
-import { snapshotToArray } from '@/utils/globalUtils'
+import { collection, query, where, onSnapshot } from 'firebase/firestore'
 
 const useClientsSelect = ({ clients, setClients, sx }: useClientsSelectProps) => {
     const allClients = useSelector((state: RootState) => state.clients)
@@ -14,9 +14,13 @@ const useClientsSelect = ({ clients, setClients, sx }: useClientsSelectProps) =>
         if (!auth.currentUser?.uid) {
             return
         }
-        const unsubscribe = onValue(ref(db, 'clients/' + auth.currentUser?.uid), (snapshot) => {
-            const snp = snapshot.val()
-            dispatch(setClientsRedux(snp ? snapshotToArray(snp) : []))
+        const q = query(collection(firestore, 'clients'), where('userId', '==', auth.currentUser?.uid))
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const vehicles: Client[] = []
+            querySnapshot.forEach((doc) => {
+                vehicles.push({key: doc.id, ...doc.data()})
+            })
+            dispatch(setClientsRedux(vehicles))
         })
         return () => {
             unsubscribe()
