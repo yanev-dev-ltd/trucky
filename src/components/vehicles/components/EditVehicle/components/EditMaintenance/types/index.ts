@@ -1,4 +1,4 @@
-import { Maintenance } from '../../../../../types'
+import { Maintenance } from '@/components/maintenance/types'
 
 export type EditMaintenanceProps = {
     handleEditMaintenanceClose: () => void
