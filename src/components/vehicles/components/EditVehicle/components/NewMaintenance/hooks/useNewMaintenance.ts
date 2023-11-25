@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { Maintenance } from '../../../../../types'
+import { Maintenance } from '@/components/maintenance/types'
 import { Driver } from '@/components/drivers/types'
 
 const useNewMaintenance = (drivers: string[]) => {

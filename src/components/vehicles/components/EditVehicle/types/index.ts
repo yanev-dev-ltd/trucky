@@ -1,6 +1,7 @@
-import { Vehicle, Maintenance, Maintenances } from '../../../types'
+import { Vehicle } from '../../../types'
+import { Maintenance, Maintenances } from '@/components/maintenance/types'
 import { UploadedFile } from '@/components/common/Upload/types'
-import { Route } from '../../../../routes/types'
+import { Route } from '@/components/routes/types'
 export type EditVehicleProps = {
     vehicle: Vehicle | undefined
     edit: string | undefined

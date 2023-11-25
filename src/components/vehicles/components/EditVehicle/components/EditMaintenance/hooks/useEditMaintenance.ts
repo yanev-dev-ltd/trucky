@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { auth, firestore } from '@/services/firebase'
-import { Maintenance } from '../../../../../types'
+import { Maintenance } from '@/components/maintenance/types'
 import { deleteDoc, updateDoc, doc } from 'firebase/firestore'
 
 const useEditMaintenance = (maintenance: Maintenance | undefined) => {

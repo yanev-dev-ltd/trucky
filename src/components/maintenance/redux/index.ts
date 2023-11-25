@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Maintenance } from '../../../types'
+import { Maintenance } from '@/components/maintenance/types'
 
 const initialState: Maintenance[] = [{ key: 'loading' }]
 

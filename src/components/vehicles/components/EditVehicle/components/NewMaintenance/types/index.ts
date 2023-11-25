@@ -1,4 +1,4 @@
-import { Maintenance } from '../../../../../types'
+import { Maintenance } from '@/components/maintenance/types'
 import { Driver } from '@/components/drivers/types'
 export type NewMaintenanceProps = {
     addMaintenance: (m: Maintenance) => void

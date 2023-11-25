@@ -4,11 +4,11 @@ import { auth, firestore } from '@/services/firebase'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
-import { Maintenance } from '../../../types'
+import { Maintenance, Maintenances } from '@/components/maintenance/types'
 import { useEditVehicleResponse } from '../types'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store/store'
-import { setVehicleMaintenance } from '../redux'
+import { setVehicleMaintenance } from '@/components/maintenance/redux'
 import { setRoutes } from '../../../../routes/redux'
 import useFiles from '@/hooks/useFiles'
 import { Route } from '../../../../routes/types'
@@ -32,7 +32,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         }
         const qs = query(collection(firestore, 'maintenance'), where('vehicleId', '==', vehicle?.key))
         const unsubscribeMaintenance = onSnapshot(qs, (querySnapshot) => {
-            const maintenance: Maintenance[] = []
+            const maintenance: Maintenances = []
             querySnapshot.forEach((doc) => {
                 maintenance.push({key: doc.id, ...doc.data()})
             })

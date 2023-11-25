@@ -2,6 +2,7 @@ import { MutableRefObject } from 'react'
 import Fuse from 'fuse.js'
 import { Column } from 'react-table'
 import { Driver } from '@/components/drivers/types'
+import { Maintenances } from '@/components/maintenance/types'
 export type Vehicles = Vehicle[]
 
 export type Vehicle = {
@@ -14,7 +15,7 @@ export type Vehicle = {
     units?: string
     route?: string
     files?: string
-    maintenance?: Maintenance[]
+    maintenance?: Maintenances
     notes?: string
 }
 
@@ -34,23 +35,6 @@ export type VehicleProps = {
     routeId: string | undefined
     drivers: Driver[]
 }
-
-export type Maintenance = {
-    cost?: number | string | null
-    date?: number | null
-    drivers?: string[]
-    mileage?: number | null
-    place?: string
-    reminderDate?: number | null
-    reminderMileage?: number | null
-    type?: string
-    part?: string
-    key?: string
-    vehicleId?: string
-    userId?: string
-}
-
-export type Maintenances = Maintenance[]
 
 export enum VehicleTypes {
     BULLDOZER = 'Bulldozer',
