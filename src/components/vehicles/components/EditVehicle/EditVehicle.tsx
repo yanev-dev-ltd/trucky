@@ -42,14 +42,14 @@ import sx from './styles/EditVehicle.sx'
 import { EditVehicleProps } from './types'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import { VehicleTypes, FuelTypes, Service } from '../../types'
+import { VehicleTypes, FuelTypes, Maintenance } from '../../types'
 import { UploadedFile } from '@/components/common/Upload/types'
 import useEditVehicle from './hooks/useEditVehicle'
 import Upload from '@/components/common/Upload/Upload'
 import Confirm from '@/components/common/Confirm/Confirm'
 import Overflow from '@/components/common/Overflow/Overflow'
-import NewService from './components/NewService/NewService'
-import EditService from './components/EditService/EditService'
+import NewMaintenance from './components/NewMaintenance/NewMaintenance'
+import EditMaintenance from './components/EditMaintenance/EditMaintenance'
 import Route from '@/components/routes/components/Route/Route'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
@@ -64,14 +64,16 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         downloadFile,
         deleteFile,
         deleteVehicle,
-        addService,
-        service,
+        addMaintenance,
+        maintenance,
         routes,
         files,
     } = useEditVehicle(vehicle)
     const allDrivers = useSelector((state: RootState) => state.drivers)
     const { settings } = useSelector((state: RootState) => state.settings)
-    const [editService, setEditService] = useState<Service | undefined>()
+    const [editMaintenance, setEditMaintenance] = useState<
+        Maintenance | undefined
+    >()
     const [confirmDeleteFile, setConfirmDeleteFile] = useState<
         UploadedFile | undefined
     >()
@@ -87,12 +89,15 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         }
     }, [settings?.locale])
 
-    const handleEditServiceOpen = useCallback((s: Service | undefined) => {
-        setEditService(s)
-    }, [])
+    const handleEditMaintenanceOpen = useCallback(
+        (m: Maintenance | undefined) => {
+            setEditMaintenance(m)
+        },
+        []
+    )
 
-    const handleEditServiceClose = useCallback(() => {
-        setEditService(undefined)
+    const handleEditMaintenanceClose = useCallback(() => {
+        setEditMaintenance(undefined)
     }, [])
 
     return (
@@ -746,18 +751,18 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                     </Paper>
                     <Paper sx={sx.paper}>
                         <Typography>
-                            <FormattedMessage id="app.Service" />
+                            <FormattedMessage id="app.Maintenance" />
                         </Typography>
                         <Box sx={sx.edit}>
-                            <NewService
-                                addService={addService}
+                            <NewMaintenance
+                                addMaintenance={addMaintenance}
                                 drivers={vehicle?.drivers || []}
                                 units={vehicle.units}
                             />
                         </Box>
-                        {service &&
-                            service.length > 0 &&
-                            (service?.[0]?.key === 'loading' ? (
+                        {maintenance &&
+                            maintenance.length > 0 &&
+                            (maintenance?.[0]?.key === 'loading' ? (
                                 <Box sx={sx.loading}>
                                     <CircularProgress />
                                 </Box>
@@ -794,22 +799,22 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {service.map((s, i) => (
+                                            {maintenance.map((m, i) => (
                                                 <TableRow key={i}>
                                                     <TableCell
                                                         sx={sx.smallCell}
                                                     >
-                                                        {(s.reminderDate ||
-                                                            s.reminderMileage) && (
+                                                        {(m.reminderDate ||
+                                                            m.reminderMileage) && (
                                                             <Tooltip
                                                                 title={
-                                                                    s.reminderDate &&
-                                                                    s.reminderMileage ? (
-                                                                        <FormattedMessage id="app.Service.AlarmDateAndMileage" />
-                                                                    ) : s.reminderDate ? (
-                                                                        <FormattedMessage id="app.Service.AlarmDate" />
+                                                                    m.reminderDate &&
+                                                                    m.reminderMileage ? (
+                                                                        <FormattedMessage id="app.Maintenance.AlarmDateAndMileage" />
+                                                                    ) : m.reminderDate ? (
+                                                                        <FormattedMessage id="app.Maintenance.AlarmDate" />
                                                                     ) : (
-                                                                        <FormattedMessage id="app.Service.AlarmMileage" />
+                                                                        <FormattedMessage id="app.Maintenance.AlarmMileage" />
                                                                     )
                                                                 }
                                                             >
@@ -820,10 +825,10 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                                     <TableCell
                                                         sx={sx.smallCell}
                                                     >
-                                                        {s.date &&
+                                                        {m.date &&
                                                             format(
                                                                 new Date(
-                                                                    +s.date
+                                                                    +m.date
                                                                 ),
                                                                 'dd/MM/yyyy'
                                                             )}
@@ -835,7 +840,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                                         }}
                                                     >
                                                         <Overflow
-                                                            text={s.type || ''}
+                                                            text={m.type || ''}
                                                         />
                                                     </TableCell>
                                                     <TableCell
@@ -845,7 +850,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                                         }}
                                                     >
                                                         <Overflow
-                                                            text={s.cost || ''}
+                                                            text={m.cost || ''}
                                                         />
                                                     </TableCell>
                                                     <TableCell
@@ -855,8 +860,8 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                                         <IconButton
                                                             size="small"
                                                             onClick={() =>
-                                                                handleEditServiceOpen(
-                                                                    s
+                                                                handleEditMaintenanceOpen(
+                                                                    m
                                                                 )
                                                             }
                                                         >
@@ -869,15 +874,17 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                     </MuiTable>
                                 </Box>
                             ))}
-                        <EditService
-                            handleEditServiceClose={handleEditServiceClose}
-                            service={editService}
+                        <EditMaintenance
+                            handleEditMaintenanceClose={
+                                handleEditMaintenanceClose
+                            }
+                            maintenance={editMaintenance}
                             units={vehicle.units}
                         />
-                        {(!service || service.length === 0) && (
+                        {(!maintenance || maintenance.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>
                                 <Typography>
-                                    <FormattedMessage id="app.NoService" />
+                                    <FormattedMessage id="app.NoMaintenance" />
                                 </Typography>
                             </Box>
                         )}

@@ -15,7 +15,7 @@ const sx: Record<string, SxProps<Theme>> = {
         flexDirection: 'row',
         alignItems: 'flex-end',
         justifyContent: 'flex-end',
-        gap: 1
+        gap: 1,
     },
     loading: {
         display: 'flex',

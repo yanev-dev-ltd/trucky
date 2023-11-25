@@ -1,4 +1,4 @@
-import { Vehicle, Service, Services } from '../../../types'
+import { Vehicle, Maintenance, Maintenances } from '../../../types'
 import { UploadedFile } from '@/components/common/Upload/types'
 import { Route } from '../../../../routes/types'
 export type EditVehicleProps = {
@@ -15,8 +15,8 @@ export type useEditVehicleResponse = {
     downloadFile: (f: UploadedFile) => void
     deleteFile: (f: UploadedFile, dbpath: string, dbkey: string, files: UploadedFile[]) => void
     deleteVehicle: () => void
-    addService: (s: Service) => void
-    service: Services
+    addMaintenance: (m: Maintenance) => void
+    maintenance: Maintenances
     routes: Route[]
     files: UploadedFile[]
 }

@@ -11,14 +11,22 @@ import {
     CircularProgress,
     Typography,
 } from '@mui/material'
-import { FileDownload, Check, Euro, Close } from '@mui/icons-material'
+import {
+    FileDownload,
+    Check,
+    Euro,
+    Close,
+    Payment,
+    Support,
+} from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import sx from './styles/Invoices.sx'
 import { format } from 'date-fns'
 import useInvoices from './hooks/useInvoices'
+import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 
 const Invoices = () => {
-    const { receipts, makePayment } = useInvoices()
+    const { receipts, makePayment, loading } = useInvoices()
     if (receipts?.[0]?.key === 'loading') {
         return (
             <Box sx={sx.loading}>
@@ -59,48 +67,85 @@ const Invoices = () => {
                         <TableRow key={i}>
                             <TableCell>
                                 {receipt.date
-                                    ? format(receipt?.date, 'dd/MM/yy HH:ss')
+                                    ? format(receipt?.date, 'dd/MM/yyyy')
                                     : '-'}
                             </TableCell>
                             <TableCell>
                                 €
-                                {receipt.amount_paid &&
-                                    (receipt.amount_paid / 100).toFixed(2)}
+                                {receipt.amount_paid
+                                    ? (receipt.amount_paid / 100).toFixed(2)
+                                    : receipt?.amount_due &&
+                                      (receipt?.amount_due / 100).toFixed(2)}
                             </TableCell>
                             <TableCell>
-                                {receipt.status === 'Declined' && (
+                                {receipt.status === 'declined' && (
                                     <>
                                         <Close fontSize="small" sx={sx.icon} />{' '}
                                         <FormattedMessage id="app.Declined" />
                                     </>
                                 )}
-                                {receipt.status === 'Payed' && (
+                                {receipt.status === 'paid' && (
                                     <>
                                         <Check fontSize="small" sx={sx.icon} />{' '}
-                                        <FormattedMessage id="app.Payed" />
+                                        <FormattedMessage id="app.Paid" />
+                                    </>
+                                )}
+                                {(receipt.status === 'void' ||
+                                    receipt.status === 'uncollectible') && (
+                                    <>
+                                        <Close fontSize="small" sx={sx.icon} />{' '}
+                                        <FormattedMessage id="app.Canceled" />
+                                    </>
+                                )}
+                                {(receipt.status === 'manual' ||
+                                    receipt.status === 'open' ||
+                                    receipt.status === 'draft') && (
+                                    <>
+                                        <Payment
+                                            fontSize="small"
+                                            sx={sx.icon}
+                                        />{' '}
+                                        <FormattedMessage id="app.ManualPayment" />
                                     </>
                                 )}
                             </TableCell>
                             <TableCell align="right" sx={sx.actions}>
-                                {receipt.status === 'Declined' && (
+                                {(receipt.status === 'void' ||
+                                    receipt.status === 'uncollectible') && (
                                     <Button
+                                        component="a"
+                                        href="https://support.trucky.one"
+                                        target="_blank"
+                                        variant="outlined"
+                                        startIcon={<Support />}
+                                    >
+                                        <FormattedMessage id="app.ContactSupport" />
+                                    </Button>
+                                )}
+                                {(receipt.status === 'manual' ||
+                                    receipt.status === 'open' ||
+                                    receipt.status === 'draft') && (
+                                    <LoadingButton
                                         color="primary"
                                         variant="contained"
                                         startIcon={<Euro />}
                                         onClick={() =>
                                             makePayment(receipt.invoice)
                                         }
+                                        isLoading={loading}
                                     >
                                         <FormattedMessage id="app.PayNow" />
-                                    </Button>
+                                    </LoadingButton>
                                 )}
-                                {receipt.status === 'Payed' && (
+                                {receipt.status === 'paid' && (
                                     <Button
+                                        component="a"
                                         color="primary"
                                         variant="outlined"
                                         startIcon={<FileDownload />}
                                         href={receipt.receipt}
-                                        // target="_blank"
+                                        download
+                                        disabled={!receipt.receipt}
                                     >
                                         <FormattedMessage id="app.Download" />
                                     </Button>

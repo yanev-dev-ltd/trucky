@@ -8,6 +8,8 @@ const useNotifications = (): useNavigationProps => {
     }
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
+        const audio = new Audio('/sounds/notification.wav')
+        audio.play()
     }
     return { anchorEl, handleClick, handleClose }
 }

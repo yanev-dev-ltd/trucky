@@ -96,9 +96,9 @@ const Navigation = () => {
                 </MenuItem>
                 <MenuItem
                     component={Link}
-                    href="/service"
+                    href="/maintenance"
                     sx={
-                        router.asPath.startsWith('/service')
+                        router.asPath.startsWith('/maintenance')
                             ? sx.itemCurrent
                             : sx.item
                     }
@@ -108,7 +108,7 @@ const Navigation = () => {
                         <Build fontSize="large" sx={sx.icon} />
                     </ListItemIcon>
                     <Typography variant="inherit">
-                        <FormattedMessage id="app.Service" />
+                        <FormattedMessage id="app.Maintenance" />
                     </Typography>
                 </MenuItem>
                 {/* <MenuItem

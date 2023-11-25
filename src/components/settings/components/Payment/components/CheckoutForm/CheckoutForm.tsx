@@ -1,5 +1,12 @@
 import { useMemo } from 'react'
-import { Box, TextField, Typography, Button } from '@mui/material'
+import {
+    Box,
+    TextField,
+    Typography,
+    Button,
+    FormControlLabel,
+    Checkbox,
+} from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { Add } from '@mui/icons-material'
 import { FormattedMessage, useIntl } from 'react-intl'
@@ -68,19 +75,30 @@ const CheckoutForm = ({ handleFormClose }: CheckoutFormProps) => {
                 </Typography>
             )}
             <Box display="flex" justifyContent="space-between">
-                <Button onClick={handleFormClose}>
-                    <FormattedMessage id="app.Cancel" />
-                </Button>
-                <LoadingButton
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    isLoading={loading}
-                    disabled={!stripe}
-                    startIcon={<Add />}
-                >
-                    <FormattedMessage id="app.AddCard" />
-                </LoadingButton>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            defaultChecked
+                            onChange={handleChange('auto_payment')}
+                        />
+                    }
+                    label={intl.formatMessage({ id: 'app.AutomaticPayment' })}
+                />
+                <Box gap={1} display="flex">
+                    <Button onClick={handleFormClose}>
+                        <FormattedMessage id="app.Cancel" />
+                    </Button>
+                    <LoadingButton
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        isLoading={loading}
+                        disabled={!stripe}
+                        startIcon={<Add />}
+                    >
+                        <FormattedMessage id="app.AddCard" />
+                    </LoadingButton>
+                </Box>
             </Box>
         </Box>
     )

@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react'
-import { Service } from '../../../../../types'
+import { Maintenance } from '../../../../../types'
 import { Driver } from '@/components/drivers/types'
 
-const useNewService = (drivers: string[]) => {
-    const [service, setService] = useState<Service>({
+const useNewMaintenance = (drivers: string[]) => {
+    const [maintenance, setMaintenance] = useState<Maintenance>({
         cost: null,
         date: new Date().getTime(),
         drivers: drivers,
@@ -16,7 +16,7 @@ const useNewService = (drivers: string[]) => {
     })
 
     const reset = () => {
-        setService({
+        setMaintenance({
             cost: null,
             date: new Date().getTime(),
             drivers: drivers,
@@ -30,12 +30,12 @@ const useNewService = (drivers: string[]) => {
     }
 
     const setField = useCallback((field: string, value: string | number | null | string[]) => {
-        setService((oldService) => {
-            return {...oldService, [field]: value}
+        setMaintenance((oldMaintenance) => {
+            return {...oldMaintenance, [field]: value}
         })
     }, [])
 
-    return { setField, service, reset }
+    return { setField, maintenance, reset }
 }
 
-export default useNewService
+export default useNewMaintenance

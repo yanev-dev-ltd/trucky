@@ -4,11 +4,11 @@ import { auth, firestore } from '@/services/firebase'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
-import { Service } from '../../../types'
+import { Maintenance } from '../../../types'
 import { useEditVehicleResponse } from '../types'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store/store'
-import { setVehicleService } from '../redux'
+import { setVehicleMaintenance } from '../redux'
 import { setRoutes } from '../../../../routes/redux'
 import useFiles from '@/hooks/useFiles'
 import { Route } from '../../../../routes/types'
@@ -16,7 +16,7 @@ import { collection, deleteDoc, updateDoc, addDoc, doc, where, query, onSnapshot
 
 const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse => {
     const [editedVehicle, setEditedVehicle] = useState<Vehicle | undefined>(vehicle)
-    const service = useSelector((state: RootState) => state.vehicleService)
+    const maintenance = useSelector((state: RootState) => state.vehicleMaintenance)
     const routes = useSelector((state: RootState) => state.routes)
     const router = useRouter()
     const intl = useIntl()
@@ -30,13 +30,13 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         if (!auth.currentUser?.uid || !vehicle?.key) {
             return
         }
-        const qs = query(collection(firestore, 'services'), where('vehicleId', '==', vehicle?.key))
-        const unsubscribeService = onSnapshot(qs, (querySnapshot) => {
-            const service: Service[] = []
+        const qs = query(collection(firestore, 'maintenance'), where('vehicleId', '==', vehicle?.key))
+        const unsubscribeMaintenance = onSnapshot(qs, (querySnapshot) => {
+            const maintenance: Maintenance[] = []
             querySnapshot.forEach((doc) => {
-                service.push({key: doc.id, ...doc.data()})
+                maintenance.push({key: doc.id, ...doc.data()})
             })
-            dispatch(setVehicleService(service))
+            dispatch(setVehicleMaintenance(maintenance))
         }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))
         const qr = query(collection(firestore, 'routes'), where('vehicleId', '==', vehicle?.key))
         const unsubscribeRoutes = onSnapshot(qr, (querySnapshot) => {
@@ -47,7 +47,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
             dispatch(setRoutes(routes))
         }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))
         return () => {
-            unsubscribeService()
+            unsubscribeMaintenance()
             unsubscribeRoutes()
         }
     }, [auth.currentUser?.uid, vehicle?.key])
@@ -88,14 +88,14 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         // TODO: delete the vehicle and write a function for clearing the db and storage
     }, [vehicle?.key])
 
-    const addService = useCallback(
-        async (s: Service) => {
+    const addMaintenance = useCallback(
+        async (m: Maintenance) => {
             if (!vehicle?.key || !auth?.currentUser?.uid) return
             try {
-                await addDoc(collection(firestore, 'services'), { ...s, userId: auth.currentUser.uid, vehicleId: vehicle?.key})
+                await addDoc(collection(firestore, 'maintenance'), { ...m, userId: auth.currentUser.uid, vehicleId: vehicle?.key})
                 enqueueSnackbar(
                     intl.formatMessage({
-                        id: 'app.Saved.service',
+                        id: 'app.Saved.maintenance',
                     }),
                     { variant: 'success' }
                 )
@@ -111,7 +111,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         [vehicle?.key]
     )
 
-    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteFile, deleteVehicle, addService, service, routes, files }
+    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteFile, deleteVehicle, addMaintenance, maintenance, routes, files }
 }
 
 export default useEditVehicle

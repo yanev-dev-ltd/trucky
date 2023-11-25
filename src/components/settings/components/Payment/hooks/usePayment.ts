@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { ref, onValue, update } from 'firebase/database'
 import { RootState } from '@/store/store'
-import { db, auth } from '@/services/firebase'
+import { firestore, auth } from '@/services/firebase'
 import { setStripe } from '../redux'
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore'
 
 const usePayment = () => {
     const dispatch = useDispatch()
@@ -13,19 +13,18 @@ const usePayment = () => {
         if (!auth.currentUser?.uid) {
             return
         }
-        const unsubscribe = onValue(ref(db, 'stripe_customers/' + auth.currentUser?.uid + '/card'), (snapshot) => {
-            const snp = snapshot.val()
+        const unsubscribe = onSnapshot(doc(firestore, 'customers', auth.currentUser?.uid), (doc) => {
+            const data = doc?.data()
             dispatch(setStripe({
-                card: snp ? {
-                    brand: snp.brand,
-                    country: snp.country,
-                    email: snp.email,
-                    exp_month: snp.exp_month,
-                    exp_year: snp.exp_year,
-                    last4: snp.last4,
-                    name: snp.name,
-                    phone: snp.phone,
-                } : undefined,
+                card_brand: data?.card_brand,
+                card_country: data?.card_country,
+                card_email: data?.card_email,
+                card_exp_month: data?.card_exp_month,
+                card_exp_year: data?.card_exp_year,
+                card_last4: data?.card_last4,
+                card_name: data?.card_name,
+                card_phone: data?.card_phone,
+                auto_payment: data?.auto_payment
             }))
         })
         return () => {
@@ -41,13 +40,21 @@ const usePayment = () => {
         setFormOpened(false)
     }
 
-    const deleteCard = () => {
+    const deleteCard = useCallback(async () => {
         if (!auth.currentUser?.uid) return
-        update(ref(db, 'stripe_customers/' + auth.currentUser.uid), {
+        await updateDoc(doc(firestore, 'customers', auth.currentUser.uid), {
             payment_method_id: null,
-            card: null
+            card_brand: null,
+            card_country: null, 
+            card_email: null,
+            card_exp_month: null, 
+            card_exp_year: null, 
+            card_last4: null,
+            card_name: null,
+            card_phone: null,
+            auto_payment: null
         })
-    }
+    },[])
 
     return { stripe, handleFormOpen, handleFormClose, formOpened, deleteCard }
 }

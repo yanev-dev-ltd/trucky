@@ -15,62 +15,66 @@ import { AddCircle } from '@mui/icons-material'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 
-import sx from './styles/NewService.sx'
-import { NewServiceProps } from './types'
-import useNewService from './hooks/useNewService'
+import sx from './styles/NewMaintenance.sx'
+import { NewMaintenanceProps } from './types'
+import useNewMaintenance from './hooks/useNewMaintenance'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 
-const NewService = ({ addService, drivers, units }: NewServiceProps) => {
+const NewMaintenance = ({
+    addMaintenance,
+    drivers,
+    units,
+}: NewMaintenanceProps) => {
     const intl = useIntl()
-    const [newServiceOpen, setNewServiceOpen] = useState(false)
-    const { setField, service, reset } = useNewService(drivers)
+    const [newMaintenanceOpen, setNewMaintenanceOpen] = useState(false)
+    const { setField, maintenance, reset } = useNewMaintenance(drivers)
 
-    const handleNewServiceOpen = useCallback(() => {
-        setNewServiceOpen(true)
+    const handleNewMaintenanceOpen = useCallback(() => {
+        setNewMaintenanceOpen(true)
     }, [])
 
-    const handleNewServiceClose = useCallback(() => {
-        setNewServiceOpen(false)
+    const handleNewMaintenanceClose = useCallback(() => {
+        setNewMaintenanceOpen(false)
     }, [])
 
     const handleSubmit = (event: SyntheticEvent) => {
         event.preventDefault()
-        addService && addService(service)
+        addMaintenance && addMaintenance(maintenance)
         handleClose()
     }
 
     const handleClose = () => {
         reset()
-        handleNewServiceClose && handleNewServiceClose()
+        handleNewMaintenanceClose && handleNewMaintenanceClose()
     }
 
     return (
         <>
             <Tooltip
-                title={<FormattedMessage id="app.AddService" />}
+                title={<FormattedMessage id="app.AddMaintenance" />}
                 sx={sx.button}
             >
-                <IconButton size="small" onClick={handleNewServiceOpen}>
+                <IconButton size="small" onClick={handleNewMaintenanceOpen}>
                     <AddCircle />
                 </IconButton>
             </Tooltip>
             <Dialog
-                open={newServiceOpen}
+                open={newMaintenanceOpen}
                 onClose={handleClose}
-                aria-labelledby="new-service-dialog-title"
+                aria-labelledby="new-maintenance-dialog-title"
                 maxWidth="sm"
             >
                 <Box sx={sx.form}>
                     <Box component="form" onSubmit={handleSubmit}>
-                        <DialogTitle id="new-service-dialog-title">
-                            <FormattedMessage id="app.AddService" />
+                        <DialogTitle id="new-maintenance-dialog-title">
+                            <FormattedMessage id="app.AddMaintenance" />
                         </DialogTitle>
                         <DialogContent>
                             <Box sx={sx.row}>
                                 <TextField
                                     variant="outlined"
                                     label={<FormattedMessage id="app.Type" />}
-                                    value={service.type || ''}
+                                    value={maintenance.type || ''}
                                     onChange={(event) =>
                                         setField('type', event.target.value)
                                     }
@@ -86,7 +90,7 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
                                     label={
                                         <FormattedMessage id="app.RepairedPart" />
                                     }
-                                    value={service.part || ''}
+                                    value={maintenance.part || ''}
                                     onChange={(event) =>
                                         setField('part', event.target.value)
                                     }
@@ -129,7 +133,7 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
                                             />
                                         ),
                                     }}
-                                    value={service.reminderMileage || ''}
+                                    value={maintenance.reminderMileage || ''}
                                     onChange={(event) =>
                                         setField(
                                             'reminderMileage',
@@ -145,7 +149,7 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
                                         <FormattedMessage id="app.ReminderDate" />
                                     }
                                     inputFormat="dd/MM/yyyy"
-                                    value={service.reminderDate || null}
+                                    value={maintenance.reminderDate || null}
                                     onChange={(d: Date | null) =>
                                         d &&
                                         setField('reminderDate', d.getTime())
@@ -173,7 +177,9 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
                                 <DesktopDatePicker
                                     label={<FormattedMessage id="app.Date" />}
                                     inputFormat="dd/MM/yyyy"
-                                    value={service.date || new Date().getTime()}
+                                    value={
+                                        maintenance.date || new Date().getTime()
+                                    }
                                     onChange={(d: Date | null) =>
                                         d && setField('date', d?.getTime())
                                     }
@@ -196,7 +202,7 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
                                 <TextField
                                     variant="outlined"
                                     label={<FormattedMessage id="app.Cost" />}
-                                    value={service.cost || ''}
+                                    value={maintenance.cost || ''}
                                     onChange={(event) =>
                                         setField('cost', event.target.value)
                                     }
@@ -207,9 +213,9 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
                                 <TextField
                                     variant="outlined"
                                     label={
-                                        <FormattedMessage id="app.PlaceService" />
+                                        <FormattedMessage id="app.PlaceMaintenance" />
                                     }
-                                    value={service.place || ''}
+                                    value={maintenance.place || ''}
                                     onChange={(event) =>
                                         setField('place', event.target.value)
                                     }
@@ -218,7 +224,7 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
                             </Box>
                             <Box sx={sx.row}>
                                 <DriversSelect
-                                    drivers={service.drivers || []}
+                                    drivers={maintenance.drivers || []}
                                     setDrivers={(drivers) =>
                                         setField('drivers', drivers)
                                     }
@@ -233,9 +239,9 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
                                 type="submit"
                                 color="primary"
                                 variant="contained"
-                                disabled={!service.type}
+                                disabled={!maintenance.type}
                             >
-                                <FormattedMessage id="app.AddService" />
+                                <FormattedMessage id="app.Save" />
                             </Button>
                         </DialogActions>
                     </Box>
@@ -245,4 +251,4 @@ const NewService = ({ addService, drivers, units }: NewServiceProps) => {
     )
 }
 
-export default NewService
+export default NewMaintenance

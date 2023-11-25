@@ -4,7 +4,7 @@ import { RootState } from '@/store/store'
 import { setSettings } from '../redux/settings'
 import { firestore } from '@/services/firebase'
 import useLocalStorage from './useLocalStorage'
-import { doc, onSnapshot } from "firebase/firestore"
+import { doc, onSnapshot } from 'firebase/firestore'
 
 const useSettings = () => {
     const settings = useSelector((state: RootState) => state.settings)

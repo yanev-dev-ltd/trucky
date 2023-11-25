@@ -24,7 +24,7 @@ const Payment = () => {
     const [confirmDeleteCard, setConfirmDeleteCard] = useState(false)
     return (
         <Box>
-            {stripe.card && (
+            {stripe.card_last4 && (
                 <TableContainer component={Paper}>
                     <Table sx={sx.table} aria-label="credit card table">
                         <TableHead>
@@ -41,6 +41,9 @@ const Payment = () => {
                                 <TableCell>
                                     <FormattedMessage id="app.CardNumber" />
                                 </TableCell>
+                                <TableCell>
+                                    <FormattedMessage id="app.AutomaticPayment" />
+                                </TableCell>
                                 <TableCell align="right">
                                     <FormattedMessage id="app.Actions" />
                                 </TableCell>
@@ -48,24 +51,38 @@ const Payment = () => {
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                <TableCell>{stripe.card.name}</TableCell>
-                                <TableCell>{stripe.card.phone}</TableCell>
-                                <TableCell>{stripe.card.email}</TableCell>
+                                <TableCell>{stripe.card_name}</TableCell>
+                                <TableCell>{stripe.card_phone}</TableCell>
+                                <TableCell>{stripe.card_email}</TableCell>
                                 <TableCell>
                                     ••••&nbsp;••••&nbsp;••••&nbsp;
-                                    {stripe.card.last4}
+                                    {stripe.card_last4}
                                     <Box>
                                         <Typography variant="caption">
                                             <FormattedMessage id="app.Expires" />{' '}
                                             <FormattedMessage
                                                 id={
                                                     'app.MonthShort.' +
-                                                    stripe.card.exp_month
+                                                    stripe.card_exp_month
                                                 }
                                             />{' '}
-                                            {stripe.card.exp_year}
+                                            {stripe.card_exp_year}
                                         </Typography>
                                     </Box>
+                                </TableCell>
+                                <TableCell>
+                                    {stripe.auto_payment ? (
+                                        <>
+                                            <FormattedMessage id="app.On" />
+                                            <Box>
+                                                <Typography variant="caption">
+                                                    <FormattedMessage id="app.EveryFirstOfTheMonth" />{' '}
+                                                </Typography>
+                                            </Box>
+                                        </>
+                                    ) : (
+                                        <FormattedMessage id="app.Off" />
+                                    )}
                                 </TableCell>
                                 <TableCell align="right">
                                     <Button
@@ -83,12 +100,12 @@ const Payment = () => {
                     </Table>
                 </TableContainer>
             )}
-            {stripe.card ? null : (
+            {stripe.card_last4 ? null : (
                 <Typography sx={sx.padding}>
                     <FormattedMessage id="app.NoCreditCard" />
                 </Typography>
             )}
-            {stripe.card ? null : (
+            {stripe.card_last4 ? null : (
                 <Button
                     onClick={handleFormOpen}
                     color="primary"

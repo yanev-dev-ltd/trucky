@@ -1,18 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Services } from '../../../types'
+import { Maintenance } from '../../../types'
 
-const initialState: Services = [{ key: 'loading' }]
+const initialState: Maintenance[] = [{ key: 'loading' }]
 
 
-export const vehicleServiceSlice = createSlice({
-    name: 'vehicleService',
+export const vehicleMaintenanceSlice = createSlice({
+    name: 'vehicleMaintenance',
     initialState,
     reducers: {
-      setVehicleService: (state, action: PayloadAction<Services>) => {
+      setVehicleMaintenance: (state, action: PayloadAction<Maintenance[]>) => {
         return action.payload
       },
     },
   })
 
-  export const { setVehicleService } = vehicleServiceSlice.actions
-  export default vehicleServiceSlice.reducer
+  export const { setVehicleMaintenance } = vehicleMaintenanceSlice.actions
+  export default vehicleMaintenanceSlice.reducer

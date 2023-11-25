@@ -13,9 +13,9 @@ import { Delete } from '@mui/icons-material'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 
-import sx from './styles/EditService.sx'
-import { EditServiceProps } from './types'
-import useEditService from './hooks/useEditService'
+import sx from './styles/EditMaintenance.sx'
+import { EditMaintenanceProps } from './types'
+import useEditMaintenance from './hooks/useEditMaintenance'
 import LoadingButton from '../../../../../common/LoadingButton/LoadingButton'
 import Confirm from '../../../../../common/Confirm/Confirm'
 import Overflow from '../../../../../common/Overflow/Overflow'
@@ -23,41 +23,41 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 
-const EditService = ({
-    service,
-    handleEditServiceClose,
+const EditMaintenance = ({
+    maintenance,
+    handleEditMaintenanceClose,
     units,
-}: EditServiceProps) => {
+}: EditMaintenanceProps) => {
     const intl = useIntl()
     const allDrivers = useSelector((state: RootState) => state.drivers)
-    const [confirmDeleteService, setConfirmDeleteService] =
+    const [confirmDeleteMaintenance, setConfirmDeleteMaintenance] =
         useState<boolean>(false)
-    const { editedService, setField, saveService, deleteService } =
-        useEditService(service)
+    const { editedMaintenance, setField, saveMaintenance, deleteMaintenance } =
+        useEditMaintenance(maintenance)
 
     const handleSubmit = (event: SyntheticEvent) => {
         event.preventDefault()
-        saveService && saveService()
-        handleEditServiceClose()
+        saveMaintenance && saveMaintenance()
+        handleEditMaintenanceClose()
     }
     return (
         <Dialog
-            open={Boolean(service)}
-            onClose={handleEditServiceClose}
-            aria-labelledby="new-service-dialog-title"
+            open={Boolean(maintenance)}
+            onClose={handleEditMaintenanceClose}
+            aria-labelledby="new-maintenance-dialog-title"
             maxWidth="sm"
         >
             <Box sx={sx.form}>
                 <Box component="form" onSubmit={handleSubmit}>
-                    <DialogTitle id="new-service-dialog-title">
-                        <FormattedMessage id="app.EditService" />
+                    <DialogTitle id="new-maintenance-dialog-title">
+                        <FormattedMessage id="app.EditMaintenance" />
                     </DialogTitle>
                     <DialogContent>
                         <Box sx={sx.row}>
                             <TextField
                                 variant="outlined"
                                 label={<FormattedMessage id="app.Type" />}
-                                value={editedService?.type || ''}
+                                value={editedMaintenance?.type || ''}
                                 onChange={(event) =>
                                     setField('type', event.target.value)
                                 }
@@ -73,7 +73,7 @@ const EditService = ({
                                 label={
                                     <FormattedMessage id="app.RepairedPart" />
                                 }
-                                value={editedService?.part || ''}
+                                value={editedMaintenance?.part || ''}
                                 onChange={(event) =>
                                     setField('part', event.target.value)
                                 }
@@ -116,7 +116,7 @@ const EditService = ({
                                         />
                                     ),
                                 }}
-                                value={editedService?.reminderMileage || ''}
+                                value={editedMaintenance?.reminderMileage || ''}
                                 onChange={(event) =>
                                     setField(
                                         'reminderMileage',
@@ -133,7 +133,8 @@ const EditService = ({
                                 }
                                 inputFormat="dd/MM/yyyy"
                                 value={
-                                    Number(editedService?.reminderDate) || null
+                                    Number(editedMaintenance?.reminderDate) ||
+                                    null
                                 }
                                 onChange={(d: Date | null) =>
                                     d && setField('reminderDate', d.getTime())
@@ -146,7 +147,7 @@ const EditService = ({
                                             <FormattedMessage id="app.ReminderInfoDate" />
                                         }
                                         InputLabelProps={{
-                                            shrink: !!editedService?.reminderDate,
+                                            shrink: !!editedMaintenance?.reminderDate,
                                         }}
                                         inputProps={{
                                             ...params.inputProps,
@@ -164,7 +165,7 @@ const EditService = ({
                             <DesktopDatePicker
                                 label={<FormattedMessage id="app.Date" />}
                                 inputFormat="dd/MM/yyyy"
-                                value={editedService?.date || null}
+                                value={editedMaintenance?.date || null}
                                 onChange={(d: Date | null) =>
                                     d && setField('date', d?.getTime())
                                 }
@@ -173,7 +174,7 @@ const EditService = ({
                                         {...params}
                                         fullWidth
                                         InputLabelProps={{
-                                            shrink: !!editedService?.date,
+                                            shrink: !!editedMaintenance?.date,
                                         }}
                                         inputProps={{
                                             ...params.inputProps,
@@ -190,7 +191,7 @@ const EditService = ({
                             <TextField
                                 variant="outlined"
                                 label={<FormattedMessage id="app.Cost" />}
-                                value={editedService?.cost || ''}
+                                value={editedMaintenance?.cost || ''}
                                 onChange={(event) =>
                                     setField('cost', event.target.value)
                                 }
@@ -201,9 +202,9 @@ const EditService = ({
                             <TextField
                                 variant="outlined"
                                 label={
-                                    <FormattedMessage id="app.PlaceService" />
+                                    <FormattedMessage id="app.PlaceMaintenance" />
                                 }
-                                value={editedService?.place || ''}
+                                value={editedMaintenance?.place || ''}
                                 onChange={(event) =>
                                     setField('place', event.target.value)
                                 }
@@ -212,7 +213,7 @@ const EditService = ({
                         </Box>
                         <Box sx={sx.row}>
                             <DriversSelect
-                                drivers={editedService?.drivers || []}
+                                drivers={editedMaintenance?.drivers || []}
                                 setDrivers={(drivers) =>
                                     setField('drivers', drivers)
                                 }
@@ -222,27 +223,30 @@ const EditService = ({
                     <DialogActions>
                         <LoadingButton
                             sx={sx.warn}
-                            onClick={() => setConfirmDeleteService(true)}
+                            onClick={() => setConfirmDeleteMaintenance(true)}
                             startIcon={<Delete />}
                             color="secondary"
                         >
                             <FormattedMessage id="app.Delete" />
                         </LoadingButton>
                         <Confirm
-                            onCancel={() => setConfirmDeleteService(false)}
+                            onCancel={() => setConfirmDeleteMaintenance(false)}
                             onSubmit={() => {
-                                deleteService()
-                                handleEditServiceClose()
-                                setConfirmDeleteService(false)
+                                deleteMaintenance()
+                                handleEditMaintenanceClose()
+                                setConfirmDeleteMaintenance(false)
                             }}
-                            isOpen={confirmDeleteService}
+                            isOpen={confirmDeleteMaintenance}
                             message={
                                 <FormattedMessage
                                     id="app.Deleting"
                                     values={{
                                         name: (
                                             <Overflow
-                                                text={editedService?.type || ''}
+                                                text={
+                                                    editedMaintenance?.type ||
+                                                    ''
+                                                }
                                             />
                                         ),
                                     }}
@@ -252,16 +256,16 @@ const EditService = ({
                             submit={<FormattedMessage id="app.Delete" />}
                             cancel={<FormattedMessage id="app.Cancel" />}
                         />
-                        <Button onClick={handleEditServiceClose}>
+                        <Button onClick={handleEditMaintenanceClose}>
                             <FormattedMessage id="app.Cancel" />
                         </Button>
                         <Button
                             type="submit"
                             color="primary"
                             variant="contained"
-                            disabled={!editedService?.type}
+                            disabled={!editedMaintenance?.type}
                         >
-                            <FormattedMessage id="app.EditService" />
+                            <FormattedMessage id="app.Save" />
                         </Button>
                     </DialogActions>
                 </Box>
@@ -270,4 +274,4 @@ const EditService = ({
     )
 }
 
-export default EditService
+export default EditMaintenance

@@ -1,8 +1,8 @@
 import { useState, ChangeEvent, SyntheticEvent } from 'react'
-import { auth, db } from '@/services/firebase'
-import { ref, update } from 'firebase/database'
+import { auth, firestore } from '@/services/firebase'
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { useCheckoutFormProps } from '../types'
+import { updateDoc, doc } from 'firebase/firestore'
 
 const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
     const stripe = useStripe()
@@ -13,12 +13,14 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
         email: '',
         phone: '',
         name: '',
+        auto_payment: true
     })
-
+    
     const handleChange =
         (prop: string) => (event: ChangeEvent<HTMLInputElement>) => {
-            setValues({ ...values, [prop]: event.target.value })
+            setValues({ ...values, [prop]: event.target.type === 'checkbox' ? event.target.checked : event.target.value })
         }
+    const { auto_payment, ...billing_details } = values
 
     const handleSubmit = async (event: SyntheticEvent) => {
         // Block native form submission.
@@ -39,7 +41,7 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
             const { error, paymentMethod } = await stripe.createPaymentMethod({
                 type: 'card',
                 card: cardElement,
-                billing_details: values,
+                billing_details: billing_details,
             })
 
             if (error) {
@@ -53,14 +55,17 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
                 }, 10000)
             } else {
                 setLoading(true)
-                update(ref(db, 'stripe_customers/' + auth.currentUser.uid), {
+                await updateDoc(doc(firestore, 'customers', auth.currentUser.uid), {
                     payment_method_id: paymentMethod.id,
-                    card: {
-                        ...paymentMethod.card,
-                        name: paymentMethod.billing_details.name,
-                        phone: paymentMethod.billing_details.phone,
-                        email: paymentMethod.billing_details.email
-                    }
+                    card_brand: paymentMethod.card?.brand,
+                    card_country: paymentMethod.card?.country,
+                    card_email: paymentMethod.billing_details.email,
+                    card_exp_month: paymentMethod.card?.exp_month,
+                    card_exp_year: paymentMethod.card?.exp_year,
+                    card_last4: paymentMethod.card?.last4,
+                    card_name: paymentMethod.billing_details.name,
+                    card_phone: paymentMethod.billing_details.phone,
+                    auto_payment: auto_payment
                 })
                 setLoading(false)
                 handleFormClose()
