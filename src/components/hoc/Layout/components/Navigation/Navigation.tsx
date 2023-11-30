@@ -39,8 +39,8 @@ const Navigation = () => {
                     <ListItemIcon>
                         <LocalShipping fontSize="large" sx={sx.icon} />
                     </ListItemIcon>
-                    <Typography variant="inherit">
-                        <FormattedMessage id="app.Vehicles" />
+                    <Typography variant="body2">
+                        <FormattedMessage id="app.Fleet" />
                     </Typography>
                 </MenuItem>
                 <MenuItem
@@ -56,7 +56,7 @@ const Navigation = () => {
                     <ListItemIcon>
                         <People fontSize="large" sx={sx.icon} />
                     </ListItemIcon>
-                    <Typography variant="inherit">
+                    <Typography variant="body2">
                         <FormattedMessage id="app.Drivers" />
                     </Typography>
                 </MenuItem>
@@ -73,7 +73,7 @@ const Navigation = () => {
                     <ListItemIcon>
                         <Room fontSize="large" sx={sx.icon} />
                     </ListItemIcon>
-                    <Typography variant="inherit">
+                    <Typography variant="body2">
                         <FormattedMessage id="app.Routes" />
                     </Typography>
                 </MenuItem>
@@ -90,7 +90,7 @@ const Navigation = () => {
                     <ListItemIcon>
                         <ListAlt fontSize="large" sx={sx.icon} />
                     </ListItemIcon>
-                    <Typography variant="inherit">
+                    <Typography variant="body2">
                         <FormattedMessage id="app.Orders" />
                     </Typography>
                 </MenuItem>
@@ -107,7 +107,7 @@ const Navigation = () => {
                     <ListItemIcon>
                         <Build fontSize="large" sx={sx.icon} />
                     </ListItemIcon>
-                    <Typography variant="inherit">
+                    <Typography variant="body2">
                         <FormattedMessage id="app.Maintenance" />
                     </Typography>
                 </MenuItem>
@@ -140,7 +140,7 @@ const Navigation = () => {
                     <ListItemIcon>
                         <AccountBox fontSize="large" sx={sx.icon} />
                     </ListItemIcon>
-                    <Typography variant="inherit">
+                    <Typography variant="body2">
                         <FormattedMessage id="app.Clients" />
                     </Typography>
                 </MenuItem>
@@ -178,7 +178,7 @@ const Navigation = () => {
                     <ListItemIcon>
                         <Settings fontSize="large" sx={sx.icon} />
                     </ListItemIcon>
-                    <Typography variant="inherit">
+                    <Typography variant="body2">
                         <FormattedMessage id="app.Settings" />
                     </Typography>
                 </MenuItem>

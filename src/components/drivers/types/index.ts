@@ -1,7 +1,6 @@
 import { ReactNode, MutableRefObject } from 'react'
 import Fuse from 'fuse.js'
 import { Column } from 'react-table'
-import { UploadedFile } from '@/components/common/Upload/types'
 
 export type Driver = {
     key: string

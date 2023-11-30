@@ -4,19 +4,19 @@ import { auth, firestore } from '@/services/firebase'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
-import { Maintenance, Maintenances } from '@/components/maintenance/types'
+import { Maintenances } from '@/components/maintenance/types'
 import { useEditVehicleResponse } from '../types'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store/store'
-import { setVehicleMaintenance } from '@/components/maintenance/redux'
+import { setMaintenances } from '@/components/maintenance/redux'
 import { setRoutes } from '../../../../routes/redux'
 import useFiles from '@/hooks/useFiles'
 import { Route } from '../../../../routes/types'
-import { collection, deleteDoc, updateDoc, addDoc, doc, where, query, onSnapshot } from 'firebase/firestore'
+import { collection, deleteDoc, updateDoc, doc, where, query, onSnapshot, orderBy } from 'firebase/firestore'
 
 const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse => {
     const [editedVehicle, setEditedVehicle] = useState<Vehicle | undefined>(vehicle)
-    const maintenance = useSelector((state: RootState) => state.vehicleMaintenance)
+    const maintenances = useSelector((state: RootState) => state.maintenances)
     const routes = useSelector((state: RootState) => state.routes)
     const router = useRouter()
     const intl = useIntl()
@@ -30,13 +30,13 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         if (!auth.currentUser?.uid || !vehicle?.key) {
             return
         }
-        const qs = query(collection(firestore, 'maintenance'), where('vehicleId', '==', vehicle?.key))
+        const qs = query(collection(firestore, 'maintenances'), where('vehicleId', '==', vehicle?.key), orderBy('date', 'desc'))
         const unsubscribeMaintenance = onSnapshot(qs, (querySnapshot) => {
-            const maintenance: Maintenances = []
+            const m: Maintenances = []
             querySnapshot.forEach((doc) => {
-                maintenance.push({key: doc.id, ...doc.data()})
+                m.push({key: doc.id, ...doc.data()})
             })
-            dispatch(setVehicleMaintenance(maintenance))
+            dispatch(setMaintenances(m))
         }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))
         const qr = query(collection(firestore, 'routes'), where('vehicleId', '==', vehicle?.key))
         const unsubscribeRoutes = onSnapshot(qr, (querySnapshot) => {
@@ -88,30 +88,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         // TODO: delete the vehicle and write a function for clearing the db and storage
     }, [vehicle?.key])
 
-    const addMaintenance = useCallback(
-        async (m: Maintenance) => {
-            if (!vehicle?.key || !auth?.currentUser?.uid) return
-            try {
-                await addDoc(collection(firestore, 'maintenance'), { ...m, userId: auth.currentUser.uid, vehicleId: vehicle?.key})
-                enqueueSnackbar(
-                    intl.formatMessage({
-                        id: 'app.Saved.maintenance',
-                    }),
-                    { variant: 'success' }
-                )
-            } catch (error) {
-                enqueueSnackbar(
-                    intl.formatMessage({
-                        id: 'app.Error.saving',
-                    }),
-                    { variant: 'error', persist: true }
-                )
-            }
-        },
-        [vehicle?.key]
-    )
-
-    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteFile, deleteVehicle, addMaintenance, maintenance, routes, files }
+    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteFile, deleteVehicle, maintenances, routes, files }
 }
 
 export default useEditVehicle

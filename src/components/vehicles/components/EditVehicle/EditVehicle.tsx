@@ -49,8 +49,8 @@ import useEditVehicle from './hooks/useEditVehicle'
 import Upload from '@/components/common/Upload/Upload'
 import Confirm from '@/components/common/Confirm/Confirm'
 import Overflow from '@/components/common/Overflow/Overflow'
-import NewMaintenance from './components/NewMaintenance/NewMaintenance'
-import EditMaintenance from './components/EditMaintenance/EditMaintenance'
+import { AddMaintenance } from '@/components/maintenance/components/AddMaintenance/AddMaintenance'
+import EditMaintenance from '@/components/maintenance/components/EditMaintenance/EditMaintenance'
 import Route from '@/components/routes/components/Route/Route'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
@@ -65,8 +65,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         downloadFile,
         deleteFile,
         deleteVehicle,
-        addMaintenance,
-        maintenance,
+        maintenances,
         routes,
         files,
     } = useEditVehicle(vehicle)
@@ -452,6 +451,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                         })
                                     }
                                     sx={sx.select}
+                                    multiple
                                 />
                                 <Button
                                     color="primary"
@@ -755,15 +755,15 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                             <FormattedMessage id="app.Maintenance" />
                         </Typography>
                         <Box sx={sx.edit}>
-                            <NewMaintenance
-                                addMaintenance={addMaintenance}
+                            <AddMaintenance
+                                vehicleId={vehicle.key}
                                 drivers={vehicle?.drivers || []}
                                 units={vehicle.units}
                             />
                         </Box>
-                        {maintenance &&
-                            maintenance.length > 0 &&
-                            (maintenance?.[0]?.key === 'loading' ? (
+                        {maintenances &&
+                            maintenances.length > 0 &&
+                            (maintenances?.[0]?.key === 'loading' ? (
                                 <Box sx={sx.loading}>
                                     <CircularProgress />
                                 </Box>
@@ -800,7 +800,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {maintenance.map((m, i) => (
+                                            {maintenances.map((m, i) => (
                                                 <TableRow key={i}>
                                                     <TableCell
                                                         sx={sx.smallCell}
@@ -882,10 +882,10 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                             maintenance={editMaintenance}
                             units={vehicle.units}
                         />
-                        {(!maintenance || maintenance.length === 0) && (
+                        {(!maintenances || maintenances.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>
                                 <Typography>
-                                    <FormattedMessage id="app.NoMaintenance" />
+                                    <FormattedMessage id="app.NoMaintenances" />
                                 </Typography>
                             </Box>
                         )}

@@ -1,4 +1,4 @@
-import { Vehicles as VehiclesComponent } from '../../components/vehicles/Vehicles'
+import { Vehicles as VehiclesComponent } from '@/components/vehicles/Vehicles'
 import { useRouter } from 'next/router'
 
 export default function Vehicles(): JSX.Element {

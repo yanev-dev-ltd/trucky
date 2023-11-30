@@ -8,6 +8,7 @@ import {
     Button,
     TextField,
 } from '@mui/material'
+import Autocomplete from '@mui/material/Autocomplete'
 import { Delete } from '@mui/icons-material'
 
 import { FormattedMessage, useIntl } from 'react-intl'
@@ -16,12 +17,11 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import sx from './styles/EditMaintenance.sx'
 import { EditMaintenanceProps } from './types'
 import useEditMaintenance from './hooks/useEditMaintenance'
-import LoadingButton from '../../../../../common/LoadingButton/LoadingButton'
-import Confirm from '../../../../../common/Confirm/Confirm'
-import Overflow from '../../../../../common/Overflow/Overflow'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/store/store'
+import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
+import Confirm from '@/components/common/Confirm/Confirm'
+import Overflow from '@/components/common/Overflow/Overflow'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
+import { MaintenanceTypes } from '@/components/maintenance/types'
 
 const EditMaintenance = ({
     maintenance,
@@ -29,7 +29,6 @@ const EditMaintenance = ({
     units,
 }: EditMaintenanceProps) => {
     const intl = useIntl()
-    const allDrivers = useSelector((state: RootState) => state.drivers)
     const [confirmDeleteMaintenance, setConfirmDeleteMaintenance] =
         useState<boolean>(false)
     const { editedMaintenance, setField, saveMaintenance, deleteMaintenance } =
@@ -54,17 +53,46 @@ const EditMaintenance = ({
                     </DialogTitle>
                     <DialogContent>
                         <Box sx={sx.row}>
+                            <Autocomplete
+                                value={editedMaintenance?.type || ''}
+                                onChange={(event, newValue) => {
+                                    setField('type', newValue)
+                                }}
+                                options={[
+                                    ...Object.values(MaintenanceTypes).map(
+                                        (type) =>
+                                            intl.formatMessage({
+                                                id: `app.MaintenanceType.${type}`,
+                                            })
+                                    ),
+                                ]}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        onChange={(event) =>
+                                            setField('type', event.target.value)
+                                        }
+                                        label={
+                                            <FormattedMessage id="app.Type" />
+                                        }
+                                    />
+                                )}
+                                freeSolo
+                            />
+                        </Box>
+                        <Box sx={sx.row}>
                             <TextField
                                 variant="outlined"
-                                label={<FormattedMessage id="app.Type" />}
-                                value={editedMaintenance?.type || ''}
+                                label={
+                                    <FormattedMessage id="app.Description" />
+                                }
+                                value={editedMaintenance?.description || ''}
                                 onChange={(event) =>
-                                    setField('type', event.target.value)
+                                    setField('description', event.target.value)
                                 }
                                 fullWidth
-                                helperText={
-                                    <FormattedMessage id="app.TypeExamples" />
-                                }
+                                multiline
+                                maxRows={8}
                             />
                         </Box>
                         <Box sx={sx.row}>

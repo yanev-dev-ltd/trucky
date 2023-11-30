@@ -1,4 +1,4 @@
-import { Clients as ClientsComponent } from '../../components/clients/Clients'
+import { Clients as ClientsComponent } from '@/components/clients/Clients'
 import { useRouter } from 'next/router'
 
 export default function Clients(): JSX.Element {

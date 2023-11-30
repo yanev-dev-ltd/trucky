@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import authReducer from '../providers/AppAuthProvider/redux';
 import settingsReducer from '../redux/settings'
 import vehiclesReducer from '../components/vehicles/redux'
-import vehicleMaintenanceReducer from '@/components/maintenance/redux'
+import maintenancesReducer from '@/components/maintenance/redux'
 import driversReducer from '../components/drivers/redux'
 import routesReducer from '../components/routes/redux'
 import clientsReducer from '../components/clients/redux'
@@ -13,7 +13,7 @@ const reducer = {
     auth: authReducer,
     settings: settingsReducer,
     vehicles: vehiclesReducer,
-    vehicleMaintenance: vehicleMaintenanceReducer,
+    maintenances: maintenancesReducer,
     drivers: driversReducer,
     routes: routesReducer,
     clients: clientsReducer,

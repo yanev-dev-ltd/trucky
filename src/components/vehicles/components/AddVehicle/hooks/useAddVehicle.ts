@@ -8,13 +8,11 @@ import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { collection, addDoc } from 'firebase/firestore'
 
-const useAddVehicle = (): useAddVehicleProps => {
+const useAddVehicle = ({onSave, setOpen, open, redirectToEdit}: useAddVehicleProps) => {
     const intl = useIntl()
     const { settings } = useSelector((state: RootState) => state.settings)
     const { enqueueSnackbar } = useSnackbar()
-    const [newVehicleId, setNewVehicleId] = useState<string | null>(null)
     const [newVehicleLoading, setNewVehicleLoading] = useState<boolean>(false)
-    const [open, setOpen] = useState<boolean>(false)
     const [newVehicle, setNewVehicle] = useState<NewVehicle>({ units: settings.units || 'km' })
     const router = useRouter()
     const handleAddVehicle = useCallback(() => {
@@ -39,8 +37,9 @@ const useAddVehicle = (): useAddVehicleProps => {
         setNewVehicleLoading(true)
         try {
             const refDoc = await addDoc(collection(firestore, 'vehicles'), { ...newVehicle, userId: auth.currentUser.uid })
+            onSave && refDoc.id && onSave(refDoc.id)
             handleClose()
-            router.push('/vehicles/' + refDoc.id)
+            redirectToEdit && router.push('/vehicles/' + refDoc.id)
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.VehicleAdded',
             }), { variant: 'success' })

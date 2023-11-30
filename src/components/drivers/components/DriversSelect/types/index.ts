@@ -5,11 +5,13 @@ export type useDriversSelectProps = {
     drivers?: string[],
     setDrivers: (driver: string[]) => void,
     sx?: SxProps<Theme>
+    multiple?: boolean
 }
 
 export type DriversSelectProps = {
-    drivers?: string[],
+    drivers?: Driver[],
     setDrivers: (driver: string[]) => void,
     allDrivers: Driver[],
     sx?: SxProps<Theme>
+    multiple?: boolean
 }

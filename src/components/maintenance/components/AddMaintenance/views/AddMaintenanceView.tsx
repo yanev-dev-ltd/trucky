@@ -9,25 +9,30 @@ import {
     TextField,
     Tooltip,
     IconButton,
+    Autocomplete,
 } from '@mui/material'
-import { AddCircle } from '@mui/icons-material'
+import { AddCircle, Add } from '@mui/icons-material'
 
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 
-import sx from './styles/NewMaintenance.sx'
-import { NewMaintenanceProps } from './types'
-import useNewMaintenance from './hooks/useNewMaintenance'
+import sx from '../styles/AddMaintenance.sx'
+import { AddMaintenanceProps } from '../types'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
+import { MaintenanceTypes } from '@/components/maintenance/types'
+import { VehiclesSelect } from '@/components/vehicles/components/VehiclesSelect/VehiclesSelect'
 
-const NewMaintenance = ({
+const AddMaintenanceView = ({
     addMaintenance,
-    drivers,
     units,
-}: NewMaintenanceProps) => {
+    vehicleId,
+    setField,
+    maintenance,
+    reset,
+    fullButton,
+}: AddMaintenanceProps) => {
     const intl = useIntl()
     const [newMaintenanceOpen, setNewMaintenanceOpen] = useState(false)
-    const { setField, maintenance, reset } = useNewMaintenance(drivers)
 
     const handleNewMaintenanceOpen = useCallback(() => {
         setNewMaintenanceOpen(true)
@@ -50,14 +55,28 @@ const NewMaintenance = ({
 
     return (
         <>
-            <Tooltip
-                title={<FormattedMessage id="app.AddMaintenance" />}
-                sx={sx.button}
-            >
-                <IconButton size="small" onClick={handleNewMaintenanceOpen}>
-                    <AddCircle />
-                </IconButton>
-            </Tooltip>
+            {fullButton ? (
+                <Tooltip title="ctrl + N">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<Add />}
+                        onClick={handleNewMaintenanceOpen}
+                        style={{ marginLeft: 'auto' }}
+                    >
+                        <FormattedMessage id="app.AddMaintenance" />
+                    </Button>
+                </Tooltip>
+            ) : (
+                <Tooltip
+                    title={<FormattedMessage id="app.AddMaintenance" />}
+                    sx={sx.button}
+                >
+                    <IconButton size="small" onClick={handleNewMaintenanceOpen}>
+                        <AddCircle />
+                    </IconButton>
+                </Tooltip>
+            )}
             <Dialog
                 open={newMaintenanceOpen}
                 onClose={handleClose}
@@ -70,18 +89,63 @@ const NewMaintenance = ({
                             <FormattedMessage id="app.AddMaintenance" />
                         </DialogTitle>
                         <DialogContent>
+                            {!vehicleId && (
+                                <Box sx={sx.row}>
+                                    <VehiclesSelect
+                                        vehicles={[maintenance.vehicleId || '']}
+                                        setVehicles={(vehicle) =>
+                                            setField('vehicleId', vehicle)
+                                        }
+                                    />
+                                </Box>
+                            )}
+                            <Box sx={sx.row}>
+                                <Autocomplete
+                                    value={maintenance?.type || ''}
+                                    onChange={(event, newValue) => {
+                                        setField('type', newValue)
+                                    }}
+                                    options={[
+                                        ...Object.values(MaintenanceTypes).map(
+                                            (type) =>
+                                                intl.formatMessage({
+                                                    id: `app.MaintenanceType.${type}`,
+                                                })
+                                        ),
+                                    ]}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            onChange={(event) =>
+                                                setField(
+                                                    'type',
+                                                    event.target.value
+                                                )
+                                            }
+                                            label={
+                                                <FormattedMessage id="app.Type" />
+                                            }
+                                        />
+                                    )}
+                                    freeSolo
+                                />
+                            </Box>
                             <Box sx={sx.row}>
                                 <TextField
                                     variant="outlined"
-                                    label={<FormattedMessage id="app.Type" />}
-                                    value={maintenance.type || ''}
+                                    label={
+                                        <FormattedMessage id="app.Description" />
+                                    }
+                                    value={maintenance.description || ''}
                                     onChange={(event) =>
-                                        setField('type', event.target.value)
+                                        setField(
+                                            'description',
+                                            event.target.value
+                                        )
                                     }
                                     fullWidth
-                                    helperText={
-                                        <FormattedMessage id="app.TypeExamples" />
-                                    }
+                                    multiline
+                                    maxRows={8}
                                 />
                             </Box>
                             <Box sx={sx.row}>
@@ -228,6 +292,7 @@ const NewMaintenance = ({
                                     setDrivers={(drivers) =>
                                         setField('drivers', drivers)
                                     }
+                                    multiple
                                 />
                             </Box>
                         </DialogContent>
@@ -251,4 +316,4 @@ const NewMaintenance = ({
     )
 }
 
-export default NewMaintenance
+export default AddMaintenanceView

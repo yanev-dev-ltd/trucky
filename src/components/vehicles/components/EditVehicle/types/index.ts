@@ -16,8 +16,7 @@ export type useEditVehicleResponse = {
     downloadFile: (f: UploadedFile) => void
     deleteFile: (f: UploadedFile, dbpath: string, dbkey: string, files: UploadedFile[]) => void
     deleteVehicle: () => void
-    addMaintenance: (m: Maintenance) => void
-    maintenance: Maintenances
+    maintenances: Maintenances
     routes: Route[]
     files: UploadedFile[]
 }

@@ -1,18 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Maintenance } from '@/components/maintenance/types'
+import { Maintenances } from '@/components/maintenance/types'
 
-const initialState: Maintenance[] = [{ key: 'loading' }]
+const initialState: Maintenances = [{ key: 'loading' }]
 
 
-export const vehicleMaintenanceSlice = createSlice({
-    name: 'vehicleMaintenance',
+export const maintenancesSlice = createSlice({
+    name: 'maintenances',
     initialState,
     reducers: {
-      setVehicleMaintenance: (state, action: PayloadAction<Maintenance[]>) => {
+      setMaintenances: (state, action: PayloadAction<Maintenances>) => {
         return action.payload
       },
     },
   })
 
-  export const { setVehicleMaintenance } = vehicleMaintenanceSlice.actions
-  export default vehicleMaintenanceSlice.reducer
+  export const { setMaintenances } = maintenancesSlice.actions
+  export default maintenancesSlice.reducer

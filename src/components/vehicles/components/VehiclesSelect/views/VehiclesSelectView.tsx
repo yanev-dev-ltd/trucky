@@ -9,37 +9,41 @@ import {
 import { AddCircle } from '@mui/icons-material'
 import { createFilterOptions } from '@mui/material/Autocomplete'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Driver } from '@/components/drivers/types'
+import { Vehicle } from '@/components/vehicles/types'
 import Overflow from '@/components/common/Overflow/Overflow'
-import { DriversSelectProps } from '../types'
-import { AddDriver } from '@/components/drivers/components/AddDriver/AddDriver'
+import { VehiclesSelectProps } from '../types'
+import { AddVehicle } from '@/components/vehicles/components/AddVehicle/AddVehicle'
 
-const filter = createFilterOptions<Driver>()
+const filter = createFilterOptions<Vehicle>()
 
-const DriversSelectView = ({
-    drivers,
-    setDrivers,
-    allDrivers,
+const VehiclesSelectView = ({
+    vehicles,
+    setVehicles,
+    allVehicles,
     sx,
     multiple,
-}: DriversSelectProps) => {
+}: VehiclesSelectProps) => {
     const intl = useIntl()
     const [open, setOpen] = useState<boolean | string>(false)
+
     return (
         <>
             <FormControl fullWidth variant="outlined">
                 <Autocomplete
-                    id="drivers"
+                    id="vehicles-select"
                     sx={sx}
                     multiple={multiple}
-                    options={allDrivers as Driver[]}
-                    value={drivers || []}
+                    options={allVehicles}
+                    value={vehicles || []}
                     getOptionLabel={(option) => option.name || ''}
                     onChange={(_, values) => {
-                        if (Array.isArray(values))
-                            setDrivers(values.map((d) => d.key))
-                        else if (values) setDrivers([values.key])
-                        else setDrivers([])
+                        if (Array.isArray(values)) {
+                            setVehicles(values.map((v) => v.key))
+                        } else if (values?.key) {
+                            setVehicles(values.key)
+                        } else {
+                            setVehicles([])
+                        }
                     }}
                     renderOption={(props, option) => (
                         <li
@@ -107,21 +111,19 @@ const DriversSelectView = ({
                                 name: inputValue,
                                 new: intl.formatMessage(
                                     {
-                                        id: 'app.Add[Driver]',
+                                        id: 'app.Add[Vehicle]',
                                     },
                                     {
-                                        driver: inputValue,
+                                        vehicle: inputValue,
                                     }
                                 ),
-                                phone: '',
                             })
                         } else {
                             filtered.splice(0, 0, {
                                 key: 'new',
                                 name: '',
-                                phone: '',
                                 new: intl.formatMessage({
-                                    id: 'app.AddDriver',
+                                    id: 'app.addVehicle',
                                 }),
                             })
                         }
@@ -131,19 +133,27 @@ const DriversSelectView = ({
                     renderInput={(params) => (
                         <TextField
                             {...params}
-                            label={<FormattedMessage id="app.Drivers" />}
+                            label={
+                                <FormattedMessage
+                                    id={
+                                        multiple
+                                            ? 'app.Vehicles'
+                                            : 'app.Vehicle'
+                                    }
+                                />
+                            }
                         />
                     )}
                 />
             </FormControl>
-            <AddDriver
-                open={open}
+            <AddVehicle
+                open={Boolean(open)}
                 setOpen={setOpen}
-                onSave={(driverId) =>
-                    setDrivers(
-                        Array.isArray(drivers) && multiple
-                            ? [...drivers.map((d) => d.key), driverId]
-                            : [driverId]
+                onSave={(vehicleId) =>
+                    setVehicles(
+                        Array.isArray(vehicles) && multiple
+                            ? [...vehicles.map((v) => v.key), vehicleId]
+                            : vehicleId
                     )
                 }
             />
@@ -151,4 +161,4 @@ const DriversSelectView = ({
     )
 }
 
-export default DriversSelectView
+export default VehiclesSelectView

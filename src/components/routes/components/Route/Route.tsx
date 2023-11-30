@@ -104,6 +104,7 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                 setDrivers={(drivers) =>
                                     changeField('drivers', drivers)
                                 }
+                                multiple
                             />
                         </Box>
                         <Box sx={sx.row}>

@@ -1,4 +1,4 @@
-import { Settings as SettingsComponent } from '../../components/settings/Settings'
+import { Settings as SettingsComponent } from '@/components/settings/Settings'
 import { useRouter } from 'next/router'
 
 export default function Settings(): JSX.Element {

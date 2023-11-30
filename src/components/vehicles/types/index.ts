@@ -1,4 +1,4 @@
-import { MutableRefObject } from 'react'
+import { MutableRefObject, ReactNode } from 'react'
 import Fuse from 'fuse.js'
 import { Column } from 'react-table'
 import { Driver } from '@/components/drivers/types'
@@ -17,6 +17,7 @@ export type Vehicle = {
     files?: string
     maintenance?: Maintenances
     notes?: string
+    new?: ReactNode
 }
 
 export type useVehicleProps = {

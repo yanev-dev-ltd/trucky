@@ -72,7 +72,7 @@ export const DriversView: FC<DriversProps> = ({
                 />
                 <AddDriverWithButton />
             </Box>
-            {Array.isArray(drivers) && filteredDrivers.length > 0 && (
+            {Array.isArray(filteredDrivers) && filteredDrivers.length > 0 && (
                 <Table
                     stickyHeader
                     columns={columns}

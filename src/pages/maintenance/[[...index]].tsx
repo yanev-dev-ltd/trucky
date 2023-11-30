@@ -1,9 +1,9 @@
-import { Drivers as DriversComponent } from '@/components/drivers/Drivers'
+import { Maintenance as MaintenanceComponent } from '@/components/maintenance/Maintenance'
 import { useRouter } from 'next/router'
 
-export default function Drivers(): JSX.Element {
+export default function Maintenance(): JSX.Element {
     const router = useRouter()
-    const driverId =
+    const maintenanceId =
         router.isReady && router.query.index && router.query.index.length > 0
             ? router.query.index[0]
             : undefined
@@ -11,5 +11,5 @@ export default function Drivers(): JSX.Element {
         router.isReady && router.query.index && router.query.index.length > 1
             ? router.query.index[1]
             : undefined
-    return <DriversComponent driverId={driverId} edit={edit} />
+    return <MaintenanceComponent maintenanceId={maintenanceId} edit={edit} />
 }

@@ -10,36 +10,35 @@ import {
 } from '@mui/material'
 
 import { Search } from '@mui/icons-material'
-
-import EditVehicle from '@/components/vehicles/components/EditVehicle/EditVehicle'
-import AddVehicleWithButton from '@/components/vehicles/components/AddVehicleWithButton/AddVehicleWithButton'
-import sx from '../styles/Vehicles.sx'
-import { Vehicles, VehicleProps } from '../types'
+import sx from '../styles/Maintenance.sx'
+import { Maintenance, MaintenanceProps } from '../types'
 import { FormattedMessage, useIntl } from 'react-intl'
+import { AddMaintenance } from '../components/AddMaintenance/AddMaintenance'
+// import { EditDriver } from '../components/EditDriver/EditDriver'
 
-export const VehiclesView: FC<VehicleProps> = ({
-    vehicles,
-    vehicleId,
+export const MaintenanceView: FC<MaintenanceProps> = ({
+    maintenances,
     edit,
+    maintenanceId,
     searchRef,
     fuse,
     columns,
-    routeId,
-    drivers,
 }): JSX.Element => {
     const intl = useIntl()
     const [search, setSearch] = useState<string | boolean>(false)
-    const [filteredVehicles, setFilteredVehicles] = useState<Vehicles>(vehicles)
+    const [filteredMaintenances, setFilteredMaintenances] =
+        useState<Maintenance[]>(maintenances)
     useEffect(() => {
         if (search && typeof search === 'string' && search.length >= 3) {
-            const tempVehicles = fuse.search(search)
-            setFilteredVehicles(tempVehicles.map((s) => s.item))
+            const tempMaintenances = fuse.search(search)
+            setFilteredMaintenances(tempMaintenances.map((s) => s.item))
         } else {
-            setFilteredVehicles(vehicles)
+            setFilteredMaintenances(maintenances)
         }
-    }, [search, vehicles])
+    }, [search, maintenances])
+    const maintenance = maintenances.find((v) => v.key === maintenanceId)
 
-    if (vehicles?.[0]?.key === 'loading' || drivers?.[0]?.key === 'loading') {
+    if (maintenances?.[0]?.key === 'loading') {
         return (
             <Box sx={sx.loading}>
                 <CircularProgress />
@@ -72,18 +71,19 @@ export const VehiclesView: FC<VehicleProps> = ({
                         ),
                     }}
                 />
-                <AddVehicleWithButton />
+                <AddMaintenance fullButton />
             </Box>
-            {Array.isArray(vehicles) && filteredVehicles.length > 0 && (
-                <Table
-                    stickyHeader
-                    columns={columns}
-                    data={filteredVehicles}
-                    name="vehicles"
-                />
-            )}
-            {Array.isArray(filteredVehicles) &&
-                filteredVehicles.length === 0 && (
+            {Array.isArray(filteredMaintenances) &&
+                filteredMaintenances.length > 0 && (
+                    <Table
+                        stickyHeader
+                        columns={columns}
+                        data={filteredMaintenances}
+                        name="maintenances"
+                    />
+                )}
+            {Array.isArray(filteredMaintenances) &&
+                filteredMaintenances.length === 0 && (
                     <Box
                         display="flex"
                         justifyContent="center"
@@ -92,15 +92,13 @@ export const VehiclesView: FC<VehicleProps> = ({
                         style={{ height: 'calc(100vh - 54px - 72px)' }}
                     >
                         <Typography variant="h5" sx={sx.padding}>
-                            <FormattedMessage id="app.noVehicles" />
+                            <FormattedMessage id="app.NoMaintenances" />
                         </Typography>
                     </Box>
                 )}
-            <EditVehicle
-                vehicle={vehicles.find((v) => v.key === vehicleId)}
-                edit={edit}
-                routeId={routeId}
-            />
+            {/* <EditDriver driver={driver || { key: '' }} edit={edit} /> */}
         </Box>
     )
 }
+
+export default MaintenanceView

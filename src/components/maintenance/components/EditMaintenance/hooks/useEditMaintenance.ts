@@ -20,7 +20,7 @@ const useEditMaintenance = (maintenance: Maintenance | undefined) => {
     const saveMaintenance = useCallback(async () => {
         if (!auth?.currentUser?.uid || !editedMaintenance?.key) return
         try {
-            await updateDoc(doc(firestore, 'maintenance', editedMaintenance?.key), {
+            await updateDoc(doc(firestore, 'maintenances', editedMaintenance?.key), {
                 cost: editedMaintenance.cost || '',
                 date: editedMaintenance.date || '',
                 drivers: editedMaintenance.drivers || [],
@@ -30,7 +30,8 @@ const useEditMaintenance = (maintenance: Maintenance | undefined) => {
                 type: editedMaintenance.type,
                 part: editedMaintenance.part || '',
                 vehicleId: editedMaintenance.vehicleId,
-                userId: auth?.currentUser?.uid
+                userId: auth?.currentUser?.uid,
+                description: editedMaintenance.description || '',
             })
             enqueueSnackbar(
                 intl.formatMessage({
@@ -48,7 +49,7 @@ const useEditMaintenance = (maintenance: Maintenance | undefined) => {
     const deleteMaintenance = useCallback(async () => {
         if (!editedMaintenance?.key || !auth?.currentUser?.uid) return
         try {
-            await deleteDoc(doc(firestore, 'maintenance', editedMaintenance?.key))
+            await deleteDoc(doc(firestore, 'maintenances', editedMaintenance?.key))
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.DeletedMaintenanceSuccess',
             }), { variant: 'success' })

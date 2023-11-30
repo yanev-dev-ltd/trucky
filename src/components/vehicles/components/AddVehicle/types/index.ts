@@ -1,5 +1,13 @@
-import { MutableRefObject } from 'react'
 export type useAddVehicleProps = {
+    onSave: (driverId: string) => void
+    setOpen: (open: boolean) => void
+    open: boolean
+    changeField?: (field: string, value: string) => void
+    newVehicle?: NewVehicle | undefined
+    newVehicleLoading?: boolean
+    redirectToEdit?: boolean
+}
+export type AddVehicleProps = {
     open: boolean
     handleClose: () => void
     handleAddVehicle: () => void
