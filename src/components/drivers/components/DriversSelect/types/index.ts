@@ -9,7 +9,7 @@ export type useDriversSelectProps = {
 }
 
 export type DriversSelectProps = {
-    drivers?: Driver[],
+    drivers?: Driver[] | Driver,
     setDrivers: (driver: string[]) => void,
     allDrivers: Driver[],
     sx?: SxProps<Theme>
