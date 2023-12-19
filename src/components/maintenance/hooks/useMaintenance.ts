@@ -26,7 +26,7 @@ const useMaintenance = ({ maintenanceId, edit }: useMaintenanceProps): Maintenan
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const m: Maintenance[] = []
             querySnapshot.forEach((doc) => {
-                m.push({key: doc.id, ...doc.data()})
+                m.push({...doc.data() as Maintenance, key: doc.id})
             })
             dispatch(setMaintenances(m))
         })
@@ -34,7 +34,7 @@ const useMaintenance = ({ maintenanceId, edit }: useMaintenanceProps): Maintenan
         const unsubscribeVehicles = onSnapshot(q2, (querySnapshot) => {
             const vehicles: Vehicle[] = []
             querySnapshot.forEach((doc) => {
-                vehicles.push({key: doc.id, ...doc.data()})
+                vehicles.push({...doc.data() as Vehicle, key: doc.id})
             })
             dispatch(setVehicles(vehicles))
         })

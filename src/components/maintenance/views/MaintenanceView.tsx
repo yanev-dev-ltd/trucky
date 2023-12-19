@@ -99,10 +99,9 @@ export const MaintenanceView: FC<MaintenanceProps> = ({
                         </Typography>
                     </Box>
                 )}
-            <EditMaintenance
-                maintenance={maintenance || { key: '' }}
-                edit={edit}
-            />
+            {maintenance && (
+                <EditMaintenance maintenance={maintenance} edit={edit} />
+            )}
         </Box>
     )
 }

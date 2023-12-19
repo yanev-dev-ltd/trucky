@@ -26,7 +26,7 @@ const useVehicles =  ({ vehicleId, edit, routeId }:useVehicleProps): VehicleProp
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const vehicles: Vehicle[] = []
             querySnapshot.forEach((doc) => {
-                vehicles.push({key: doc.id, ...doc.data()})
+                vehicles.push({...doc.data() as Vehicle, key: doc.id})
             })
             dispatch(setVehicles(vehicles))
         })

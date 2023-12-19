@@ -13,7 +13,7 @@ const useAddVehicle = ({onSave, setOpen, open, redirectToEdit}: useAddVehiclePro
     const { settings } = useSelector((state: RootState) => state.settings)
     const { enqueueSnackbar } = useSnackbar()
     const [newVehicleLoading, setNewVehicleLoading] = useState<boolean>(false)
-    const [newVehicle, setNewVehicle] = useState<NewVehicle>({ units: settings.units || 'km' })
+    const [newVehicle, setNewVehicle] = useState<NewVehicle>({ units: settings.units })
     const router = useRouter()
     const handleAddVehicle = useCallback(() => {
         if (!auth.currentUser?.uid) return
@@ -26,9 +26,9 @@ const useAddVehicle = ({onSave, setOpen, open, redirectToEdit}: useAddVehiclePro
         setNewVehicle({ units: settings.units || 'km' })
     },[])
 
-    const changeField = useCallback((field: string, value: string) => {
+    const changeField = useCallback((field: keyof NewVehicle, value: string) => {
         setNewVehicle(oldVehicle => {
-            return oldVehicle ? { ...oldVehicle, [field]: value  } : { [field]: value }
+            return oldVehicle ? { ...oldVehicle, [field]: value  } : { units: settings.units, [field]: value }
         })
     }, [])
 

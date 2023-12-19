@@ -2,7 +2,7 @@ import { UniqueIdentifier } from '@dnd-kit/core'
 import { Order } from '@/components/orders/types'
 export type RouteProps = {
     vehicleId?: string
-    units?: string
+    units: string
     routeId?: string
     drivers?: string[]
 }

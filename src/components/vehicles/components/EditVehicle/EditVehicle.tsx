@@ -483,10 +483,10 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                     <AddCircle />
                                 </IconButton>
                             </Tooltip>
-                            {edit === 'route' && (
+                            {edit === 'route' && editedVehicle && (
                                 <Route
                                     vehicleId={vehicle?.key}
-                                    units={editedVehicle?.units}
+                                    units={editedVehicle.units}
                                     routeId={routeId}
                                     drivers={editedVehicle?.drivers}
                                 />
@@ -875,10 +875,12 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                     </MuiTable>
                                 </Box>
                             ))}
-                        <EditMaintenance
-                            maintenance={editMaintenance}
-                            edit={editMaintenance ? 'edit' : undefined}
-                        />
+                        {editMaintenance && (
+                            <EditMaintenance
+                                maintenance={editMaintenance}
+                                edit={editMaintenance ? 'edit' : undefined}
+                            />
+                        )}
                         {(!maintenances || maintenances.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>
                                 <Typography>

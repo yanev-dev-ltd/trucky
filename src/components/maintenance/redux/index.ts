@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Maintenances } from '@/components/maintenance/types'
 
-const initialState: Maintenances = [{ key: 'loading' }]
+const initialState: Maintenances = [{ key: 'loading', units: '' }]
 
 
 export const maintenancesSlice = createSlice({

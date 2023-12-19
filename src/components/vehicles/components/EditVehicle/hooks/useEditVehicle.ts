@@ -4,7 +4,7 @@ import { auth, firestore } from '@/services/firebase'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
-import { Maintenances } from '@/components/maintenance/types'
+import { Maintenances, Maintenance } from '@/components/maintenance/types'
 import { useEditVehicleResponse } from '../types'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store/store'
@@ -34,7 +34,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         const unsubscribeMaintenance = onSnapshot(qs, (querySnapshot) => {
             const m: Maintenances = []
             querySnapshot.forEach((doc) => {
-                m.push({key: doc.id, ...doc.data()})
+                m.push({...doc.data() as Maintenance, key: doc.id})
             })
             dispatch(setMaintenances(m))
         }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))

@@ -13,6 +13,8 @@ import { Vehicle } from '@/components/vehicles/types'
 import Overflow from '@/components/common/Overflow/Overflow'
 import { VehiclesSelectProps } from '../types'
 import { AddVehicle } from '@/components/vehicles/components/AddVehicle/AddVehicle'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 
 const filter = createFilterOptions<Vehicle>()
 
@@ -24,6 +26,7 @@ const VehiclesSelectView = ({
     multiple,
 }: VehiclesSelectProps) => {
     const intl = useIntl()
+    const { settings } = useSelector((state: RootState) => state.settings)
     const [open, setOpen] = useState<boolean | string>(false)
 
     return (
@@ -109,6 +112,7 @@ const VehiclesSelectView = ({
                             filtered.push({
                                 key: 'new',
                                 name: inputValue,
+                                units: settings.units,
                                 new: intl.formatMessage(
                                     {
                                         id: 'app.Add[Vehicle]',
@@ -122,6 +126,7 @@ const VehiclesSelectView = ({
                             filtered.splice(0, 0, {
                                 key: 'new',
                                 name: '',
+                                units: settings.units,
                                 new: intl.formatMessage({
                                     id: 'app.addVehicle',
                                 }),
