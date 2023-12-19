@@ -17,6 +17,7 @@ import { AddMaintenance } from '../components/AddMaintenance/AddMaintenance'
 import { EditMaintenance } from '../components/EditMaintenance/EditMaintenance'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
+import { useRouter } from 'next/router'
 
 export const MaintenanceView: FC<MaintenanceProps> = ({
     maintenances,
@@ -27,6 +28,7 @@ export const MaintenanceView: FC<MaintenanceProps> = ({
     columns,
 }): JSX.Element => {
     const intl = useIntl()
+    const router = useRouter()
     const [search, setSearch] = useState<string | boolean>(false)
     const [filteredMaintenances, setFilteredMaintenances] =
         useState<Maintenance[]>(maintenances)
@@ -100,7 +102,17 @@ export const MaintenanceView: FC<MaintenanceProps> = ({
                     </Box>
                 )}
             {maintenance && (
-                <EditMaintenance maintenance={maintenance} edit={edit} />
+                <EditMaintenance
+                    maintenance={maintenance}
+                    edit={edit}
+                    onClose={() => router.push('/maintenance')}
+                    onCancel={() =>
+                        router.push(`/maintenance/${maintenanceId}`)
+                    }
+                    onEdit={(field) =>
+                        router.push(`/maintenance/${maintenanceId}/${field}`)
+                    }
+                />
             )}
         </Box>
     )

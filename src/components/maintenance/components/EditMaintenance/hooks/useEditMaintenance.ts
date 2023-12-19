@@ -6,8 +6,9 @@ import { Maintenance } from '@/components/maintenance/types'
 import { deleteDoc, updateDoc, doc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import { useEditMaintenanceProps } from '../types'
+import { on } from 'events'
 
-const useEditMaintenance = ({ maintenance, edit }: useEditMaintenanceProps) => {
+const useEditMaintenance = ({ maintenance, edit, onClose, onCancel, onEdit }: useEditMaintenanceProps) => {
     const [editedMaintenance, setEditedMaintenance] = useState(maintenance)
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
@@ -26,7 +27,7 @@ const useEditMaintenance = ({ maintenance, edit }: useEditMaintenanceProps) => {
                 id: 'app.Error.saving',
             }), { variant: 'error', persist: true })
         }
-        router.push('/maintenance/' + maintenance.key)
+        onCancel()
     }, [editedMaintenance])
 
     const reset = useCallback(() => {
@@ -40,6 +41,7 @@ const useEditMaintenance = ({ maintenance, edit }: useEditMaintenanceProps) => {
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.DeletedMaintenanceSuccess',
             }), { variant: 'success' })
+            onClose()
         } catch (error) {
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.DeletedMaintenanceError',
@@ -47,7 +49,7 @@ const useEditMaintenance = ({ maintenance, edit }: useEditMaintenanceProps) => {
         }
     }, [editedMaintenance?.key])
 
-    return { maintenance, saveMaintenanceField, setEditedMaintenance, editedMaintenance, deleteMaintenance, edit, reset }
+    return { maintenance, saveMaintenanceField, setEditedMaintenance, editedMaintenance, deleteMaintenance, edit, reset, onClose, onCancel, onEdit }
 }
 
 export default useEditMaintenance

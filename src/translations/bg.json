@@ -47,6 +47,7 @@
   "app.DeletedDocumentSuccess": "Документът е изтрит.",
   "app.DeleteDriver": "Изтрий Шофьорът",
   "app.DeleteFileConfirm": "Изтриване на {file}?",
+  "app.DeleteMaintenance": "Изтрий Поддръжката",
   "app.DeletedMaintenanceError": "Грешка при изтриването на поддръжката.",
   "app.DeletedMaintenanceSuccess": "Поддръжката е изтрита.",
   "app.DeleteOrder": "Изтрий Поръчката",

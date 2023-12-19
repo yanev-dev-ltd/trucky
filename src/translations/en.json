@@ -47,6 +47,7 @@
   "app.DeletedDocumentSuccess": "Document deleted",
   "app.DeleteDriver": "Delete Driver",
   "app.DeleteFileConfirm": "Delete {file}?",
+  "app.DeleteMaintenance": "Delete Maintenance",
   "app.DeletedMaintenanceError": "Error deleting the maintenance.",
   "app.DeletedMaintenanceSuccess": "Maintenance deleted",
   "app.DeleteOrder": "Delete Order",

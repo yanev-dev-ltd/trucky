@@ -30,6 +30,9 @@ const EditMaintenanceView = ({
     setEditedMaintenance,
     editedMaintenance,
     deleteMaintenance,
+    onClose,
+    onCancel,
+    onEdit,
 }: EditMaintenanceProps) => {
     const router = useRouter()
     const intl = useIntl()
@@ -40,15 +43,13 @@ const EditMaintenanceView = ({
         <Drawer
             open={Boolean(maintenance?.key)}
             anchor="right"
-            onClose={() => router.push('/maintenance')}
+            onClose={onClose}
         >
             {!maintenance && (
                 <Box display="flex" justifyContent="center" p={2} sx={sx.wrap}>
-                    <NextLink href={'/maintenance'}>
-                        <IconButton size="small" sx={sx.edit}>
-                            <Close />
-                        </IconButton>
-                    </NextLink>
+                    <IconButton size="small" sx={sx.edit} onClick={onClose}>
+                        <Close />
+                    </IconButton>
                     <Typography>
                         <FormattedMessage id="app.MaintenanceNotFound" />
                     </Typography>
@@ -60,11 +61,9 @@ const EditMaintenanceView = ({
                         <Typography variant="h6">
                             <FormattedMessage id="app.Details" />
                         </Typography>
-                        <NextLink href={'/maintenance'}>
-                            <IconButton size="small">
-                                <Close />
-                            </IconButton>
-                        </NextLink>
+                        <IconButton size="small" onClick={onClose}>
+                            <Close />
+                        </IconButton>
                     </Box>
                     <Paper sx={sx.paper}>
                         {edit !== 'type' && (
@@ -83,9 +82,7 @@ const EditMaintenanceView = ({
                                         size="small"
                                         sx={sx.edit}
                                         onClick={() => {
-                                            router.push(
-                                                `/maintenance/${maintenance?.key}/type`
-                                            )
+                                            onEdit('type')
                                             reset()
                                         }}
                                     >
@@ -156,9 +153,7 @@ const EditMaintenanceView = ({
                                         sx={sx.edit}
                                         onClick={() => {
                                             reset()
-                                            router.push(
-                                                `/maintenance/${maintenance?.key}`
-                                            )
+                                            onCancel()
                                         }}
                                     >
                                         <Close />

@@ -31,7 +31,7 @@ import {
     NotificationsActive,
     Route as RouteIcon,
 } from '@mui/icons-material'
-import { format, formatRelative } from 'date-fns'
+import { format, formatRelative, set } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
@@ -79,6 +79,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     >()
     const [confirmDeleteVehicle, setConfirmDeleteVehicle] =
         useState<boolean>(false)
+    const [editMaintenanceField, setEditMaintenanceField] = useState<string>()
 
     const locale = useMemo(() => {
         switch (settings?.locale) {
@@ -878,7 +879,14 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                         {editMaintenance && (
                             <EditMaintenance
                                 maintenance={editMaintenance}
-                                edit={editMaintenance ? 'edit' : undefined}
+                                edit={editMaintenanceField}
+                                onClose={() => setEditMaintenance(undefined)}
+                                onCancel={() =>
+                                    setEditMaintenanceField(undefined)
+                                }
+                                onEdit={(field) =>
+                                    setEditMaintenanceField(field)
+                                }
                             />
                         )}
                         {(!maintenances || maintenances.length === 0) && (

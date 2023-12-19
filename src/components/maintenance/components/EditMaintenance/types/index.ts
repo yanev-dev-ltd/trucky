@@ -9,9 +9,15 @@ export type EditMaintenanceProps = {
     setEditedMaintenance: Dispatch<SetStateAction<Maintenance>>
     editedMaintenance: Maintenance | undefined
     deleteMaintenance: () => void
+    onClose: () => void
+    onCancel: () => void
+    onEdit: (field: string) => void
 }
 
 export type useEditMaintenanceProps = {
     maintenance: Maintenance
     edit: string | undefined
+    onClose: () => void
+    onCancel: () => void
+    onEdit: (field: string) => void
 }
