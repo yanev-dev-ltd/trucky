@@ -1,14 +1,17 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, use } from 'react'
 import { Maintenance } from '@/components/maintenance/types'
 import { useAddMaintenanceProps } from '../types'
 import { collection, addDoc } from 'firebase/firestore'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { auth, firestore } from '@/services/firebase'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 
 const useAddMaintenance = ({ drivers, vehicleId, units, fullButton}: useAddMaintenanceProps) => {
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
+    const allVehicles = useSelector((state: RootState) => state.vehicles)
     const [maintenance, setMaintenance] = useState<Maintenance>({
         cost: null,
         date: new Date().getTime(),
@@ -21,6 +24,7 @@ const useAddMaintenance = ({ drivers, vehicleId, units, fullButton}: useAddMaint
         part: '',
         description: '',
         vehicleId: '',
+        units: allVehicles.find((v) => v.key === vehicleId)?.units || units,
     })
 
     const reset = () => {
@@ -36,6 +40,7 @@ const useAddMaintenance = ({ drivers, vehicleId, units, fullButton}: useAddMaint
             part: '',
             description: '',
             vehicleId: vehicleId,
+            units: allVehicles.find((v) => v.key === vehicleId)?.units || units,
         })
     }
 
@@ -44,6 +49,12 @@ const useAddMaintenance = ({ drivers, vehicleId, units, fullButton}: useAddMaint
             return {...oldMaintenance, vehicleId: vehicleId}
         })
     }, [vehicleId])
+
+    useEffect(() => {
+        setMaintenance((oldMaintenance) => {
+            return {...oldMaintenance, units: allVehicles.find((v) => v.key === maintenance.vehicleId)?.units || units}
+        })
+    }, [maintenance.vehicleId])
 
     const setField = useCallback((field: string, value: string | number | null | string[]) => {
         setMaintenance((oldMaintenance) => {
@@ -75,7 +86,7 @@ const useAddMaintenance = ({ drivers, vehicleId, units, fullButton}: useAddMaint
         [maintenance]
     )
 
-    return { addMaintenance, setField, maintenance, reset, units, vehicleId, fullButton }
+    return { addMaintenance, setField, maintenance, reset, units: maintenance.units, vehicleId, fullButton }
 }
 
 export default useAddMaintenance

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Vehicles } from '../types'
 
-const initialState = [{ key: 'loading' }]
+const initialState = [{ key: 'loading', units: 'km' }]
 
 
 export const vehiclesSlice = createSlice({

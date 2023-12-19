@@ -14,7 +14,9 @@ import sx from '../styles/Maintenance.sx'
 import { Maintenance, MaintenanceProps } from '../types'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { AddMaintenance } from '../components/AddMaintenance/AddMaintenance'
-// import { EditDriver } from '../components/EditDriver/EditDriver'
+import { EditMaintenance } from '../components/EditMaintenance/EditMaintenance'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 
 export const MaintenanceView: FC<MaintenanceProps> = ({
     maintenances,
@@ -28,6 +30,7 @@ export const MaintenanceView: FC<MaintenanceProps> = ({
     const [search, setSearch] = useState<string | boolean>(false)
     const [filteredMaintenances, setFilteredMaintenances] =
         useState<Maintenance[]>(maintenances)
+    const { settings } = useSelector((state: RootState) => state.settings)
     useEffect(() => {
         if (search && typeof search === 'string' && search.length >= 3) {
             const tempMaintenances = fuse.search(search)
@@ -71,7 +74,7 @@ export const MaintenanceView: FC<MaintenanceProps> = ({
                         ),
                     }}
                 />
-                <AddMaintenance fullButton />
+                <AddMaintenance units={settings.units} fullButton />
             </Box>
             {Array.isArray(filteredMaintenances) &&
                 filteredMaintenances.length > 0 && (
@@ -96,7 +99,10 @@ export const MaintenanceView: FC<MaintenanceProps> = ({
                         </Typography>
                     </Box>
                 )}
-            {/* <EditDriver driver={driver || { key: '' }} edit={edit} /> */}
+            <EditMaintenance
+                maintenance={maintenance || { key: '' }}
+                edit={edit}
+            />
         </Box>
     )
 }

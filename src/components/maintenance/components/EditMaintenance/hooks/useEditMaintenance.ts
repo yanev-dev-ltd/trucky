@@ -4,47 +4,34 @@ import { useIntl } from 'react-intl'
 import { auth, firestore } from '@/services/firebase'
 import { Maintenance } from '@/components/maintenance/types'
 import { deleteDoc, updateDoc, doc } from 'firebase/firestore'
+import { useRouter } from 'next/router'
+import { useEditMaintenanceProps } from '../types'
 
-const useEditMaintenance = (maintenance: Maintenance | undefined) => {
+const useEditMaintenance = ({ maintenance, edit }: useEditMaintenanceProps) => {
     const [editedMaintenance, setEditedMaintenance] = useState(maintenance)
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
+    const router = useRouter()
     useEffect(() => setEditedMaintenance(maintenance), [maintenance])
 
-    const setField = useCallback((field: string, value: string | number | null | string[]) => {
-        setEditedMaintenance((oldMaintenance) => {
-            return {...oldMaintenance, [field]: value}
-        })
-    }, [])
-
-    const saveMaintenance = useCallback(async () => {
-        if (!auth?.currentUser?.uid || !editedMaintenance?.key) return
+    const saveMaintenanceField = useCallback(async (field: keyof Maintenance) => {
+        if (!maintenance?.key || !auth?.currentUser?.uid) return
         try {
-            await updateDoc(doc(firestore, 'maintenances', editedMaintenance?.key), {
-                cost: editedMaintenance.cost || '',
-                date: editedMaintenance.date || '',
-                drivers: editedMaintenance.drivers || [],
-                place: editedMaintenance.place || '',
-                reminderDate: editedMaintenance.reminderDate || '',
-                reminderMileage: editedMaintenance.reminderMileage || '',
-                type: editedMaintenance.type,
-                part: editedMaintenance.part || '',
-                vehicleId: editedMaintenance.vehicleId,
-                userId: auth?.currentUser?.uid,
-                description: editedMaintenance.description || '',
-            })
-            enqueueSnackbar(
-                intl.formatMessage({
-                    id: 'app.Saved.maintenance',
-                }),
-                { variant: 'success' }
-            )
+            await updateDoc(doc(firestore, 'maintenances', maintenance.key), { [field]: editedMaintenance?.[field]})
+            enqueueSnackbar(intl.formatMessage({
+                id: `app.Saved.${field}`,
+            }), { variant: 'success' })
         } catch (error) {
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.Error.saving',
             }), { variant: 'error', persist: true })
         }
+        router.push('/maintenance/' + maintenance.key)
     }, [editedMaintenance])
+
+    const reset = useCallback(() => {
+        setEditedMaintenance(maintenance)
+    }, [setEditedMaintenance, maintenance])
 
     const deleteMaintenance = useCallback(async () => {
         if (!editedMaintenance?.key || !auth?.currentUser?.uid) return
@@ -60,7 +47,7 @@ const useEditMaintenance = (maintenance: Maintenance | undefined) => {
         }
     }, [editedMaintenance?.key])
 
-    return { editedMaintenance, setField, saveMaintenance, deleteMaintenance }
+    return { maintenance, saveMaintenanceField, setEditedMaintenance, editedMaintenance, deleteMaintenance, edit, reset }
 }
 
 export default useEditMaintenance

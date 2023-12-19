@@ -39,7 +39,7 @@ export const makeUnpaid = onDocumentCreated(
       created: new Date().getTime(),
     }));
 
-export const addPaymentMethodOrMakeManualPayment = onDocumentUpdated(
+export const addPaymentMethod = onDocumentUpdated(
     "customers/{userId}",
     async (event) => {
       const prevData = event?.data?.before.data();
@@ -65,62 +65,78 @@ export const addPaymentMethodOrMakeManualPayment = onDocumentUpdated(
                 }});
           await stripe.paymentMethods.detach(prevData.payment_method_id);
         }
-        if (
-          data?.try_payment &&
-          typeof data.try_payment === "string" && event.params.userId) {
-          const pay = await stripe.invoices.pay(data.try_payment);
-          const batch = firestore.batch();
-          const receiptsColl: CollectionReference<DocumentData> =
-            firestore.collection("receipts");
-          const q2: Query<DocumentData> =
-            receiptsColl.where("invoice", "==", data.try_payment);
-          const querySnapshot2: QuerySnapshot<DocumentData> = await q2.get();
-          if (pay.status === "paid") {
-            const userColl: CollectionReference<DocumentData> =
-              firestore.collection("routes");
-            const q1: Query<DocumentData> =
-              userColl
-                  .where("status", "==", "UNPAID")
-                  .where("userId", "==", event.params.userId);
-            const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
-            querySnapshot.forEach((doc) => {
-              batch.update(
-                  firestore.doc("/routes/" + doc.id),
-                  {status: "PAID"});
-            });
-            const charge = await stripe.charges.retrieve(pay?.charge as string);
-            querySnapshot2.forEach((doc) => {
-              batch.update(
-                  firestore.doc("/receipts/" + doc.id),
-                  {
-                    status: "paid",
-                    receipt:
-                      charge.receipt_url ?
-                      charge.receipt_url.split("?")[0] + "/pdf" : null,
-                    amount_paid: charge?.amount_captured || 0,
-                  });
-            });
-            batch.update(
-                firestore.doc("/customers/" + event.params.userId),
-                {status: "active", try_payment: null});
-          } else {
-            batch.update(
-                firestore.doc("/customers/" + event.params.userId),
-                {status: "inactive", try_payment: null});
-            querySnapshot2.forEach((doc) => {
-              batch.update(
-                  firestore.doc("/receipts/" + doc.id),
-                  {status: "declined", receipt: null});
-            });
-          }
-          await batch.commit();
-        }
-      } catch (e) {
+      } catch (e: any) {
         const errorRef = firestore.collection("errors").doc();
         await errorRef.set({
           userId: event.params.userId,
-          error: "addPaymentMethodOrMakeManualPayment",
+          name: "addPaymentMethod",
+          error: e?.message,
+          date: new Date().getTime(),
         });
+      }
+    });
+
+export const makeManualPayment = onDocumentUpdated(
+    "customers/{userId}",
+    async (event) => {
+      const data = event?.data?.after.data().try_payment;
+      if (typeof data === "string" && event.params.userId) {
+        try {
+          const invoice = await stripe.invoices.retrieve(data);
+          if (invoice.status !== "paid") {
+            const pay = await stripe.invoices.pay(data);
+            const batch = firestore.batch();
+            const receiptsColl: CollectionReference<DocumentData> =
+              firestore.collection("receipts");
+            const q2: Query<DocumentData> =
+              receiptsColl.where("invoice", "==", data);
+            const querySnapshot2: QuerySnapshot<DocumentData> = await q2.get();
+            if (pay.status === "paid") {
+              const userColl: CollectionReference<DocumentData> =
+                firestore.collection("routes");
+              const q1: Query<DocumentData> =
+                userColl
+                    .where("status", "==", "UNPAID")
+                    .where("userId", "==", event.params.userId);
+              const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
+              querySnapshot.forEach((doc) => {
+                batch.update(
+                    firestore.doc("/routes/" + doc.id),
+                    {status: "PAID"});
+              });
+              querySnapshot2.forEach((doc) => {
+                batch.update(
+                    firestore.doc("/receipts/" + doc.id),
+                    {
+                      status: "paid",
+                      receipt: pay?.invoice_pdf,
+                      amount_paid: pay?.amount_paid || 0,
+                    });
+              });
+              batch.update(
+                  firestore.doc("/customers/" + event.params.userId),
+                  {status: "active", try_payment: null});
+            } else {
+              batch.update(
+                  firestore.doc("/customers/" + event.params.userId),
+                  {status: "inactive", try_payment: null});
+              querySnapshot2.forEach((doc) => {
+                batch.update(
+                    firestore.doc("/receipts/" + doc.id),
+                    {status: "declined", receipt: null});
+              });
+            }
+            await batch.commit();
+          }
+        } catch (e: any) {
+          const errorRef = firestore.collection("errors").doc();
+          await errorRef.set({
+            userId: event.params.userId,
+            name: "makeManualPayment",
+            error: e?.message,
+            date: new Date().getTime(),
+          });
+        }
       }
     });
 
@@ -197,7 +213,7 @@ export const createInvoice = onSchedule(
                             receipt: null,
                             date: new Date().getTime(),
                             amount_due: nInvoice.amount_due,
-                            amount_paid: nInvoice.amount_paid,
+                            amount_paid: 0,
                             invoice: invoice.id,
                             status: nInvoice.status,
                             userId: user.uid});
@@ -230,7 +246,9 @@ export const createInvoice = onSchedule(
       } catch (e) {
         const errorRef = firestore.collection("errors").doc();
         await errorRef.set({
+          name: "createInvoice",
           error: e,
+          date: new Date().getTime(),
         });
       }
     });

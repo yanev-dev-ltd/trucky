@@ -16,6 +16,7 @@ export type Maintenance = {
     vehicleId?: string
     userId?: string
     description?: string
+    units?: string
 }
 
 export type Maintenances = Maintenance[]

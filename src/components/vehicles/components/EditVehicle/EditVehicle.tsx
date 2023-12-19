@@ -50,7 +50,7 @@ import Upload from '@/components/common/Upload/Upload'
 import Confirm from '@/components/common/Confirm/Confirm'
 import Overflow from '@/components/common/Overflow/Overflow'
 import { AddMaintenance } from '@/components/maintenance/components/AddMaintenance/AddMaintenance'
-import EditMaintenance from '@/components/maintenance/components/EditMaintenance/EditMaintenance'
+import { EditMaintenance } from '@/components/maintenance/components/EditMaintenance/EditMaintenance'
 import Route from '@/components/routes/components/Route/Route'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
@@ -876,11 +876,8 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 </Box>
                             ))}
                         <EditMaintenance
-                            handleEditMaintenanceClose={
-                                handleEditMaintenanceClose
-                            }
                             maintenance={editMaintenance}
-                            units={vehicle.units}
+                            edit={editMaintenance ? 'edit' : undefined}
                         />
                         {(!maintenances || maintenances.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>

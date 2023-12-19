@@ -2,7 +2,7 @@ import { Maintenance } from '@/components/maintenance/types'
 
 export type AddMaintenanceProps = {
     addMaintenance: (m: Maintenance) => void
-    units?: string
+    units: string
     vehicleId?: string
     setField: (field: string, value: string | number | null | string[]) => void
     maintenance: Maintenance
@@ -13,6 +13,6 @@ export type AddMaintenanceProps = {
 export type useAddMaintenanceProps = {
     drivers?: string[]
     vehicleId?: string
-    units?: string
+    units: string
     fullButton?: boolean
 }
