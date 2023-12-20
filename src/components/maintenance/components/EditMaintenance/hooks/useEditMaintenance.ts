@@ -1,18 +1,15 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, SetStateAction, Dispatch } from 'react'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { auth, firestore } from '@/services/firebase'
 import { Maintenance } from '@/components/maintenance/types'
 import { deleteDoc, updateDoc, doc } from 'firebase/firestore'
-import { useRouter } from 'next/router'
 import { useEditMaintenanceProps } from '../types'
-import { on } from 'events'
 
-const useEditMaintenance = ({ maintenance, edit, onClose, onCancel, onEdit }: useEditMaintenanceProps) => {
+const useEditMaintenance = ({ maintenance = { units: '' }, edit, onClose, onCancel, onEdit }: useEditMaintenanceProps) => {
     const [editedMaintenance, setEditedMaintenance] = useState(maintenance)
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
-    const router = useRouter()
     useEffect(() => setEditedMaintenance(maintenance), [maintenance])
 
     const saveMaintenanceField = useCallback(async (field: keyof Maintenance) => {
