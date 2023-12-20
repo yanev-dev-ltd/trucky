@@ -101,19 +101,15 @@ export const MaintenanceView: FC<MaintenanceProps> = ({
                         </Typography>
                     </Box>
                 )}
-            {maintenance && (
-                <EditMaintenance
-                    maintenance={maintenance}
-                    edit={edit}
-                    onClose={() => router.push('/maintenance')}
-                    onCancel={() =>
-                        router.push(`/maintenance/${maintenanceId}`)
-                    }
-                    onEdit={(field) =>
-                        router.push(`/maintenance/${maintenanceId}/${field}`)
-                    }
-                />
-            )}
+            <EditMaintenance
+                maintenance={maintenance}
+                edit={edit}
+                onClose={() => router.push('/maintenance')}
+                onCancel={() => router.push(`/maintenance/${maintenanceId}`)}
+                onEdit={(field) =>
+                    router.push(`/maintenance/${maintenanceId}/${field}`)
+                }
+            />
         </Box>
     )
 }

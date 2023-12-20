@@ -2,7 +2,7 @@ import { Maintenance } from '@/components/maintenance/types'
 import { Dispatch, SetStateAction } from 'react'
 
 export type EditMaintenanceProps = {
-    maintenance: Maintenance
+    maintenance?: Maintenance
     edit: string | undefined
     reset: () => void
     saveMaintenanceField: (field: keyof Maintenance) => void
@@ -15,7 +15,7 @@ export type EditMaintenanceProps = {
 }
 
 export type useEditMaintenanceProps = {
-    maintenance: Maintenance
+    maintenance?: Maintenance
     edit: string | undefined
     onClose: () => void
     onCancel: () => void

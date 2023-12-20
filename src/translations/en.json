@@ -121,6 +121,7 @@
   "app.Maintenance.AlarmDate": "Alarm set for date.",
   "app.Maintenance.AlarmDateAndMileage": "Alarm set for date and mileage.",
   "app.Maintenance.AlarmMileage": "Alarm set for mileage.",
+  "app.MaintenanceNotFound": "Maintenance Not Found",
   "app.MaintenanceType.oil_change": "Oil Change",
   "app.MaintenanceType.tire_change": "Tire Change",
   "app.MaintenanceType.tire_rotation": "Tire Rotation",

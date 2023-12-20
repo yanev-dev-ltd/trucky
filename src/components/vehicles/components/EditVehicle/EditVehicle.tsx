@@ -876,19 +876,13 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                     </MuiTable>
                                 </Box>
                             ))}
-                        {editMaintenance && (
-                            <EditMaintenance
-                                maintenance={editMaintenance}
-                                edit={editMaintenanceField}
-                                onClose={() => setEditMaintenance(undefined)}
-                                onCancel={() =>
-                                    setEditMaintenanceField(undefined)
-                                }
-                                onEdit={(field) =>
-                                    setEditMaintenanceField(field)
-                                }
-                            />
-                        )}
+                        <EditMaintenance
+                            maintenance={editMaintenance}
+                            edit={editMaintenanceField}
+                            onClose={() => setEditMaintenance(undefined)}
+                            onCancel={() => setEditMaintenanceField(undefined)}
+                            onEdit={(field) => setEditMaintenanceField(field)}
+                        />
                         {(!maintenances || maintenances.length === 0) && (
                             <Box display="flex" justifyContent="center" mb={2}>
                                 <Typography>

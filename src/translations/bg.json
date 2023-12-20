@@ -121,6 +121,7 @@
   "app.Maintenance.AlarmDate": "Аларма за дата.",
   "app.Maintenance.AlarmDateAndMileage": "Аларма за дата и километраж.",
   "app.Maintenance.AlarmMileage": "Аларма за километраж.",
+  "app.MaintenanceNotFound": "Поддръжката не е открита",
   "app.MaintenanceType.oil_change": "Смяна на масло",
   "app.MaintenanceType.tire_change": "Смяна на гума",
   "app.MaintenanceType.tire_rotation": "Размяна на гума",
