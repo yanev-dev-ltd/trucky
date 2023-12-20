@@ -21,11 +21,11 @@ const useDrivers = ({ driverId, edit }: useDriversProps): DriversProps => {
         }
         const q = query(collection(firestore, 'drivers'), where('userId', '==', auth.currentUser?.uid))
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const vehicles: Driver[] = []
+            const d: Driver[] = []
             querySnapshot.forEach((doc) => {
-                vehicles.push({key: doc.id, ...doc.data()})
+                d.push({...doc.data() as Driver, key: doc.id})
             })
-            dispatch(setDrivers(vehicles))
+            dispatch(setDrivers(d))
         })
         return () => unsubscribe()
     }, [auth.currentUser?.uid])
