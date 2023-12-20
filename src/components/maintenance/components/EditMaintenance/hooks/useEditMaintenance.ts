@@ -10,7 +10,6 @@ const useEditMaintenance = ({ maintenance = { units: '' }, edit, onClose, onCanc
     const [editedMaintenance, setEditedMaintenance] = useState(maintenance)
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
-    useEffect(() => setEditedMaintenance(maintenance), [maintenance])
 
     const saveMaintenanceField = useCallback(async (field: keyof Maintenance) => {
         if (!maintenance?.key || !auth?.currentUser?.uid) return
