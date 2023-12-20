@@ -25,6 +25,7 @@ const useAddMaintenance = ({ drivers, vehicleId, units, fullButton}: useAddMaint
         description: '',
         vehicleId: '',
         units: allVehicles.find((v) => v.key === vehicleId)?.units || units,
+        startMileage: allVehicles.find((v) => v.key === vehicleId)?.mileage,
     })
 
     const reset = () => {
@@ -41,6 +42,7 @@ const useAddMaintenance = ({ drivers, vehicleId, units, fullButton}: useAddMaint
             description: '',
             vehicleId: vehicleId,
             units: allVehicles.find((v) => v.key === vehicleId)?.units || units,
+            startMileage: allVehicles.find((v) => v.key === vehicleId)?.mileage,
         })
     }
 
@@ -52,7 +54,8 @@ const useAddMaintenance = ({ drivers, vehicleId, units, fullButton}: useAddMaint
 
     useEffect(() => {
         setMaintenance((oldMaintenance) => {
-            return {...oldMaintenance, units: allVehicles.find((v) => v.key === maintenance.vehicleId)?.units || units}
+            const vehicle = allVehicles.find((v) => v.key === maintenance.vehicleId)
+            return {...oldMaintenance, units: vehicle?.units || units, startMileage: vehicle?.mileage}
         })
     }, [maintenance.vehicleId])
 

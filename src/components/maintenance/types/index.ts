@@ -17,6 +17,7 @@ export type Maintenance = {
     userId?: string
     description?: string
     units: string
+    startMileage?: number | null
 }
 
 export type Maintenances = Maintenance[]
