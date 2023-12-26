@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Receipt } from '../types'
 
-const initialState: Receipt[] = [{ loading: true }]
+const initialState: Receipt[] = [{ key: 'loading' }]
 
 
 export const receiptsSlice = createSlice({

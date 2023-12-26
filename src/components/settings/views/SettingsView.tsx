@@ -15,6 +15,8 @@ import {
     OneK,
     DeleteForever,
     Receipt,
+    Person2,
+    Password as PasswordIcon,
 } from '@mui/icons-material'
 import { SettingsViewProps } from '../types'
 import sx from '../styles/Settings.sx'
@@ -26,7 +28,9 @@ import Language from '../components/Language/Language'
 import Theme from '../components/Theme/Theme'
 import Units from '../components/Units/Units'
 import Delete from '../components/Delete/Delete'
-import { Elements, ElementsConsumer } from '@stripe/react-stripe-js'
+import Profile from '../components/Profile/Profile'
+import Password from '../components/Password/Password'
+import { Elements } from '@stripe/react-stripe-js'
 
 export const SettingsView = ({ section, stripePromise }: SettingsViewProps) => {
     const component = useMemo(() => {
@@ -47,6 +51,10 @@ export const SettingsView = ({ section, stripePromise }: SettingsViewProps) => {
                 return <Units />
             case 'delete':
                 return <Delete />
+            case 'profile':
+                return <Profile />
+            case 'password':
+                return <Password />
             default:
                 return null
         }
@@ -56,6 +64,30 @@ export const SettingsView = ({ section, stripePromise }: SettingsViewProps) => {
         <Box sx={sx.root}>
             <Paper sx={sx.menu}>
                 <MenuList>
+                    <MenuItem
+                        component={Link}
+                        href={'/settings/profile'}
+                        sx={section === 'profile' ? sx.active : undefined}
+                    >
+                        <ListItemIcon>
+                            <Person2 fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>
+                            <FormattedMessage id="app.Profile" />
+                        </ListItemText>
+                    </MenuItem>
+                    <MenuItem
+                        component={Link}
+                        href={'/settings/password'}
+                        sx={section === 'password' ? sx.active : undefined}
+                    >
+                        <ListItemIcon>
+                            <PasswordIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>
+                            <FormattedMessage id="app.PasswordChange" />
+                        </ListItemText>
+                    </MenuItem>
                     <MenuItem
                         component={Link}
                         href={'/settings/payment'}

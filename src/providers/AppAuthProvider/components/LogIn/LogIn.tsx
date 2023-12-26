@@ -40,7 +40,11 @@ const LogIn = () => {
                     autoComplete="current-password"
                     inputRef={passwordRef}
                 />
-                {error && <Typography>{error}</Typography>}
+                {error && (
+                    <Typography>
+                        {<FormattedMessage id={`app.${error}`} />}
+                    </Typography>
+                )}
                 <LoadingButton
                     type="submit"
                     fullWidth

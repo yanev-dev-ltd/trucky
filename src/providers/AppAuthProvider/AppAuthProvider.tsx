@@ -1,10 +1,12 @@
 import { FC, PropsWithChildren } from 'react'
 import LogIn from './components/LogIn/LogIn'
+import EmailVerification from './components/EmailVerification/EmailVerification'
 import useAppAuthProvider from './hooks/useAppAuthProvider'
 import { Box, CircularProgress } from '@mui/material'
 import Layout from '@/components/hoc/Layout/Layout'
 import sx from './styles/AppAuthProvider.sx'
 import { useRouter } from 'next/router'
+import { auth } from '@/services/firebase'
 
 const Authenticated: FC<PropsWithChildren<unknown>> = ({ children }) => {
     const { user, subscription } = useAppAuthProvider()
@@ -30,6 +32,18 @@ const Authenticated: FC<PropsWithChildren<unknown>> = ({ children }) => {
                 <CircularProgress />
             </Box>
         )
+    }
+
+    if (router.asPath.startsWith('/registration') && user === 'anonymous') {
+        return <>{children}</>
+    }
+
+    if (router.asPath.startsWith('/registration') && user !== 'anonymous') {
+        router.push('/')
+    }
+
+    if (auth.currentUser?.emailVerified === false) {
+        return <EmailVerification />
     }
 
     if (user !== 'anonymous' && user !== 'loading') {
