@@ -17,7 +17,19 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     submit: {
         marginTop: 2,
-    }
+    },
+    modal: {
+        padding: 2,
+        width: '400px',
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+    },
+    actions: {
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
 }
 
 export default sx

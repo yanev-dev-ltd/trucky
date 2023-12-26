@@ -6,6 +6,7 @@ import { RegistrationProps } from '../types'
 import { IntlProvider, FormattedMessage } from 'react-intl'
 import messagesEn from '../../../translations/en.json'
 import messagesBg from '../../../translations/bg.json'
+import Link from '@mui/material/Link'
 
 export const RegistrationView: FC<RegistrationProps> = ({
     onSubmit,
@@ -85,6 +86,12 @@ export const RegistrationView: FC<RegistrationProps> = ({
                     >
                         <FormattedMessage id="app.Register" />
                     </LoadingButton>
+                    <Typography sx={{ padding: 1 }}>
+                        <FormattedMessage id="app.HaveAnAccount" />{' '}
+                        <Link href="/" color="primary">
+                            <FormattedMessage id="app.LogIn" />
+                        </Link>
+                    </Typography>
                 </Box>
             </Container>
         </IntlProvider>
