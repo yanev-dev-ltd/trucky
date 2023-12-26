@@ -14,7 +14,14 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     table: {
         width: '100%'
-    }
+    },
+    noCard: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 'calc(100vh - 88px)'
+    },
 }
 
 export default sx

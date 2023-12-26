@@ -1,13 +1,17 @@
-import { useState, ChangeEvent, SyntheticEvent } from 'react'
+import { useState, useEffect, ChangeEvent, SyntheticEvent } from 'react'
 import { auth, firestore } from '@/services/firebase'
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { useCheckoutFormProps } from '../types'
 import { updateDoc, doc } from 'firebase/firestore'
+import { useIntl } from 'react-intl'
+import { useSnackbar } from 'notistack'
 
 const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
     const stripe = useStripe()
     const elements = useElements()
     const [cardError, setCardError] = useState<string | undefined>()
+    const { enqueueSnackbar } = useSnackbar()
+    const intl = useIntl()
     const [loading, setLoading] = useState(false)
     const [values, setValues] = useState({
         email: '',
@@ -21,6 +25,12 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
             setValues({ ...values, [prop]: event.target.type === 'checkbox' ? event.target.checked : event.target.value })
         }
     const { auto_payment, ...billing_details } = values
+
+    useEffect(() => {
+        if (cardError) {
+            enqueueSnackbar(intl.formatMessage({ id: `app.${cardError}` }), { variant: 'error' })
+        }
+    }, [cardError])
 
     const handleSubmit = async (event: SyntheticEvent) => {
         // Block native form submission.
@@ -38,6 +48,7 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
         const cardElement = elements.getElement(CardElement)
         try {
             if (!cardElement) return
+            setLoading(true)
             const { error, paymentMethod } = await stripe.createPaymentMethod({
                 type: 'card',
                 card: cardElement,
@@ -54,8 +65,7 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
                     setCardError(undefined)
                 }, 10000)
             } else {
-                setLoading(true)
-                await updateDoc(doc(firestore, 'customers', auth.currentUser.uid), {
+                await updateDoc(doc(firestore, 'profile', auth.currentUser.uid), {
                     payment_method_id: paymentMethod.id,
                     card_brand: paymentMethod.card?.brand,
                     card_country: paymentMethod.card?.country,
@@ -71,13 +81,16 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
                 handleFormClose()
             }
         } catch (error) {
+            console.log(error)
             setCardError('try_again')
+        } finally {
+            setLoading(false)
         }
 
         // Use your card Element with other Stripe.js APIs
     }
 
-    return { handleChange, handleSubmit, cardError, loading, stripe }
+    return { handleChange, handleSubmit, loading, stripe }
 }
 
 export default useCheckoutForm

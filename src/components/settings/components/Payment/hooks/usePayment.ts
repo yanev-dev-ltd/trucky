@@ -13,7 +13,7 @@ const usePayment = () => {
         if (!auth.currentUser?.uid) {
             return
         }
-        const unsubscribe = onSnapshot(doc(firestore, 'customers', auth.currentUser?.uid), (doc) => {
+        const unsubscribe = onSnapshot(doc(firestore, 'profile', auth.currentUser?.uid), (doc) => {
             const data = doc?.data()
             dispatch(setStripe({
                 card_brand: data?.card_brand,
@@ -42,7 +42,7 @@ const usePayment = () => {
 
     const deleteCard = useCallback(async () => {
         if (!auth.currentUser?.uid) return
-        await updateDoc(doc(firestore, 'customers', auth.currentUser.uid), {
+        await updateDoc(doc(firestore, 'profile', auth.currentUser.uid), {
             payment_method_id: null,
             card_brand: null,
             card_country: null, 

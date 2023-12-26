@@ -19,8 +19,9 @@ import useCheckoutForm from './hooks/useCheckoutForm'
 const CheckoutForm = ({ handleFormClose }: CheckoutFormProps) => {
     const intl = useIntl()
     const theme = useTheme()
-    const { handleChange, handleSubmit, cardError, loading, stripe } =
-        useCheckoutForm({ handleFormClose })
+    const { handleChange, handleSubmit, loading, stripe } = useCheckoutForm({
+        handleFormClose,
+    })
 
     const options = {
         style: {
@@ -68,12 +69,6 @@ const CheckoutForm = ({ handleFormClose }: CheckoutFormProps) => {
             <Box sx={sx.wrapper}>
                 <CardElement options={options} />
             </Box>
-            {cardError && (
-                <Typography color="error">
-                    <FormattedMessage id={`app.stripe.${cardError}`} />
-                    {` (${cardError})`}
-                </Typography>
-            )}
             <Box display="flex" justifyContent="space-between">
                 <FormControlLabel
                     control={

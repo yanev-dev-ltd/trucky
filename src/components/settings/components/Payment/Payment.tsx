@@ -72,14 +72,7 @@ const Payment = () => {
                                 </TableCell>
                                 <TableCell>
                                     {stripe.auto_payment ? (
-                                        <>
-                                            <FormattedMessage id="app.On" />
-                                            <Box>
-                                                <Typography variant="caption">
-                                                    <FormattedMessage id="app.EveryFirstOfTheMonth" />{' '}
-                                                </Typography>
-                                            </Box>
-                                        </>
+                                        <FormattedMessage id="app.On" />
                                     ) : (
                                         <FormattedMessage id="app.Off" />
                                     )}
@@ -101,18 +94,18 @@ const Payment = () => {
                 </TableContainer>
             )}
             {stripe.card_last4 ? null : (
-                <Typography sx={sx.padding}>
-                    <FormattedMessage id="app.NoCreditCard" />
-                </Typography>
-            )}
-            {stripe.card_last4 ? null : (
-                <Button
-                    onClick={handleFormOpen}
-                    color="primary"
-                    variant="contained"
-                >
-                    <FormattedMessage id="app.AddCard" />
-                </Button>
+                <Box sx={sx.noCard}>
+                    <Typography sx={sx.padding}>
+                        <FormattedMessage id="app.NoCreditCard" />
+                    </Typography>
+                    <Button
+                        onClick={handleFormOpen}
+                        color="primary"
+                        variant="contained"
+                    >
+                        <FormattedMessage id="app.AddCard" />
+                    </Button>
+                </Box>
             )}
             <Modal open={formOpened} onClose={handleFormClose}>
                 <Paper sx={sx.modal}>

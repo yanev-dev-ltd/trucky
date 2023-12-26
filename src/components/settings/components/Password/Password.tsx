@@ -50,15 +50,17 @@ const Password = () => {
                 autoComplete="current-password"
                 inputRef={newPassword2Ref}
             />
-            <LoadingButton
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                isLoading={loading}
-            >
-                <FormattedMessage id="app.ChangePassword" />
-            </LoadingButton>
+            <Box sx={{ marginTop: 2 }}>
+                <LoadingButton
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    isLoading={loading}
+                >
+                    <FormattedMessage id="app.ChangePassword" />
+                </LoadingButton>
+            </Box>
         </Box>
     )
 }

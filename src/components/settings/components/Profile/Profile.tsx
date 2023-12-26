@@ -165,15 +165,17 @@ const Profile = () => {
                     }
                 />
             </Box>
-            <LoadingButton
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                isLoading={loading}
-            >
-                <FormattedMessage id="app.Save" />
-            </LoadingButton>
+            <Box sx={{ marginTop: 2 }}>
+                <LoadingButton
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    isLoading={loading}
+                >
+                    <FormattedMessage id="app.Save" />
+                </LoadingButton>
+            </Box>
         </Box>
     )
 }
