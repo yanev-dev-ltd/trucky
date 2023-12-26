@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from 'react'
 import { useAddClientProps } from '../types'
 import { firestore, auth } from '@/services/firebase'
-import { collection, addDoc, doc } from 'firebase/firestore'
+import { collection, addDoc } from 'firebase/firestore'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { useRouter } from 'next/router'

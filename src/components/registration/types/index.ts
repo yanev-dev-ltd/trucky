@@ -1,3 +1,4 @@
+import { Locales } from '../../../types/settings'
 export type FirebaseError = {
     code: any
 } & Error
@@ -13,5 +14,5 @@ export type RegistrationProps = {
 }
 
 export type useRegistrationProps = {
-    locale: string
+    locale: Locales
 }

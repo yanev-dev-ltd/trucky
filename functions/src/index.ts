@@ -49,11 +49,10 @@ export const registerNewUser = functions.auth.user().onCreate(async (user) => {
     ],
   });
   await firestore.collection("settings").doc(user.uid).set({
-    locale: "en",
     currency: "EUR",
     theme: "light",
     units: "km",
-  });
+  }, {merge: true});
   return firestore.collection("customers").doc(user.uid).set({
     status: "active",
     created: new Date().getTime(),
@@ -73,6 +72,7 @@ export const deleteUser = functions.auth.user().onDelete(async (user) => {
     customer.get("stripe_subscription_id") && await stripe.subscriptions.cancel(customer.get("stripe_subscription_id"));
     customer.get("stripe_customer_id") && await stripe.customers.del(customer.get("stripe_customer_id"));
     await firestore.collection("settings").doc(user.uid).delete();
+    await firestore.collection("profile").doc(user.uid).delete();
     const vehicles = await firestore.collection("vehicles").where("userId", "==", user.uid).get();
     vehicles.forEach(async (vehicle) => {
       await vehicle.ref.delete();
