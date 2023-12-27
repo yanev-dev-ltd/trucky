@@ -43,7 +43,6 @@ const useInvoices = () => {
                 card_last4: data?.card_last4,
                 card_name: data?.card_name,
                 card_phone: data?.card_phone,
-                auto_payment: data?.auto_payment
             }))
         })
         return () => {
