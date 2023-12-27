@@ -24,9 +24,11 @@ import sx from './styles/Invoices.sx'
 import { format } from 'date-fns'
 import useInvoices from './hooks/useInvoices'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
+import { useRouter } from 'next/router'
 
 const Invoices = () => {
-    const { receipts, makePayment, loading } = useInvoices()
+    const { receipts, makePayment, loading, card_last4 } = useInvoices()
+    const router = useRouter()
     if (receipts?.[0]?.key === 'loading') {
         return (
             <Box sx={sx.loading}>
@@ -67,23 +69,25 @@ const Invoices = () => {
                         <TableRow key={i}>
                             <TableCell>
                                 {receipt.date
-                                    ? format(receipt?.date, 'dd/MM/yyyy')
+                                    ? format(receipt?.date * 1000, 'dd/MM/yyyy')
                                     : '-'}
                             </TableCell>
                             <TableCell>
                                 €
-                                {receipt.amount_paid
-                                    ? (receipt.amount_paid / 100).toFixed(2)
-                                    : receipt?.amount_due &&
-                                      (receipt?.amount_due / 100).toFixed(2)}
+                                {receipt.amount &&
+                                    (receipt.amount / 100).toFixed(2)}
                             </TableCell>
                             <TableCell>
-                                {receipt.status === 'declined' && (
-                                    <>
-                                        <Close fontSize="small" sx={sx.icon} />{' '}
-                                        <FormattedMessage id="app.Declined" />
-                                    </>
-                                )}
+                                {receipt.status === 'declined' ||
+                                    (receipt.status === 'open' && (
+                                        <>
+                                            <Close
+                                                fontSize="small"
+                                                sx={sx.icon}
+                                            />{' '}
+                                            <FormattedMessage id="app.Declined" />
+                                        </>
+                                    ))}
                                 {receipt.status === 'paid' && (
                                     <>
                                         <Check fontSize="small" sx={sx.icon} />{' '}
@@ -98,7 +102,6 @@ const Invoices = () => {
                                     </>
                                 )}
                                 {(receipt.status === 'manual' ||
-                                    receipt.status === 'open' ||
                                     receipt.status === 'draft') && (
                                     <>
                                         <Payment
@@ -125,17 +128,33 @@ const Invoices = () => {
                                 {(receipt.status === 'manual' ||
                                     receipt.status === 'open' ||
                                     receipt.status === 'draft') && (
-                                    <LoadingButton
-                                        color="primary"
-                                        variant="contained"
-                                        startIcon={<Euro />}
-                                        onClick={() =>
-                                            makePayment(receipt.invoice)
-                                        }
-                                        isLoading={loading}
-                                    >
-                                        <FormattedMessage id="app.PayNow" />
-                                    </LoadingButton>
+                                    <>
+                                        <LoadingButton
+                                            color="primary"
+                                            variant="contained"
+                                            startIcon={<Euro />}
+                                            onClick={() =>
+                                                makePayment(receipt.key)
+                                            }
+                                            isLoading={loading}
+                                            disabled={!card_last4}
+                                        >
+                                            <FormattedMessage id="app.PayNow" />
+                                        </LoadingButton>
+                                        {!card_last4 && (
+                                            <Button
+                                                color="primary"
+                                                variant="outlined"
+                                                onClick={() =>
+                                                    router.push(
+                                                        '/settings/payment'
+                                                    )
+                                                }
+                                            >
+                                                <FormattedMessage id="app.AddPaymentMethod" />
+                                            </Button>
+                                        )}
+                                    </>
                                 )}
                                 {receipt.status === 'paid' && (
                                     <Button
@@ -143,9 +162,9 @@ const Invoices = () => {
                                         color="primary"
                                         variant="outlined"
                                         startIcon={<FileDownload />}
-                                        href={receipt.receipt}
+                                        href={receipt.invoicePdf}
                                         download
-                                        disabled={!receipt.receipt}
+                                        disabled={!receipt.invoicePdf}
                                     >
                                         <FormattedMessage id="app.Download" />
                                     </Button>

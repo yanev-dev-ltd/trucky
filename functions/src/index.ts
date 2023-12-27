@@ -6,6 +6,8 @@ import {
   // Change,
   // FirestoreEvent,
 } from "firebase-functions/v2/firestore";
+import {log} from "firebase-functions/logger";
+import {onRequest} from "firebase-functions/v2/https";
 import * as functions from "firebase-functions";
 import Stripe from "stripe";
 import {
@@ -46,11 +48,19 @@ export const registerNewUser = functions.auth.user().onCreate(async (user) => {
         quantity: 0,
       },
     ],
+    metadata: {
+      userId: user.uid,
+    },
   });
   await firestore.collection("settings").doc(user.uid).set({
     currency: "EUR",
     theme: "light",
     units: "km",
+  }, {merge: true});
+  await firestore.collection("profile").doc(user.uid).set({
+    company: "",
+    phone: "",
+    address: "",
   }, {merge: true});
   return firestore.collection("customers").doc(user.uid).set({
     status: "active",
@@ -177,13 +187,110 @@ export const addPaymentMethod = onDocumentUpdated(
         }
       } catch (e) {
         if (e instanceof Stripe.errors.StripeError) {
-          const errorRef = firestore.collection("errors").doc();
-          await errorRef.set({
-            userId: event.params.userId,
-            name: "addPaymentMethod",
-            error: e?.message,
-            date: new Date().getTime(),
-          });
+          await firestore.collection("profile").doc(event.params.userId).set({
+            card_error: e.decline_code || e.code,
+            payment_method_id: null,
+            card_brand: null,
+            card_country: null,
+            card_email: null,
+            card_exp_month: null,
+            card_exp_year: null,
+            card_last4: null,
+            card_name: null,
+            card_phone: null,
+          }, {merge: true});
         }
       }
+    });
+
+export const manualPayment = onDocumentUpdated(
+    "receipts/{receiptId}",
+    async (event) => {
+      const prevData = event?.data?.before.data();
+      const data = event?.data?.after.data();
+      if (!prevData?.try_payment && data?.try_payment && data?.invoice) {
+        try {
+          await stripe.invoices.pay(data?.invoice);
+        } catch (e) {
+          if (e instanceof Stripe.errors.StripeError) {
+            const errorRef = firestore.collection("errors").doc();
+            await errorRef.set({
+              userId: data?.userId,
+              name: "manualPayment",
+              error: e?.message,
+              date: new Date().getTime(),
+            });
+          }
+        }
+        await firestore.collection("receipts").doc(event.params.receiptId).set({
+          try_payment: false,
+        }, {merge: true});
+      }
+    });
+
+export const stripeWebhook = onRequest(
+    {timeoutSeconds: 1200, cors: true},
+    async (req, res) => {
+      const sig = req.headers["stripe-signature"];
+      const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
+      let event: Stripe.Event;
+      try {
+        event = stripe.webhooks.constructEvent(req.rawBody, sig || "", endpointSecret);
+        let userId;
+        let q1;
+        switch (event.type) {
+          case "invoice.paid":
+            userId = event.data.object?.subscription_details?.metadata?.userId || "";
+            userId && await firestore.collection("customers").doc(userId).set({
+              status: "active",
+            }, {merge: true});
+            q1 = await firestore.collection("receipts").where("invoice", "==", event.data.object.id).get();
+            q1.forEach(async (receipt) => {
+              await receipt.ref.delete();
+            });
+            userId && await firestore.collection("receipts").add({
+              userId,
+              invoicePdf: event.data.object.invoice_pdf,
+              invoice: event.data.object.id,
+              amount: event.data.object.amount_paid,
+              status: event.data.object.status,
+              date: event.data.object.created,
+            });
+            break;
+          case "invoice.payment_failed":
+            userId = event.data.object?.subscription_details?.metadata?.userId || "";
+            await firestore.collection("customers").doc(userId).set({
+              status: "inactive",
+            }, {merge: true});
+            q1 = await firestore.collection("receipts").where("invoice", "==", event.data.object.id).get();
+            q1.forEach(async (receipt) => {
+              await receipt.ref.delete();
+            });
+            userId && await firestore.collection("receipts").add({
+              userId,
+              invoicePdf: event.data.object.invoice_pdf,
+              invoice: event.data.object.id,
+              amount: event.data.object.amount_due,
+              status: event.data.object.status,
+              date: event.data.object.created,
+            });
+            break;
+          default:
+            log(`Unhandled event type ${event.type}`);
+        }
+      } catch (err) {
+        if (err instanceof Stripe.errors.StripeSignatureVerificationError) {
+          const errorRef = firestore.collection("errors").doc();
+          await errorRef.set({
+            name: "stripeWebhook",
+            error: err.message,
+            headers: req.headers,
+            date: new Date().getTime(),
+          });
+          res.status(400).send(`Webhook Error: ${err.message}`);
+          return;
+        }
+      }
+      res.json({received: true});
+      return;
     });

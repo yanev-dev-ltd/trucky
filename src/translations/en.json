@@ -11,6 +11,7 @@
   "app.AddDriver": "Add Driver",
   "app.AddMaintenance": "Add Maintenance",
   "app.AddOrder": "Add Order",
+  "app.AddPaymentMethod": "Add Payment Method",
   "app.Address": "Address",
   "app.AddRoute": "Add Route",
   "app.AddStop": "Add Stop",

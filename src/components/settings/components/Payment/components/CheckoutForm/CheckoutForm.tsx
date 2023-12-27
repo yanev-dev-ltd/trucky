@@ -24,6 +24,7 @@ const CheckoutForm = ({ handleFormClose }: CheckoutFormProps) => {
     })
 
     const options = {
+        hidePostalCode: true,
         style: {
             base: {
                 color: theme.palette.text.primary,
@@ -70,30 +71,19 @@ const CheckoutForm = ({ handleFormClose }: CheckoutFormProps) => {
                 <CardElement options={options} />
             </Box>
             <Box display="flex" justifyContent="space-between">
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            defaultChecked
-                            onChange={handleChange('auto_payment')}
-                        />
-                    }
-                    label={intl.formatMessage({ id: 'app.AutomaticPayment' })}
-                />
-                <Box gap={1} display="flex">
-                    <Button onClick={handleFormClose}>
-                        <FormattedMessage id="app.Cancel" />
-                    </Button>
-                    <LoadingButton
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        isLoading={loading}
-                        disabled={!stripe}
-                        startIcon={<Add />}
-                    >
-                        <FormattedMessage id="app.AddCard" />
-                    </LoadingButton>
-                </Box>
+                <Button onClick={handleFormClose}>
+                    <FormattedMessage id="app.Cancel" />
+                </Button>
+                <LoadingButton
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    isLoading={loading}
+                    disabled={!stripe}
+                    startIcon={<Add />}
+                >
+                    <FormattedMessage id="app.AddCard" />
+                </LoadingButton>
             </Box>
         </Box>
     )

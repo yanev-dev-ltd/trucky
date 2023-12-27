@@ -4,10 +4,14 @@ import { RootState } from '@/store/store'
 import { firestore, auth } from '@/services/firebase'
 import { setStripe } from '../redux'
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore'
+import { useSnackbar } from 'notistack'
+import { useIntl } from 'react-intl'
 
 const usePayment = () => {
     const dispatch = useDispatch()
     const stripe = useSelector((state: RootState) => state.stripe)
+    const { enqueueSnackbar } = useSnackbar()
+    const intl = useIntl()
     const [formOpened, setFormOpened] = useState(false)
     useEffect(() => {
         if (!auth.currentUser?.uid) {
@@ -24,13 +28,24 @@ const usePayment = () => {
                 card_last4: data?.card_last4,
                 card_name: data?.card_name,
                 card_phone: data?.card_phone,
-                auto_payment: data?.auto_payment
+                card_error: data?.card_error
             }))
         })
         return () => {
             unsubscribe()
         } 
     }, [auth.currentUser?.uid])
+
+    useEffect(() => {
+        if (!stripe.card_error || !auth?.currentUser?.uid) return
+        enqueueSnackbar(intl.formatMessage({ id: `app.stripe.${stripe.card_error}` }), { variant: 'error', persist: true })
+        const clearError = async () => {
+            auth?.currentUser?.uid && await updateDoc(doc(firestore, 'profile', auth?.currentUser?.uid), {
+                card_error: null,
+            })
+        }
+        clearError()
+    }, [stripe.card_error])
 
     const handleFormOpen = () => {
         setFormOpened(true)
@@ -52,7 +67,6 @@ const usePayment = () => {
             card_last4: null,
             card_name: null,
             card_phone: null,
-            auto_payment: null
         })
     },[])
 

@@ -41,9 +41,6 @@ const Payment = () => {
                                 <TableCell>
                                     <FormattedMessage id="app.CardNumber" />
                                 </TableCell>
-                                <TableCell>
-                                    <FormattedMessage id="app.AutomaticPayment" />
-                                </TableCell>
                                 <TableCell align="right">
                                     <FormattedMessage id="app.Actions" />
                                 </TableCell>
@@ -69,13 +66,6 @@ const Payment = () => {
                                             {stripe.card_exp_year}
                                         </Typography>
                                     </Box>
-                                </TableCell>
-                                <TableCell>
-                                    {stripe.auto_payment ? (
-                                        <FormattedMessage id="app.On" />
-                                    ) : (
-                                        <FormattedMessage id="app.Off" />
-                                    )}
                                 </TableCell>
                                 <TableCell align="right">
                                     <Button

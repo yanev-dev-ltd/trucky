@@ -1,11 +1,10 @@
 import { Stripe } from '@stripe/stripe-js';
 export type Receipt = {
     key?: string
-    amount_paid?: number
-    amount_due?: number
+    amount?: number
     date?: number
     invoice?: string
-    receipt?: string
+    invoicePdf?: string
     status?: string
     loading?: boolean
 }

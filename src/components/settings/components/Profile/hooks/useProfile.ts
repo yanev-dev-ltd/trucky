@@ -40,7 +40,6 @@ const useProfile = () => {
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.Error.saving',
             }), { variant: 'error', persist: true })
-            console.log(error)
             setLoading(false)
         }
     }, [profile])

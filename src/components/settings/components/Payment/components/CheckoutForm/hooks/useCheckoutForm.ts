@@ -17,15 +17,11 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
         email: '',
         phone: '',
         name: '',
-        auto_payment: true
     })
-    
     const handleChange =
         (prop: string) => (event: ChangeEvent<HTMLInputElement>) => {
             setValues({ ...values, [prop]: event.target.type === 'checkbox' ? event.target.checked : event.target.value })
         }
-    const { auto_payment, ...billing_details } = values
-
     useEffect(() => {
         if (cardError) {
             enqueueSnackbar(intl.formatMessage({ id: `app.${cardError}` }), { variant: 'error' })
@@ -52,7 +48,7 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
             const { error, paymentMethod } = await stripe.createPaymentMethod({
                 type: 'card',
                 card: cardElement,
-                billing_details: billing_details,
+                billing_details: values,
             })
 
             if (error) {
@@ -75,7 +71,6 @@ const useCheckoutForm = ({ handleFormClose }: useCheckoutFormProps) => {
                     card_last4: paymentMethod.card?.last4,
                     card_name: paymentMethod.billing_details.name,
                     card_phone: paymentMethod.billing_details.phone,
-                    auto_payment: auto_payment
                 })
                 setLoading(false)
                 handleFormClose()

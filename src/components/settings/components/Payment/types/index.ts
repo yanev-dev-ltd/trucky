@@ -7,6 +7,6 @@ export type Stripe = {
     card_last4?: number,
     card_name?: string,
     card_phone?: string,
-    auto_payment?: boolean,
+    card_error?: string
     loading?: boolean
 }
