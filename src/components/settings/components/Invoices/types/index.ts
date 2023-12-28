@@ -1,4 +1,3 @@
-import { Stripe } from '@stripe/stripe-js';
 export type Receipt = {
     key?: string
     amount?: number
@@ -7,9 +6,5 @@ export type Receipt = {
     invoicePdf?: string
     status?: string
     loading?: boolean
-}
-
-export type InvoicesProps = {
-    receipts: Receipt[]
-    makePayment: (invoiceId: string | undefined) => void
+    client_secret?: string
 }

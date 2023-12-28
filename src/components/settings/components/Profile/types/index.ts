@@ -10,4 +10,5 @@ export type Profile = {
         line1?: string,
     },
     phone?: string
+    client_secret?: string
 }

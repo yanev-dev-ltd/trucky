@@ -1,18 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { firestore, auth } from '@/services/firebase'
 import { setReceipts } from '../redux'
 import { Receipt } from '../types'
-import { collection, query, where, onSnapshot, updateDoc, doc, addDoc, orderBy } from 'firebase/firestore'
+import { collection, query, where, onSnapshot, updateDoc, doc, orderBy } from 'firebase/firestore'
 import { RootState } from '@/store/store'
 import { useSnackbar } from 'notistack'
 import { FirebaseError } from '../../../../../providers/AppAuthProvider/types'
 import { setStripe } from '../../Payment/redux'
+import { useStripe } from '@stripe/react-stripe-js'
 
 const useInvoices = () => {
     const [loading, setLoading] = useState(false)
     const receipts = useSelector((state: RootState) => state.receipts)
-    const stripe = useSelector((state: RootState) => state.stripe)
+    const stripeState = useSelector((state: RootState) => state.stripe)
+    const stripe = useStripe()
     const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
     useEffect(() => {
@@ -43,6 +45,8 @@ const useInvoices = () => {
                 card_last4: data?.card_last4,
                 card_name: data?.card_name,
                 card_phone: data?.card_phone,
+                client_secret: data?.client_secret,
+                payment_method_id: data?.payment_method_id,
             }))
         })
         return () => {
@@ -54,7 +58,24 @@ const useInvoices = () => {
 
     const makePayment = async (receiptId: string | undefined) => {
         if (!receiptId || !auth?.currentUser?.uid) return
+        const receipt = receipts.find((r) => r.key === receiptId)
         setLoading(true)
+        if (receipt?.client_secret) {
+            const intent = await stripe?.retrievePaymentIntent(receipt.client_secret || '')
+            console.log(intent?.paymentIntent?.status)
+            if (intent?.paymentIntent?.status === 'requires_action' || intent?.paymentIntent?.status === 'requires_payment_method') {
+                const result = await stripe?.confirmCardPayment(receipt.client_secret || '', {
+                    payment_method: stripeState.payment_method_id,
+                })
+                if (result?.error) {
+                    enqueueSnackbar(result.error.message, { variant: 'error', persist: true })
+                    setLoading(false)
+                    return
+                }
+                return
+            }
+            return
+        }
         try {
             await updateDoc(doc(firestore, 'receipts', receiptId), {
                 try_payment: true
@@ -64,7 +85,7 @@ const useInvoices = () => {
         }
     }
 
-    return { receipts, makePayment, loading, card_last4: stripe.card_last4 }
+    return { receipts, makePayment, loading, card_last4: stripeState.card_last4 }
 }
 
 export default useInvoices

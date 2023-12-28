@@ -17,11 +17,14 @@ import sx from './styles/Payment.sx'
 import { FormattedMessage } from 'react-intl'
 import CheckoutForm from './components/CheckoutForm/CheckoutForm'
 import Confirm from '@/components/common/Confirm/Confirm'
+import { PaymentViewProps } from './types'
+import { useRouter } from 'next/router'
 
-const Payment = () => {
-    const { stripe, handleFormOpen, handleFormClose, formOpened, deleteCard } =
-        usePayment()
+const Payment = ({ checkoutFormOpen }: PaymentViewProps) => {
+    const router = useRouter()
+    const { stripe, deleteCard } = usePayment()
     const [confirmDeleteCard, setConfirmDeleteCard] = useState(false)
+
     return (
         <Box>
             {stripe.card_last4 && (
@@ -89,7 +92,7 @@ const Payment = () => {
                         <FormattedMessage id="app.NoCreditCard" />
                     </Typography>
                     <Button
-                        onClick={handleFormOpen}
+                        onClick={() => router.push('/settings/payment/open')}
                         color="primary"
                         variant="contained"
                     >
@@ -97,9 +100,14 @@ const Payment = () => {
                     </Button>
                 </Box>
             )}
-            <Modal open={formOpened} onClose={handleFormClose}>
+            <Modal
+                open={Boolean(checkoutFormOpen)}
+                onClose={() => router.push('/settings/payment')}
+            >
                 <Paper sx={sx.modal}>
-                    <CheckoutForm handleFormClose={handleFormClose} />
+                    <CheckoutForm
+                        handleFormClose={() => router.push('/settings/payment')}
+                    />
                 </Paper>
             </Modal>
             <Confirm

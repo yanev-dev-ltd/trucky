@@ -238,6 +238,7 @@ export const stripeWebhook = onRequest(
         event = stripe.webhooks.constructEvent(req.rawBody, sig || "", endpointSecret);
         let userId;
         let q1;
+        let intent;
         switch (event.type) {
           case "invoice.paid":
             userId = event.data.object?.subscription_details?.metadata?.userId || "";
@@ -266,6 +267,7 @@ export const stripeWebhook = onRequest(
             q1.forEach(async (receipt) => {
               await receipt.ref.delete();
             });
+            intent = await stripe.paymentIntents.retrieve(event.data.object.payment_intent?.toString() || "");
             userId && await firestore.collection("receipts").add({
               userId,
               invoicePdf: event.data.object.invoice_pdf,
@@ -273,6 +275,14 @@ export const stripeWebhook = onRequest(
               amount: event.data.object.amount_due,
               status: event.data.object.status,
               date: event.data.object.created,
+              client_secret: intent.client_secret,
+            });
+            break;
+          case "payment_intent.succeeded":
+            await firestore.collection("errors").doc().set({
+              name: "stripeWebhook payment_intent.succeeded",
+              data: event.data.object,
+              date: new Date().getTime(),
             });
             break;
           default:

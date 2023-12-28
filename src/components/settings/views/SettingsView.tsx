@@ -32,17 +32,25 @@ import Profile from '../components/Profile/Profile'
 import Password from '../components/Password/Password'
 import { Elements } from '@stripe/react-stripe-js'
 
-export const SettingsView = ({ section, stripePromise }: SettingsViewProps) => {
+export const SettingsView = ({
+    section,
+    stripePromise,
+    checkoutFormOpen,
+}: SettingsViewProps) => {
     const component = useMemo(() => {
         switch (section) {
             case 'payment':
                 return (
                     <Elements stripe={stripePromise}>
-                        <Payment />
+                        <Payment checkoutFormOpen={checkoutFormOpen} />
                     </Elements>
                 )
             case 'invoices':
-                return <Invoices />
+                return (
+                    <Elements stripe={stripePromise}>
+                        <Invoices />
+                    </Elements>
+                )
             case 'language':
                 return <Language />
             case 'theme':
@@ -58,7 +66,7 @@ export const SettingsView = ({ section, stripePromise }: SettingsViewProps) => {
             default:
                 return null
         }
-    }, [section])
+    }, [section, checkoutFormOpen])
 
     return (
         <Box sx={sx.root}>

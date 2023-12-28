@@ -12,7 +12,6 @@ const usePayment = () => {
     const stripe = useSelector((state: RootState) => state.stripe)
     const { enqueueSnackbar } = useSnackbar()
     const intl = useIntl()
-    const [formOpened, setFormOpened] = useState(false)
     useEffect(() => {
         if (!auth.currentUser?.uid) {
             return
@@ -28,7 +27,8 @@ const usePayment = () => {
                 card_last4: data?.card_last4,
                 card_name: data?.card_name,
                 card_phone: data?.card_phone,
-                card_error: data?.card_error
+                card_error: data?.card_error,
+                client_secret: data?.client_secret,
             }))
         })
         return () => {
@@ -47,14 +47,6 @@ const usePayment = () => {
         clearError()
     }, [stripe.card_error])
 
-    const handleFormOpen = () => {
-        setFormOpened(true)
-    }
-    
-    const handleFormClose = () => {
-        setFormOpened(false)
-    }
-
     const deleteCard = useCallback(async () => {
         if (!auth.currentUser?.uid) return
         await updateDoc(doc(firestore, 'profile', auth.currentUser.uid), {
@@ -67,10 +59,11 @@ const usePayment = () => {
             card_last4: null,
             card_name: null,
             card_phone: null,
+            client_secret: null,
         })
     },[])
 
-    return { stripe, handleFormOpen, handleFormClose, formOpened, deleteCard }
+    return { stripe, deleteCard }
 }
 
 export default usePayment
