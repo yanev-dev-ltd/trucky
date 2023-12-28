@@ -239,6 +239,8 @@ export const stripeWebhook = onRequest(
         let userId;
         let q1;
         let intent;
+        let client;
+        let vehicles;
         switch (event.type) {
           case "invoice.paid":
             userId = event.data.object?.subscription_details?.metadata?.userId || "";
@@ -257,6 +259,19 @@ export const stripeWebhook = onRequest(
               status: event.data.object.status,
               date: event.data.object.created,
             });
+            client = await firestore.collection("customers").doc(userId).get();
+            vehicles = await firestore.collection("vehicles").where("userId", "==", userId).get();
+            await stripe.subscriptions.update(
+                client.get("stripe_subscription_id"),
+                {
+                  items: [
+                    {
+                      id: client.get("stripe_item_id"),
+                      quantity: vehicles.size,
+                    },
+                  ],
+                }
+            );
             break;
           case "invoice.payment_failed":
             userId = event.data.object?.subscription_details?.metadata?.userId || "";
@@ -277,13 +292,18 @@ export const stripeWebhook = onRequest(
               date: event.data.object.created,
               client_secret: intent.client_secret,
             });
-            break;
-          case "payment_intent.succeeded":
-            await firestore.collection("errors").doc().set({
-              name: "stripeWebhook payment_intent.succeeded",
-              data: event.data.object,
-              date: new Date().getTime(),
-            });
+            client = await firestore.collection("customers").doc(userId).get();
+            await stripe.subscriptions.update(
+                client.get("stripe_subscription_id"),
+                {
+                  items: [
+                    {
+                      id: client.get("stripe_item_id"),
+                      quantity: 0,
+                    },
+                  ],
+                }
+            );
             break;
           default:
             log(`Unhandled event type ${event.type}`);

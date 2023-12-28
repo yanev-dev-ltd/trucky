@@ -61,9 +61,9 @@ const useInvoices = () => {
         const receipt = receipts.find((r) => r.key === receiptId)
         setLoading(true)
         if (receipt?.client_secret) {
-            const intent = await stripe?.retrievePaymentIntent(receipt.client_secret || '')
+            const intent = await stripe?.retrievePaymentIntent(receipt.client_secret)
             if (intent?.paymentIntent?.status === 'requires_action' || intent?.paymentIntent?.status === 'requires_payment_method') {
-                const result = await stripe?.confirmCardPayment(receipt.client_secret || '', {
+                const result = await stripe?.confirmCardPayment(receipt.client_secret, {
                     payment_method: stripeState.payment_method_id,
                 })
                 if (result?.error) {
