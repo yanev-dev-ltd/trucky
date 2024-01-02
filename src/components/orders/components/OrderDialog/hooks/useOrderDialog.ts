@@ -35,6 +35,7 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
                 return
             }
             if (!newOrder?.key) {
+                console.log(routeId)
                 const newOrderRef = doc(collection(firestore, 'routes')).id
                 if (newOrderRef) setNewOrder({ ...newOrder, key: newOrderRef, vehicleId, routeId, userId: auth.currentUser.uid})
             }

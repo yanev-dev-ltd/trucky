@@ -17,6 +17,7 @@ import {
     Receipt,
     Person2,
     Password as PasswordIcon,
+    Euro,
 } from '@mui/icons-material'
 import { SettingsViewProps } from '../types'
 import sx from '../styles/Settings.sx'
@@ -30,6 +31,7 @@ import Units from '../components/Units/Units'
 import Delete from '../components/Delete/Delete'
 import Profile from '../components/Profile/Profile'
 import Password from '../components/Password/Password'
+import Currency from '../components/Currency/Currency'
 import { Elements } from '@stripe/react-stripe-js'
 
 export const SettingsView = ({
@@ -63,6 +65,8 @@ export const SettingsView = ({
                 return <Profile />
             case 'password':
                 return <Password />
+            case 'currency':
+                return <Currency />
             default:
                 return null
         }
@@ -142,6 +146,18 @@ export const SettingsView = ({
                         </ListItemIcon>
                         <ListItemText>
                             <FormattedMessage id="app.Theme" />
+                        </ListItemText>
+                    </MenuItem>
+                    <MenuItem
+                        component={Link}
+                        href={'/settings/currency'}
+                        sx={section === 'currency' ? sx.active : undefined}
+                    >
+                        <ListItemIcon>
+                            <Euro fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>
+                            <FormattedMessage id="app.Currency" />
                         </ListItemText>
                     </MenuItem>
                     <MenuItem

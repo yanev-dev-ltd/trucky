@@ -4,6 +4,7 @@ export type Settings = {
     theme: PaletteMode
     locale: Locales
     units: string
+    currency: string
 }
 
 export enum Locales {

@@ -68,13 +68,14 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
         if (!auth.currentUser?.uid) return
         const { key, orders, ...routeData} = route
         const batch = writeBatch(firestore)
-        const routeRef = key ? doc(firestore, 'routes', key) : doc(collection(firestore, 'routes'))
+        const routeKey = key || doc(collection(firestore, 'routes')).id
+        const routeRef = doc(firestore, 'routes', routeKey)
         batch.set(routeRef, { ...routeData, distance, toll, ferry, userId: auth.currentUser.uid, vehicleId })
         if (orders)
             for (const order of orders) {
                 const orderRef = order.key ? doc(firestore, 'orders', order.key) : doc(collection(firestore, 'orders'))
                 const { key: orderKey, shouldDelete, ...orderData } = order
-                batch.set(orderRef, { ...orderData, routeId: key })
+                batch.set(orderRef, { ...orderData, routeId: routeKey })
             }
         try {
             await batch.commit()
