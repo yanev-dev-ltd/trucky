@@ -1,0 +1,101 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>AppUiProviders.tsx</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">src/providers/AppUiProviders/AppUiProviders.tsx</td><td class="">83.81%</td><td class="">80%</td><td class="">105</td><td class="">88</td><td class="">17</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import { useMemo, FC, PropsWithChildren } from &#x27;react&#x27;
+import {
+    ThemeProvider,
+    StyledEngineProvider,
+    CssBaseline,
+    Box,
+    Typography,
+} from &#x27;@mui/material&#x27;
+import messagesEn from &#x27;../../translations/en.json&#x27;
+import messagesBg from &#x27;../../translations/bg.json&#x27;
+import { IntlProvider, FormattedMessage } from &#x27;react-intl&#x27;
+import { Offline, Online } from &#x27;react-detect-offline&#x27;
+import useSettings from &#x27;../../hooks/useSettings&#x27;
+import useTheme from &#x27;../../hooks/useTheme&#x27;
+import sx from &#x27;./styles/AppUiProviders.sx&#x27;
+import { SnackbarProvider } from &#x27;notistack&#x27;
+import SnackbarClose from &#x27;./components/SnackbarClose/SnackbarClose&#x27;
+import { LocalizationProvider } from &#x27;@mui/x-date-pickers&#x27;
+import { AdapterDateFns } from &#x27;@mui/x-date-pickers/AdapterDateFns&#x27;
+import bg from &#x27;date-fns/locale/bg&#x27;
+import en from &#x27;date-fns/locale/en-US&#x27;
+import dynamic from &#x27;next/dynamic&#x27;
+
+const AppUiProviders: FC&lt;PropsWithChildren&lt;unknown&gt;&gt; = ({ children }) =&gt; {
+    const settings = useSettings()
+    const { theme } = useTheme()
+    const messages = useMemo(() =&gt; {
+        switch (settings?.locale) {
+            case &#x27;bg&#x27;:
+                return messagesBg
+            default:
+                return messagesEn
+        }
+    }, [settings?.locale])
+    const adapterLocale = useMemo(() =&gt; {
+        switch (settings?.locale) {
+            case &#x27;bg&#x27;:
+                return bg
+            default:
+                return en
+        }
+    }, [settings?.locale])
+
+    return (
+        &lt;StyledEngineProvider injectFirst&gt;
+            &lt;ThemeProvider key={settings?.theme} theme={theme(settings?.theme)}&gt;
+                &lt;CssBaseline /&gt;
+                &lt;IntlProvider
+                    locale={settings?.locale || &#x27;en&#x27;}
+                    key={settings?.locale}
+                    messages={messages}
+                &gt;
+                    &lt;SnackbarProvider
+                        maxSnack={5}
+                        autoHideDuration={10000}
+                        action={(snackbarId) =&gt; (
+                            &lt;SnackbarClose id={snackbarId} /&gt;
+                        )}
+                    &gt;
+                        &lt;LocalizationProvider
+                            dateAdapter={AdapterDateFns}
+                            adapterLocale={adapterLocale}
+                        &gt;
+                            &lt;Online&gt;{children}&lt;/Online&gt;
+                            &lt;Offline&gt;
+                                &lt;Box sx={sx.container}&gt;
+                                    &lt;Typography&gt;
+                                        &lt;FormattedMessage id=&quot;app.Offline&quot; /&gt;
+                                    &lt;/Typography&gt;
+                                &lt;/Box&gt;
+                            &lt;/Offline&gt;
+                        &lt;/LocalizationProvider&gt;
+                    &lt;/SnackbarProvider&gt;
+                &lt;/IntlProvider&gt;
+            &lt;/ThemeProvider&gt;
+        &lt;/StyledEngineProvider&gt;
+    )
+}
+
+// needed to set the correct theme
+export default dynamic(() =&gt; Promise.resolve(AppUiProviders), {
+    ssr: false,
+})
+</textarea><pre id="annotations" style="display:none">[{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:24,&quot;character&quot;:10,&quot;text&quot;:&quot;settings&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:27,&quot;character&quot;:16,&quot;text&quot;:&quot;settings&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:27,&quot;character&quot;:26,&quot;text&quot;:&quot;locale&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:33,&quot;character&quot;:8,&quot;text&quot;:&quot;settings&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:33,&quot;character&quot;:18,&quot;text&quot;:&quot;locale&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:35,&quot;character&quot;:16,&quot;text&quot;:&quot;settings&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:35,&quot;character&quot;:26,&quot;text&quot;:&quot;locale&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:41,&quot;character&quot;:8,&quot;text&quot;:&quot;settings&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:41,&quot;character&quot;:18,&quot;text&quot;:&quot;locale&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:45,&quot;character&quot;:32,&quot;text&quot;:&quot;settings&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:45,&quot;character&quot;:42,&quot;text&quot;:&quot;theme&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:45,&quot;character&quot;:62,&quot;text&quot;:&quot;settings&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:45,&quot;character&quot;:72,&quot;text&quot;:&quot;theme&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:48,&quot;character&quot;:28,&quot;text&quot;:&quot;settings&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:48,&quot;character&quot;:38,&quot;text&quot;:&quot;locale&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:49,&quot;character&quot;:25,&quot;text&quot;:&quot;settings&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/providers/AppUiProviders/AppUiProviders.tsx&quot;,&quot;line&quot;:49,&quot;character&quot;:35,&quot;text&quot;:&quot;locale&quot;,&quot;kind&quot;:1}]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Thu, 04 Jan 2024 18:45:36 GMT</p>
+    </body>
+  </html>
+  

@@ -1,0 +1,3712 @@
+{
+  "fileCounts": {},
+  "anys": [
+    {
+      "file": "src/hooks/useLocalStorage.ts",
+      "line": 5,
+      "character": 11,
+      "text": "storedValue",
+      "kind": 1
+    },
+    {
+      "file": "src/hooks/useLocalStorage.ts",
+      "line": 25,
+      "character": 18,
+      "text": "valueToStore",
+      "kind": 1
+    },
+    {
+      "file": "src/hooks/useLocalStorage.ts",
+      "line": 25,
+      "character": 67,
+      "text": "storedValue",
+      "kind": 1
+    },
+    {
+      "file": "src/hooks/useLocalStorage.ts",
+      "line": 27,
+      "character": 27,
+      "text": "valueToStore",
+      "kind": 1
+    },
+    {
+      "file": "src/hooks/useLocalStorage.ts",
+      "line": 30,
+      "character": 64,
+      "text": "valueToStore",
+      "kind": 1
+    },
+    {
+      "file": "src/hooks/useLocalStorage.ts",
+      "line": 37,
+      "character": 12,
+      "text": "storedValue",
+      "kind": 1
+    },
+    {
+      "file": "src/hooks/useSettings.ts",
+      "line": 10,
+      "character": 11,
+      "text": "settingsStorage",
+      "kind": 1
+    },
+    {
+      "file": "src/hooks/useSettings.ts",
+      "line": 10,
+      "character": 28,
+      "text": "setSettingsStorage",
+      "kind": 1
+    },
+    {
+      "file": "src/hooks/useSettings.ts",
+      "line": 20,
+      "character": 20,
+      "text": "setSettingsStorage",
+      "kind": 1
+    },
+    {
+      "file": "src/hooks/useSettings.ts",
+      "line": 26,
+      "character": 11,
+      "text": "settingsStorage",
+      "kind": 1
+    },
+    {
+      "file": "src/hooks/useSubscription.ts",
+      "line": 15,
+      "character": 41,
+      "text": "status",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 24,
+      "character": 10,
+      "text": "settings",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 27,
+      "character": 16,
+      "text": "settings",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 27,
+      "character": 26,
+      "text": "locale",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 33,
+      "character": 8,
+      "text": "settings",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 33,
+      "character": 18,
+      "text": "locale",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 35,
+      "character": 16,
+      "text": "settings",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 35,
+      "character": 26,
+      "text": "locale",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 41,
+      "character": 8,
+      "text": "settings",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 41,
+      "character": 18,
+      "text": "locale",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 45,
+      "character": 32,
+      "text": "settings",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 45,
+      "character": 42,
+      "text": "theme",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 45,
+      "character": 62,
+      "text": "settings",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 45,
+      "character": 72,
+      "text": "theme",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 48,
+      "character": 28,
+      "text": "settings",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 48,
+      "character": 38,
+      "text": "locale",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 49,
+      "character": 25,
+      "text": "settings",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppUiProviders/AppUiProviders.tsx",
+      "line": 49,
+      "character": 35,
+      "text": "locale",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppAuthProvider/types/index.ts",
+      "line": 1,
+      "character": 4,
+      "text": "code",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppAuthProvider/components/LogIn/hooks/useLogin.ts",
+      "line": 17,
+      "character": 11,
+      "text": "settingsStorage",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppAuthProvider/components/LogIn/hooks/useLogin.ts",
+      "line": 28,
+      "character": 88,
+      "text": "code",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppAuthProvider/components/LogIn/hooks/useLogin.ts",
+      "line": 34,
+      "character": 55,
+      "text": "locale",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppAuthProvider/components/LogIn/hooks/useLogin.ts",
+      "line": 34,
+      "character": 63,
+      "text": "settingsStorage",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppAuthProvider/components/LogIn/hooks/useLogin.ts",
+      "line": 34,
+      "character": 79,
+      "text": "locale",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppAuthProvider/components/LogIn/hooks/useForgotPassword.ts",
+      "line": 31,
+      "character": 84,
+      "text": "code",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppAuthProvider/components/LogIn/LogIn.tsx",
+      "line": 17,
+      "character": 54,
+      "text": "locale",
+      "kind": 1
+    },
+    {
+      "file": "src/providers/AppAuthProvider/components/LogIn/LogIn.tsx",
+      "line": 123,
+      "character": 49,
+      "text": "locale",
+      "kind": 1
+    },
+    {
+      "file": "src/utils/globalUtils.tsx",
+      "line": 19,
+      "character": 7,
+      "text": "children",
+      "kind": 1
+    },
+    {
+      "file": "src/utils/globalUtils.tsx",
+      "line": 20,
+      "character": 14,
+      "text": "AnyView",
+      "kind": 1
+    },
+    {
+      "file": "src/utils/globalUtils.tsx",
+      "line": 22,
+      "character": 52,
+      "text": "AnyView",
+      "kind": 1
+    },
+    {
+      "file": "src/utils/globalUtils.tsx",
+      "line": 22,
+      "character": 41,
+      "text": "children",
+      "kind": 1
+    },
+    {
+      "file": "src/utils/globalUtils.tsx",
+      "line": 14,
+      "character": 19,
+      "text": "argsObj",
+      "kind": 1
+    },
+    {
+      "file": "src/types/index.d.ts",
+      "line": 3,
+      "character": 4,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/clients/hooks/useClients.columns.tsx",
+      "line": 10,
+      "character": 22,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/clients/hooks/useClients.columns.tsx",
+      "line": 10,
+      "character": 30,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/clients/hooks/useClients.columns.tsx",
+      "line": 11,
+      "character": 13,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/clients/hooks/useClients.columns.tsx",
+      "line": 11,
+      "character": 15,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/clients/hooks/useClients.columns.tsx",
+      "line": 12,
+      "character": 13,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/clients/hooks/useClients.columns.tsx",
+      "line": 12,
+      "character": 15,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/clients/hooks/useClients.columns.tsx",
+      "line": 13,
+      "character": 15,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/clients/hooks/useClients.columns.tsx",
+      "line": 13,
+      "character": 17,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/clients/hooks/useClients.columns.tsx",
+      "line": 13,
+      "character": 30,
+      "text": "localeCompare",
+      "kind": 1
+    },
+    {
+      "file": "src/components/clients/hooks/useClients.columns.tsx",
+      "line": 13,
+      "character": 44,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/clients/hooks/useClients.columns.tsx",
+      "line": 13,
+      "character": 46,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Table/Table.tsx",
+      "line": 211,
+      "character": 37,
+      "text": "user",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Upload/hooks/useUpload.ts",
+      "line": 121,
+      "character": 22,
+      "text": "err",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Upload/hooks/useUpload.ts",
+      "line": 122,
+      "character": 32,
+      "text": "err",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Upload/hooks/useUpload.ts",
+      "line": 122,
+      "character": 36,
+      "text": "message",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 10,
+      "character": 28,
+      "text": "grey",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 11,
+      "character": 28,
+      "text": "grey",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 15,
+      "character": 28,
+      "text": "grey",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 16,
+      "character": 28,
+      "text": "grey",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 19,
+      "character": 44,
+      "text": "primary",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 19,
+      "character": 52,
+      "text": "main",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 25,
+      "character": 8,
+      "text": "background",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 25,
+      "character": 34,
+      "text": "background",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 25,
+      "character": 45,
+      "text": "paper",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 28,
+      "character": 8,
+      "text": "background",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 28,
+      "character": 34,
+      "text": "text",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/TextareaAutoSize/TextAreaAutoSize.tsx",
+      "line": 28,
+      "character": 39,
+      "text": "secondary",
+      "kind": 1
+    },
+    {
+      "file": "src/components/drivers/hooks/useDrivers.columns.tsx",
+      "line": 10,
+      "character": 22,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/drivers/hooks/useDrivers.columns.tsx",
+      "line": 10,
+      "character": 30,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/drivers/hooks/useDrivers.columns.tsx",
+      "line": 11,
+      "character": 13,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/drivers/hooks/useDrivers.columns.tsx",
+      "line": 11,
+      "character": 15,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/drivers/hooks/useDrivers.columns.tsx",
+      "line": 12,
+      "character": 13,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/drivers/hooks/useDrivers.columns.tsx",
+      "line": 12,
+      "character": 15,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/drivers/hooks/useDrivers.columns.tsx",
+      "line": 13,
+      "character": 15,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/drivers/hooks/useDrivers.columns.tsx",
+      "line": 13,
+      "character": 17,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/drivers/hooks/useDrivers.columns.tsx",
+      "line": 13,
+      "character": 30,
+      "text": "localeCompare",
+      "kind": 1
+    },
+    {
+      "file": "src/components/drivers/hooks/useDrivers.columns.tsx",
+      "line": 13,
+      "character": 44,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/drivers/hooks/useDrivers.columns.tsx",
+      "line": 13,
+      "character": 46,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/maintenance/hooks/useMaintenance.columns.tsx",
+      "line": 15,
+      "character": 22,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/maintenance/hooks/useMaintenance.columns.tsx",
+      "line": 15,
+      "character": 30,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/maintenance/hooks/useMaintenance.columns.tsx",
+      "line": 16,
+      "character": 13,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/maintenance/hooks/useMaintenance.columns.tsx",
+      "line": 16,
+      "character": 15,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/maintenance/hooks/useMaintenance.columns.tsx",
+      "line": 17,
+      "character": 13,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/maintenance/hooks/useMaintenance.columns.tsx",
+      "line": 17,
+      "character": 15,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/maintenance/hooks/useMaintenance.columns.tsx",
+      "line": 18,
+      "character": 15,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/maintenance/hooks/useMaintenance.columns.tsx",
+      "line": 18,
+      "character": 17,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/maintenance/hooks/useMaintenance.columns.tsx",
+      "line": 18,
+      "character": 30,
+      "text": "localeCompare",
+      "kind": 1
+    },
+    {
+      "file": "src/components/maintenance/hooks/useMaintenance.columns.tsx",
+      "line": 18,
+      "character": 44,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/maintenance/hooks/useMaintenance.columns.tsx",
+      "line": 18,
+      "character": 46,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/registration/types/index.ts",
+      "line": 2,
+      "character": 4,
+      "text": "code",
+      "kind": 1
+    },
+    {
+      "file": "src/components/registration/hooks/useRegistration.ts",
+      "line": 17,
+      "character": 11,
+      "text": "settingsStorage",
+      "kind": 1
+    },
+    {
+      "file": "src/components/registration/hooks/useRegistration.ts",
+      "line": 17,
+      "character": 28,
+      "text": "setSettingsStorage",
+      "kind": 1
+    },
+    {
+      "file": "src/components/registration/hooks/useRegistration.ts",
+      "line": 31,
+      "character": 126,
+      "text": "settingsStorage",
+      "kind": 1
+    },
+    {
+      "file": "src/components/registration/hooks/useRegistration.ts",
+      "line": 32,
+      "character": 16,
+      "text": "setSettingsStorage",
+      "kind": 1
+    },
+    {
+      "file": "src/components/registration/hooks/useRegistration.ts",
+      "line": 36,
+      "character": 50,
+      "text": "code",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Payment/hooks/usePayment.ts",
+      "line": 21,
+      "character": 34,
+      "text": "card_brand",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Payment/hooks/usePayment.ts",
+      "line": 22,
+      "character": 36,
+      "text": "card_country",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Payment/hooks/usePayment.ts",
+      "line": 23,
+      "character": 34,
+      "text": "card_email",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Payment/hooks/usePayment.ts",
+      "line": 24,
+      "character": 38,
+      "text": "card_exp_month",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Payment/hooks/usePayment.ts",
+      "line": 25,
+      "character": 37,
+      "text": "card_exp_year",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Payment/hooks/usePayment.ts",
+      "line": 26,
+      "character": 34,
+      "text": "card_last4",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Payment/hooks/usePayment.ts",
+      "line": 27,
+      "character": 33,
+      "text": "card_name",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Payment/hooks/usePayment.ts",
+      "line": 28,
+      "character": 34,
+      "text": "card_phone",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Payment/hooks/usePayment.ts",
+      "line": 29,
+      "character": 34,
+      "text": "card_error",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Payment/hooks/usePayment.ts",
+      "line": 30,
+      "character": 37,
+      "text": "client_secret",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Invoices/hooks/useInvoices.ts",
+      "line": 25,
+      "character": 23,
+      "text": "try_payment",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Invoices/hooks/useInvoices.ts",
+      "line": 39,
+      "character": 34,
+      "text": "card_brand",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Invoices/hooks/useInvoices.ts",
+      "line": 40,
+      "character": 36,
+      "text": "card_country",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Invoices/hooks/useInvoices.ts",
+      "line": 41,
+      "character": 34,
+      "text": "card_email",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Invoices/hooks/useInvoices.ts",
+      "line": 42,
+      "character": 38,
+      "text": "card_exp_month",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Invoices/hooks/useInvoices.ts",
+      "line": 43,
+      "character": 37,
+      "text": "card_exp_year",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Invoices/hooks/useInvoices.ts",
+      "line": 44,
+      "character": 34,
+      "text": "card_last4",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Invoices/hooks/useInvoices.ts",
+      "line": 45,
+      "character": 33,
+      "text": "card_name",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Invoices/hooks/useInvoices.ts",
+      "line": 46,
+      "character": 34,
+      "text": "card_phone",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Invoices/hooks/useInvoices.ts",
+      "line": 47,
+      "character": 37,
+      "text": "client_secret",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Invoices/hooks/useInvoices.ts",
+      "line": 48,
+      "character": 41,
+      "text": "payment_method_id",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Delete/hooks/useDelete.ts",
+      "line": 32,
+      "character": 46,
+      "text": "code",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Profile/Profile.tsx",
+      "line": 73,
+      "character": 35,
+      "text": "event",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Password/hooks/usePassword.ts",
+      "line": 35,
+      "character": 52,
+      "text": "code",
+      "kind": 1
+    },
+    {
+      "file": "src/components/settings/components/Currency/Currency.tsx",
+      "line": 29,
+      "character": 23,
+      "text": "event",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 15,
+      "character": 22,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 15,
+      "character": 30,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 16,
+      "character": 13,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 16,
+      "character": 15,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 17,
+      "character": 13,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 17,
+      "character": 15,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 18,
+      "character": 15,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 18,
+      "character": 17,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 18,
+      "character": 30,
+      "text": "localeCompare",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 18,
+      "character": 44,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 18,
+      "character": 46,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 72,
+      "character": 27,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 72,
+      "character": 35,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 73,
+      "character": 25,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 73,
+      "character": 28,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 74,
+      "character": 25,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 74,
+      "character": 28,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 79,
+      "character": 36,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 79,
+      "character": 39,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 86,
+      "character": 36,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 86,
+      "character": 39,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 97,
+      "character": 36,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 97,
+      "character": 39,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 104,
+      "character": 36,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 104,
+      "character": 39,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 136,
+      "character": 27,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 136,
+      "character": 35,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 137,
+      "character": 31,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 137,
+      "character": 33,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 138,
+      "character": 31,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 138,
+      "character": 33,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 139,
+      "character": 24,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 139,
+      "character": 26,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 139,
+      "character": 41,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 139,
+      "character": 43,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 142,
+      "character": 24,
+      "text": "a",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 142,
+      "character": 26,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 142,
+      "character": 41,
+      "text": "b",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/hooks/useVehicles.columns.tsx",
+      "line": 142,
+      "character": 43,
+      "text": "original",
+      "kind": 1
+    },
+    {
+      "file": "src/components/vehicles/components/EditVehicle/hooks/useEditVehicle.ts",
+      "line": 28,
+      "character": 10,
+      "text": "files",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 13,
+      "character": 11,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 13,
+      "character": 18,
+      "text": "setRoute",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 22,
+      "character": 52,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 23,
+      "character": 8,
+      "text": "setRoute",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 23,
+      "character": 22,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 23,
+      "character": 38,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 26,
+      "character": 8,
+      "text": "setRoute",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 38,
+      "character": 33,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 38,
+      "character": 39,
+      "text": "drivers",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 39,
+      "character": 12,
+      "text": "setRoute",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 61,
+      "character": 12,
+      "text": "setRoute",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 68,
+      "character": 16,
+      "text": "key",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 68,
+      "character": 21,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 68,
+      "character": 32,
+      "text": "routeData",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 70,
+      "character": 14,
+      "text": "routeKey",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 70,
+      "character": 25,
+      "text": "key",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 72,
+      "character": 33,
+      "text": "routeData",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 73,
+      "character": 12,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 74,
+      "character": 23,
+      "text": "order",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 75,
+      "character": 33,
+      "text": "order",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 75,
+      "character": 39,
+      "text": "key",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 75,
+      "character": 70,
+      "text": "order",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 75,
+      "character": 76,
+      "text": "key",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 76,
+      "character": 29,
+      "text": "orderKey",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 76,
+      "character": 39,
+      "text": "shouldDelete",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 76,
+      "character": 56,
+      "text": "orderData",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 77,
+      "character": 41,
+      "text": "orderData",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 77,
+      "character": 52,
+      "text": "routeId",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 77,
+      "character": 61,
+      "text": "routeKey",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 74,
+      "character": 32,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 97,
+      "character": 16,
+      "text": "key",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 97,
+      "character": 21,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 100,
+      "character": 12,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 101,
+      "character": 23,
+      "text": "order",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 102,
+      "character": 29,
+      "text": "orderKey",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 101,
+      "character": 32,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/hooks/useRoute.ts",
+      "line": 121,
+      "character": 8,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 21,
+      "character": 58,
+      "text": "getPlacePredictions",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 32,
+      "character": 60,
+      "text": "google",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 35,
+      "character": 14,
+      "text": "google",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 35,
+      "character": 21,
+      "text": "maps",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 35,
+      "character": 26,
+      "text": "places",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 35,
+      "character": 33,
+      "text": "AutocompleteService",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 53,
+      "character": 20,
+      "text": "geocoder",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 53,
+      "character": 51,
+      "text": "google",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 53,
+      "character": 58,
+      "text": "maps",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 53,
+      "character": 63,
+      "text": "Geocoder",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 54,
+      "character": 16,
+      "text": "geocoder",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 54,
+      "character": 25,
+      "text": "geocode",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 56,
+      "character": 21,
+      "text": "result",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 56,
+      "character": 34,
+      "text": "status",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 59,
+      "character": 28,
+      "text": "status",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 60,
+      "character": 44,
+      "text": "google",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 60,
+      "character": 51,
+      "text": "maps",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 60,
+      "character": 56,
+      "text": "GeocoderStatus",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 60,
+      "character": 71,
+      "text": "OK",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 64,
+      "character": 38,
+      "text": "postalCode",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 64,
+      "character": 51,
+      "text": "result",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 64,
+      "character": 62,
+      "text": "address_components",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 64,
+      "character": 81,
+      "text": "result",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 64,
+      "character": 91,
+      "text": "address_components",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 64,
+      "character": 110,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 64,
+      "character": 123,
+      "text": "short_name",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 65,
+      "character": 42,
+      "text": "postalCode",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 66,
+      "character": 44,
+      "text": "postalCode",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 66,
+      "character": 67,
+      "text": "result",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 66,
+      "character": 78,
+      "text": "address_components",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 66,
+      "character": 97,
+      "text": "result",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 66,
+      "character": 107,
+      "text": "address_components",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 66,
+      "character": 126,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 66,
+      "character": 139,
+      "text": "short_name",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 67,
+      "character": 50,
+      "text": "result",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 67,
+      "character": 61,
+      "text": "address_components",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 67,
+      "character": 84,
+      "text": "short_name",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 72,
+      "character": 41,
+      "text": "result",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 72,
+      "character": 51,
+      "text": "geometry",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 72,
+      "character": 60,
+      "text": "location",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 72,
+      "character": 69,
+      "text": "lat",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 73,
+      "character": 41,
+      "text": "result",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 73,
+      "character": 51,
+      "text": "geometry",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 73,
+      "character": 60,
+      "text": "location",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 73,
+      "character": 69,
+      "text": "lng",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 90,
+      "character": 48,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 91,
+      "character": 78,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/hooks/useStopDialog.ts",
+      "line": 91,
+      "character": 99,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/StopDialog.tsx",
+      "line": 75,
+      "character": 35,
+      "text": "event",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/StopDialog.tsx",
+      "line": 112,
+      "character": 45,
+      "text": "match",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/StopDialog.tsx",
+      "line": 113,
+      "character": 36,
+      "text": "match",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/StopDialog.tsx",
+      "line": 113,
+      "character": 42,
+      "text": "offset",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/StopDialog.tsx",
+      "line": 114,
+      "character": 36,
+      "text": "match",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/StopDialog.tsx",
+      "line": 114,
+      "character": 42,
+      "text": "offset",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/StopDialog.tsx",
+      "line": 114,
+      "character": 51,
+      "text": "match",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/StopDialog/StopDialog.tsx",
+      "line": 114,
+      "character": 57,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 17,
+      "character": 52,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 22,
+      "character": 14,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 22,
+      "character": 25,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 24,
+      "character": 14,
+      "text": "platform",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 24,
+      "character": 29,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 24,
+      "character": 31,
+      "text": "service",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 24,
+      "character": 39,
+      "text": "Platform",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 27,
+      "character": 14,
+      "text": "defaultLayers",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 27,
+      "character": 30,
+      "text": "platform",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 27,
+      "character": 39,
+      "text": "createDefaultLayers",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 28,
+      "character": 14,
+      "text": "hMap",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 28,
+      "character": 25,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 28,
+      "character": 27,
+      "text": "Map",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 30,
+      "character": 12,
+      "text": "defaultLayers",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 30,
+      "character": 26,
+      "text": "vector",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 30,
+      "character": 33,
+      "text": "normal",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 30,
+      "character": 40,
+      "text": "truck",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 45,
+      "character": 14,
+      "text": "behavior",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 45,
+      "character": 29,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 45,
+      "character": 31,
+      "text": "mapevents",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 45,
+      "character": 41,
+      "text": "Behavior",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 45,
+      "character": 54,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 45,
+      "character": 56,
+      "text": "mapevents",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 45,
+      "character": 66,
+      "text": "MapEvents",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 45,
+      "character": 76,
+      "text": "hMap",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 49,
+      "character": 22,
+      "text": "icon",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 49,
+      "character": 33,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 49,
+      "character": 35,
+      "text": "map",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 49,
+      "character": 39,
+      "text": "Icon",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 54,
+      "character": 20,
+      "text": "marker",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 54,
+      "character": 33,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 54,
+      "character": 35,
+      "text": "map",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 54,
+      "character": 39,
+      "text": "Marker",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 56,
+      "character": 26,
+      "text": "icon",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 58,
+      "character": 16,
+      "text": "hMap",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 58,
+      "character": 21,
+      "text": "addObject",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 58,
+      "character": 31,
+      "text": "marker",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 61,
+      "character": 18,
+      "text": "router",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 61,
+      "character": 27,
+      "text": "platform",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 61,
+      "character": 36,
+      "text": "getRoutingService",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 66,
+      "character": 16,
+      "text": "router",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 66,
+      "character": 23,
+      "text": "calculateRoute",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 71,
+      "character": 68,
+      "text": "via",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 71,
+      "character": 77,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 71,
+      "character": 79,
+      "text": "service",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 71,
+      "character": 87,
+      "text": "Url",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 71,
+      "character": 91,
+      "text": "MultiValueQueryParameter",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 79,
+      "character": 21,
+      "text": "result",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 80,
+      "character": 30,
+      "text": "sections",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 80,
+      "character": 41,
+      "text": "result",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 80,
+      "character": 49,
+      "text": "routes",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 80,
+      "character": 60,
+      "text": "sections",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 86,
+      "character": 29,
+      "text": "sections",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 93,
+      "character": 24,
+      "text": "sections",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 93,
+      "character": 33,
+      "text": "forEach",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 93,
+      "character": 42,
+      "text": "section",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 96,
+      "character": 32,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 96,
+      "character": 34,
+      "text": "geo",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 96,
+      "character": 38,
+      "text": "LineString",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 96,
+      "character": 49,
+      "text": "fromFlexiblePolyline",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 97,
+      "character": 36,
+      "text": "section",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 97,
+      "character": 44,
+      "text": "polyline",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 100,
+      "character": 32,
+      "text": "section",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 100,
+      "character": 40,
+      "text": "departure",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 100,
+      "character": 50,
+      "text": "place",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 100,
+      "character": 56,
+      "text": "originalLocation",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 101,
+      "character": 53,
+      "text": "section",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 101,
+      "character": 62,
+      "text": "travelSummary",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 101,
+      "character": 77,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 102,
+      "character": 49,
+      "text": "section",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 102,
+      "character": 58,
+      "text": "travelSummary",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 102,
+      "character": 73,
+      "text": "tolls",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 102,
+      "character": 80,
+      "text": "total",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 102,
+      "character": 87,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 104,
+      "character": 72,
+      "text": "section",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 104,
+      "character": 81,
+      "text": "travelSummary",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 104,
+      "character": 96,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 105,
+      "character": 64,
+      "text": "section",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 105,
+      "character": 73,
+      "text": "travelSummary",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 105,
+      "character": 88,
+      "text": "tolls",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 105,
+      "character": 95,
+      "text": "total",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 105,
+      "character": 102,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 108,
+      "character": 32,
+      "text": "section",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 108,
+      "character": 41,
+      "text": "transport",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 108,
+      "character": 51,
+      "text": "mode",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 117,
+      "character": 30,
+      "text": "multiLineString",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 117,
+      "character": 52,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 117,
+      "character": 54,
+      "text": "geo",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 117,
+      "character": 58,
+      "text": "MultiLineString",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 120,
+      "character": 30,
+      "text": "bounds",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 120,
+      "character": 39,
+      "text": "multiLineString",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 120,
+      "character": 55,
+      "text": "getBoundingBox",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 122,
+      "character": 24,
+      "text": "hMap",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 122,
+      "character": 29,
+      "text": "addObject",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 123,
+      "character": 32,
+      "text": "H",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 123,
+      "character": 34,
+      "text": "map",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 123,
+      "character": 38,
+      "text": "Polyline",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 123,
+      "character": 47,
+      "text": "multiLineString",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 129,
+      "character": 24,
+      "text": "hMap",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 129,
+      "character": 29,
+      "text": "getViewModel",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 129,
+      "character": 44,
+      "text": "setLookAtData",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 129,
+      "character": 60,
+      "text": "bounds",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 142,
+      "character": 12,
+      "text": "hMap",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 142,
+      "character": 17,
+      "text": "getViewPort",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 142,
+      "character": 31,
+      "text": "resize",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 150,
+      "character": 12,
+      "text": "hMap",
+      "kind": 1
+    },
+    {
+      "file": "src/components/common/Map/hooks/useMap.ts",
+      "line": 150,
+      "character": 17,
+      "text": "dispose",
+      "kind": 1
+    },
+    {
+      "file": "src/components/orders/components/OrderDialog/types/index.ts",
+      "line": 25,
+      "character": 33,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/orders/components/OrderDialog/hooks/useOrderDialog.ts",
+      "line": 10,
+      "character": 52,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/orders/components/OrderDialog/hooks/useOrderDialog.ts",
+      "line": 11,
+      "character": 44,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 50,
+      "character": 8,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 81,
+      "character": 25,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 81,
+      "character": 32,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 82,
+      "character": 24,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 82,
+      "character": 30,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 82,
+      "character": 40,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 83,
+      "character": 25,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 83,
+      "character": 31,
+      "text": "drivers",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 84,
+      "character": 24,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 84,
+      "character": 30,
+      "text": "drivers",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 84,
+      "character": 38,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 86,
+      "character": 25,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 86,
+      "character": 31,
+      "text": "endDate",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 87,
+      "character": 25,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 87,
+      "character": 31,
+      "text": "startDate",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 102,
+      "character": 41,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 102,
+      "character": 48,
+      "text": "drivers",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 116,
+      "character": 32,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 116,
+      "character": 39,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 116,
+      "character": 46,
+      "text": "startDate",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 140,
+      "character": 32,
+      "text": "value",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 140,
+      "character": 39,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 140,
+      "character": 46,
+      "text": "endDate",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 165,
+      "character": 39,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 165,
+      "character": 46,
+      "text": "fuelConsumption",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 195,
+      "character": 35,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 195,
+      "character": 41,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 196,
+      "character": 36,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 196,
+      "character": 42,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 196,
+      "character": 52,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 201,
+      "character": 33,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 201,
+      "character": 39,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 202,
+      "character": 36,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 202,
+      "character": 42,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 202,
+      "character": 52,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 204,
+      "character": 51,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 204,
+      "character": 57,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 216,
+      "character": 54,
+      "text": "index",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 217,
+      "character": 53,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 217,
+      "character": 59,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 218,
+      "character": 56,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 218,
+      "character": 62,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 218,
+      "character": 72,
+      "text": "findIndex",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 237,
+      "character": 72,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 237,
+      "character": 78,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 238,
+      "character": 72,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 238,
+      "character": 78,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 238,
+      "character": 85,
+      "text": "some",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 258,
+      "character": 65,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 258,
+      "character": 71,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 259,
+      "character": 64,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 259,
+      "character": 70,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 260,
+      "character": 69,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 262,
+      "character": 65,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 262,
+      "character": 71,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 262,
+      "character": 78,
+      "text": "every",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 283,
+      "character": 68,
+      "text": "index",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 284,
+      "character": 64,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 284,
+      "character": 70,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 285,
+      "character": 64,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 285,
+      "character": 70,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 286,
+      "character": 69,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 289,
+      "character": 68,
+      "text": "index",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 291,
+      "character": 66,
+      "text": "index",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 292,
+      "character": 71,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 292,
+      "character": 78,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 293,
+      "character": 74,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 294,
+      "character": 80,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 295,
+      "character": 79,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 307,
+      "character": 80,
+      "text": "index",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 309,
+      "character": 80,
+      "text": "index",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 322,
+      "character": 80,
+      "text": "index",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 328,
+      "character": 88,
+      "text": "index",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 350,
+      "character": 80,
+      "text": "index",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 359,
+      "character": 88,
+      "text": "index",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 369,
+      "character": 76,
+      "text": "index",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 450,
+      "character": 48,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 450,
+      "character": 54,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 460,
+      "character": 44,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 460,
+      "character": 50,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 460,
+      "character": 61,
+      "text": "filter",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 476,
+      "character": 64,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 476,
+      "character": 70,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 477,
+      "character": 64,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 477,
+      "character": 70,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 480,
+      "character": 67,
+      "text": "code",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 482,
+      "character": 64,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 482,
+      "character": 70,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 483,
+      "character": 64,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 483,
+      "character": 70,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 486,
+      "character": 67,
+      "text": "address",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 522,
+      "character": 53,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 522,
+      "character": 59,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 523,
+      "character": 52,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 523,
+      "character": 58,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 523,
+      "character": 68,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 531,
+      "character": 35,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 531,
+      "character": 41,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 532,
+      "character": 36,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 532,
+      "character": 42,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 532,
+      "character": 49,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 533,
+      "character": 36,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 533,
+      "character": 42,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 533,
+      "character": 49,
+      "text": "every",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 538,
+      "character": 42,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 538,
+      "character": 48,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 539,
+      "character": 40,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 539,
+      "character": 46,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 539,
+      "character": 56,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 546,
+      "character": 33,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 546,
+      "character": 39,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 546,
+      "character": 49,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 546,
+      "character": 55,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 546,
+      "character": 62,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 548,
+      "character": 41,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 548,
+      "character": 47,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 548,
+      "character": 54,
+      "text": "map",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 608,
+      "character": 52,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 608,
+      "character": 59,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 617,
+      "character": 48,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 617,
+      "character": 54,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 617,
+      "character": 61,
+      "text": "map",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 628,
+      "character": 48,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 628,
+      "character": 54,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 628,
+      "character": 62,
+      "text": "map",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 645,
+      "character": 51,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 645,
+      "character": 57,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 646,
+      "character": 46,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 646,
+      "character": 52,
+      "text": "startDate",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 650,
+      "character": 44,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 650,
+      "character": 50,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 652,
+      "character": 49,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 652,
+      "character": 55,
+      "text": "key",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 661,
+      "character": 44,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 661,
+      "character": 50,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 661,
+      "character": 58,
+      "text": "map",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 682,
+      "character": 60,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 682,
+      "character": 66,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 683,
+      "character": 60,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 683,
+      "character": 66,
+      "text": "orders",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 685,
+      "character": 63,
+      "text": "reference",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 704,
+      "character": 35,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 704,
+      "character": 41,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 740,
+      "character": 52,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 740,
+      "character": 59,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 741,
+      "character": 58,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 741,
+      "character": 65,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 742,
+      "character": 63,
+      "text": "map",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 748,
+      "character": 63,
+      "text": "join",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 782,
+      "character": 33,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 782,
+      "character": 40,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 783,
+      "character": 32,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 783,
+      "character": 38,
+      "text": "locations",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 783,
+      "character": 48,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 784,
+      "character": 33,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 784,
+      "character": 39,
+      "text": "drivers",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 785,
+      "character": 32,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 785,
+      "character": 38,
+      "text": "drivers",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 785,
+      "character": 46,
+      "text": "length",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 787,
+      "character": 33,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 787,
+      "character": 39,
+      "text": "endDate",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 788,
+      "character": 33,
+      "text": "route",
+      "kind": 1
+    },
+    {
+      "file": "src/components/routes/components/Route/Route.tsx",
+      "line": 788,
+      "character": 39,
+      "text": "startDate",
+      "kind": 1
+    }
+  ],
+  "percentage": 97.58204589084926,
+  "total": 21878,
+  "covered": 21349,
+  "uncovered": 529
+}

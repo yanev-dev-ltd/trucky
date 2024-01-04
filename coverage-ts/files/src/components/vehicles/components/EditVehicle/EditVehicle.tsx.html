@@ -1,0 +1,1042 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>EditVehicle.tsx</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../../../../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../../../../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../../../../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">src/components/vehicles/components/EditVehicle/EditVehicle.tsx</td><td class="">100.00%</td><td class="">80%</td><td class="">1254</td><td class="">1254</td><td class="">0</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import { useState, useCallback, useMemo } from &#x27;react&#x27;
+import {
+    Box,
+    Typography,
+    Button,
+    Drawer,
+    Paper,
+    IconButton,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Table as MuiTable,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Divider,
+    TextField,
+    Tooltip,
+    CircularProgress,
+} from &#x27;@mui/material&#x27;
+import {
+    Close,
+    Edit,
+    InsertDriveFile,
+    AddCircle,
+    Visibility,
+    Delete,
+    NotificationsActive,
+    Route as RouteIcon,
+} from &#x27;@mui/icons-material&#x27;
+import { format, formatRelative, set } from &#x27;date-fns&#x27;
+import { bg, enUS } from &#x27;date-fns/locale&#x27;
+import { useRouter } from &#x27;next/router&#x27;
+import NextLink from &#x27;next/link&#x27;
+import { FormattedMessage } from &#x27;react-intl&#x27;
+import LoadingButton from &#x27;@/components/common/LoadingButton/LoadingButton&#x27;
+import { auth } from &#x27;@/services/firebase&#x27;
+import sx from &#x27;./styles/EditVehicle.sx&#x27;
+import { EditVehicleProps } from &#x27;./types&#x27;
+import { useSelector } from &#x27;react-redux&#x27;
+import { RootState } from &#x27;@/store/store&#x27;
+import { VehicleTypes, FuelTypes } from &#x27;../../types&#x27;
+import { Maintenance } from &#x27;@/components/maintenance/types&#x27;
+import { UploadedFile } from &#x27;@/components/common/Upload/types&#x27;
+import useEditVehicle from &#x27;./hooks/useEditVehicle&#x27;
+import Upload from &#x27;@/components/common/Upload/Upload&#x27;
+import Confirm from &#x27;@/components/common/Confirm/Confirm&#x27;
+import Overflow from &#x27;@/components/common/Overflow/Overflow&#x27;
+import { AddMaintenance } from &#x27;@/components/maintenance/components/AddMaintenance/AddMaintenance&#x27;
+import { EditMaintenance } from &#x27;@/components/maintenance/components/EditMaintenance/EditMaintenance&#x27;
+import Route from &#x27;@/components/routes/components/Route/Route&#x27;
+import { DriversSelect } from &#x27;@/components/drivers/components/DriversSelect/DriversSelect&#x27;
+import { GroupsSelect } from &#x27;@/components/common/Group/components/GroupsSelect/GroupsSelect&#x27;
+import TextareaAutoSize from &#x27;@/components/common/TextareaAutoSize/TextAreaAutoSize&#x27;
+
+const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) =&gt; {
+    const router = useRouter()
+    const {
+        saveVehicleField,
+        editedVehicle,
+        setEditedVehicle,
+        reset,
+        downloadFile,
+        deleteFile,
+        deleteVehicle,
+        maintenances,
+        routes,
+        files,
+    } = useEditVehicle(vehicle)
+    const allDrivers = useSelector((state: RootState) =&gt; state.drivers)
+    const allGroups = useSelector((state: RootState) =&gt; state.groups)
+    const { settings } = useSelector((state: RootState) =&gt; state.settings)
+    const [editMaintenance, setEditMaintenance] = useState&lt;
+        Maintenance | undefined
+    &gt;()
+    const [confirmDeleteFile, setConfirmDeleteFile] = useState&lt;
+        UploadedFile | undefined
+    &gt;()
+    const [confirmDeleteVehicle, setConfirmDeleteVehicle] =
+        useState&lt;boolean&gt;(false)
+    const [editMaintenanceField, setEditMaintenanceField] = useState&lt;string&gt;()
+
+    const locale = useMemo(() =&gt; {
+        switch (settings?.locale) {
+            case &#x27;bg&#x27;:
+                return bg
+            default:
+                return enUS
+        }
+    }, [settings?.locale])
+
+    const handleEditMaintenanceOpen = useCallback(
+        (m: Maintenance | undefined) =&gt; {
+            setEditMaintenance(m)
+        },
+        []
+    )
+
+    return (
+        &lt;Drawer
+            open={Boolean(vehicle?.key)}
+            anchor=&quot;right&quot;
+            onClose={() =&gt; router.push(&#x27;/vehicles&#x27;)}
+        &gt;
+            {!vehicle &amp;&amp; (
+                &lt;Box display=&quot;flex&quot; justifyContent=&quot;center&quot; p={2} sx={sx.wrap}&gt;
+                    &lt;NextLink href={&#x27;/vehicles&#x27;}&gt;
+                        &lt;IconButton size=&quot;small&quot; sx={sx.edit}&gt;
+                            &lt;Close /&gt;
+                        &lt;/IconButton&gt;
+                    &lt;/NextLink&gt;
+                    &lt;Typography&gt;
+                        &lt;FormattedMessage id=&quot;app.VehicleNotFound&quot; /&gt;
+                    &lt;/Typography&gt;
+                &lt;/Box&gt;
+            )}
+            {vehicle &amp;&amp; (
+                &lt;Box sx={sx.wrap}&gt;
+                    &lt;Box display=&quot;flex&quot; justifyContent=&quot;space-between&quot;&gt;
+                        &lt;Typography variant=&quot;h6&quot;&gt;
+                            &lt;FormattedMessage id=&quot;app.Details&quot; /&gt;
+                        &lt;/Typography&gt;
+                        &lt;NextLink href={&#x27;/vehicles&#x27;}&gt;
+                            &lt;IconButton size=&quot;small&quot;&gt;
+                                &lt;Close /&gt;
+                            &lt;/IconButton&gt;
+                        &lt;/NextLink&gt;
+                    &lt;/Box&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        {edit !== &#x27;name&#x27; &amp;&amp; (
+                            &lt;&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Name&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;Overflow
+                                    text={vehicle?.name || &#x27;-&#x27;}
+                                    variant=&quot;h6&quot;
+                                /&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Edit&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}/name`
+                                            )
+                                            reset()
+                                        }}
+                                    &gt;
+                                        &lt;Edit /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                            &lt;/&gt;
+                        )}
+                        {edit === &#x27;name&#x27; &amp;&amp; (
+                            &lt;Box
+                                component=&quot;form&quot;
+                                onSubmit={(event) =&gt; {
+                                    event.preventDefault()
+                                    saveVehicleField(&#x27;name&#x27;)
+                                }}
+                            &gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Name&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;TextField
+                                    variant=&quot;outlined&quot;
+                                    label={&lt;FormattedMessage id=&quot;app.Name&quot; /&gt;}
+                                    value={editedVehicle?.name || &#x27;&#x27;}
+                                    onChange={(event) =&gt; {
+                                        setEditedVehicle({
+                                            ...vehicle,
+                                            name: event.target.value || &#x27;&#x27;,
+                                        })
+                                    }}
+                                    fullWidth
+                                    sx={sx.select}
+                                    helperText={
+                                        &lt;FormattedMessage id=&quot;app.NameExamples&quot; /&gt;
+                                    }
+                                /&gt;
+                                &lt;Button
+                                    color=&quot;primary&quot;
+                                    type=&quot;submit&quot;
+                                    disabled={
+                                        vehicle.name === editedVehicle?.name ||
+                                        !editedVehicle?.name
+                                    }
+                                &gt;
+                                    &lt;FormattedMessage id=&quot;app.Save&quot; /&gt;
+                                &lt;/Button&gt;
+
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}`
+                                            )
+                                        }}
+                                    &gt;
+                                        &lt;Close /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        &lt;Box sx={sx.flex}&gt;
+                            &lt;Box sx={sx.left}&gt;
+                                &lt;FormattedMessage id=&quot;app.Type&quot; /&gt;
+                                &lt;Typography variant=&quot;h6&quot;&gt;
+                                    {vehicle?.type ? (
+                                        &lt;FormattedMessage
+                                            id={`app.VehicleType.${
+                                                VehicleTypes[
+                                                    vehicle?.type as keyof typeof VehicleTypes
+                                                ]
+                                            }`}
+                                        /&gt;
+                                    ) : (
+                                        &#x27;-&#x27;
+                                    )}
+                                &lt;/Typography&gt;
+                            &lt;/Box&gt;
+                            &lt;Box sx={sx.right}&gt;
+                                &lt;FormattedMessage id=&quot;app.Fuel&quot; /&gt;
+                                &lt;Typography variant=&quot;h6&quot;&gt;
+                                    {vehicle?.fuel ? (
+                                        &lt;FormattedMessage
+                                            id={`app.FuelType.${
+                                                FuelTypes[
+                                                    vehicle?.fuel as keyof typeof FuelTypes
+                                                ]
+                                            }`}
+                                        /&gt;
+                                    ) : (
+                                        &#x27;-&#x27;
+                                    )}
+                                &lt;/Typography&gt;
+                            &lt;/Box&gt;
+                        &lt;/Box&gt;
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        {edit !== &#x27;mileage&#x27; &amp;&amp; (
+                            &lt;&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Edit&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}/mileage`
+                                            )
+                                            reset()
+                                        }}
+                                    &gt;
+                                        &lt;Edit /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;Typography sx={sx.textWrap}&gt;
+                                    &lt;FormattedMessage id=&quot;app.Mileage&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;Box
+                                    display=&quot;flex&quot;
+                                    alignItems=&quot;baseline&quot;
+                                    gap={1}
+                                &gt;
+                                    &lt;Overflow
+                                        text={vehicle?.mileage || &#x27;-&#x27;}
+                                        variant=&quot;h6&quot;
+                                    /&gt;
+                                    &lt;Typography&gt;
+                                        {editedVehicle?.units === &#x27;km&#x27; ? (
+                                            &lt;FormattedMessage id=&quot;app.Km&quot; /&gt;
+                                        ) : editedVehicle?.units === &#x27;m&#x27; ? (
+                                            &lt;FormattedMessage id=&quot;app.Mi&quot; /&gt;
+                                        ) : (
+                                            &lt;FormattedMessage id=&quot;app.Hrs&quot; /&gt;
+                                        )}
+                                    &lt;/Typography&gt;
+                                &lt;/Box&gt;
+                            &lt;/&gt;
+                        )}
+                        {edit === &#x27;mileage&#x27; &amp;&amp; (
+                            &lt;Box
+                                component=&quot;form&quot;
+                                onSubmit={(event) =&gt; {
+                                    event.preventDefault()
+                                    saveVehicleField(&#x27;mileage&#x27;)
+                                }}
+                            &gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Mileage&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}`
+                                            )
+                                        }}
+                                    &gt;
+                                        &lt;Close /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;TextField
+                                    variant=&quot;outlined&quot;
+                                    label={
+                                        &lt;FormattedMessage id=&quot;app.Mileage&quot; /&gt;
+                                    }
+                                    value={editedVehicle?.mileage || &#x27;&#x27;}
+                                    onChange={(event) =&gt;
+                                        setEditedVehicle({
+                                            ...vehicle,
+                                            mileage: +event.target.value,
+                                        })
+                                    }
+                                    sx={sx.select}
+                                    fullWidth
+                                    type=&quot;number&quot;
+                                    InputProps={{
+                                        inputProps: {
+                                            max: 999999999,
+                                        },
+                                        endAdornment: (
+                                            &lt;FormattedMessage
+                                                id={
+                                                    editedVehicle?.units ===
+                                                    &#x27;km&#x27;
+                                                        ? &#x27;app.Km&#x27;
+                                                        : editedVehicle?.units ===
+                                                          &#x27;m&#x27;
+                                                        ? &#x27;app.Mi&#x27;
+                                                        : &#x27;app.Hrs&#x27;
+                                                }
+                                            /&gt;
+                                        ),
+                                    }}
+                                /&gt;
+                                &lt;Button
+                                    color=&quot;primary&quot;
+                                    disabled={
+                                        (editedVehicle?.mileage &amp;&amp;
+                                            +editedVehicle?.mileage) ===
+                                        (vehicle?.mileage &amp;&amp; +vehicle.mileage)
+                                    }
+                                    type=&quot;submit&quot;
+                                &gt;
+                                    &lt;FormattedMessage id=&quot;app.Save&quot; /&gt;
+                                &lt;/Button&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        {edit !== &#x27;groups&#x27; &amp;&amp; (
+                            &lt;&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Edit&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}/groups`
+                                            )
+                                            reset()
+                                        }}
+                                    &gt;
+                                        &lt;Edit /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Groups&quot; /&gt;
+                                &lt;/Typography&gt;
+                                {vehicle.groups
+                                    ? vehicle.groups.map((g) =&gt; {
+                                          const group = allGroups.find(
+                                              (gr) =&gt; gr.key === g
+                                          )
+                                          return (
+                                              group?.name &amp;&amp; (
+                                                  &lt;Box key={group?.key}&gt;
+                                                      &lt;Overflow
+                                                          text={group.name}
+                                                          variant=&quot;h6&quot;
+                                                      /&gt;
+                                                      &lt;Typography
+                                                          variant=&quot;caption&quot;
+                                                          sx={sx.textWrap}
+                                                      &gt;
+                                                          {group?.description ||
+                                                              &#x27;-&#x27;}
+                                                      &lt;/Typography&gt;
+                                                  &lt;/Box&gt;
+                                              )
+                                          )
+                                      })
+                                    : &#x27;-&#x27;}
+                            &lt;/&gt;
+                        )}
+                        {edit === &#x27;groups&#x27; &amp;&amp; (
+                            &lt;Box
+                                component=&quot;form&quot;
+                                onSubmit={(event) =&gt; {
+                                    event.preventDefault()
+                                }}
+                            &gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Groups&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}`
+                                            )
+                                        }}
+                                    &gt;
+                                        &lt;Close /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;GroupsSelect
+                                    groups={editedVehicle?.groups || []}
+                                    setGroups={(groups) =&gt;
+                                        setEditedVehicle({
+                                            ...vehicle,
+                                            groups,
+                                        })
+                                    }
+                                    type=&quot;vehicle&quot;
+                                    sx={sx.select}
+                                    multiple
+                                /&gt;
+                                &lt;Button
+                                    color=&quot;primary&quot;
+                                    onClick={() =&gt; saveVehicleField(&#x27;groups&#x27;)}
+                                &gt;
+                                    &lt;FormattedMessage id=&quot;app.Save&quot; /&gt;
+                                &lt;/Button&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        {edit !== &#x27;drivers&#x27; &amp;&amp; (
+                            &lt;&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Edit&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}/drivers`
+                                            )
+                                            reset()
+                                        }}
+                                    &gt;
+                                        &lt;Edit /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Drivers&quot; /&gt;
+                                &lt;/Typography&gt;
+                                {vehicle.drivers
+                                    ? vehicle.drivers.map((d) =&gt; {
+                                          const driver = allDrivers.find(
+                                              (dr) =&gt; dr.key === d
+                                          )
+                                          return (
+                                              driver?.name &amp;&amp; (
+                                                  &lt;Box key={driver?.key}&gt;
+                                                      &lt;Overflow
+                                                          text={driver.name}
+                                                          variant=&quot;h6&quot;
+                                                      /&gt;
+                                                      &lt;Typography
+                                                          variant=&quot;caption&quot;
+                                                          sx={sx.textWrap}
+                                                      &gt;
+                                                          {driver?.phone || &#x27;-&#x27;}
+                                                      &lt;/Typography&gt;
+                                                  &lt;/Box&gt;
+                                              )
+                                          )
+                                      })
+                                    : &#x27;-&#x27;}
+                            &lt;/&gt;
+                        )}
+                        {edit === &#x27;drivers&#x27; &amp;&amp; (
+                            &lt;Box
+                                component=&quot;form&quot;
+                                onSubmit={(event) =&gt; {
+                                    event.preventDefault()
+                                }}
+                            &gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Drivers&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}`
+                                            )
+                                        }}
+                                    &gt;
+                                        &lt;Close /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;DriversSelect
+                                    drivers={editedVehicle?.drivers || []}
+                                    setDrivers={(drivers) =&gt;
+                                        setEditedVehicle({
+                                            ...vehicle,
+                                            drivers,
+                                        })
+                                    }
+                                    sx={sx.select}
+                                    multiple
+                                /&gt;
+                                &lt;Button
+                                    color=&quot;primary&quot;
+                                    onClick={() =&gt; saveVehicleField(&#x27;drivers&#x27;)}
+                                &gt;
+                                    &lt;FormattedMessage id=&quot;app.Save&quot; /&gt;
+                                &lt;/Button&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        &lt;Box sx={sx.relative}&gt;
+                            &lt;Typography&gt;
+                                &lt;FormattedMessage id=&quot;app.Routes&quot; /&gt;
+                            &lt;/Typography&gt;
+                            &lt;Tooltip
+                                title={&lt;FormattedMessage id=&quot;app.AddRoute&quot; /&gt;}
+                            &gt;
+                                &lt;IconButton
+                                    size=&quot;small&quot;
+                                    sx={sx.edit}
+                                    onClick={() =&gt; {
+                                        router.push(
+                                            `/vehicles/${vehicle?.key}/route`
+                                        )
+                                        reset()
+                                    }}
+                                &gt;
+                                    &lt;AddCircle /&gt;
+                                &lt;/IconButton&gt;
+                            &lt;/Tooltip&gt;
+                            {edit === &#x27;route&#x27; &amp;&amp; editedVehicle &amp;&amp; (
+                                &lt;Route
+                                    vehicleId={vehicle?.key}
+                                    units={editedVehicle.units}
+                                    routeId={routeId}
+                                    drivers={editedVehicle?.drivers}
+                                /&gt;
+                            )}
+                        &lt;/Box&gt;
+                        &lt;List dense sx={sx.fixedHeight}&gt;
+                            {routes?.[0]?.key === &#x27;loading&#x27; ? (
+                                &lt;Box sx={sx.loading}&gt;
+                                    &lt;CircularProgress /&gt;
+                                &lt;/Box&gt;
+                            ) : (
+                                routes.map((route) =&gt; (
+                                    &lt;ListItem key={route.key} disablePadding&gt;
+                                        &lt;ListItemButton
+                                            onClick={() =&gt;
+                                                router.push(
+                                                    `/vehicles/${vehicle?.key}/route/${route.key}`
+                                                )
+                                            }
+                                        &gt;
+                                            &lt;ListItemIcon&gt;
+                                                &lt;RouteIcon /&gt;
+                                            &lt;/ListItemIcon&gt;
+                                            &lt;ListItemText
+                                                primary={
+                                                    &lt;Overflow
+                                                        text={
+                                                            (route?.locations &amp;&amp;
+                                                                route.locations
+                                                                    .map(
+                                                                        (
+                                                                            location
+                                                                        ) =&gt;
+                                                                            location.code
+                                                                    )
+                                                                    .join(
+                                                                        &#x27; → &#x27;
+                                                                    )) ||
+                                                            &#x27;&#x27;
+                                                        }
+                                                    /&gt;
+                                                }
+                                                secondary={`${
+                                                    route.startDate &amp;&amp;
+                                                    format(
+                                                        new Date(
+                                                            +route.startDate
+                                                        ),
+                                                        &#x27;dd/MM/yyyy HH:mm&#x27;
+                                                    )
+                                                } - ${
+                                                    route.endDate &amp;&amp;
+                                                    format(
+                                                        new Date(
+                                                            +route.endDate
+                                                        ),
+                                                        &#x27;dd/MM/yyyy HH:mm&#x27;
+                                                    )
+                                                }`}
+                                            /&gt;
+                                        &lt;/ListItemButton&gt;
+                                    &lt;/ListItem&gt;
+                                ))
+                            )}
+                        &lt;/List&gt;
+                        {(!routes || routes.length === 0) &amp;&amp; (
+                            &lt;Box display=&quot;flex&quot; justifyContent=&quot;center&quot; mb={2}&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.NoRoutes&quot; /&gt;
+                                &lt;/Typography&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        &lt;Box sx={sx.edit}&gt;
+                            &lt;Upload
+                                filepath={
+                                    auth?.currentUser?.uid
+                                        ? `user/${auth?.currentUser?.uid}/vehicles`
+                                        : undefined
+                                }
+                                dbpath=&quot;vehicles&quot;
+                                dbkey={vehicle.key}
+                                currentFiles={files || []}
+                            /&gt;
+                        &lt;/Box&gt;
+                        &lt;Typography&gt;
+                            &lt;FormattedMessage id=&quot;app.Documents&quot; /&gt;
+                        &lt;/Typography&gt;
+                        &lt;List dense sx={sx.fixedHeight}&gt;
+                            {files &amp;&amp;
+                                files.length &gt; 0 &amp;&amp;
+                                files.map((uf, i) =&gt; (
+                                    &lt;ListItem
+                                        key={i}
+                                        secondaryAction={
+                                            &lt;IconButton
+                                                edge=&quot;end&quot;
+                                                aria-label=&quot;delete&quot;
+                                                onClick={() =&gt;
+                                                    setConfirmDeleteFile(uf)
+                                                }
+                                            &gt;
+                                                &lt;Delete /&gt;
+                                            &lt;/IconButton&gt;
+                                        }
+                                        disablePadding
+                                    &gt;
+                                        &lt;ListItemButton
+                                            onClick={() =&gt; downloadFile(uf)}
+                                        &gt;
+                                            &lt;ListItemIcon&gt;
+                                                &lt;InsertDriveFile /&gt;
+                                            &lt;/ListItemIcon&gt;
+                                            &lt;ListItemText
+                                                primary={
+                                                    &lt;Overflow text={uf.name} /&gt;
+                                                }
+                                                secondary={formatRelative(
+                                                    new Date(uf.date),
+                                                    new Date(),
+                                                    { locale }
+                                                )}
+                                                style={{
+                                                    cursor: &#x27;pointer&#x27;,
+                                                }}
+                                            /&gt;
+                                        &lt;/ListItemButton&gt;
+                                    &lt;/ListItem&gt;
+                                ))}
+                        &lt;/List&gt;
+                        &lt;Confirm
+                            onCancel={() =&gt; setConfirmDeleteFile(undefined)}
+                            onSubmit={() =&gt; {
+                                confirmDeleteFile &amp;&amp;
+                                    deleteFile(
+                                        confirmDeleteFile,
+                                        &#x27;vehicles&#x27;,
+                                        vehicle.key,
+                                        files || []
+                                    )
+                                setConfirmDeleteFile(undefined)
+                            }}
+                            isOpen={Boolean(confirmDeleteFile)}
+                            message={
+                                &lt;FormattedMessage
+                                    id=&quot;app.DeleteFileConfirm&quot;
+                                    values={{
+                                        file: (
+                                            &lt;Overflow
+                                                text={
+                                                    confirmDeleteFile?.name ||
+                                                    &#x27;&#x27;
+                                                }
+                                            /&gt;
+                                        ),
+                                    }}
+                                /&gt;
+                            }
+                            type=&quot;warn&quot;
+                            submit={&lt;FormattedMessage id=&quot;app.Delete&quot; /&gt;}
+                            cancel={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                        /&gt;
+                        {(!files || files.length === 0) &amp;&amp; (
+                            &lt;Box display=&quot;flex&quot; justifyContent=&quot;center&quot; mb={2}&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.NoDocuments&quot; /&gt;
+                                &lt;/Typography&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        {edit !== &#x27;notes&#x27; &amp;&amp; (
+                            &lt;&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Edit&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}/notes`
+                                            )
+                                            reset()
+                                        }}
+                                    &gt;
+                                        &lt;Edit /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Notes&quot; /&gt;
+                                &lt;/Typography&gt;
+                                {vehicle.notes &amp;&amp; (
+                                    &lt;Box sx={sx.fixedHeight}&gt;
+                                        &lt;Typography
+                                            sx={{
+                                                whiteSpace: &#x27;pre-line&#x27;,
+                                                wordBreak: &#x27;break-all&#x27;,
+                                                fontSize: 14,
+                                            }}
+                                            mt={2}
+                                        &gt;
+                                            {vehicle.notes}
+                                        &lt;/Typography&gt;
+                                    &lt;/Box&gt;
+                                )}
+                                {!vehicle.notes &amp;&amp; (
+                                    &lt;Box
+                                        display=&quot;flex&quot;
+                                        justifyContent=&quot;center&quot;
+                                        mb={2}
+                                    &gt;
+                                        &lt;Typography&gt;
+                                            &lt;FormattedMessage id=&quot;app.NoNotes&quot; /&gt;
+                                        &lt;/Typography&gt;
+                                    &lt;/Box&gt;
+                                )}
+                            &lt;/&gt;
+                        )}
+                        {edit === &#x27;notes&#x27; &amp;&amp; (
+                            &lt;Box
+                                component=&quot;form&quot;
+                                onSubmit={(event) =&gt; {
+                                    event.preventDefault()
+                                    saveVehicleField(&#x27;notes&#x27;)
+                                }}
+                            &gt;
+                                &lt;Typography mb={2}&gt;
+                                    &lt;FormattedMessage id=&quot;app.Notes&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}`
+                                            )
+                                        }}
+                                    &gt;
+                                        &lt;Close /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;TextareaAutoSize
+                                    value={editedVehicle?.notes || &#x27;&#x27;}
+                                    onChange={(event) =&gt;
+                                        setEditedVehicle({
+                                            ...vehicle,
+                                            notes: event.target.value,
+                                        })
+                                    }
+                                    maxRows={16}
+                                /&gt;
+                                &lt;Button color=&quot;primary&quot; type=&quot;submit&quot;&gt;
+                                    &lt;FormattedMessage id=&quot;app.Save&quot; /&gt;
+                                &lt;/Button&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        &lt;Typography&gt;
+                            &lt;FormattedMessage id=&quot;app.Maintenance&quot; /&gt;
+                        &lt;/Typography&gt;
+                        &lt;Box sx={sx.edit}&gt;
+                            &lt;AddMaintenance
+                                vehicleId={vehicle.key}
+                                drivers={vehicle?.drivers || []}
+                                units={vehicle.units}
+                            /&gt;
+                        &lt;/Box&gt;
+                        {maintenances &amp;&amp;
+                            maintenances.length &gt; 0 &amp;&amp;
+                            (maintenances?.[0]?.key === &#x27;loading&#x27; ? (
+                                &lt;Box sx={sx.loading}&gt;
+                                    &lt;CircularProgress /&gt;
+                                &lt;/Box&gt;
+                            ) : (
+                                &lt;Box sx={sx.fixedHeight}&gt;
+                                    &lt;MuiTable size=&quot;small&quot; stickyHeader&gt;
+                                        &lt;TableHead&gt;
+                                            &lt;TableRow&gt;
+                                                &lt;TableCell
+                                                    sx={sx.smallCellHead}
+                                                &gt;
+                                                    &amp;nbsp;
+                                                &lt;/TableCell&gt;
+                                                &lt;TableCell
+                                                    sx={sx.smallCellHead}
+                                                &gt;
+                                                    &lt;FormattedMessage id=&quot;app.Date&quot; /&gt;
+                                                &lt;/TableCell&gt;
+                                                &lt;TableCell
+                                                    sx={sx.smallCellHead}
+                                                &gt;
+                                                    &lt;FormattedMessage id=&quot;app.Type&quot; /&gt;
+                                                &lt;/TableCell&gt;
+                                                &lt;TableCell
+                                                    sx={sx.smallCellHead}
+                                                &gt;
+                                                    &lt;FormattedMessage id=&quot;app.Cost&quot; /&gt;
+                                                &lt;/TableCell&gt;
+                                                &lt;TableCell
+                                                    sx={sx.smallCellHead}
+                                                &gt;
+                                                    &amp;nbsp;
+                                                &lt;/TableCell&gt;
+                                            &lt;/TableRow&gt;
+                                        &lt;/TableHead&gt;
+                                        &lt;TableBody&gt;
+                                            {maintenances.map((m, i) =&gt; (
+                                                &lt;TableRow key={i}&gt;
+                                                    &lt;TableCell
+                                                        sx={sx.smallCell}
+                                                    &gt;
+                                                        {(m.reminderDate ||
+                                                            m.reminderMileage) &amp;&amp; (
+                                                            &lt;Tooltip
+                                                                title={
+                                                                    m.reminderDate &amp;&amp;
+                                                                    m.reminderMileage ? (
+                                                                        &lt;FormattedMessage id=&quot;app.Maintenance.AlarmDateAndMileage&quot; /&gt;
+                                                                    ) : m.reminderDate ? (
+                                                                        &lt;FormattedMessage id=&quot;app.Maintenance.AlarmDate&quot; /&gt;
+                                                                    ) : (
+                                                                        &lt;FormattedMessage id=&quot;app.Maintenance.AlarmMileage&quot; /&gt;
+                                                                    )
+                                                                }
+                                                            &gt;
+                                                                &lt;NotificationsActive /&gt;
+                                                            &lt;/Tooltip&gt;
+                                                        )}
+                                                    &lt;/TableCell&gt;
+                                                    &lt;TableCell
+                                                        sx={sx.smallCell}
+                                                    &gt;
+                                                        {m.date &amp;&amp;
+                                                            format(
+                                                                new Date(
+                                                                    +m.date
+                                                                ),
+                                                                &#x27;dd/MM/yyyy&#x27;
+                                                            )}
+                                                    &lt;/TableCell&gt;
+                                                    &lt;TableCell
+                                                        sx={sx.smallCell}
+                                                        style={{
+                                                            maxWidth: &#x27;160px&#x27;,
+                                                        }}
+                                                    &gt;
+                                                        &lt;Overflow
+                                                            text={m.type || &#x27;&#x27;}
+                                                        /&gt;
+                                                    &lt;/TableCell&gt;
+                                                    &lt;TableCell
+                                                        sx={sx.smallCell}
+                                                        style={{
+                                                            maxWidth: &#x27;90px&#x27;,
+                                                        }}
+                                                    &gt;
+                                                        &lt;Overflow
+                                                            text={m.cost || &#x27;&#x27;}
+                                                        /&gt;
+                                                    &lt;/TableCell&gt;
+                                                    &lt;TableCell
+                                                        sx={sx.smallCell}
+                                                        align=&quot;right&quot;
+                                                    &gt;
+                                                        &lt;IconButton
+                                                            size=&quot;small&quot;
+                                                            onClick={() =&gt;
+                                                                handleEditMaintenanceOpen(
+                                                                    m
+                                                                )
+                                                            }
+                                                        &gt;
+                                                            &lt;Visibility /&gt;
+                                                        &lt;/IconButton&gt;
+                                                    &lt;/TableCell&gt;
+                                                &lt;/TableRow&gt;
+                                            ))}
+                                        &lt;/TableBody&gt;
+                                    &lt;/MuiTable&gt;
+                                &lt;/Box&gt;
+                            ))}
+                        &lt;EditMaintenance
+                            maintenance={editMaintenance}
+                            edit={editMaintenanceField}
+                            onClose={() =&gt; setEditMaintenance(undefined)}
+                            onCancel={() =&gt; setEditMaintenanceField(undefined)}
+                            onEdit={(field) =&gt; setEditMaintenanceField(field)}
+                        /&gt;
+                        {(!maintenances || maintenances.length === 0) &amp;&amp; (
+                            &lt;Box display=&quot;flex&quot; justifyContent=&quot;center&quot; mb={2}&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.NoMaintenances&quot; /&gt;
+                                &lt;/Typography&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Divider /&gt;
+                    &lt;LoadingButton
+                        sx={sx.warn}
+                        onClick={() =&gt; setConfirmDeleteVehicle(true)}
+                        startIcon={&lt;Delete /&gt;}
+                        color=&quot;secondary&quot;
+                        fullWidth
+                    &gt;
+                        &lt;FormattedMessage id=&quot;app.DeleteVehicle&quot; /&gt;
+                    &lt;/LoadingButton&gt;
+                    &lt;Confirm
+                        onCancel={() =&gt; setConfirmDeleteVehicle(false)}
+                        onSubmit={() =&gt; {
+                            deleteVehicle()
+                            setConfirmDeleteVehicle(false)
+                        }}
+                        isOpen={confirmDeleteVehicle}
+                        message={
+                            &lt;FormattedMessage
+                                id=&quot;app.Deleting&quot;
+                                values={{
+                                    name: (
+                                        &lt;Overflow text={vehicle.name || &#x27;&#x27;} /&gt;
+                                    ),
+                                }}
+                            /&gt;
+                        }
+                        type=&quot;warn&quot;
+                        submit={&lt;FormattedMessage id=&quot;app.Delete&quot; /&gt;}
+                        cancel={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                    /&gt;
+                &lt;/Box&gt;
+            )}
+        &lt;/Drawer&gt;
+    )
+}
+
+export default EditVehicle
+</textarea><pre id="annotations" style="display:none">[]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Thu, 04 Jan 2024 18:45:36 GMT</p>
+    </body>
+  </html>
+  

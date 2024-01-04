@@ -1,0 +1,135 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>MaintenanceView.tsx</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../../../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../../../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../../../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">src/components/maintenance/views/MaintenanceView.tsx</td><td class="">100.00%</td><td class="">80%</td><td class="">185</td><td class="">185</td><td class="">0</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import { useState, useEffect, FC } from &#x27;react&#x27;
+import Table from &#x27;@/components/common/Table/Table&#x27;
+import {
+    TextField,
+    CircularProgress,
+    Box,
+    Typography,
+    InputAdornment,
+    Paper,
+} from &#x27;@mui/material&#x27;
+
+import { Search } from &#x27;@mui/icons-material&#x27;
+import sx from &#x27;../styles/Maintenance.sx&#x27;
+import { Maintenance, MaintenanceProps } from &#x27;../types&#x27;
+import { FormattedMessage, useIntl } from &#x27;react-intl&#x27;
+import { AddMaintenance } from &#x27;../components/AddMaintenance/AddMaintenance&#x27;
+import { EditMaintenance } from &#x27;../components/EditMaintenance/EditMaintenance&#x27;
+import { useSelector } from &#x27;react-redux&#x27;
+import { RootState } from &#x27;@/store/store&#x27;
+import { useRouter } from &#x27;next/router&#x27;
+
+export const MaintenanceView: FC&lt;MaintenanceProps&gt; = ({
+    maintenances,
+    edit,
+    maintenanceId,
+    searchRef,
+    fuse,
+    columns,
+}): JSX.Element =&gt; {
+    const intl = useIntl()
+    const router = useRouter()
+    const [search, setSearch] = useState&lt;string | boolean&gt;(false)
+    const [filteredMaintenances, setFilteredMaintenances] =
+        useState&lt;Maintenance[]&gt;(maintenances)
+    const { settings } = useSelector((state: RootState) =&gt; state.settings)
+    useEffect(() =&gt; {
+        if (search &amp;&amp; typeof search === &#x27;string&#x27; &amp;&amp; search.length &gt;= 3) {
+            const tempMaintenances = fuse.search(search)
+            setFilteredMaintenances(tempMaintenances.map((s) =&gt; s.item))
+        } else {
+            setFilteredMaintenances(maintenances)
+        }
+    }, [search, maintenances])
+    const maintenance = maintenances.find((v) =&gt; v.key === maintenanceId)
+
+    if (maintenances?.[0]?.key === &#x27;loading&#x27;) {
+        return (
+            &lt;Box sx={sx.loading}&gt;
+                &lt;CircularProgress /&gt;
+            &lt;/Box&gt;
+        )
+    }
+
+    return (
+        &lt;Box&gt;
+            &lt;Box sx={sx.header}&gt;
+                &lt;TextField
+                    variant=&quot;outlined&quot;
+                    placeholder={intl.formatMessage({ id: &#x27;app.Search&#x27; })}
+                    size=&quot;small&quot;
+                    onChange={(e) =&gt; setSearch(e.target.value)}
+                    sx={sx.search}
+                    inputRef={searchRef}
+                    InputProps={{
+                        startAdornment: (
+                            &lt;InputAdornment position=&quot;start&quot;&gt;
+                                &lt;Search /&gt;
+                            &lt;/InputAdornment&gt;
+                        ),
+                        endAdornment: (
+                            &lt;InputAdornment position=&quot;end&quot;&gt;
+                                &lt;Paper sx={sx.searchKey} elevation={2}&gt;
+                                    &lt;Typography variant=&quot;caption&quot;&gt;/&lt;/Typography&gt;
+                                &lt;/Paper&gt;
+                            &lt;/InputAdornment&gt;
+                        ),
+                    }}
+                /&gt;
+                &lt;AddMaintenance units={settings.units} fullButton /&gt;
+            &lt;/Box&gt;
+            {Array.isArray(filteredMaintenances) &amp;&amp;
+                filteredMaintenances.length &gt; 0 &amp;&amp; (
+                    &lt;Table
+                        stickyHeader
+                        columns={columns}
+                        data={filteredMaintenances}
+                        name=&quot;maintenances&quot;
+                    /&gt;
+                )}
+            {Array.isArray(filteredMaintenances) &amp;&amp;
+                filteredMaintenances.length === 0 &amp;&amp; (
+                    &lt;Box
+                        display=&quot;flex&quot;
+                        justifyContent=&quot;center&quot;
+                        alignItems=&quot;center&quot;
+                        flexDirection=&quot;column&quot;
+                        style={{ height: &#x27;calc(100vh - 54px - 72px)&#x27; }}
+                    &gt;
+                        &lt;Typography variant=&quot;h5&quot; sx={sx.padding}&gt;
+                            &lt;FormattedMessage id=&quot;app.NoMaintenances&quot; /&gt;
+                        &lt;/Typography&gt;
+                    &lt;/Box&gt;
+                )}
+            &lt;EditMaintenance
+                maintenance={maintenance}
+                edit={edit}
+                onClose={() =&gt; router.push(&#x27;/maintenance&#x27;)}
+                onCancel={() =&gt; router.push(`/maintenance/${maintenanceId}`)}
+                onEdit={(field) =&gt;
+                    router.push(`/maintenance/${maintenanceId}/${field}`)
+                }
+            /&gt;
+        &lt;/Box&gt;
+    )
+}
+
+export default MaintenanceView
+</textarea><pre id="annotations" style="display:none">[]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Thu, 04 Jan 2024 18:45:36 GMT</p>
+    </body>
+  </html>
+  

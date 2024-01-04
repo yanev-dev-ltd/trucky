@@ -1,0 +1,299 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>GroupView.tsx</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../../../../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../../../../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../../../../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">src/components/common/Group/views/GroupView.tsx</td><td class="">100.00%</td><td class="">80%</td><td class="">313</td><td class="">313</td><td class="">0</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import {
+    Box,
+    IconButton,
+    Tooltip,
+    Chip,
+    Popover,
+    List,
+    ListItem,
+    ListItemText,
+    Button,
+    TextField,
+    Typography,
+    Paper,
+    ListItemButton,
+} from &#x27;@mui/material&#x27;
+import { GroupWork, Edit, AddCircle } from &#x27;@mui/icons-material&#x27;
+import { useIntl, FormattedMessage } from &#x27;react-intl&#x27;
+import { useRouter } from &#x27;next/router&#x27;
+import { GroupProps } from &#x27;../types&#x27;
+import sx from &#x27;../styles/Group.sx&#x27;
+import LoadingButton from &#x27;@/components/common/LoadingButton/LoadingButton&#x27;
+import Confirm from &#x27;@/components/common/Confirm/Confirm&#x27;
+import Overflow from &#x27;@/components/common/Overflow/Overflow&#x27;
+import { useState } from &#x27;react&#x27;
+import { AddGroup } from &#x27;../components/AddGroup/AddGroup&#x27;
+
+export const GroupView = ({
+    groups,
+    anchorEl,
+    handleClose,
+    handleClick,
+    editGroupIndex,
+    setEditGroupIndex,
+    editGroup,
+    editedGroup,
+    setEditedGroup,
+    editLoading,
+    deleteGroup,
+    type,
+}: GroupProps) =&gt; {
+    const intl = useIntl()
+    const router = useRouter()
+    const [confirmDeleteGroup, setConfirmDeleteGroup] = useState&lt;boolean&gt;(false)
+    const [openAdd, setOpenAdd] = useState&lt;boolean&gt;(false)
+    const selectedGroup = groups.find((g) =&gt; g.key === router.query.group)
+    return (
+        &lt;Box display=&quot;flex&quot; justifyContent=&quot;center&quot; alignItems=&quot;center&quot; gap={1}&gt;
+            &lt;Tooltip title={intl.formatMessage({ id: &#x27;app.Groups&#x27; })}&gt;
+                &lt;IconButton onClick={handleClick}&gt;
+                    &lt;GroupWork /&gt;
+                &lt;/IconButton&gt;
+            &lt;/Tooltip&gt;
+            &lt;Popover
+                id=&quot;group-popover&quot;
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: &#x27;bottom&#x27;,
+                    horizontal: &#x27;left&#x27;,
+                }}
+                transformOrigin={{
+                    vertical: &#x27;top&#x27;,
+                    horizontal: &#x27;left&#x27;,
+                }}
+            &gt;
+                &lt;List sx={sx.groupsList}&gt;
+                    {!groups.length &amp;&amp; (
+                        &lt;ListItem&gt;
+                            &lt;ListItemText
+                                sx={sx.noGroups}
+                                primary={
+                                    &lt;FormattedMessage id=&quot;app.NoGroupsYet&quot; /&gt;
+                                }
+                            /&gt;
+                        &lt;/ListItem&gt;
+                    )}
+                    &lt;ListItem&gt;
+                        &lt;Button
+                            fullWidth
+                            onClick={() =&gt; setOpenAdd(true)}
+                            variant=&quot;outlined&quot;
+                            size=&quot;small&quot;
+                            startIcon={&lt;AddCircle /&gt;}
+                        &gt;
+                            &lt;FormattedMessage id=&quot;app.AddGroup&quot; /&gt;
+                        &lt;/Button&gt;
+                        &lt;AddGroup
+                            type={type}
+                            open={openAdd}
+                            setOpen={setOpenAdd}
+                            onSave={() =&gt; setOpenAdd(false)}
+                        /&gt;
+                    &lt;/ListItem&gt;
+                    {groups.map((group, index) =&gt; {
+                        if (index === editGroupIndex) {
+                            return (
+                                &lt;ListItem key={group.key}&gt;
+                                    &lt;Paper sx={sx.paper}&gt;
+                                        &lt;Box
+                                            component=&quot;form&quot;
+                                            onSubmit={(event) =&gt; {
+                                                event.preventDefault()
+                                                event.stopPropagation()
+                                                if (!editedGroup?.name) return
+                                                editGroup()
+                                            }}
+                                        &gt;
+                                            &lt;Box sx={sx.row}&gt;
+                                                &lt;TextField
+                                                    variant=&quot;outlined&quot;
+                                                    label={
+                                                        &lt;FormattedMessage id=&quot;app.Name&quot; /&gt;
+                                                    }
+                                                    fullWidth
+                                                    value={
+                                                        editedGroup?.name || &#x27;&#x27;
+                                                    }
+                                                    onChange={(e) =&gt;
+                                                        setEditedGroup({
+                                                            ...editedGroup,
+                                                            name: e.target
+                                                                .value,
+                                                        })
+                                                    }
+                                                /&gt;
+                                            &lt;/Box&gt;
+                                            &lt;Box sx={sx.row}&gt;
+                                                &lt;TextField
+                                                    variant=&quot;outlined&quot;
+                                                    label={
+                                                        &lt;FormattedMessage id=&quot;app.Description&quot; /&gt;
+                                                    }
+                                                    fullWidth
+                                                    value={
+                                                        editedGroup?.description ||
+                                                        &#x27;&#x27;
+                                                    }
+                                                    multiline
+                                                    onChange={(e) =&gt;
+                                                        setEditedGroup({
+                                                            ...editedGroup,
+                                                            description:
+                                                                e.target.value,
+                                                        })
+                                                    }
+                                                /&gt;
+                                            &lt;/Box&gt;
+                                            &lt;Box
+                                                sx={{
+                                                    display: &#x27;flex&#x27;,
+                                                    justifyContent:
+                                                        &#x27;space-between&#x27;,
+                                                }}
+                                            &gt;
+                                                &lt;Button
+                                                    variant=&quot;contained&quot;
+                                                    color=&quot;error&quot;
+                                                    onClick={() =&gt;
+                                                        setConfirmDeleteGroup(
+                                                            true
+                                                        )
+                                                    }
+                                                &gt;
+                                                    &lt;FormattedMessage id=&quot;app.Delete&quot; /&gt;
+                                                &lt;/Button&gt;
+                                                &lt;Confirm
+                                                    onCancel={() =&gt;
+                                                        setConfirmDeleteGroup(
+                                                            false
+                                                        )
+                                                    }
+                                                    onSubmit={() =&gt; {
+                                                        deleteGroup()
+                                                        setConfirmDeleteGroup(
+                                                            false
+                                                        )
+                                                    }}
+                                                    isOpen={confirmDeleteGroup}
+                                                    message={
+                                                        &lt;FormattedMessage
+                                                            id=&quot;app.Deleting&quot;
+                                                            values={{
+                                                                name: (
+                                                                    &lt;Overflow
+                                                                        text={
+                                                                            editedGroup?.name ||
+                                                                            &#x27;&#x27;
+                                                                        }
+                                                                    /&gt;
+                                                                ),
+                                                            }}
+                                                        /&gt;
+                                                    }
+                                                    type=&quot;warn&quot;
+                                                    submit={
+                                                        &lt;FormattedMessage id=&quot;app.Delete&quot; /&gt;
+                                                    }
+                                                    cancel={
+                                                        &lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;
+                                                    }
+                                                /&gt;
+                                                &lt;Box display=&quot;flex&quot; gap={1}&gt;
+                                                    &lt;Button
+                                                        onClick={() =&gt;
+                                                            setEditGroupIndex(
+                                                                null
+                                                            )
+                                                        }
+                                                    &gt;
+                                                        &lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;
+                                                    &lt;/Button&gt;
+                                                    &lt;LoadingButton
+                                                        variant=&quot;contained&quot;
+                                                        color=&quot;primary&quot;
+                                                        isLoading={editLoading}
+                                                        type=&quot;submit&quot;
+                                                    &gt;
+                                                        &lt;FormattedMessage id=&quot;app.Save&quot; /&gt;
+                                                    &lt;/LoadingButton&gt;
+                                                &lt;/Box&gt;
+                                            &lt;/Box&gt;
+                                        &lt;/Box&gt;
+                                    &lt;/Paper&gt;
+                                &lt;/ListItem&gt;
+                            )
+                        }
+                        return (
+                            &lt;ListItem
+                                key={group.key}
+                                onClick={() =&gt; {
+                                    router.replace({
+                                        query: {
+                                            ...router.query,
+                                            group: group.key,
+                                        },
+                                    })
+                                    handleClose()
+                                }}
+                                secondaryAction={
+                                    &lt;IconButton
+                                        onClick={(e) =&gt; {
+                                            e.stopPropagation()
+                                            setEditGroupIndex(index)
+                                        }}
+                                    &gt;
+                                        &lt;Edit /&gt;
+                                    &lt;/IconButton&gt;
+                                }
+                                disablePadding
+                            &gt;
+                                &lt;ListItemButton
+                                    sx={
+                                        selectedGroup?.key === group.key
+                                            ? sx.selected
+                                            : null
+                                    }
+                                &gt;
+                                    &lt;ListItemText
+                                        primary={group.name}
+                                        secondary={group.description}
+                                    /&gt;
+                                &lt;/ListItemButton&gt;
+                            &lt;/ListItem&gt;
+                        )
+                    })}
+                &lt;/List&gt;
+            &lt;/Popover&gt;
+            {selectedGroup &amp;&amp; (
+                &lt;Chip
+                    label={selectedGroup.name}
+                    onDelete={() =&gt;
+                        router.replace({
+                            query: { ...router.query, group: null },
+                        })
+                    }
+                /&gt;
+            )}
+        &lt;/Box&gt;
+    )
+}
+</textarea><pre id="annotations" style="display:none">[]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Thu, 04 Jan 2024 18:45:36 GMT</p>
+    </body>
+  </html>
+  

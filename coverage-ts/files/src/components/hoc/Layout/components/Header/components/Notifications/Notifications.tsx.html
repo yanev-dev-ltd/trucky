@@ -1,0 +1,421 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Notifications.tsx</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../../../../../../../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../../../../../../../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../../../../../../../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">src/components/hoc/Layout/components/Header/components/Notifications/Notifications.tsx</td><td class="">100.00%</td><td class="">80%</td><td class="">395</td><td class="">395</td><td class="">0</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import { useMemo } from &#x27;react&#x27;
+import {
+    Box,
+    IconButton,
+    Typography,
+    Popover,
+    List,
+    ListItem,
+    ListItemText,
+    Tooltip,
+    ListItemAvatar,
+    Avatar,
+} from &#x27;@mui/material&#x27;
+import {
+    NotificationsActive,
+    ReceiptLong,
+    NotificationsNone,
+} from &#x27;@mui/icons-material&#x27;
+import { FormattedMessage } from &#x27;react-intl&#x27;
+import { formatRelative } from &#x27;date-fns&#x27;
+import { bg, enUS } from &#x27;date-fns/locale&#x27;
+import Link from &#x27;next/link&#x27;
+import Head from &#x27;next/head&#x27;
+import sx from &#x27;./styles/Notifications.sx&#x27;
+import useNotifications from &#x27;./hooks/useNotifications&#x27;
+import { useSelector } from &#x27;react-redux&#x27;
+import { RootState } from &#x27;@/store/store&#x27;
+import { NotificationItem } from &#x27;./types&#x27;
+
+const unreadMsgs = [
+    {
+        id: 1,
+        title: &#x27;Title&#x27;,
+        message: &#x27;Message&#x27;,
+        timeCreated: 1670602365240,
+        url: &#x27;/invoices&#x27;,
+    },
+    {
+        id: 2,
+        title: &#x27;Title 2&#x27;,
+        message: &#x27;Message 2&#x27;,
+        timeCreated: 1670501365240,
+        url: &#x27;/invoices&#x27;,
+    },
+    {
+        id: 3,
+        title: &#x27;Title 3&#x27;,
+        message: &#x27;Message 3&#x27;,
+        timeCreated: 1633005321168,
+        url: &#x27;/invoices&#x27;,
+    },
+]
+
+const readMsgs = [
+    {
+        id: 1,
+        title: &#x27;Title&#x27;,
+        message: &#x27;Message&#x27;,
+        timeCreated: 1586774169772,
+        url: &#x27;/invoices&#x27;,
+    },
+    {
+        id: 2,
+        title: &#x27;Title 2&#x27;,
+        message: &#x27;Message 2&#x27;,
+        timeCreated: 1586774169772,
+        url: &#x27;/invoices&#x27;,
+    },
+    {
+        id: 3,
+        title: &#x27;Title 3&#x27;,
+        message: &#x27;Message 3&#x27;,
+        timeCreated: 1586774169772,
+        url: &#x27;/invoices&#x27;,
+    },
+    {
+        id: 4,
+        title: &#x27;Title&#x27;,
+        message: &#x27;Message&#x27;,
+        timeCreated: 1586774169772,
+        url: &#x27;/invoices&#x27;,
+    },
+    {
+        id: 5,
+        title: &#x27;Title 2&#x27;,
+        message: &#x27;Message 2&#x27;,
+        timeCreated: 1586774169772,
+        url: &#x27;/invoices&#x27;,
+    },
+    {
+        id: 6,
+        title: &#x27;Title 3&#x27;,
+        message: &#x27;Message 3&#x27;,
+        timeCreated: 1586774169772,
+        url: &#x27;/invoices&#x27;,
+    },
+    {
+        id: 7,
+        title: &#x27;Title&#x27;,
+        message: &#x27;Message&#x27;,
+        timeCreated: 1586774169772,
+        url: &#x27;/invoices&#x27;,
+    },
+    {
+        id: 8,
+        title: &#x27;Title 2&#x27;,
+        message: &#x27;Message 2&#x27;,
+        timeCreated: 1586774169772,
+        url: &#x27;/invoices&#x27;,
+    },
+    {
+        id: 9,
+        title: &#x27;Title 3&#x27;,
+        message: &#x27;Message 3&#x27;,
+        timeCreated: 1586774169772,
+        url: &#x27;/invoices&#x27;,
+    },
+]
+
+const hasNotifications = true
+
+const Notifications = () =&gt; {
+    const { anchorEl, handleClick, handleClose } = useNotifications()
+    const { settings } = useSelector((state: RootState) =&gt; state.settings)
+    const locale = useMemo(() =&gt; {
+        switch (settings?.locale) {
+            case &#x27;bg&#x27;:
+                return bg
+            default:
+                return enUS
+        }
+    }, [settings?.locale])
+
+    const renderItem = (item: NotificationItem) =&gt; {
+        const { id, title, message, timeCreated, url } = item
+
+        return (
+            &lt;ListItem key={id} sx={sx.item}&gt;
+                &lt;Link
+                    href={url}
+                    style={{ textDecoration: &#x27;none&#x27;, width: &#x27;100%&#x27; }}
+                &gt;
+                    &lt;Box sx={sx.link}&gt;
+                        &lt;ListItemAvatar sx={sx.avatar}&gt;
+                            &lt;Box sx={sx.avatar}&gt;
+                                &lt;Avatar&gt;
+                                    &lt;ReceiptLong /&gt;
+                                &lt;/Avatar&gt;
+                                &lt;Typography sx={sx.time}&gt;
+                                    {formatRelative(
+                                        new Date(timeCreated),
+                                        new Date(),
+                                        { locale }
+                                    )}
+                                &lt;/Typography&gt;
+                            &lt;/Box&gt;
+                        &lt;/ListItemAvatar&gt;
+                        &lt;Box style={{ flex: 1 }}&gt;
+                            &lt;ListItemText primary={title} secondary={message} /&gt;
+                        &lt;/Box&gt;
+                    &lt;/Box&gt;
+                &lt;/Link&gt;
+            &lt;/ListItem&gt;
+        )
+    }
+
+    const unread = unreadMsgs.map(renderItem)
+    const read = readMsgs.map(renderItem)
+    return (
+        &lt;&gt;
+            &lt;Head&gt;
+                &lt;title&gt;Trucky.one&lt;/title&gt;
+                {hasNotifications ? (
+                    &lt;&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;57x57&quot;
+                            href=&quot;/icons/notification/apple-icon-57x57.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;60x60&quot;
+                            href=&quot;/icons/notification/apple-icon-60x60.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;72x72&quot;
+                            href=&quot;/icons/notification/apple-icon-72x72.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;76x76&quot;
+                            href=&quot;/icons/notification/apple-icon-76x76.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;114x114&quot;
+                            href=&quot;/icons/notification/apple-icon-114x114.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;120x120&quot;
+                            href=&quot;/icons/notification/apple-icon-120x120.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;144x144&quot;
+                            href=&quot;/icons/notification/apple-icon-144x144.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;152x152&quot;
+                            href=&quot;/icons/notification/apple-icon-152x152.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;180x180&quot;
+                            href=&quot;/icons/notification/apple-icon-180x180.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;icon&quot;
+                            type=&quot;image/png&quot;
+                            sizes=&quot;192x192&quot;
+                            href=&quot;/icons/notification/android-icon-192x192.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;icon&quot;
+                            type=&quot;image/png&quot;
+                            sizes=&quot;32x32&quot;
+                            href=&quot;/icons/notification/favicon-32x32.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;icon&quot;
+                            type=&quot;image/png&quot;
+                            sizes=&quot;96x96&quot;
+                            href=&quot;/icons/notification/favicon-96x96.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;icon&quot;
+                            type=&quot;image/png&quot;
+                            sizes=&quot;16x16&quot;
+                            href=&quot;/icons/notification/favicon-16x16.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;manifest&quot;
+                            href=&quot;/icons/notification/manifest.json&quot;
+                        /&gt;
+                        &lt;meta
+                            name=&quot;msapplication-TileColor&quot;
+                            content=&quot;#ffffff&quot;
+                        /&gt;
+                        &lt;meta
+                            name=&quot;msapplication-TileImage&quot;
+                            content=&quot;/icons/notification/ms-icon-144x144.png&quot;
+                        /&gt;
+                        &lt;meta name=&quot;theme-color&quot; content=&quot;#ffffff&quot; /&gt;
+                    &lt;/&gt;
+                ) : (
+                    &lt;&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;57x57&quot;
+                            href=&quot;/icons/fav/apple-icon-57x57.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;60x60&quot;
+                            href=&quot;/icons/fav/apple-icon-60x60.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;72x72&quot;
+                            href=&quot;/icons/fav/apple-icon-72x72.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;76x76&quot;
+                            href=&quot;/icons/fav/apple-icon-76x76.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;114x114&quot;
+                            href=&quot;/icons/fav/apple-icon-114x114.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;120x120&quot;
+                            href=&quot;/icons/fav/apple-icon-120x120.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;144x144&quot;
+                            href=&quot;/icons/fav/apple-icon-144x144.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;152x152&quot;
+                            href=&quot;/icons/fav/apple-icon-152x152.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;apple-touch-icon&quot;
+                            sizes=&quot;180x180&quot;
+                            href=&quot;/icons/fav/apple-icon-180x180.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;icon&quot;
+                            type=&quot;image/png&quot;
+                            sizes=&quot;192x192&quot;
+                            href=&quot;/icons/fav/android-icon-192x192.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;icon&quot;
+                            type=&quot;image/png&quot;
+                            sizes=&quot;32x32&quot;
+                            href=&quot;/icons/fav/favicon-32x32.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;icon&quot;
+                            type=&quot;image/png&quot;
+                            sizes=&quot;96x96&quot;
+                            href=&quot;/icons/fav/favicon-96x96.png&quot;
+                        /&gt;
+                        &lt;link
+                            rel=&quot;icon&quot;
+                            type=&quot;image/png&quot;
+                            sizes=&quot;16x16&quot;
+                            href=&quot;/icons/fav/favicon-16x16.png&quot;
+                        /&gt;
+                        &lt;link rel=&quot;manifest&quot; href=&quot;/icons/fav/manifest.json&quot; /&gt;
+                        &lt;meta
+                            name=&quot;msapplication-TileColor&quot;
+                            content=&quot;#ffffff&quot;
+                        /&gt;
+                        &lt;meta
+                            name=&quot;msapplication-TileImage&quot;
+                            content=&quot;/icons/fav/ms-icon-144x144.png&quot;
+                        /&gt;
+                        &lt;meta name=&quot;theme-color&quot; content=&quot;#ffffff&quot; /&gt;
+                    &lt;/&gt;
+                )}
+            &lt;/Head&gt;
+            &lt;Tooltip title={&lt;FormattedMessage id=&quot;app.Notifications&quot; /&gt;}&gt;
+                &lt;IconButton onClick={handleClick} sx={sx.notifications}&gt;
+                    {Boolean(anchorEl) ? (
+                        &lt;NotificationsActive /&gt;
+                    ) : (
+                        &lt;NotificationsNone /&gt;
+                    )}
+                    &lt;Typography sx={sx.notificationsCount}&gt;9+&lt;/Typography&gt;
+                &lt;/IconButton&gt;
+            &lt;/Tooltip&gt;
+            &lt;Popover
+                id=&quot;notifications&quot;
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: &#x27;bottom&#x27;,
+                    horizontal: &#x27;right&#x27;,
+                }}
+                transformOrigin={{
+                    vertical: &#x27;top&#x27;,
+                    horizontal: &#x27;right&#x27;,
+                }}
+            &gt;
+                &lt;List sx={sx.notificationsList}&gt;
+                    {unread.length &gt; 0 &amp;&amp; (
+                        &lt;&gt;
+                            &lt;ListItem sx={sx.gray}&gt;
+                                &lt;ListItemText
+                                    secondary={
+                                        &lt;FormattedMessage id=&quot;app.Recent&quot; /&gt;
+                                    }
+                                /&gt;
+                            &lt;/ListItem&gt;
+                            {unread}
+                        &lt;/&gt;
+                    )}
+                    {read.length &gt; 0 &amp;&amp; (
+                        &lt;&gt;
+                            &lt;ListItem sx={sx.gray}&gt;
+                                &lt;ListItemText
+                                    secondary={
+                                        &lt;FormattedMessage id=&quot;app.Older&quot; /&gt;
+                                    }
+                                /&gt;
+                            &lt;/ListItem&gt;
+                            {read}
+                        &lt;/&gt;
+                    )}
+                    {!unread.length &amp;&amp; !read.length &amp;&amp; (
+                        &lt;Box textAlign=&quot;center&quot; m={1}&gt;
+                            &lt;Typography&gt;
+                                &lt;FormattedMessage id=&quot;app.NoNotificationsYet&quot; /&gt;
+                            &lt;/Typography&gt;
+                        &lt;/Box&gt;
+                    )}
+                &lt;/List&gt;
+            &lt;/Popover&gt;
+        &lt;/&gt;
+    )
+}
+export default Notifications
+</textarea><pre id="annotations" style="display:none">[]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Thu, 04 Jan 2024 18:45:36 GMT</p>
+    </body>
+  </html>
+  

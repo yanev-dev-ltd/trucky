@@ -1,0 +1,137 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>react-table-config.d.ts</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">src/react-table-config.d.ts</td><td class="">100.00%</td><td class="">80%</td><td class="">174</td><td class="">174</td><td class="">0</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import {
+    UseColumnOrderInstanceProps,
+    UseColumnOrderState,
+    UseExpandedHooks,
+    UseExpandedInstanceProps,
+    UseExpandedOptions,
+    UseExpandedRowProps,
+    UseExpandedState,
+    UseFiltersColumnOptions,
+    UseFiltersColumnProps,
+    UseFiltersInstanceProps,
+    UseFiltersOptions,
+    UseFiltersState,
+    UseGlobalFiltersColumnOptions,
+    UseGlobalFiltersInstanceProps,
+    UseGlobalFiltersOptions,
+    UseGlobalFiltersState,
+    UseGroupByCellProps,
+    UseGroupByColumnOptions,
+    UseGroupByColumnProps,
+    UseGroupByHooks,
+    UseGroupByInstanceProps,
+    UseGroupByOptions,
+    UseGroupByRowProps,
+    UseGroupByState,
+    UsePaginationInstanceProps,
+    UsePaginationOptions,
+    UsePaginationState,
+    UseResizeColumnsColumnOptions,
+    UseResizeColumnsColumnProps,
+    UseResizeColumnsOptions,
+    UseResizeColumnsState,
+    UseRowSelectHooks,
+    UseRowSelectInstanceProps,
+    UseRowSelectOptions,
+    UseRowSelectRowProps,
+    UseRowSelectState,
+    UseRowStateCellProps,
+    UseRowStateInstanceProps,
+    UseRowStateOptions,
+    UseRowStateRowProps,
+    UseRowStateState,
+    UseSortByColumnOptions,
+    UseSortByColumnProps,
+    UseSortByHooks,
+    UseSortByInstanceProps,
+    UseSortByOptions,
+    UseSortByState
+  } from &#x27;react-table&#x27;
+  
+  declare module &#x27;react-table&#x27; {
+    // take this file as-is, or comment out the sections that don&#x27;t apply to your plugin configuration
+  
+    export interface TableOptions&lt;D extends Record&lt;string, unknown&gt;&gt;
+      extends UseExpandedOptions&lt;D&gt;,
+        UseFiltersOptions&lt;D&gt;,
+        UseGlobalFiltersOptions&lt;D&gt;,
+        UseGroupByOptions&lt;D&gt;,
+        UsePaginationOptions&lt;D&gt;,
+        UseResizeColumnsOptions&lt;D&gt;,
+        UseRowSelectOptions&lt;D&gt;,
+        UseRowStateOptions&lt;D&gt;,
+        UseSortByOptions&lt;D&gt;,
+        // note that having Record here allows you to add anything to the options, this matches the spirit of the
+        // underlying js library, but might be cleaner if it&#x27;s replaced by a more specific type that matches your
+        // feature set, this is a safe default.
+        Record&lt;string, any&gt; {}
+  
+    export interface Hooks&lt;D extends Record&lt;string, unknown&gt; = Record&lt;string, unknown&gt;&gt;
+      extends UseExpandedHooks&lt;D&gt;,
+        UseGroupByHooks&lt;D&gt;,
+        UseRowSelectHooks&lt;D&gt;,
+        UseSortByHooks&lt;D&gt; {}
+  
+    export interface TableInstance&lt;D extends Record&lt;string, unknown&gt; = Record&lt;string, unknown&gt;&gt;
+      extends UseColumnOrderInstanceProps&lt;D&gt;,
+        UseExpandedInstanceProps&lt;D&gt;,
+        UseFiltersInstanceProps&lt;D&gt;,
+        UseGlobalFiltersInstanceProps&lt;D&gt;,
+        UseGroupByInstanceProps&lt;D&gt;,
+        UsePaginationInstanceProps&lt;D&gt;,
+        UseRowSelectInstanceProps&lt;D&gt;,
+        UseRowStateInstanceProps&lt;D&gt;,
+        UseSortByInstanceProps&lt;D&gt; {}
+  
+    export interface TableState&lt;D extends Record&lt;string, unknown&gt; = Record&lt;string, unknown&gt;&gt;
+      extends UseColumnOrderState&lt;D&gt;,
+        UseExpandedState&lt;D&gt;,
+        UseFiltersState&lt;D&gt;,
+        UseGlobalFiltersState&lt;D&gt;,
+        UseGroupByState&lt;D&gt;,
+        UsePaginationState&lt;D&gt;,
+        UseResizeColumnsState&lt;D&gt;,
+        UseRowSelectState&lt;D&gt;,
+        UseRowStateState&lt;D&gt;,
+        UseSortByState&lt;D&gt; {}
+  
+    export interface ColumnInterface&lt;D extends Record&lt;string, unknown&gt; = Record&lt;string, unknown&gt;&gt;
+      extends UseFiltersColumnOptions&lt;D&gt;,
+        UseGlobalFiltersColumnOptions&lt;D&gt;,
+        UseGroupByColumnOptions&lt;D&gt;,
+        UseResizeColumnsColumnOptions&lt;D&gt;,
+        UseSortByColumnOptions&lt;D&gt; {}
+  
+    export interface ColumnInstance&lt;D extends Record&lt;string, unknown&gt; = Record&lt;string, unknown&gt;&gt;
+      extends UseFiltersColumnProps&lt;D&gt;,
+        UseGroupByColumnProps&lt;D&gt;,
+        UseResizeColumnsColumnProps&lt;D&gt;,
+        UseSortByColumnProps&lt;D&gt; {}
+  
+    export interface Cell&lt;D extends Record&lt;string, unknown&gt; = Record&lt;string, unknown&gt;, V = any&gt;
+      extends UseGroupByCellProps&lt;D&gt;,
+        UseRowStateCellProps&lt;D&gt; {}
+  
+    export interface Row&lt;D extends Record&lt;string, unknown&gt; = Record&lt;string, unknown&gt;&gt;
+      extends UseExpandedRowProps&lt;D&gt;,
+        UseGroupByRowProps&lt;D&gt;,
+        UseRowSelectRowProps&lt;D&gt;,
+        UseRowStateRowProps&lt;D&gt; {}
+  }</textarea><pre id="annotations" style="display:none">[]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Thu, 04 Jan 2024 18:45:36 GMT</p>
+    </body>
+  </html>
+  

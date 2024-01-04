@@ -1,0 +1,176 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>useMap.ts</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../../../../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../../../../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../../../../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="negative"><td class="">src/components/common/Map/hooks/useMap.ts</td><td class="">65.03%</td><td class="">80%</td><td class="">306</td><td class="">199</td><td class="">107</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import { useState, useRef, useLayoutEffect } from &#x27;react&#x27;
+import { Location } from &#x27;@/components/routes/types&#x27;
+import svgMarker from &#x27;@/constants/marker&#x27;
+import { useSnackbar, SnackbarKey } from &#x27;notistack&#x27;
+import { useIntl } from &#x27;react-intl&#x27;
+import { useMapProps } from &#x27;../types&#x27;
+
+const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMapProps) =&gt; {
+    const mapRef = useRef(null)
+    const message = useRef&lt;SnackbarKey&gt;()
+    const [reload, setReload] = useState(false)
+    const [loading, setLoading] = useState&lt;boolean&gt;(false)
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+    const intl = useIntl()
+    
+    useLayoutEffect(() =&gt; {
+        // `mapRef.current` will be `undefined` when this hook first runs; edge case that
+        if ((!mapRef.current &amp;&amp; !reload) || !window.H) {
+            // some strange ref behavior needs to be reloaded
+            setReload(true)
+            return
+        }
+        const H = window.H
+        
+        const platform = new H.service.Platform({
+            apikey: process.env.TRUCKY_HERE_API_KEY || &#x27;&#x27;
+        })
+        const defaultLayers = platform.createDefaultLayers()
+        const hMap = new H.Map(
+            mapRef.current,
+            defaultLayers.vector.normal.truck, //TODO: maptypes.vector.normal.map for cars
+            {
+                center: { lat: 50, lng: 5 },
+                zoom: 4,
+                pixelRatio: window.devicePixelRatio || 1,
+                padding: {
+                    top: 40,
+                    left: 40,
+                    right: 40,
+                    bottom: 40,
+                },
+            }
+        )
+        
+        // const ui = H.ui.UI.createDefault(hMap, defaultLayers)
+        const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(hMap))
+
+        if(locations &amp;&amp; locations.length &gt; 1) {
+            locations.map((location: Location, index: number) =&gt; {
+                const icon = new H.map.Icon(
+                        svgMarker
+                            .replace(&#x27;{LEFT}&#x27;, index &gt; 8 ? &#x27;7&#x27; : &#x27;12&#x27;)
+                            .replace(&#x27;{NUMBER}&#x27;, `${index + 1}`)
+                    ),
+                    marker = new H.map.Marker(
+                        { lat: location.lat || 0, lng: location.lng || 0 },
+                        { icon }
+                    )
+                hMap.addObject(marker)
+            })
+
+            const router = platform.getRoutingService(null, 8)
+            const origin = [...locations].shift()
+            const destination = [...locations].pop()
+            if (origin) {
+                setLoading &amp;&amp; setLoading(true)
+                router.calculateRoute(
+                    {
+                        origin: `${origin?.lat},${origin?.lng}`,
+                        destination: `${destination?.lat},${destination?.lng}`,
+                        // defines multiple waypoints
+                        ...((locations &amp;&amp; locations.length &gt; 2) &amp;&amp; {via: new H.service.Url.MultiValueQueryParameter([
+                            ...locations.filter((l, i) =&gt; i !== 0 &amp;&amp; i !== (locations &amp;&amp; locations.length - 1)).map((p) =&gt; `${p.lat},${p.lng}`),
+                        ])}),
+                        return: &#x27;polyline,travelSummary,tolls,routeLabels&#x27;,
+                        currency: &#x27;EUR&#x27;,
+                        &#x27;tolls[summaries]&#x27;: &#x27;total&#x27;,
+                        transportMode: &#x27;truck&#x27;, //TODO: change to cars if needed
+                    },
+                    (result: any) =&gt; {
+                        const sections = result?.routes[0]?.sections
+                        const lineStrings: unknown[] = []
+                        const distance: number[] = []
+                        const toll: number[] = []
+                        const ferry: boolean[] = []
+                        setLoading &amp;&amp; setLoading(false)
+                        if (!sections) {
+                            setNoRoute &amp;&amp; setNoRoute(true)
+                            message.current = enqueueSnackbar(intl.formatMessage({ id: &#x27;app.CouldNotCalculateRoute&#x27;}), { variant: &#x27;error&#x27;, persist: true })
+                            return
+                        }
+                        setNoRoute &amp;&amp; setNoRoute(false)
+                        closeSnackbar(message.current)
+                        sections.forEach((section: any) =&gt; {
+                            // convert Flexible Polyline encoded string to geometry
+                            lineStrings.push(
+                                H.geo.LineString.fromFlexiblePolyline(
+                                    section.polyline
+                                )
+                            )
+                            if (section.departure.place.originalLocation) {
+                                distance.push(Number(section?.travelSummary?.length))
+                                toll.push(Number(section?.travelSummary?.tolls?.total?.value))
+                            } else {
+                                distance[distance.length - 1] += Number(section?.travelSummary?.length)
+                                toll[toll.length - 1] += Number(section?.travelSummary?.tolls?.total?.value)
+                            }
+                            
+                            if (section?.transport.mode === &#x27;ferry&#x27;) {
+                                ferry[distance.length - 1] = true
+                            }
+                        })
+
+                        setDistance &amp;&amp; setDistance(distance)
+                        setToll &amp;&amp; setToll(toll)
+                        setFerry &amp;&amp; setFerry(ferry)
+
+                        const multiLineString = new H.geo.MultiLineString(
+                            lineStrings
+                        )
+                        const bounds = multiLineString.getBoundingBox()
+                        // render route on the map
+                        hMap.addObject(
+                            new H.map.Polyline(multiLineString, {
+                                style: { lineWidth: 5 },
+                                arrows: { fillColor: &#x27;white&#x27;, frequency: 2, width: 0.8, length: 0.7 }
+                            })
+                        )
+                        // zoom to polyline
+                        hMap.getViewModel().setLookAtData({ bounds })
+                        // hMap.addLayer(defaultLayers.vector.normal.trafficincidents)
+                    },
+                    () =&gt; {
+                        setNoRoute &amp;&amp; setNoRoute(true)
+                        message.current = enqueueSnackbar(intl.formatMessage({ id: &#x27;app.Error.LoadingRoute&#x27;}), { variant: &#x27;error&#x27;, persist: true, preventDuplicate: true })
+                        setLoading &amp;&amp; setLoading(false)
+                    }
+                )
+            }
+        }
+
+        const handleResize = () =&gt; {
+            hMap.getViewPort().resize()
+        }
+
+        window.addEventListener(&#x27;resize&#x27;, handleResize)
+
+        // This will act as a cleanup to run once this hook runs again.
+        // This includes when the component un-mounts
+        return () =&gt; {
+            hMap.dispose()
+            window.removeEventListener(&#x27;resize&#x27;, handleResize)
+        }
+    }, [mapRef, reload, locations])
+
+    return { mapRef, loading }
+}
+
+export default useMap</textarea><pre id="annotations" style="display:none">[{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:17,&quot;character&quot;:52,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:22,&quot;character&quot;:14,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:22,&quot;character&quot;:25,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:24,&quot;character&quot;:14,&quot;text&quot;:&quot;platform&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:24,&quot;character&quot;:29,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:24,&quot;character&quot;:31,&quot;text&quot;:&quot;service&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:24,&quot;character&quot;:39,&quot;text&quot;:&quot;Platform&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:27,&quot;character&quot;:14,&quot;text&quot;:&quot;defaultLayers&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:27,&quot;character&quot;:30,&quot;text&quot;:&quot;platform&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:27,&quot;character&quot;:39,&quot;text&quot;:&quot;createDefaultLayers&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:28,&quot;character&quot;:14,&quot;text&quot;:&quot;hMap&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:28,&quot;character&quot;:25,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:28,&quot;character&quot;:27,&quot;text&quot;:&quot;Map&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:30,&quot;character&quot;:12,&quot;text&quot;:&quot;defaultLayers&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:30,&quot;character&quot;:26,&quot;text&quot;:&quot;vector&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:30,&quot;character&quot;:33,&quot;text&quot;:&quot;normal&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:30,&quot;character&quot;:40,&quot;text&quot;:&quot;truck&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:45,&quot;character&quot;:14,&quot;text&quot;:&quot;behavior&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:45,&quot;character&quot;:29,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:45,&quot;character&quot;:31,&quot;text&quot;:&quot;mapevents&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:45,&quot;character&quot;:41,&quot;text&quot;:&quot;Behavior&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:45,&quot;character&quot;:54,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:45,&quot;character&quot;:56,&quot;text&quot;:&quot;mapevents&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:45,&quot;character&quot;:66,&quot;text&quot;:&quot;MapEvents&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:45,&quot;character&quot;:76,&quot;text&quot;:&quot;hMap&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:49,&quot;character&quot;:22,&quot;text&quot;:&quot;icon&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:49,&quot;character&quot;:33,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:49,&quot;character&quot;:35,&quot;text&quot;:&quot;map&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:49,&quot;character&quot;:39,&quot;text&quot;:&quot;Icon&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:54,&quot;character&quot;:20,&quot;text&quot;:&quot;marker&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:54,&quot;character&quot;:33,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:54,&quot;character&quot;:35,&quot;text&quot;:&quot;map&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:54,&quot;character&quot;:39,&quot;text&quot;:&quot;Marker&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:56,&quot;character&quot;:26,&quot;text&quot;:&quot;icon&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:58,&quot;character&quot;:16,&quot;text&quot;:&quot;hMap&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:58,&quot;character&quot;:21,&quot;text&quot;:&quot;addObject&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:58,&quot;character&quot;:31,&quot;text&quot;:&quot;marker&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:61,&quot;character&quot;:18,&quot;text&quot;:&quot;router&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:61,&quot;character&quot;:27,&quot;text&quot;:&quot;platform&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:61,&quot;character&quot;:36,&quot;text&quot;:&quot;getRoutingService&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:66,&quot;character&quot;:16,&quot;text&quot;:&quot;router&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:66,&quot;character&quot;:23,&quot;text&quot;:&quot;calculateRoute&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:71,&quot;character&quot;:68,&quot;text&quot;:&quot;via&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:71,&quot;character&quot;:77,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:71,&quot;character&quot;:79,&quot;text&quot;:&quot;service&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:71,&quot;character&quot;:87,&quot;text&quot;:&quot;Url&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:71,&quot;character&quot;:91,&quot;text&quot;:&quot;MultiValueQueryParameter&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:79,&quot;character&quot;:21,&quot;text&quot;:&quot;result&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:80,&quot;character&quot;:30,&quot;text&quot;:&quot;sections&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:80,&quot;character&quot;:41,&quot;text&quot;:&quot;result&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:80,&quot;character&quot;:49,&quot;text&quot;:&quot;routes&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:80,&quot;character&quot;:60,&quot;text&quot;:&quot;sections&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:86,&quot;character&quot;:29,&quot;text&quot;:&quot;sections&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:93,&quot;character&quot;:24,&quot;text&quot;:&quot;sections&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:93,&quot;character&quot;:33,&quot;text&quot;:&quot;forEach&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:93,&quot;character&quot;:42,&quot;text&quot;:&quot;section&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:96,&quot;character&quot;:32,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:96,&quot;character&quot;:34,&quot;text&quot;:&quot;geo&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:96,&quot;character&quot;:38,&quot;text&quot;:&quot;LineString&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:96,&quot;character&quot;:49,&quot;text&quot;:&quot;fromFlexiblePolyline&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:97,&quot;character&quot;:36,&quot;text&quot;:&quot;section&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:97,&quot;character&quot;:44,&quot;text&quot;:&quot;polyline&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:100,&quot;character&quot;:32,&quot;text&quot;:&quot;section&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:100,&quot;character&quot;:40,&quot;text&quot;:&quot;departure&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:100,&quot;character&quot;:50,&quot;text&quot;:&quot;place&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:100,&quot;character&quot;:56,&quot;text&quot;:&quot;originalLocation&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:101,&quot;character&quot;:53,&quot;text&quot;:&quot;section&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:101,&quot;character&quot;:62,&quot;text&quot;:&quot;travelSummary&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:101,&quot;character&quot;:77,&quot;text&quot;:&quot;length&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:102,&quot;character&quot;:49,&quot;text&quot;:&quot;section&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:102,&quot;character&quot;:58,&quot;text&quot;:&quot;travelSummary&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:102,&quot;character&quot;:73,&quot;text&quot;:&quot;tolls&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:102,&quot;character&quot;:80,&quot;text&quot;:&quot;total&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:102,&quot;character&quot;:87,&quot;text&quot;:&quot;value&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:104,&quot;character&quot;:72,&quot;text&quot;:&quot;section&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:104,&quot;character&quot;:81,&quot;text&quot;:&quot;travelSummary&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:104,&quot;character&quot;:96,&quot;text&quot;:&quot;length&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:105,&quot;character&quot;:64,&quot;text&quot;:&quot;section&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:105,&quot;character&quot;:73,&quot;text&quot;:&quot;travelSummary&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:105,&quot;character&quot;:88,&quot;text&quot;:&quot;tolls&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:105,&quot;character&quot;:95,&quot;text&quot;:&quot;total&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:105,&quot;character&quot;:102,&quot;text&quot;:&quot;value&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:108,&quot;character&quot;:32,&quot;text&quot;:&quot;section&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:108,&quot;character&quot;:41,&quot;text&quot;:&quot;transport&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:108,&quot;character&quot;:51,&quot;text&quot;:&quot;mode&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:117,&quot;character&quot;:30,&quot;text&quot;:&quot;multiLineString&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:117,&quot;character&quot;:52,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:117,&quot;character&quot;:54,&quot;text&quot;:&quot;geo&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:117,&quot;character&quot;:58,&quot;text&quot;:&quot;MultiLineString&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:120,&quot;character&quot;:30,&quot;text&quot;:&quot;bounds&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:120,&quot;character&quot;:39,&quot;text&quot;:&quot;multiLineString&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:120,&quot;character&quot;:55,&quot;text&quot;:&quot;getBoundingBox&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:122,&quot;character&quot;:24,&quot;text&quot;:&quot;hMap&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:122,&quot;character&quot;:29,&quot;text&quot;:&quot;addObject&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:123,&quot;character&quot;:32,&quot;text&quot;:&quot;H&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:123,&quot;character&quot;:34,&quot;text&quot;:&quot;map&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:123,&quot;character&quot;:38,&quot;text&quot;:&quot;Polyline&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:123,&quot;character&quot;:47,&quot;text&quot;:&quot;multiLineString&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:129,&quot;character&quot;:24,&quot;text&quot;:&quot;hMap&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:129,&quot;character&quot;:29,&quot;text&quot;:&quot;getViewModel&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:129,&quot;character&quot;:44,&quot;text&quot;:&quot;setLookAtData&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:129,&quot;character&quot;:60,&quot;text&quot;:&quot;bounds&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:142,&quot;character&quot;:12,&quot;text&quot;:&quot;hMap&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:142,&quot;character&quot;:17,&quot;text&quot;:&quot;getViewPort&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:142,&quot;character&quot;:31,&quot;text&quot;:&quot;resize&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:150,&quot;character&quot;:12,&quot;text&quot;:&quot;hMap&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/common/Map/hooks/useMap.ts&quot;,&quot;line&quot;:150,&quot;character&quot;:17,&quot;text&quot;:&quot;dispose&quot;,&quot;kind&quot;:1}]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Thu, 04 Jan 2024 18:45:36 GMT</p>
+    </body>
+  </html>
+  

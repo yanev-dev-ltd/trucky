@@ -1,0 +1,199 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Invoices.tsx</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../../../../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../../../../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../../../../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">src/components/settings/components/Invoices/Invoices.tsx</td><td class="">100.00%</td><td class="">80%</td><td class="">220</td><td class="">220</td><td class="">0</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import {
+    Box,
+    TableContainer,
+    Paper,
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody,
+    Button,
+    CircularProgress,
+    Typography,
+} from &#x27;@mui/material&#x27;
+import {
+    FileDownload,
+    Check,
+    Euro,
+    Close,
+    Payment,
+    Support,
+} from &#x27;@mui/icons-material&#x27;
+import { FormattedMessage } from &#x27;react-intl&#x27;
+import sx from &#x27;./styles/Invoices.sx&#x27;
+import { format } from &#x27;date-fns&#x27;
+import useInvoices from &#x27;./hooks/useInvoices&#x27;
+import LoadingButton from &#x27;@/components/common/LoadingButton/LoadingButton&#x27;
+import { useRouter } from &#x27;next/router&#x27;
+
+const Invoices = () =&gt; {
+    const { receipts, makePayment, loading, card_last4 } = useInvoices()
+    const router = useRouter()
+    if (receipts?.[0]?.key === &#x27;loading&#x27;) {
+        return (
+            &lt;Box sx={sx.loading}&gt;
+                &lt;CircularProgress /&gt;
+            &lt;/Box&gt;
+        )
+    }
+    if (receipts.length === 0) {
+        return (
+            &lt;Box sx={sx.loading}&gt;
+                &lt;Typography&gt;
+                    &lt;FormattedMessage id=&quot;app.NoInvoices&quot; /&gt;
+                &lt;/Typography&gt;
+            &lt;/Box&gt;
+        )
+    }
+    return (
+        &lt;TableContainer component={Paper}&gt;
+            &lt;Table sx={sx.table} aria-label=&quot;invoice table&quot;&gt;
+                &lt;TableHead&gt;
+                    &lt;TableRow&gt;
+                        &lt;TableCell&gt;
+                            &lt;FormattedMessage id=&quot;app.Date&quot; /&gt;
+                        &lt;/TableCell&gt;
+                        &lt;TableCell&gt;
+                            &lt;FormattedMessage id=&quot;app.Amount&quot; /&gt;
+                        &lt;/TableCell&gt;
+                        &lt;TableCell&gt;
+                            &lt;FormattedMessage id=&quot;app.Status&quot; /&gt;
+                        &lt;/TableCell&gt;
+                        &lt;TableCell align=&quot;right&quot;&gt;
+                            &lt;FormattedMessage id=&quot;app.Actions&quot; /&gt;
+                        &lt;/TableCell&gt;
+                    &lt;/TableRow&gt;
+                &lt;/TableHead&gt;
+                &lt;TableBody&gt;
+                    {receipts.map((receipt, i) =&gt; (
+                        &lt;TableRow key={i}&gt;
+                            &lt;TableCell&gt;
+                                {receipt.date
+                                    ? format(receipt?.date * 1000, &#x27;dd/MM/yyyy&#x27;)
+                                    : &#x27;-&#x27;}
+                            &lt;/TableCell&gt;
+                            &lt;TableCell&gt;
+                                €
+                                {receipt.amount &amp;&amp;
+                                    (receipt.amount / 100).toFixed(2)}
+                            &lt;/TableCell&gt;
+                            &lt;TableCell&gt;
+                                {receipt.status === &#x27;declined&#x27; ||
+                                    (receipt.status === &#x27;open&#x27; &amp;&amp; (
+                                        &lt;&gt;
+                                            &lt;Close
+                                                fontSize=&quot;small&quot;
+                                                sx={sx.icon}
+                                            /&gt;{&#x27; &#x27;}
+                                            &lt;FormattedMessage id=&quot;app.Declined&quot; /&gt;
+                                        &lt;/&gt;
+                                    ))}
+                                {receipt.status === &#x27;paid&#x27; &amp;&amp; (
+                                    &lt;&gt;
+                                        &lt;Check fontSize=&quot;small&quot; sx={sx.icon} /&gt;{&#x27; &#x27;}
+                                        &lt;FormattedMessage id=&quot;app.Paid&quot; /&gt;
+                                    &lt;/&gt;
+                                )}
+                                {(receipt.status === &#x27;void&#x27; ||
+                                    receipt.status === &#x27;uncollectible&#x27;) &amp;&amp; (
+                                    &lt;&gt;
+                                        &lt;Close fontSize=&quot;small&quot; sx={sx.icon} /&gt;{&#x27; &#x27;}
+                                        &lt;FormattedMessage id=&quot;app.Canceled&quot; /&gt;
+                                    &lt;/&gt;
+                                )}
+                                {(receipt.status === &#x27;manual&#x27; ||
+                                    receipt.status === &#x27;draft&#x27;) &amp;&amp; (
+                                    &lt;&gt;
+                                        &lt;Payment
+                                            fontSize=&quot;small&quot;
+                                            sx={sx.icon}
+                                        /&gt;{&#x27; &#x27;}
+                                        &lt;FormattedMessage id=&quot;app.ManualPayment&quot; /&gt;
+                                    &lt;/&gt;
+                                )}
+                            &lt;/TableCell&gt;
+                            &lt;TableCell align=&quot;right&quot; sx={sx.actions}&gt;
+                                {(receipt.status === &#x27;void&#x27; ||
+                                    receipt.status === &#x27;uncollectible&#x27;) &amp;&amp; (
+                                    &lt;Button
+                                        component=&quot;a&quot;
+                                        href=&quot;https://support.trucky.one&quot;
+                                        target=&quot;_blank&quot;
+                                        variant=&quot;outlined&quot;
+                                        startIcon={&lt;Support /&gt;}
+                                    &gt;
+                                        &lt;FormattedMessage id=&quot;app.ContactSupport&quot; /&gt;
+                                    &lt;/Button&gt;
+                                )}
+                                {(receipt.status === &#x27;manual&#x27; ||
+                                    receipt.status === &#x27;open&#x27; ||
+                                    receipt.status === &#x27;draft&#x27;) &amp;&amp; (
+                                    &lt;&gt;
+                                        &lt;LoadingButton
+                                            color=&quot;primary&quot;
+                                            variant=&quot;contained&quot;
+                                            startIcon={&lt;Euro /&gt;}
+                                            onClick={() =&gt;
+                                                makePayment(receipt.key)
+                                            }
+                                            isLoading={loading}
+                                            disabled={!card_last4}
+                                        &gt;
+                                            &lt;FormattedMessage id=&quot;app.PayNow&quot; /&gt;
+                                        &lt;/LoadingButton&gt;
+                                        {!card_last4 &amp;&amp; (
+                                            &lt;Button
+                                                color=&quot;primary&quot;
+                                                variant=&quot;outlined&quot;
+                                                onClick={() =&gt;
+                                                    router.push(
+                                                        &#x27;/settings/payment&#x27;
+                                                    )
+                                                }
+                                            &gt;
+                                                &lt;FormattedMessage id=&quot;app.AddPaymentMethod&quot; /&gt;
+                                            &lt;/Button&gt;
+                                        )}
+                                    &lt;/&gt;
+                                )}
+                                {receipt.status === &#x27;paid&#x27; &amp;&amp; (
+                                    &lt;Button
+                                        component=&quot;a&quot;
+                                        color=&quot;primary&quot;
+                                        variant=&quot;outlined&quot;
+                                        startIcon={&lt;FileDownload /&gt;}
+                                        href={receipt.invoicePdf}
+                                        download
+                                        disabled={!receipt.invoicePdf}
+                                    &gt;
+                                        &lt;FormattedMessage id=&quot;app.Download&quot; /&gt;
+                                    &lt;/Button&gt;
+                                )}
+                            &lt;/TableCell&gt;
+                        &lt;/TableRow&gt;
+                    ))}
+                &lt;/TableBody&gt;
+            &lt;/Table&gt;
+        &lt;/TableContainer&gt;
+    )
+}
+
+export default Invoices
+</textarea><pre id="annotations" style="display:none">[]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Thu, 04 Jan 2024 18:45:36 GMT</p>
+    </body>
+  </html>
+  

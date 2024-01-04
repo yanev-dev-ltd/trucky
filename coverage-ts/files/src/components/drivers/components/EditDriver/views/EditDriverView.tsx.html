@@ -1,0 +1,683 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>EditDriverView.tsx</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../../../../../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../../../../../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../../../../../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">src/components/drivers/components/EditDriver/views/EditDriverView.tsx</td><td class="">100.00%</td><td class="">80%</td><td class="">810</td><td class="">810</td><td class="">0</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import { useState, useMemo } from &#x27;react&#x27;
+import {
+    Box,
+    Typography,
+    Button,
+    Drawer,
+    Paper,
+    IconButton,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Divider,
+    TextField,
+    Tooltip,
+} from &#x27;@mui/material&#x27;
+import { Close, Edit, InsertDriveFile, Delete } from &#x27;@mui/icons-material&#x27;
+import { useRouter } from &#x27;next/router&#x27;
+import sx from &#x27;../styles/EditDriver.sx&#x27;
+import NextLink from &#x27;next/link&#x27;
+import { FormattedMessage } from &#x27;react-intl&#x27;
+import Upload from &#x27;@/components/common/Upload/Upload&#x27;
+import { UploadedFile } from &#x27;@/components/common/Upload/types&#x27;
+import Confirm from &#x27;@/components/common/Confirm/Confirm&#x27;
+import Overflow from &#x27;@/components/common/Overflow/Overflow&#x27;
+import { auth } from &#x27;@/services/firebase&#x27;
+import { bg, enUS } from &#x27;date-fns/locale&#x27;
+import { useSelector } from &#x27;react-redux&#x27;
+import { RootState } from &#x27;@/store/store&#x27;
+import { formatRelative } from &#x27;date-fns&#x27;
+import LoadingButton from &#x27;@/components/common/LoadingButton/LoadingButton&#x27;
+import { EditDriverProps } from &#x27;../types&#x27;
+import TextareaAutoSize from &#x27;@/components/common/TextareaAutoSize/TextAreaAutoSize&#x27;
+import { GroupsSelect } from &#x27;@/components/common/Group/components/GroupsSelect/GroupsSelect&#x27;
+
+const EditDriverView = ({
+    driver,
+    edit,
+    reset,
+    saveDriverField,
+    setEditedDriver,
+    editedDriver,
+    downloadFile,
+    deleteFile,
+    deleteDriver,
+}: EditDriverProps) =&gt; {
+    const router = useRouter()
+    const [confirmDeleteFile, setConfirmDeleteFile] = useState&lt;
+        UploadedFile | undefined
+    &gt;()
+    const [confirmDeleteDriver, setConfirmDeleteDriver] =
+        useState&lt;boolean&gt;(false)
+    const { settings } = useSelector((state: RootState) =&gt; state.settings)
+    const allGroups = useSelector((state: RootState) =&gt; state.groups)
+    const locale = useMemo(() =&gt; {
+        switch (settings?.locale) {
+            case &#x27;bg&#x27;:
+                return bg
+            default:
+                return enUS
+        }
+    }, [settings?.locale])
+    const files: UploadedFile[] = JSON.parse(driver?.files || &#x27;[]&#x27;)
+
+    return (
+        &lt;Drawer
+            open={Boolean(driver?.key)}
+            anchor=&quot;right&quot;
+            onClose={() =&gt; router.push(&#x27;/drivers&#x27;)}
+        &gt;
+            {!driver &amp;&amp; (
+                &lt;Box display=&quot;flex&quot; justifyContent=&quot;center&quot; p={2} sx={sx.wrap}&gt;
+                    &lt;NextLink href={&#x27;/drivers&#x27;}&gt;
+                        &lt;IconButton size=&quot;small&quot; sx={sx.edit}&gt;
+                            &lt;Close /&gt;
+                        &lt;/IconButton&gt;
+                    &lt;/NextLink&gt;
+                    &lt;Typography&gt;
+                        &lt;FormattedMessage id=&quot;app.DriverNotFound&quot; /&gt;
+                    &lt;/Typography&gt;
+                &lt;/Box&gt;
+            )}
+            {driver &amp;&amp; (
+                &lt;Box sx={sx.wrap}&gt;
+                    &lt;Box display=&quot;flex&quot; justifyContent=&quot;space-between&quot;&gt;
+                        &lt;Typography variant=&quot;h6&quot;&gt;
+                            &lt;FormattedMessage id=&quot;app.Details&quot; /&gt;
+                        &lt;/Typography&gt;
+                        &lt;NextLink href={&#x27;/drivers&#x27;}&gt;
+                            &lt;IconButton size=&quot;small&quot;&gt;
+                                &lt;Close /&gt;
+                            &lt;/IconButton&gt;
+                        &lt;/NextLink&gt;
+                    &lt;/Box&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        {edit !== &#x27;name&#x27; &amp;&amp; (
+                            &lt;&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Name&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;Overflow
+                                    text={driver?.name || &#x27;-&#x27;}
+                                    variant=&quot;h6&quot;
+                                /&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Edit&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            router.push(
+                                                `/drivers/${driver?.key}/name`
+                                            )
+                                            reset()
+                                        }}
+                                    &gt;
+                                        &lt;Edit /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                            &lt;/&gt;
+                        )}
+                        {edit === &#x27;name&#x27; &amp;&amp; (
+                            &lt;Box
+                                component=&quot;form&quot;
+                                onSubmit={(event) =&gt; {
+                                    event.preventDefault()
+                                    saveDriverField(&#x27;name&#x27;)
+                                }}
+                            &gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Name&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;TextField
+                                    variant=&quot;outlined&quot;
+                                    label={&lt;FormattedMessage id=&quot;app.Name&quot; /&gt;}
+                                    value={editedDriver?.name || &#x27;&#x27;}
+                                    onChange={(event) =&gt; {
+                                        setEditedDriver({
+                                            ...driver,
+                                            name: event.target.value || &#x27;&#x27;,
+                                        })
+                                    }}
+                                    fullWidth
+                                    sx={sx.select}
+                                /&gt;
+                                &lt;Button
+                                    color=&quot;primary&quot;
+                                    type=&quot;submit&quot;
+                                    disabled={
+                                        driver.name === editedDriver?.name ||
+                                        !editedDriver?.name
+                                    }
+                                &gt;
+                                    &lt;FormattedMessage id=&quot;app.Save&quot; /&gt;
+                                &lt;/Button&gt;
+
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            reset()
+                                            router.push(
+                                                `/drivers/${driver?.key}`
+                                            )
+                                        }}
+                                    &gt;
+                                        &lt;Close /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        {edit !== &#x27;phone&#x27; &amp;&amp; (
+                            &lt;&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Phone&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;Overflow
+                                    text={driver?.phone || &#x27;-&#x27;}
+                                    variant=&quot;h6&quot;
+                                /&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Edit&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            router.push(
+                                                `/drivers/${driver?.key}/phone`
+                                            )
+                                            reset()
+                                        }}
+                                    &gt;
+                                        &lt;Edit /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                            &lt;/&gt;
+                        )}
+                        {edit === &#x27;phone&#x27; &amp;&amp; (
+                            &lt;Box
+                                component=&quot;form&quot;
+                                onSubmit={(event) =&gt; {
+                                    event.preventDefault()
+                                    saveDriverField(&#x27;phone&#x27;)
+                                }}
+                            &gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Phone&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;TextField
+                                    variant=&quot;outlined&quot;
+                                    label={&lt;FormattedMessage id=&quot;app.Phone&quot; /&gt;}
+                                    value={editedDriver?.phone || &#x27;&#x27;}
+                                    onChange={(event) =&gt; {
+                                        setEditedDriver({
+                                            ...driver,
+                                            phone: event.target.value || &#x27;&#x27;,
+                                        })
+                                    }}
+                                    fullWidth
+                                    sx={sx.select}
+                                /&gt;
+                                &lt;Button
+                                    color=&quot;primary&quot;
+                                    type=&quot;submit&quot;
+                                    disabled={
+                                        driver.phone === editedDriver?.phone ||
+                                        !editedDriver?.phone
+                                    }
+                                &gt;
+                                    &lt;FormattedMessage id=&quot;app.Save&quot; /&gt;
+                                &lt;/Button&gt;
+
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            reset()
+                                            router.push(
+                                                `/drivers/${driver?.key}`
+                                            )
+                                        }}
+                                    &gt;
+                                        &lt;Close /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        {edit !== &#x27;address&#x27; &amp;&amp; (
+                            &lt;&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Address&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;Overflow
+                                    text={driver?.address || &#x27;-&#x27;}
+                                    variant=&quot;h6&quot;
+                                /&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Edit&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            router.push(
+                                                `/drivers/${driver?.key}/address`
+                                            )
+                                            reset()
+                                        }}
+                                    &gt;
+                                        &lt;Edit /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                            &lt;/&gt;
+                        )}
+                        {edit === &#x27;address&#x27; &amp;&amp; (
+                            &lt;Box
+                                component=&quot;form&quot;
+                                onSubmit={(event) =&gt; {
+                                    event.preventDefault()
+                                    saveDriverField(&#x27;address&#x27;)
+                                }}
+                            &gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Address&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;TextField
+                                    variant=&quot;outlined&quot;
+                                    label={
+                                        &lt;FormattedMessage id=&quot;app.Address&quot; /&gt;
+                                    }
+                                    value={editedDriver?.address || &#x27;&#x27;}
+                                    onChange={(event) =&gt; {
+                                        setEditedDriver({
+                                            ...driver,
+                                            address: event.target.value || &#x27;&#x27;,
+                                        })
+                                    }}
+                                    fullWidth
+                                    sx={sx.select}
+                                /&gt;
+                                &lt;Button
+                                    color=&quot;primary&quot;
+                                    type=&quot;submit&quot;
+                                    disabled={
+                                        driver.address ===
+                                            editedDriver?.address ||
+                                        !editedDriver?.address
+                                    }
+                                &gt;
+                                    &lt;FormattedMessage id=&quot;app.Save&quot; /&gt;
+                                &lt;/Button&gt;
+
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            reset()
+                                            router.push(
+                                                `/drivers/${driver?.key}`
+                                            )
+                                        }}
+                                    &gt;
+                                        &lt;Close /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        &lt;Box sx={sx.edit}&gt;
+                            &lt;Upload
+                                filepath={
+                                    auth?.currentUser?.uid
+                                        ? `user/${auth?.currentUser?.uid}/drivers`
+                                        : undefined
+                                }
+                                dbpath=&quot;drivers&quot;
+                                dbkey={driver?.key}
+                                currentFiles={files || []}
+                            /&gt;
+                        &lt;/Box&gt;
+                        &lt;Typography&gt;
+                            &lt;FormattedMessage id=&quot;app.Documents&quot; /&gt;
+                        &lt;/Typography&gt;
+                        &lt;List dense sx={sx.fixedHeight}&gt;
+                            {files &amp;&amp;
+                                files.length &gt; 0 &amp;&amp;
+                                files.map((uf, i) =&gt; (
+                                    &lt;ListItem
+                                        key={i}
+                                        secondaryAction={
+                                            &lt;IconButton
+                                                edge=&quot;end&quot;
+                                                aria-label=&quot;delete&quot;
+                                                onClick={() =&gt;
+                                                    setConfirmDeleteFile(uf)
+                                                }
+                                            &gt;
+                                                &lt;Delete /&gt;
+                                            &lt;/IconButton&gt;
+                                        }
+                                        disablePadding
+                                    &gt;
+                                        &lt;ListItemButton
+                                            onClick={() =&gt; downloadFile(uf)}
+                                        &gt;
+                                            &lt;ListItemIcon&gt;
+                                                &lt;InsertDriveFile /&gt;
+                                            &lt;/ListItemIcon&gt;
+                                            &lt;ListItemText
+                                                primary={
+                                                    &lt;Overflow text={uf.name} /&gt;
+                                                }
+                                                secondary={formatRelative(
+                                                    new Date(uf.date),
+                                                    new Date(),
+                                                    { locale }
+                                                )}
+                                                style={{
+                                                    cursor: &#x27;pointer&#x27;,
+                                                }}
+                                            /&gt;
+                                        &lt;/ListItemButton&gt;
+                                    &lt;/ListItem&gt;
+                                ))}
+                        &lt;/List&gt;
+                        &lt;Confirm
+                            onCancel={() =&gt; setConfirmDeleteFile(undefined)}
+                            onSubmit={() =&gt; {
+                                confirmDeleteFile &amp;&amp;
+                                    deleteFile(
+                                        confirmDeleteFile,
+                                        &#x27;drivers&#x27;,
+                                        driver?.key,
+                                        files || []
+                                    )
+                                setConfirmDeleteFile(undefined)
+                            }}
+                            isOpen={Boolean(confirmDeleteFile)}
+                            message={
+                                &lt;FormattedMessage
+                                    id=&quot;app.DeleteFileConfirm&quot;
+                                    values={{
+                                        file: (
+                                            &lt;Overflow
+                                                text={
+                                                    confirmDeleteFile?.name ||
+                                                    &#x27;&#x27;
+                                                }
+                                            /&gt;
+                                        ),
+                                    }}
+                                /&gt;
+                            }
+                            type=&quot;warn&quot;
+                            submit={&lt;FormattedMessage id=&quot;app.Delete&quot; /&gt;}
+                            cancel={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                        /&gt;
+                        {(!files || files.length === 0) &amp;&amp; (
+                            &lt;Box display=&quot;flex&quot; justifyContent=&quot;center&quot; mb={2}&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.NoDocuments&quot; /&gt;
+                                &lt;/Typography&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        {edit !== &#x27;groups&#x27; &amp;&amp; (
+                            &lt;&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Edit&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            router.push(
+                                                `/drivers/${driver?.key}/groups`
+                                            )
+                                            reset()
+                                        }}
+                                    &gt;
+                                        &lt;Edit /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Groups&quot; /&gt;
+                                &lt;/Typography&gt;
+                                {driver.groups
+                                    ? driver.groups.map((g) =&gt; {
+                                          const group = allGroups.find(
+                                              (gr) =&gt; gr.key === g
+                                          )
+                                          return (
+                                              group?.name &amp;&amp; (
+                                                  &lt;Box key={group?.key}&gt;
+                                                      &lt;Overflow
+                                                          text={group.name}
+                                                          variant=&quot;h6&quot;
+                                                      /&gt;
+                                                      &lt;Typography
+                                                          variant=&quot;caption&quot;
+                                                          sx={sx.textWrap}
+                                                      &gt;
+                                                          {group?.description ||
+                                                              &#x27;-&#x27;}
+                                                      &lt;/Typography&gt;
+                                                  &lt;/Box&gt;
+                                              )
+                                          )
+                                      })
+                                    : &#x27;-&#x27;}
+                            &lt;/&gt;
+                        )}
+                        {edit === &#x27;groups&#x27; &amp;&amp; (
+                            &lt;Box
+                                component=&quot;form&quot;
+                                onSubmit={(event) =&gt; {
+                                    event.preventDefault()
+                                }}
+                            &gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Groups&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            reset()
+                                            router.push(
+                                                `/drivers/${driver?.key}`
+                                            )
+                                        }}
+                                    &gt;
+                                        &lt;Close /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;GroupsSelect
+                                    groups={editedDriver?.groups || []}
+                                    setGroups={(groups) =&gt;
+                                        setEditedDriver({
+                                            ...driver,
+                                            groups,
+                                        })
+                                    }
+                                    type=&quot;driver&quot;
+                                    sx={sx.select}
+                                    multiple
+                                /&gt;
+                                &lt;Button
+                                    color=&quot;primary&quot;
+                                    onClick={() =&gt; saveDriverField(&#x27;groups&#x27;)}
+                                &gt;
+                                    &lt;FormattedMessage id=&quot;app.Save&quot; /&gt;
+                                &lt;/Button&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Paper sx={sx.paper}&gt;
+                        {edit !== &#x27;notes&#x27; &amp;&amp; (
+                            &lt;&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Edit&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            router.push(
+                                                `/drivers/${driver?.key}/notes`
+                                            )
+                                            reset()
+                                        }}
+                                    &gt;
+                                        &lt;Edit /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;Typography&gt;
+                                    &lt;FormattedMessage id=&quot;app.Notes&quot; /&gt;
+                                &lt;/Typography&gt;
+                                {driver.notes &amp;&amp; (
+                                    &lt;Box sx={sx.fixedHeight}&gt;
+                                        &lt;Typography
+                                            sx={{
+                                                whiteSpace: &#x27;pre-line&#x27;,
+                                                wordBreak: &#x27;break-all&#x27;,
+                                                fontSize: 14,
+                                            }}
+                                            mt={2}
+                                        &gt;
+                                            {driver.notes}
+                                        &lt;/Typography&gt;
+                                    &lt;/Box&gt;
+                                )}
+                                {!driver.notes &amp;&amp; (
+                                    &lt;Box
+                                        display=&quot;flex&quot;
+                                        justifyContent=&quot;center&quot;
+                                        mb={2}
+                                    &gt;
+                                        &lt;Typography&gt;
+                                            &lt;FormattedMessage id=&quot;app.NoNotes&quot; /&gt;
+                                        &lt;/Typography&gt;
+                                    &lt;/Box&gt;
+                                )}
+                            &lt;/&gt;
+                        )}
+                        {edit === &#x27;notes&#x27; &amp;&amp; (
+                            &lt;Box
+                                component=&quot;form&quot;
+                                onSubmit={(event) =&gt; {
+                                    event.preventDefault()
+                                    saveDriverField(&#x27;notes&#x27;)
+                                }}
+                            &gt;
+                                &lt;Typography mb={2}&gt;
+                                    &lt;FormattedMessage id=&quot;app.Notes&quot; /&gt;
+                                &lt;/Typography&gt;
+                                &lt;Tooltip
+                                    title={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                                &gt;
+                                    &lt;IconButton
+                                        size=&quot;small&quot;
+                                        sx={sx.edit}
+                                        onClick={() =&gt; {
+                                            reset()
+                                            router.push(
+                                                `/drivers/${driver?.key}`
+                                            )
+                                        }}
+                                    &gt;
+                                        &lt;Close /&gt;
+                                    &lt;/IconButton&gt;
+                                &lt;/Tooltip&gt;
+                                &lt;TextareaAutoSize
+                                    value={editedDriver?.notes || &#x27;&#x27;}
+                                    onChange={(event) =&gt;
+                                        setEditedDriver({
+                                            ...driver,
+                                            notes: event.target.value,
+                                        })
+                                    }
+                                    maxRows={16}
+                                /&gt;
+                                &lt;Button color=&quot;primary&quot; type=&quot;submit&quot;&gt;
+                                    &lt;FormattedMessage id=&quot;app.Save&quot; /&gt;
+                                &lt;/Button&gt;
+                            &lt;/Box&gt;
+                        )}
+                    &lt;/Paper&gt;
+                    &lt;Divider /&gt;
+                    &lt;LoadingButton
+                        sx={sx.warn}
+                        onClick={() =&gt; setConfirmDeleteDriver(true)}
+                        startIcon={&lt;Delete /&gt;}
+                        color=&quot;secondary&quot;
+                        fullWidth
+                    &gt;
+                        &lt;FormattedMessage id=&quot;app.DeleteDriver&quot; /&gt;
+                    &lt;/LoadingButton&gt;
+                    &lt;Confirm
+                        onCancel={() =&gt; setConfirmDeleteDriver(false)}
+                        onSubmit={() =&gt; {
+                            deleteDriver()
+                            setConfirmDeleteDriver(false)
+                        }}
+                        isOpen={confirmDeleteDriver}
+                        message={
+                            &lt;FormattedMessage
+                                id=&quot;app.Deleting&quot;
+                                values={{
+                                    name: &lt;Overflow text={driver.name || &#x27;&#x27;} /&gt;,
+                                }}
+                            /&gt;
+                        }
+                        type=&quot;warn&quot;
+                        submit={&lt;FormattedMessage id=&quot;app.Delete&quot; /&gt;}
+                        cancel={&lt;FormattedMessage id=&quot;app.Cancel&quot; /&gt;}
+                    /&gt;
+                &lt;/Box&gt;
+            )}
+        &lt;/Drawer&gt;
+    )
+}
+
+export default EditDriverView
+</textarea><pre id="annotations" style="display:none">[]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Thu, 04 Jan 2024 18:45:36 GMT</p>
+    </body>
+  </html>
+  

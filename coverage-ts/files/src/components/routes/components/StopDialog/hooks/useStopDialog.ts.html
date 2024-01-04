@@ -1,0 +1,137 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>useStopDialog.ts</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../../../../../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../../../../../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../../../../../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="negative"><td class="">src/components/routes/components/StopDialog/hooks/useStopDialog.ts</td><td class="">75.13%</td><td class="">80%</td><td class="">193</td><td class="">145</td><td class="">48</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import { useState, useEffect, useMemo } from &#x27;react&#x27;
+import { debounce } from &#x27;@mui/material/utils&#x27;
+import { PlaceType } from &#x27;../types&#x27;
+import { Location } from &#x27;../../../types&#x27;
+import { v4 as uuid } from &#x27;uuid&#x27;
+
+const autocompleteService = { current: null }
+const useStopDialog = (parentLocation: Location | undefined, setOpen?: ((open: boolean) =&gt; void) | undefined) =&gt; {
+    const [loadingSuggestions, setLoadingSuggestions] = useState&lt;boolean&gt;(false)
+    const [loadingLocation, setLoadingLocation] = useState&lt;boolean&gt;(false)
+    const [value, setValue] = useState&lt;PlaceType | null&gt;(null)
+    const [inputValue, setInputValue] = useState(&#x27;&#x27;)
+    const [options, setOptions] = useState&lt;readonly PlaceType[]&gt;([])
+    const [location, setLocation] = useState&lt;Location | undefined&gt;(parentLocation)
+    const fetch = useMemo(
+        () =&gt;
+            debounce(
+                (
+                    request: { input: string },
+                    callback: (results?: readonly PlaceType[]) =&gt; void
+                ) =&gt; {
+                    ;(autocompleteService.current as any).getPlacePredictions(
+                        request,
+                        callback
+                    )
+                },
+                400
+            ),
+        []
+    )
+
+    useEffect(() =&gt; {
+        if (!autocompleteService.current &amp;&amp; (window as any).google) {
+            autocompleteService.current = new (
+                window as any
+            ).google.maps.places.AutocompleteService()
+        }
+        if (!autocompleteService.current) {
+            return undefined
+        }
+
+        if (inputValue === &#x27;&#x27;) {
+            setOptions(value ? [value] : [])
+            return undefined
+        }
+        setLoadingSuggestions(true)
+
+        fetch({ input: inputValue }, (results?: readonly PlaceType[]) =&gt; {
+            let newOptions: readonly PlaceType[] = []
+            setLoadingSuggestions(false)
+            if (value) {
+                setLoadingLocation(true)
+                newOptions = [value]
+                var geocoder = new (window as any).google.maps.Geocoder()
+                geocoder.geocode(
+                    { address: value.description },
+                    (result: any, status: any) =&gt; {
+                        setLoadingLocation(false)
+                        if (
+                            status ==
+                            (window as any).google.maps.GeocoderStatus.OK
+                        ) {
+                            setLocation((oldLocation) =&gt; {
+                                const code = []
+                                const postalCode = result[0]?.address_components[result[0].address_components.length - 1]?.short_name
+                                code.push(postalCode)
+                                if (!isNaN(+postalCode)) code.push(result[0]?.address_components[result[0].address_components.length - 2]?.short_name)
+                                else code.unshift(result[0]?.address_components[0]?.short_name)
+                                return {
+                                    ...oldLocation,
+                                    code: code.reverse().join(&#x27; &#x27;),
+                                    address: value.description,
+                                    lat: result[0].geometry.location.lat(),
+                                    lng: result[0].geometry.location.lng(),
+                                    id: uuid()
+                                }
+                            })
+                        }
+                    }
+                )
+            }
+
+            if (results) {
+                newOptions = [...newOptions, ...results]
+            }
+
+            setOptions(newOptions)
+        })
+    }, [value, inputValue, fetch])
+
+    const changeField = (field: keyof Location, value: any) =&gt; {
+        setLocation((oldLocation) =&gt; oldLocation ? { ...oldLocation, [field]: value } : { [field]: value })
+    }
+
+    const handleClose = () =&gt; {
+        setLocation(undefined)
+        setValue(null)
+        setOptions([])
+        setInputValue(&#x27;&#x27;)
+        setLoadingSuggestions(false)
+        setLoadingLocation(false)
+        setOpen &amp;&amp; setOpen(false)
+    }
+
+    return {
+        loadingSuggestions,
+        loadingLocation,
+        value,
+        setValue,
+        setInputValue,
+        options,
+        setOptions,
+        location,
+        changeField,
+        setLocation,
+        handleClose
+    }
+}
+
+export default useStopDialog</textarea><pre id="annotations" style="display:none">[{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:21,&quot;character&quot;:58,&quot;text&quot;:&quot;getPlacePredictions&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:32,&quot;character&quot;:60,&quot;text&quot;:&quot;google&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:35,&quot;character&quot;:14,&quot;text&quot;:&quot;google&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:35,&quot;character&quot;:21,&quot;text&quot;:&quot;maps&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:35,&quot;character&quot;:26,&quot;text&quot;:&quot;places&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:35,&quot;character&quot;:33,&quot;text&quot;:&quot;AutocompleteService&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:53,&quot;character&quot;:20,&quot;text&quot;:&quot;geocoder&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:53,&quot;character&quot;:51,&quot;text&quot;:&quot;google&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:53,&quot;character&quot;:58,&quot;text&quot;:&quot;maps&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:53,&quot;character&quot;:63,&quot;text&quot;:&quot;Geocoder&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:54,&quot;character&quot;:16,&quot;text&quot;:&quot;geocoder&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:54,&quot;character&quot;:25,&quot;text&quot;:&quot;geocode&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:56,&quot;character&quot;:21,&quot;text&quot;:&quot;result&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:56,&quot;character&quot;:34,&quot;text&quot;:&quot;status&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:59,&quot;character&quot;:28,&quot;text&quot;:&quot;status&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:60,&quot;character&quot;:44,&quot;text&quot;:&quot;google&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:60,&quot;character&quot;:51,&quot;text&quot;:&quot;maps&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:60,&quot;character&quot;:56,&quot;text&quot;:&quot;GeocoderStatus&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:60,&quot;character&quot;:71,&quot;text&quot;:&quot;OK&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:64,&quot;character&quot;:38,&quot;text&quot;:&quot;postalCode&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:64,&quot;character&quot;:51,&quot;text&quot;:&quot;result&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:64,&quot;character&quot;:62,&quot;text&quot;:&quot;address_components&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:64,&quot;character&quot;:81,&quot;text&quot;:&quot;result&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:64,&quot;character&quot;:91,&quot;text&quot;:&quot;address_components&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:64,&quot;character&quot;:110,&quot;text&quot;:&quot;length&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:64,&quot;character&quot;:123,&quot;text&quot;:&quot;short_name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:65,&quot;character&quot;:42,&quot;text&quot;:&quot;postalCode&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:66,&quot;character&quot;:44,&quot;text&quot;:&quot;postalCode&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:66,&quot;character&quot;:67,&quot;text&quot;:&quot;result&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:66,&quot;character&quot;:78,&quot;text&quot;:&quot;address_components&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:66,&quot;character&quot;:97,&quot;text&quot;:&quot;result&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:66,&quot;character&quot;:107,&quot;text&quot;:&quot;address_components&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:66,&quot;character&quot;:126,&quot;text&quot;:&quot;length&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:66,&quot;character&quot;:139,&quot;text&quot;:&quot;short_name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:67,&quot;character&quot;:50,&quot;text&quot;:&quot;result&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:67,&quot;character&quot;:61,&quot;text&quot;:&quot;address_components&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:67,&quot;character&quot;:84,&quot;text&quot;:&quot;short_name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:72,&quot;character&quot;:41,&quot;text&quot;:&quot;result&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:72,&quot;character&quot;:51,&quot;text&quot;:&quot;geometry&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:72,&quot;character&quot;:60,&quot;text&quot;:&quot;location&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:72,&quot;character&quot;:69,&quot;text&quot;:&quot;lat&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:73,&quot;character&quot;:41,&quot;text&quot;:&quot;result&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:73,&quot;character&quot;:51,&quot;text&quot;:&quot;geometry&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:73,&quot;character&quot;:60,&quot;text&quot;:&quot;location&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:73,&quot;character&quot;:69,&quot;text&quot;:&quot;lng&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:90,&quot;character&quot;:48,&quot;text&quot;:&quot;value&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:91,&quot;character&quot;:78,&quot;text&quot;:&quot;value&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;src/components/routes/components/StopDialog/hooks/useStopDialog.ts&quot;,&quot;line&quot;:91,&quot;character&quot;:99,&quot;text&quot;:&quot;value&quot;,&quot;kind&quot;:1}]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Thu, 04 Jan 2024 18:45:36 GMT</p>
+    </body>
+  </html>
+  
