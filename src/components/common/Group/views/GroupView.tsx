@@ -13,7 +13,7 @@ import {
     Paper,
     ListItemButton,
 } from '@mui/material'
-import { GroupWork, Edit } from '@mui/icons-material'
+import { GroupWork, Edit, AddCircle } from '@mui/icons-material'
 import { useIntl, FormattedMessage } from 'react-intl'
 import { useRouter } from 'next/router'
 import { GroupProps } from '../types'
@@ -81,6 +81,7 @@ export const GroupView = ({
                             onClick={() => setOpenAdd(true)}
                             variant="outlined"
                             size="small"
+                            startIcon={<AddCircle />}
                         >
                             <FormattedMessage id="app.AddGroup" />
                         </Button>

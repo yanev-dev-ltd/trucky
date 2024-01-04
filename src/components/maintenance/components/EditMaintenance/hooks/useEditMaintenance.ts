@@ -31,9 +31,9 @@ const useEditMaintenance = ({ maintenance = { units: '' }, edit, onClose, onCanc
     }, [setEditedMaintenance, maintenance])
 
     const deleteMaintenance = useCallback(async () => {
-        if (!editedMaintenance?.key || !auth?.currentUser?.uid) return
+        if (!maintenance?.key || !auth?.currentUser?.uid) return
         try {
-            await deleteDoc(doc(firestore, 'maintenances', editedMaintenance?.key))
+            await deleteDoc(doc(firestore, 'maintenances', maintenance?.key))
             enqueueSnackbar(intl.formatMessage({
                 id: 'app.DeletedMaintenanceSuccess',
             }), { variant: 'success' })
@@ -43,7 +43,7 @@ const useEditMaintenance = ({ maintenance = { units: '' }, edit, onClose, onCanc
                 id: 'app.DeletedMaintenanceError',
             }), { variant: 'error', persist: true })
         }
-    }, [editedMaintenance?.key])
+    }, [maintenance?.key, auth?.currentUser?.uid])
 
     return { maintenance, saveMaintenanceField, setEditedMaintenance, editedMaintenance, deleteMaintenance, edit, reset, onClose, onCancel, onEdit }
 }
