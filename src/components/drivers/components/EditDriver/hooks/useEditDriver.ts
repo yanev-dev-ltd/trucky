@@ -6,15 +6,36 @@ import { useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack'
 import { firestore, auth } from '@/services/firebase'
 import useFiles from '@/hooks/useFiles'
-import { updateDoc, doc } from 'firebase/firestore'
+import { collection, updateDoc, doc, where, query, onSnapshot } from 'firebase/firestore'
+import { Group } from '@/components/common/Group/types'
+import { setGroups } from '@/components/common/Group/redux'
+import { useDispatch } from 'react-redux'
 
 const useEditDriver = ({ driver, edit }: useEditDriverProps) : EditDriverProps => {
     const [editedDriver, setEditedDriver] = useState<Driver | undefined>(driver)
     const router = useRouter()
     const intl = useIntl()
+    const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
     const { downloadFile, deleteFile } = useFiles()
     useEffect(() => setEditedDriver(driver), [driver])
+
+    useEffect(() => {
+        if (!auth.currentUser?.uid || !driver?.key) {
+            return
+        }
+        const qg = query(collection(firestore, 'groups'), where('userId', '==', auth.currentUser?.uid), where('type', '==', 'driver'))
+        const unsubscribeGroups = onSnapshot(qg, (querySnapshot) => {
+            const groups: Group[] = []
+            querySnapshot.forEach((doc) => {
+                groups.push({key: doc.id, ...doc.data()})
+            })
+            dispatch(setGroups(groups))
+        }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))
+        return () => {
+            unsubscribeGroups()
+        }
+    }, [auth.currentUser?.uid, driver?.key])
 
     const saveDriverField = useCallback(async (field: keyof Driver) => {
         if (!driver?.key || !auth?.currentUser?.uid) return

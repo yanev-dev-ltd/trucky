@@ -7,6 +7,7 @@ import { DriversProps, useDriversProps, Driver } from '../types'
 import useDriversFuse from './useDrivers.fuse'
 import useDriversColumns from './useDrivers.columns'
 import { collection, query, where, onSnapshot } from 'firebase/firestore'
+import { useRouter } from 'next/router'
 
 const useDrivers = ({ driverId, edit }: useDriversProps): DriversProps => {
     const drivers = useSelector((state: RootState) => state.drivers)
@@ -14,12 +15,15 @@ const useDrivers = ({ driverId, edit }: useDriversProps): DriversProps => {
     const searchRef = useRef<HTMLInputElement | null>(null)
     const { columns } = useDriversColumns(drivers)
     const { fuse } = useDriversFuse(drivers)
+    const router = useRouter()
     
     useEffect(() => {
         if (!auth.currentUser?.uid) {
             return
         }
-        const q = query(collection(firestore, 'drivers'), where('userId', '==', auth.currentUser?.uid))
+        const conditions = [where('userId', '==', auth.currentUser?.uid)]
+        router.query.group && conditions.push(where('groups', 'array-contains', router.query.group))
+        const q = query(collection(firestore, 'drivers'), ...conditions)
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const d: Driver[] = []
             querySnapshot.forEach((doc) => {
@@ -28,7 +32,7 @@ const useDrivers = ({ driverId, edit }: useDriversProps): DriversProps => {
             dispatch(setDrivers(d))
         })
         return () => unsubscribe()
-    }, [auth.currentUser?.uid])
+    }, [auth.currentUser?.uid, router.query.group])
 
     useEffect(() => {
         function handleKeyPress(event: KeyboardEvent) {

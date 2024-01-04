@@ -13,6 +13,8 @@ import { setRoutes } from '../../../../routes/redux'
 import useFiles from '@/hooks/useFiles'
 import { Route } from '../../../../routes/types'
 import { collection, deleteDoc, updateDoc, doc, where, query, onSnapshot, orderBy } from 'firebase/firestore'
+import { Group } from '@/components/common/Group/types'
+import { setGroups } from '@/components/common/Group/redux'
 
 const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse => {
     const [editedVehicle, setEditedVehicle] = useState<Vehicle | undefined>(vehicle)
@@ -46,9 +48,18 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
             })
             dispatch(setRoutes(routes))
         }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))
+        const qg = query(collection(firestore, 'groups'), where('userId', '==', auth.currentUser?.uid), where('type', '==', 'vehicle'))
+        const unsubscribeGroups = onSnapshot(qg, (querySnapshot) => {
+            const groups: Group[] = []
+            querySnapshot.forEach((doc) => {
+                groups.push({key: doc.id, ...doc.data()})
+            })
+            dispatch(setGroups(groups))
+        }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))
         return () => {
             unsubscribeMaintenance()
             unsubscribeRoutes()
+            unsubscribeGroups()
         }
     }, [auth.currentUser?.uid, vehicle?.key])
 

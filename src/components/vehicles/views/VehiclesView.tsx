@@ -16,6 +16,7 @@ import AddVehicleWithButton from '@/components/vehicles/components/AddVehicleWit
 import sx from '../styles/Vehicles.sx'
 import { Vehicles, VehicleProps } from '../types'
 import { FormattedMessage, useIntl } from 'react-intl'
+import { Group } from '@/components/common/Group/Group'
 
 export const VehiclesView: FC<VehicleProps> = ({
     vehicles,
@@ -50,28 +51,38 @@ export const VehiclesView: FC<VehicleProps> = ({
     return (
         <Box>
             <Box sx={sx.header}>
-                <TextField
-                    variant="outlined"
-                    placeholder={intl.formatMessage({ id: 'app.Search' })}
-                    size="small"
-                    onChange={(e) => setSearch(e.target.value)}
-                    sx={sx.search}
-                    inputRef={searchRef}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <Search />
-                            </InputAdornment>
-                        ),
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <Paper sx={sx.searchKey} elevation={2}>
-                                    <Typography variant="caption">/</Typography>
-                                </Paper>
-                            </InputAdornment>
-                        ),
-                    }}
-                />
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    gap={1}
+                >
+                    <TextField
+                        variant="outlined"
+                        placeholder={intl.formatMessage({ id: 'app.Search' })}
+                        size="small"
+                        onChange={(e) => setSearch(e.target.value)}
+                        sx={sx.search}
+                        inputRef={searchRef}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            ),
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <Paper sx={sx.searchKey} elevation={2}>
+                                        <Typography variant="caption">
+                                            /
+                                        </Typography>
+                                    </Paper>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <Group type="vehicle" />
+                </Box>
                 <AddVehicleWithButton />
             </Box>
             {Array.isArray(vehicles) && filteredVehicles.length > 0 && (

@@ -9,6 +9,7 @@ import clientsReducer from '../components/clients/redux'
 import stripeReducer from '../components/settings/components/Payment/redux'
 import receiptsReducer from '../components/settings/components/Invoices/redux'
 import profileReducer from '../components/settings/components/Profile/redux'
+import groupsReducer from '../components/common/Group/redux'
 
 const reducer = {
     auth: authReducer,
@@ -21,6 +22,7 @@ const reducer = {
     stripe: stripeReducer,
     receipts: receiptsReducer,
     profile: profileReducer,
+    groups: groupsReducer,
 }
 
 const store = configureStore({

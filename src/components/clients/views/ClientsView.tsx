@@ -15,6 +15,7 @@ import { Client, ClientsProps } from '../types'
 import { FormattedMessage, useIntl } from 'react-intl'
 import AddClientWithButton from '../components/AddClientWithButton/AddClientWithButton'
 import { EditClient } from '../components/EditClient/EditClient'
+import { Group } from '@/components/common/Group/Group'
 
 export const ClientsView: FC<ClientsProps> = ({
     clients,
@@ -48,28 +49,38 @@ export const ClientsView: FC<ClientsProps> = ({
     return (
         <Box>
             <Box sx={sx.header}>
-                <TextField
-                    variant="outlined"
-                    placeholder={intl.formatMessage({ id: 'app.Search' })}
-                    size="small"
-                    onChange={(e) => setSearch(e.target.value)}
-                    sx={sx.search}
-                    inputRef={searchRef}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <Search />
-                            </InputAdornment>
-                        ),
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <Paper sx={sx.searchKey} elevation={2}>
-                                    <Typography variant="caption">/</Typography>
-                                </Paper>
-                            </InputAdornment>
-                        ),
-                    }}
-                />
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    gap={1}
+                >
+                    <TextField
+                        variant="outlined"
+                        placeholder={intl.formatMessage({ id: 'app.Search' })}
+                        size="small"
+                        onChange={(e) => setSearch(e.target.value)}
+                        sx={sx.search}
+                        inputRef={searchRef}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            ),
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <Paper sx={sx.searchKey} elevation={2}>
+                                        <Typography variant="caption">
+                                            /
+                                        </Typography>
+                                    </Paper>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <Group type="client" />
+                </Box>
                 <AddClientWithButton />
             </Box>
             {Array.isArray(clients) && filteredClients.length > 0 && (

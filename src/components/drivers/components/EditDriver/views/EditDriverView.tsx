@@ -32,6 +32,7 @@ import { formatRelative } from 'date-fns'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { EditDriverProps } from '../types'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
+import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
 
 const EditDriverView = ({
     driver,
@@ -51,6 +52,7 @@ const EditDriverView = ({
     const [confirmDeleteDriver, setConfirmDeleteDriver] =
         useState<boolean>(false)
     const { settings } = useSelector((state: RootState) => state.settings)
+    const allGroups = useSelector((state: RootState) => state.groups)
     const locale = useMemo(() => {
         switch (settings?.locale) {
             case 'bg':
@@ -435,6 +437,101 @@ const EditDriverView = ({
                                 <Typography>
                                     <FormattedMessage id="app.NoDocuments" />
                                 </Typography>
+                            </Box>
+                        )}
+                    </Paper>
+                    <Paper sx={sx.paper}>
+                        {edit !== 'groups' && (
+                            <>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/drivers/${driver?.key}/groups`
+                                            )
+                                            reset()
+                                        }}
+                                    >
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip>
+                                <Typography>
+                                    <FormattedMessage id="app.Groups" />
+                                </Typography>
+                                {driver.groups
+                                    ? driver.groups.map((g) => {
+                                          const group = allGroups.find(
+                                              (gr) => gr.key === g
+                                          )
+                                          return (
+                                              group?.name && (
+                                                  <Box key={group?.key}>
+                                                      <Overflow
+                                                          text={group.name}
+                                                          variant="h6"
+                                                      />
+                                                      <Typography
+                                                          variant="caption"
+                                                          sx={sx.textWrap}
+                                                      >
+                                                          {group?.description ||
+                                                              '-'}
+                                                      </Typography>
+                                                  </Box>
+                                              )
+                                          )
+                                      })
+                                    : '-'}
+                            </>
+                        )}
+                        {edit === 'groups' && (
+                            <Box
+                                component="form"
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                }}
+                            >
+                                <Typography>
+                                    <FormattedMessage id="app.Groups" />
+                                </Typography>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/drivers/${driver?.key}`
+                                            )
+                                        }}
+                                    >
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
+                                <GroupsSelect
+                                    groups={editedDriver?.groups || []}
+                                    setGroups={(groups) =>
+                                        setEditedDriver({
+                                            ...driver,
+                                            groups,
+                                        })
+                                    }
+                                    type="driver"
+                                    sx={sx.select}
+                                    multiple
+                                />
+                                <Button
+                                    color="primary"
+                                    onClick={() => saveDriverField('groups')}
+                                >
+                                    <FormattedMessage id="app.Save" />
+                                </Button>
                             </Box>
                         )}
                     </Paper>

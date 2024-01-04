@@ -32,6 +32,7 @@ import { formatRelative } from 'date-fns'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { EditClientProps } from '../types'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
+import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
 
 const EditClientView = ({
     client,
@@ -51,6 +52,7 @@ const EditClientView = ({
     const [confirmDeleteClient, setConfirmDeleteClient] =
         useState<boolean>(false)
     const { settings } = useSelector((state: RootState) => state.settings)
+    const allGroups = useSelector((state: RootState) => state.groups)
     const locale = useMemo(() => {
         switch (settings?.locale) {
             case 'bg':
@@ -505,6 +507,101 @@ const EditClientView = ({
                                         <Close />
                                     </IconButton>
                                 </Tooltip>
+                            </Box>
+                        )}
+                    </Paper>
+                    <Paper sx={sx.paper}>
+                        {edit !== 'groups' && (
+                            <>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/clients/${client?.key}/groups`
+                                            )
+                                            reset()
+                                        }}
+                                    >
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip>
+                                <Typography>
+                                    <FormattedMessage id="app.Groups" />
+                                </Typography>
+                                {client.groups
+                                    ? client.groups.map((g) => {
+                                          const group = allGroups.find(
+                                              (gr) => gr.key === g
+                                          )
+                                          return (
+                                              group?.name && (
+                                                  <Box key={group?.key}>
+                                                      <Overflow
+                                                          text={group.name}
+                                                          variant="h6"
+                                                      />
+                                                      <Typography
+                                                          variant="caption"
+                                                          sx={sx.textWrap}
+                                                      >
+                                                          {group?.description ||
+                                                              '-'}
+                                                      </Typography>
+                                                  </Box>
+                                              )
+                                          )
+                                      })
+                                    : '-'}
+                            </>
+                        )}
+                        {edit === 'groups' && (
+                            <Box
+                                component="form"
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                }}
+                            >
+                                <Typography>
+                                    <FormattedMessage id="app.Groups" />
+                                </Typography>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/clients/${client?.key}`
+                                            )
+                                        }}
+                                    >
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
+                                <GroupsSelect
+                                    groups={editedClient?.groups || []}
+                                    setGroups={(groups) =>
+                                        setEditedClient({
+                                            ...client,
+                                            groups,
+                                        })
+                                    }
+                                    type="client"
+                                    sx={sx.select}
+                                    multiple
+                                />
+                                <Button
+                                    color="primary"
+                                    onClick={() => saveClientField('groups')}
+                                >
+                                    <FormattedMessage id="app.Save" />
+                                </Button>
                             </Box>
                         )}
                     </Paper>

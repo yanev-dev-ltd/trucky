@@ -18,6 +18,7 @@ export type Vehicle = {
     maintenance?: Maintenances
     notes?: string
     new?: ReactNode
+    groups?: string[]
 }
 
 export type useVehicleProps = {

@@ -7,6 +7,7 @@ import { setClients } from '../redux'
 import useClientsFuse from './useClients.fuse'
 import useClientsColumns from './useClients.columns'
 import { collection, query, where, onSnapshot } from 'firebase/firestore'
+import { useRouter } from 'next/router'
 
 const useClients = ({ clientId, edit }: useClientsProps): ClientsProps => {
     const clients = useSelector((state: RootState) => state.clients)
@@ -14,12 +15,15 @@ const useClients = ({ clientId, edit }: useClientsProps): ClientsProps => {
     const searchRef = useRef<HTMLInputElement | null>(null)
     const { columns } = useClientsColumns(clients)
     const { fuse } = useClientsFuse(clients)
+    const router = useRouter()
     
     useEffect(() => {
         if (!auth.currentUser?.uid) {
             return
         }
-        const q = query(collection(firestore, 'clients'), where('userId', '==', auth.currentUser?.uid))
+        const conditions = [where('userId', '==', auth.currentUser?.uid)]
+        router.query.group && conditions.push(where('groups', 'array-contains', router.query.group))
+        const q = query(collection(firestore, 'clients'), ...conditions)
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const clients: Client[] = []
             querySnapshot.forEach((doc) => {
@@ -28,7 +32,7 @@ const useClients = ({ clientId, edit }: useClientsProps): ClientsProps => {
             dispatch(setClients(clients))
         })
         return () => unsubscribe()
-    }, [auth.currentUser?.uid])
+    }, [auth.currentUser?.uid, router.query.group])
 
     useEffect(() => {
         function handleKeyPress(event: KeyboardEvent) {

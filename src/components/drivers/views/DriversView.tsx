@@ -15,6 +15,7 @@ import { Driver, DriversProps } from '../types'
 import { FormattedMessage, useIntl } from 'react-intl'
 import AddDriverWithButton from '../components/AddDriverWithButton/AddDriverWithButton'
 import { EditDriver } from '../components/EditDriver/EditDriver'
+import { Group } from '@/components/common/Group/Group'
 
 export const DriversView: FC<DriversProps> = ({
     drivers,
@@ -48,28 +49,38 @@ export const DriversView: FC<DriversProps> = ({
     return (
         <Box>
             <Box sx={sx.header}>
-                <TextField
-                    variant="outlined"
-                    placeholder={intl.formatMessage({ id: 'app.Search' })}
-                    size="small"
-                    onChange={(e) => setSearch(e.target.value)}
-                    sx={sx.search}
-                    inputRef={searchRef}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <Search />
-                            </InputAdornment>
-                        ),
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <Paper sx={sx.searchKey} elevation={2}>
-                                    <Typography variant="caption">/</Typography>
-                                </Paper>
-                            </InputAdornment>
-                        ),
-                    }}
-                />
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    gap={1}
+                >
+                    <TextField
+                        variant="outlined"
+                        placeholder={intl.formatMessage({ id: 'app.Search' })}
+                        size="small"
+                        onChange={(e) => setSearch(e.target.value)}
+                        sx={sx.search}
+                        inputRef={searchRef}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            ),
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <Paper sx={sx.searchKey} elevation={2}>
+                                        <Typography variant="caption">
+                                            /
+                                        </Typography>
+                                    </Paper>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <Group type="driver" />
+                </Box>
                 <AddDriverWithButton />
             </Box>
             {Array.isArray(filteredDrivers) && filteredDrivers.length > 0 && (

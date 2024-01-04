@@ -53,6 +53,7 @@ import { AddMaintenance } from '@/components/maintenance/components/AddMaintenan
 import { EditMaintenance } from '@/components/maintenance/components/EditMaintenance/EditMaintenance'
 import Route from '@/components/routes/components/Route/Route'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
+import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 
 const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
@@ -70,6 +71,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         files,
     } = useEditVehicle(vehicle)
     const allDrivers = useSelector((state: RootState) => state.drivers)
+    const allGroups = useSelector((state: RootState) => state.groups)
     const { settings } = useSelector((state: RootState) => state.settings)
     const [editMaintenance, setEditMaintenance] = useState<
         Maintenance | undefined
@@ -96,10 +98,6 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         },
         []
     )
-
-    const handleEditMaintenanceClose = useCallback(() => {
-        setEditMaintenance(undefined)
-    }, [])
 
     return (
         <Drawer
@@ -364,6 +362,101 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                         (vehicle?.mileage && +vehicle.mileage)
                                     }
                                     type="submit"
+                                >
+                                    <FormattedMessage id="app.Save" />
+                                </Button>
+                            </Box>
+                        )}
+                    </Paper>
+                    <Paper sx={sx.paper}>
+                        {edit !== 'groups' && (
+                            <>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}/groups`
+                                            )
+                                            reset()
+                                        }}
+                                    >
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip>
+                                <Typography>
+                                    <FormattedMessage id="app.Groups" />
+                                </Typography>
+                                {vehicle.groups
+                                    ? vehicle.groups.map((g) => {
+                                          const group = allGroups.find(
+                                              (gr) => gr.key === g
+                                          )
+                                          return (
+                                              group?.name && (
+                                                  <Box key={group?.key}>
+                                                      <Overflow
+                                                          text={group.name}
+                                                          variant="h6"
+                                                      />
+                                                      <Typography
+                                                          variant="caption"
+                                                          sx={sx.textWrap}
+                                                      >
+                                                          {group?.description ||
+                                                              '-'}
+                                                      </Typography>
+                                                  </Box>
+                                              )
+                                          )
+                                      })
+                                    : '-'}
+                            </>
+                        )}
+                        {edit === 'groups' && (
+                            <Box
+                                component="form"
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                }}
+                            >
+                                <Typography>
+                                    <FormattedMessage id="app.Groups" />
+                                </Typography>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}`
+                                            )
+                                        }}
+                                    >
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
+                                <GroupsSelect
+                                    groups={editedVehicle?.groups || []}
+                                    setGroups={(groups) =>
+                                        setEditedVehicle({
+                                            ...vehicle,
+                                            groups,
+                                        })
+                                    }
+                                    type="vehicle"
+                                    sx={sx.select}
+                                    multiple
+                                />
+                                <Button
+                                    color="primary"
+                                    onClick={() => saveVehicleField('groups')}
                                 >
                                     <FormattedMessage id="app.Save" />
                                 </Button>

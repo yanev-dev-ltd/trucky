@@ -11,6 +11,7 @@ export type Client = {
     email?: string
     files?: string
     notes?: string
+    groups?: string[]
 }
 
 export type ClientsProps = {

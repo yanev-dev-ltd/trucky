@@ -390,7 +390,9 @@ const Notifications = () => {
                     )}
                     {!unread.length && !read.length && (
                         <Box textAlign="center" m={1}>
-                            <Typography>No notifications yet...</Typography>
+                            <Typography>
+                                <FormattedMessage id="app.NoNotificationsYet" />
+                            </Typography>
                         </Box>
                     )}
                 </List>

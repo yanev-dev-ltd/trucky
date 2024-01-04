@@ -10,6 +10,7 @@ export type Driver = {
     new?: ReactNode
     files?: string
     notes?: string
+    groups?: string[]
 }
 
 export type useDriversProps = {
