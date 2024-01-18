@@ -40,7 +40,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
             })
             dispatch(setMaintenances(m))
         }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))
-        const qr = query(collection(firestore, 'routes'), where('vehicleId', '==', vehicle?.key))
+        const qr = query(collection(firestore, 'routes'), where('vehicleId', '==', vehicle?.key), orderBy('startDate', 'desc'))
         const unsubscribeRoutes = onSnapshot(qr, (querySnapshot) => {
             const routes: Route[] = []
             querySnapshot.forEach((doc) => {

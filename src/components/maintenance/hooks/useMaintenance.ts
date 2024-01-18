@@ -9,13 +9,16 @@ import useMaintenanceColumns from './useMaintenance.columns'
 import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore'
 import { Vehicle } from '@/components/vehicles/types'
 import { setVehicles } from '@/components/vehicles/redux'
+import { Trailer } from '@/components/trailers/types'
+import { setTrailers } from '@/components/trailers/redux'
 
 const useMaintenance = ({ maintenanceId, edit }: useMaintenanceProps): MaintenanceProps => {
     const maintenances = useSelector((state: RootState) => state.maintenances)
     const vehicles = useSelector((state: RootState) => state.vehicles)
+    const trailers = useSelector((state: RootState) => state.trailers)
     const dispatch = useDispatch()
     const searchRef = useRef<HTMLInputElement | null>(null)
-    const { columns } = useMaintenanceColumns(maintenances, vehicles)
+    const { columns } = useMaintenanceColumns(maintenances, vehicles, trailers)
     const { fuse } = useMaintenanceFuse(maintenances, vehicles)
     
     useEffect(() => {
@@ -38,9 +41,18 @@ const useMaintenance = ({ maintenanceId, edit }: useMaintenanceProps): Maintenan
             })
             dispatch(setVehicles(vehicles))
         })
+        const q3 = query(collection(firestore, 'trailers'), where('userId', '==', auth.currentUser?.uid))
+        const unsubscribeTrailers = onSnapshot(q3, (querySnapshot) => {
+            const trailers: Trailer[] = []
+            querySnapshot.forEach((doc) => {
+                trailers.push({...doc.data() as Trailer, key: doc.id})
+            })
+            dispatch(setTrailers(trailers))
+        })
         return () => { 
             unsubscribe()
             unsubscribeVehicles()
+            unsubscribeTrailers()
         }
     }, [auth.currentUser?.uid])
 

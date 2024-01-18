@@ -10,10 +10,13 @@ import useVehiclesFuse from './useVehicles.fuse'
 import { collection, query, where, onSnapshot } from 'firebase/firestore'
 import { Driver } from '@/components/drivers/types'
 import { useRouter } from 'next/router'
+import { Trailer } from '@/components/trailers/types'
+import { setTrailers } from '@/components/trailers/redux'
 
 const useVehicles =  ({ vehicleId, edit, routeId }:useVehicleProps): VehicleProps => {
     const vehicles = useSelector((state: RootState) => state.vehicles)
     const drivers = useSelector((state: RootState) => state.drivers)
+    const trailers = useSelector((state: RootState) => state.trailers)
     const dispatch = useDispatch()
     const searchRef = useRef<HTMLInputElement | null>(null)
     const { columns } = useVehiclesColumns(vehicles)
@@ -37,6 +40,12 @@ const useVehicles =  ({ vehicleId, edit, routeId }:useVehicleProps): VehicleProp
             })
             dispatch(setVehicles(vehicles))
         })
+        return () => {
+            unsubscribe()
+        } 
+    }, [auth.currentUser?.uid, router.query.group])
+
+    useEffect(() => {
         const qd = query(collection(firestore, 'drivers'), where('userId', '==', auth.currentUser?.uid))
         const unsubscribeDrivers = onSnapshot(qd, (querySnapshot) => {
             const drivers: Driver[] = []
@@ -45,11 +54,19 @@ const useVehicles =  ({ vehicleId, edit, routeId }:useVehicleProps): VehicleProp
             })
             dispatch(setDrivers(drivers))
         })
+        const qt = query(collection(firestore, 'trailers'), where('userId', '==', auth.currentUser?.uid))
+        const unsubscribeTrailers = onSnapshot(qt, (querySnapshot) => {
+            const trailers: Trailer[] = []
+            querySnapshot.forEach((doc) => {
+                trailers.push({key: doc.id, ...doc.data()})
+            })
+            dispatch(setTrailers(trailers))
+        })
         return () => {
-            unsubscribe()
             unsubscribeDrivers()
+            unsubscribeTrailers()
         } 
-    }, [auth.currentUser?.uid, router.query.group])
+    }, [auth.currentUser?.uid])
 
     useEffect(() => {
         function handleKeyPress(event: KeyboardEvent) {
@@ -62,7 +79,7 @@ const useVehicles =  ({ vehicleId, edit, routeId }:useVehicleProps): VehicleProp
         return () => document.removeEventListener('keydown', handleKeyPress)
     }, [])
 
-    return { vehicles, vehicleId, edit, searchRef, fuse, columns, routeId, drivers }
+    return { vehicles, vehicleId, edit, searchRef, fuse, columns, routeId, drivers, trailers }
 }
 
 export default useVehicles

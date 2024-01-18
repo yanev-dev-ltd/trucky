@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
     Box,
     Typography,
@@ -10,8 +10,13 @@ import {
     TextField,
     Tooltip,
     Autocomplete,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
 } from '@mui/material'
-import { Close, Edit, Delete } from '@mui/icons-material'
+import { Close, Edit, Delete, InsertDriveFile } from '@mui/icons-material'
 import sx from '../styles/EditMaintenance.sx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import Confirm from '@/components/common/Confirm/Confirm'
@@ -20,10 +25,15 @@ import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { EditMaintenanceProps } from '../types'
 import { MaintenanceTypes } from '@/components/maintenance/types'
 import { DesktopDatePicker } from '@mui/x-date-pickers'
-import { format } from 'date-fns'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
+import Upload from '@/components/common/Upload/Upload'
+import { auth } from '@/services/firebase'
+import { UploadedFile } from '@/components/common/Upload/types'
+import { format, formatRelative } from 'date-fns'
+import { bg, enUS } from 'date-fns/locale'
+import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 
 const EditMaintenanceView = ({
     maintenance,
@@ -36,11 +46,27 @@ const EditMaintenanceView = ({
     onClose,
     onCancel,
     onEdit,
+    downloadFile,
+    deleteFile,
+    files,
 }: EditMaintenanceProps) => {
     const allDrivers = useSelector((state: RootState) => state.drivers)
+    const { settings } = useSelector((state: RootState) => state.settings)
     const intl = useIntl()
     const [confirmDeleteMaintenance, setConfirmDeleteMaintenance] =
         useState<boolean>(false)
+    const [confirmDeleteFile, setConfirmDeleteFile] = useState<
+        UploadedFile | undefined
+    >()
+
+    const locale = useMemo(() => {
+        switch (settings?.locale) {
+            case 'bg':
+                return bg
+            default:
+                return enUS
+        }
+    }, [settings?.locale])
 
     const drivers = allDrivers.filter((d) =>
         editedMaintenance?.drivers?.find((dr) => dr === d.key)
@@ -899,6 +925,199 @@ const EditMaintenanceView = ({
                                         <Close />
                                     </IconButton>
                                 </Tooltip>
+                            </Box>
+                        )}
+                    </Paper>
+                    <Paper sx={sx.paper}>
+                        <Box sx={sx.edit}>
+                            <Upload
+                                filepath={
+                                    auth?.currentUser?.uid
+                                        ? `user/${auth?.currentUser?.uid}/maintenances`
+                                        : undefined
+                                }
+                                dbpath="maintenances"
+                                dbkey={maintenance.key || ''}
+                                currentFiles={files || []}
+                            />
+                        </Box>
+                        <Typography>
+                            <FormattedMessage id="app.Documents" />
+                        </Typography>
+                        <List dense sx={sx.fixedHeight}>
+                            {files &&
+                                files.length > 0 &&
+                                files.map((uf, i) => (
+                                    <ListItem
+                                        key={i}
+                                        secondaryAction={
+                                            <IconButton
+                                                edge="end"
+                                                aria-label="delete"
+                                                onClick={() =>
+                                                    setConfirmDeleteFile(uf)
+                                                }
+                                            >
+                                                <Delete />
+                                            </IconButton>
+                                        }
+                                        disablePadding
+                                    >
+                                        <ListItemButton
+                                            onClick={() => downloadFile(uf)}
+                                        >
+                                            <ListItemIcon>
+                                                <InsertDriveFile />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                primary={
+                                                    <Overflow text={uf.name} />
+                                                }
+                                                secondary={formatRelative(
+                                                    new Date(uf.date),
+                                                    new Date(),
+                                                    { locale }
+                                                )}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                }}
+                                            />
+                                        </ListItemButton>
+                                    </ListItem>
+                                ))}
+                        </List>
+                        <Confirm
+                            onCancel={() => setConfirmDeleteFile(undefined)}
+                            onSubmit={() => {
+                                confirmDeleteFile &&
+                                    deleteFile(
+                                        confirmDeleteFile,
+                                        'maintenances',
+                                        maintenance.key || '',
+                                        files || []
+                                    )
+                                setConfirmDeleteFile(undefined)
+                            }}
+                            isOpen={Boolean(confirmDeleteFile)}
+                            message={
+                                <FormattedMessage
+                                    id="app.DeleteFileConfirm"
+                                    values={{
+                                        file: (
+                                            <Overflow
+                                                text={
+                                                    confirmDeleteFile?.name ||
+                                                    ''
+                                                }
+                                            />
+                                        ),
+                                    }}
+                                />
+                            }
+                            type="warn"
+                            submit={<FormattedMessage id="app.Delete" />}
+                            cancel={<FormattedMessage id="app.Cancel" />}
+                        />
+                        {(!files || files.length === 0) && (
+                            <Box display="flex" justifyContent="center" mb={2}>
+                                <Typography>
+                                    <FormattedMessage id="app.NoDocuments" />
+                                </Typography>
+                            </Box>
+                        )}
+                    </Paper>
+                    <Paper sx={sx.paper}>
+                        {edit !== 'notes' && (
+                            <>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            onEdit('notes')
+                                            reset()
+                                        }}
+                                    >
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip>
+                                <Typography>
+                                    <FormattedMessage id="app.Notes" />
+                                </Typography>
+                                {maintenance.notes && (
+                                    <Box sx={sx.fixedHeight}>
+                                        <Typography
+                                            sx={{
+                                                whiteSpace: 'pre-line',
+                                                wordBreak: 'break-all',
+                                                fontSize: 14,
+                                            }}
+                                            mt={2}
+                                        >
+                                            {maintenance.notes}
+                                        </Typography>
+                                    </Box>
+                                )}
+                                {!maintenance.notes && (
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        mb={2}
+                                    >
+                                        <Typography>
+                                            <FormattedMessage id="app.NoNotes" />
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </>
+                        )}
+                        {edit === 'notes' && (
+                            <Box
+                                component="form"
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                    saveMaintenanceField('notes')
+                                }}
+                            >
+                                <Typography mb={2}>
+                                    <FormattedMessage id="app.Notes" />
+                                </Typography>
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            onCancel()
+                                        }}
+                                    >
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
+                                <TextareaAutoSize
+                                    value={editedMaintenance?.notes || ''}
+                                    onChange={(event) =>
+                                        setEditedMaintenance({
+                                            ...maintenance,
+                                            notes: event.target.value,
+                                        })
+                                    }
+                                    maxRows={16}
+                                />
+                                <Button
+                                    color="primary"
+                                    type="submit"
+                                    disabled={
+                                        maintenance.notes ===
+                                        editedMaintenance?.notes
+                                    }
+                                >
+                                    <FormattedMessage id="app.Save" />
+                                </Button>
                             </Box>
                         )}
                     </Paper>

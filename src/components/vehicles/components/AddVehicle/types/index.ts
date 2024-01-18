@@ -1,3 +1,5 @@
+import { VehicleTypes, FuelTypes } from '@/components/vehicles/types'
+
 export type useAddVehicleProps = {
     onSave: (driverId: string) => void
     setOpen: (open: boolean) => void
@@ -18,8 +20,9 @@ export type AddVehicleProps = {
 }
 export type NewVehicle = {
     name?: string
-    type?: string
-    fuel?: string
+    type?: VehicleTypes
+    fuel?: FuelTypes
     units: string
     userId?: string
+    trailer?: string | null
 }

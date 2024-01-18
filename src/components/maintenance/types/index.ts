@@ -1,4 +1,4 @@
-import { ReactNode, MutableRefObject } from 'react'
+import { MutableRefObject } from 'react'
 import Fuse from 'fuse.js'
 import { Column } from 'react-table'
 
@@ -18,6 +18,9 @@ export type Maintenance = {
     description?: string
     units: string
     startMileage?: number | null
+    files?: string
+    notes?: string
+    isTrailer?: boolean
 }
 
 export type Maintenances = Maintenance[]

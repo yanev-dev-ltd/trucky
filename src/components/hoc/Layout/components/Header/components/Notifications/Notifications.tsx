@@ -143,6 +143,7 @@ const Notifications = () => {
                     <Box sx={sx.link}>
                         <ListItemAvatar sx={sx.avatar}>
                             <Box sx={sx.avatar}>
+                                <Box sx={sx.dot} />
                                 <Avatar>
                                     <ReceiptLong />
                                 </Avatar>

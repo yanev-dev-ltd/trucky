@@ -1,15 +1,18 @@
-import { useState, useCallback, useEffect, SetStateAction, Dispatch } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { auth, firestore } from '@/services/firebase'
 import { Maintenance } from '@/components/maintenance/types'
-import { deleteDoc, updateDoc, doc } from 'firebase/firestore'
+import { deleteDoc, updateDoc, doc, onSnapshot } from 'firebase/firestore'
 import { useEditMaintenanceProps } from '../types'
+import useFiles from '@/hooks/useFiles'
 
 const useEditMaintenance = ({ maintenance = { units: '' }, edit, onClose, onCancel, onEdit }: useEditMaintenanceProps) => {
-    const [editedMaintenance, setEditedMaintenance] = useState(maintenance)
+    const [editedMaintenance, setEditedMaintenance] = useState<Maintenance>(maintenance)
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
+    const { downloadFile, deleteFile } = useFiles()
+    const files = JSON.parse(maintenance?.files || '[]')
 
     const saveMaintenanceField = useCallback(async (field: keyof Maintenance) => {
         if (!maintenance?.key || !auth?.currentUser?.uid) return
@@ -45,7 +48,21 @@ const useEditMaintenance = ({ maintenance = { units: '' }, edit, onClose, onCanc
         }
     }, [maintenance?.key, auth?.currentUser?.uid])
 
-    return { maintenance, saveMaintenanceField, setEditedMaintenance, editedMaintenance, deleteMaintenance, edit, reset, onClose, onCancel, onEdit }
+    return {
+        maintenance,
+        saveMaintenanceField,
+        setEditedMaintenance,
+        editedMaintenance,
+        deleteMaintenance,
+        edit,
+        reset,
+        onClose,
+        onCancel,
+        onEdit,
+        deleteFile,
+        downloadFile,
+        files,
+    }
 }
 
 export default useEditMaintenance

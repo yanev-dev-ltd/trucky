@@ -74,7 +74,17 @@ const sx: Record<string, SxProps<Theme>> = {
         width: 86,
         flexDirection: 'column',
         alignItems: 'center',
+        position: 'relative',
     },
+    dot: {
+        backgroundColor: 'primary.main',
+        width: 6,
+        height: 6,
+        borderRadius: 100,
+        position: 'absolute',
+        top: '18px',
+        left: 8,
+    }
 }
 
 export default sx

@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import authReducer from '../providers/AppAuthProvider/redux';
 import settingsReducer from '../redux/settings'
 import vehiclesReducer from '../components/vehicles/redux'
+import trailersReducer from '../components/trailers/redux'
 import maintenancesReducer from '@/components/maintenance/redux'
 import driversReducer from '../components/drivers/redux'
 import routesReducer from '../components/routes/redux'
@@ -23,6 +24,7 @@ const reducer = {
     receipts: receiptsReducer,
     profile: profileReducer,
     groups: groupsReducer,
+    trailers: trailersReducer,
 }
 
 const store = configureStore({

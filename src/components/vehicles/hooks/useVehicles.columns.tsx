@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import Link from 'next/link'
 import { Column } from 'react-table'
-import { Vehicle, Vehicles, VehicleTypes, FuelTypes } from '../types'
+import { Vehicle, Vehicles, VehicleTypes } from '../types'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Typography, Box, Tooltip, IconButton } from '@mui/material'
 import { FormatListBulleted } from '@mui/icons-material'
@@ -9,10 +9,12 @@ import Overflow from '@/components/common/Overflow/Overflow'
 import sx from '../styles/Vehicles.sx'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
+import { GroupsView } from '@/components/common/Group/components/GroupsView/GroupsView'
 
 const useVehiclesColumns = (vehicles: Vehicles) => {
     const intl = useIntl()
     const allDrivers = useSelector((state: RootState) => state.drivers)
+    const allTrailers = useSelector((state: RootState) => state.trailers)
     const sortType = (a: any, b: any, id: string) => {
         if (!a.original[id]) return 1
         if (!b.original[id]) return -1
@@ -21,6 +23,13 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
 
     const columns = useMemo<Column<Vehicle>[]>(
         () => [
+            {
+                Header: '',
+                id: 'groups',
+                accessor: (v: Vehicle) =>
+                    v.groups ? <GroupsView groups={v.groups} /> : null,
+                width: 36,
+            },
             {
                 Header: <FormattedMessage id="app.Name" />,
                 id: 'name',
@@ -45,11 +54,7 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                             text={
                                 v.type
                                     ? intl.formatMessage({
-                                          id: `app.VehicleType.${
-                                              VehicleTypes[
-                                                  v.type as keyof typeof VehicleTypes
-                                              ]
-                                          }`,
+                                          id: `app.VehicleType.${v.type}`,
                                       })
                                     : '-'
                             }
@@ -58,11 +63,7 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                             text={
                                 v.fuel
                                     ? intl.formatMessage({
-                                          id: `app.FuelType.${
-                                              FuelTypes[
-                                                  v.fuel as keyof typeof FuelTypes
-                                              ]
-                                          }`,
+                                          id: `app.FuelType.${v.fuel}`,
                                       })
                                     : '-'
                             }
@@ -110,6 +111,30 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                         return -1
                     }
                     return 0
+                },
+            },
+            {
+                Header: <FormattedMessage id="app.Trailer" />,
+                id: 'trailer',
+                accessor: (v: Vehicle) => {
+                    const t = allTrailers.find((t) => t.key === v.trailer)
+                    return v.trailer ? (
+                        <Box>
+                            <Overflow text={t?.name || '-'} />
+                            <Overflow
+                                text={
+                                    t?.type
+                                        ? intl.formatMessage({
+                                              id: `app.TrailerType.${t.type}`,
+                                          })
+                                        : '-'
+                                }
+                                variant="caption"
+                            />
+                        </Box>
+                    ) : (
+                        '-'
+                    )
                 },
             },
             {
@@ -198,7 +223,7 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                 disableSortBy: true,
             },
         ],
-        [vehicles, allDrivers]
+        [vehicles, allDrivers, allTrailers]
     )
 
     return { columns }

@@ -1,8 +1,10 @@
+import { tr } from 'date-fns/locale';
 import { MutableRefObject, ReactNode } from 'react'
 import Fuse from 'fuse.js'
 import { Column } from 'react-table'
 import { Driver } from '@/components/drivers/types'
 import { Maintenances } from '@/components/maintenance/types'
+import { Trailer } from '@/components/trailers/types';
 export type Vehicles = Vehicle[]
 
 export type Vehicle = {
@@ -10,8 +12,8 @@ export type Vehicle = {
     drivers?: string[]
     mileage?: number
     name?: string
-    type?: keyof VehicleTypes
-    fuel?: keyof FuelTypes
+    type?: VehicleTypes
+    fuel?: FuelTypes
     units: string
     route?: string
     files?: string
@@ -19,6 +21,7 @@ export type Vehicle = {
     notes?: string
     new?: ReactNode
     groups?: string[]
+    trailer?: string | null
 }
 
 export type useVehicleProps = {
@@ -36,6 +39,7 @@ export type VehicleProps = {
     columns: Column<Vehicle>[]
     routeId: string | undefined
     drivers: Driver[]
+    trailers: Trailer[]
 }
 
 export enum VehicleTypes {
@@ -51,10 +55,9 @@ export enum VehicleTypes {
     LIGHT_DUTY_TRUCK = 'LightDutyTruck',
     PICKUP_TRUCK = 'PickupTruck',
     ROAD_TRACTOR = 'RoadTractor',
-    SEMITRAILER = 'Semitrailer',
     TAXI = 'Taxi',
+    TOW_TRUCK = 'TowTruck',
     TRACTOR = 'Tractor',
-    TRAILER = 'Trailer',
     TRUCK = 'Truck',
     VAN = 'Van',
 }
@@ -68,5 +71,5 @@ export enum FuelTypes {
     KEROSINE = 'Kerosine',
     HYDROGEN = 'Hydrogen',
     HYBRID = 'Hybrid',
-    ELECTRIC = 'Electric'
+    ELECTRIC = 'Electric',
 }

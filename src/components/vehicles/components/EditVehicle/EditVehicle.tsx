@@ -31,7 +31,7 @@ import {
     NotificationsActive,
     Route as RouteIcon,
 } from '@mui/icons-material'
-import { format, formatRelative, set } from 'date-fns'
+import { format, formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
@@ -42,8 +42,6 @@ import sx from './styles/EditVehicle.sx'
 import { EditVehicleProps } from './types'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import { VehicleTypes, FuelTypes } from '../../types'
-import { Maintenance } from '@/components/maintenance/types'
 import { UploadedFile } from '@/components/common/Upload/types'
 import useEditVehicle from './hooks/useEditVehicle'
 import Upload from '@/components/common/Upload/Upload'
@@ -55,6 +53,7 @@ import Route from '@/components/routes/components/Route/Route'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
+import { TrailersSelect } from '@/components/trailers/components/TrailersSelect/TrailersSelect'
 
 const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     const router = useRouter()
@@ -71,10 +70,11 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         files,
     } = useEditVehicle(vehicle)
     const allDrivers = useSelector((state: RootState) => state.drivers)
+    const allTrailers = useSelector((state: RootState) => state.trailers)
     const allGroups = useSelector((state: RootState) => state.groups)
     const { settings } = useSelector((state: RootState) => state.settings)
-    const [editMaintenance, setEditMaintenance] = useState<
-        Maintenance | undefined
+    const [editMaintenanceId, setEditMaintenanceId] = useState<
+        number | undefined
     >()
     const [confirmDeleteFile, setConfirmDeleteFile] = useState<
         UploadedFile | undefined
@@ -92,12 +92,9 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         }
     }, [settings?.locale])
 
-    const handleEditMaintenanceOpen = useCallback(
-        (m: Maintenance | undefined) => {
-            setEditMaintenance(m)
-        },
-        []
-    )
+    const handleEditMaintenanceOpen = useCallback((id: number | undefined) => {
+        setEditMaintenanceId(id)
+    }, [])
 
     return (
         <Drawer
@@ -221,11 +218,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 <Typography variant="h6">
                                     {vehicle?.type ? (
                                         <FormattedMessage
-                                            id={`app.VehicleType.${
-                                                VehicleTypes[
-                                                    vehicle?.type as keyof typeof VehicleTypes
-                                                ]
-                                            }`}
+                                            id={`app.VehicleType.${vehicle?.type}`}
                                         />
                                     ) : (
                                         '-'
@@ -237,11 +230,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 <Typography variant="h6">
                                     {vehicle?.fuel ? (
                                         <FormattedMessage
-                                            id={`app.FuelType.${
-                                                FuelTypes[
-                                                    vehicle?.fuel as keyof typeof FuelTypes
-                                                ]
-                                            }`}
+                                            id={`app.FuelType.${vehicle?.fuel}`}
                                         />
                                     ) : (
                                         '-'
@@ -249,6 +238,91 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 </Typography>
                             </Box>
                         </Box>
+                    </Paper>
+                    <Paper sx={sx.paper}>
+                        {edit !== 'trailer' && (
+                            <>
+                                <Typography>
+                                    <FormattedMessage id="app.Trailer" />
+                                </Typography>
+                                <Overflow
+                                    text={
+                                        allTrailers?.find(
+                                            (t) => t.key === vehicle?.trailer
+                                        )?.name || '-'
+                                    }
+                                    variant="h6"
+                                />
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Edit" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}/trailer`
+                                            )
+                                            reset()
+                                        }}
+                                    >
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip>
+                            </>
+                        )}
+                        {edit === 'trailer' && (
+                            <Box
+                                component="form"
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                    saveVehicleField('trailer')
+                                }}
+                            >
+                                <Typography>
+                                    <FormattedMessage id="app.Trailer" />
+                                </Typography>
+                                <TrailersSelect
+                                    trailers={[editedVehicle?.trailer || '']}
+                                    setTrailers={(trailer) =>
+                                        setEditedVehicle({
+                                            ...vehicle,
+                                            trailer:
+                                                typeof trailer === 'string'
+                                                    ? trailer
+                                                    : trailer?.[0],
+                                        })
+                                    }
+                                />
+                                <Button
+                                    color="primary"
+                                    type="submit"
+                                    disabled={
+                                        vehicle.trailer ===
+                                        editedVehicle?.trailer
+                                    }
+                                >
+                                    <FormattedMessage id="app.Save" />
+                                </Button>
+
+                                <Tooltip
+                                    title={<FormattedMessage id="app.Cancel" />}
+                                >
+                                    <IconButton
+                                        size="small"
+                                        sx={sx.edit}
+                                        onClick={() => {
+                                            reset()
+                                            router.push(
+                                                `/vehicles/${vehicle?.key}`
+                                            )
+                                        }}
+                                    >
+                                        <Close />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                        )}
                     </Paper>
                     <Paper sx={sx.paper}>
                         {edit !== 'mileage' && (
@@ -956,7 +1030,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                                             size="small"
                                                             onClick={() =>
                                                                 handleEditMaintenanceOpen(
-                                                                    m
+                                                                    i
                                                                 )
                                                             }
                                                         >
@@ -970,9 +1044,13 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 </Box>
                             ))}
                         <EditMaintenance
-                            maintenance={editMaintenance}
+                            maintenance={
+                                typeof editMaintenanceId === 'number'
+                                    ? maintenances?.[editMaintenanceId]
+                                    : undefined
+                            }
                             edit={editMaintenanceField}
-                            onClose={() => setEditMaintenance(undefined)}
+                            onClose={() => setEditMaintenanceId(undefined)}
                             onCancel={() => setEditMaintenanceField(undefined)}
                             onEdit={(field) => setEditMaintenanceField(field)}
                         />

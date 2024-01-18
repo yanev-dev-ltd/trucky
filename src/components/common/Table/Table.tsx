@@ -144,9 +144,13 @@ export function Table<T extends Record<string, unknown>>(
                         <TableRow {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column) => (
                                 <TableCell
-                                    {...column.getHeaderProps(
-                                        column.getSortByToggleProps()
-                                    )}
+                                    {...column.getHeaderProps({
+                                        ...column.getSortByToggleProps(),
+                                        style: {
+                                            maxWidth: column.maxWidth,
+                                            width: column.width,
+                                        },
+                                    })}
                                     sx={{
                                         backgroundColor: 'background.default',
                                         boxShadow: (theme) =>
@@ -218,6 +222,7 @@ export function Table<T extends Record<string, unknown>>(
                                 {...cell.getCellProps({
                                     style: {
                                         maxWidth: cell.column.maxWidth,
+                                        width: cell.column.width,
                                     },
                                 })}
                             >

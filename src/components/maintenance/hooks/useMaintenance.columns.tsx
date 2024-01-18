@@ -1,18 +1,22 @@
 import { useMemo } from 'react'
 import { Column } from 'react-table'
 import { Maintenance } from '../types'
-import { FormattedMessage } from 'react-intl'
-import { Tooltip, IconButton } from '@mui/material'
+import { FormattedMessage, useIntl } from 'react-intl'
+import { Tooltip, IconButton, Box, Typography } from '@mui/material'
 import Overflow from '@/components/common/Overflow/Overflow'
 import { FormatListBulleted } from '@mui/icons-material'
 import Link from 'next/link'
 import { Vehicle } from '@/components/vehicles/types'
 import { format } from 'date-fns'
+import { Trailer } from '@/components/trailers/types'
+import sx from '../styles/Maintenance.sx'
 
 const useMaintenanceColumns = (
     maintenance: Maintenance[],
-    vehicles: Vehicle[]
+    vehicles: Vehicle[],
+    trailers: Trailer[]
 ) => {
+    const intl = useIntl()
     const sortType = (a: any, b: any, id: string) => {
         if (!a.original[id]) return 1
         if (!b.original[id]) return -1
@@ -22,19 +26,38 @@ const useMaintenanceColumns = (
     const columns = useMemo<Column<Maintenance>[]>(
         () => [
             {
-                Header: <FormattedMessage id="app.Vehicle" />,
+                Header: (
+                    <Box component={'span'} sx={sx.multiLineHeader}>
+                        <FormattedMessage id="app.Vehicle" />
+                        <Typography variant="caption">
+                            <FormattedMessage id="app.Type" />
+                        </Typography>
+                    </Box>
+                ),
                 id: 'vehicle',
-                accessor: (m: Maintenance) =>
-                    m.vehicleId ? (
-                        <Overflow
-                            text={
-                                vehicles.find((v) => v.key === m.vehicleId)
-                                    ?.name || '-'
-                            }
-                        />
+                accessor: (m: Maintenance) => {
+                    const v = !m.isTrailer
+                        ? vehicles.find((v) => v.key === m.vehicleId)
+                        : trailers.find((t) => t.key === m.vehicleId)
+                    return m.vehicleId ? (
+                        <Box>
+                            <Overflow text={v?.name || '-'} />
+                            <Overflow
+                                text={
+                                    v?.type
+                                        ? intl.formatMessage({
+                                              id: !m.isTrailer
+                                                  ? `app.VehicleType.${v.type}`
+                                                  : `app.TrailerType.${v.type}`,
+                                          })
+                                        : '-'
+                                }
+                            />
+                        </Box>
                     ) : (
                         '-'
-                    ),
+                    )
+                },
                 sortType,
             },
             {

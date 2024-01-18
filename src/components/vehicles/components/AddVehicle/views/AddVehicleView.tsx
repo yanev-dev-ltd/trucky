@@ -16,10 +16,13 @@ import {
 } from '@mui/material'
 import { Close } from '@mui/icons-material'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import sx from '../styles/AddVehicle.sx'
 import { FuelTypes, VehicleTypes } from '../../../types'
 import { AddVehicleProps } from '../types'
+import { VehiclesSelect } from '@/components/vehicles/components/VehiclesSelect/VehiclesSelect'
+import Trailers from 'pages/trailers/[[...index]]'
+import { TrailersSelect } from '@/components/trailers/components/TrailersSelect/TrailersSelect'
 
 const AddVehicleView = ({
     open,
@@ -29,10 +32,9 @@ const AddVehicleView = ({
     newVehicle,
     newVehicleLoading,
 }: AddVehicleProps) => {
-    const typeKeys = Object.keys(VehicleTypes) as Array<
-        keyof typeof VehicleTypes
-    >
-    const fuelKeys = Object.keys(FuelTypes) as Array<keyof typeof FuelTypes>
+    const intl = useIntl()
+    const typeKeys = Object.values(VehicleTypes) as Array<VehicleTypes>
+    const fuelKeys = Object.values(FuelTypes) as Array<FuelTypes>
 
     return (
         <Modal open={open}>
@@ -94,9 +96,9 @@ const AddVehicleView = ({
                                     labelId="type-label"
                                     id="type"
                                     value={newVehicle?.type || ''}
-                                    onChange={(event) =>
+                                    onChange={(event) => {
                                         changeField('type', event.target.value)
-                                    }
+                                    }}
                                     label={<FormattedMessage id="app.Type" />}
                                 >
                                     {!newVehicle?.type && (
@@ -104,17 +106,44 @@ const AddVehicleView = ({
                                             &#8212;
                                         </MenuItem>
                                     )}
-                                    {typeKeys.map((key, i) => (
-                                        <MenuItem key={i} value={key}>
-                                            {
-                                                <FormattedMessage
-                                                    id={`app.VehicleType.${VehicleTypes[key]}`}
-                                                />
-                                            }
-                                        </MenuItem>
-                                    ))}
+                                    {typeKeys
+                                        .sort((a, b) =>
+                                            intl
+                                                .formatMessage({
+                                                    id: `app.VehicleType.${a}`,
+                                                })
+                                                .localeCompare(
+                                                    intl.formatMessage({
+                                                        id: `app.VehicleType.${b}`,
+                                                    })
+                                                )
+                                        )
+                                        .map((key, i) => (
+                                            <MenuItem key={i} value={key}>
+                                                {
+                                                    <FormattedMessage
+                                                        id={`app.VehicleType.${key}`}
+                                                    />
+                                                }
+                                            </MenuItem>
+                                        ))}
                                 </Select>
                             </FormControl>
+                        </Box>
+
+                        <Box sx={sx.row}>
+                            <TrailersSelect
+                                trailers={
+                                    typeof newVehicle?.trailer === 'string'
+                                        ? [newVehicle?.trailer]
+                                        : []
+                                }
+                                setTrailers={(trailer) =>
+                                    typeof trailer === 'string'
+                                        ? changeField('trailer', trailer)
+                                        : changeField('trailer', '')
+                                }
+                            />
                         </Box>
                         <Box sx={sx.row}>
                             <FormControl
@@ -143,7 +172,7 @@ const AddVehicleView = ({
                                         <MenuItem key={i} value={key}>
                                             {
                                                 <FormattedMessage
-                                                    id={`app.FuelType.${FuelTypes[key]}`}
+                                                    id={`app.FuelType.${key}`}
                                                 />
                                             }
                                         </MenuItem>

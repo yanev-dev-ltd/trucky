@@ -7,7 +7,9 @@ export type useGroupProps = {
 export enum GroupType {
     vehicle = 'vehicle',
     driver = 'driver',
-    client = 'client'
+    client = 'client',
+    route = 'route',
+    trailer = 'trailer'
 }
 
 export type Group = {

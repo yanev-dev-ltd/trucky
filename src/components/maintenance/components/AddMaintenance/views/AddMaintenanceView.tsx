@@ -1,4 +1,3 @@
-import { useState, useCallback, SyntheticEvent } from 'react'
 import {
     Dialog,
     Box,
@@ -10,8 +9,19 @@ import {
     Tooltip,
     IconButton,
     Autocomplete,
+    Typography,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    FormControl,
+    FormLabel,
+    RadioGroup,
+    FormControlLabel,
+    Radio,
 } from '@mui/material'
-import { AddCircle, Add } from '@mui/icons-material'
+import { AddCircle, Add, Delete, InsertDriveFile } from '@mui/icons-material'
 
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
@@ -21,37 +31,52 @@ import { AddMaintenanceProps } from '../types'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 import { MaintenanceTypes } from '@/components/maintenance/types'
 import { VehiclesSelect } from '@/components/vehicles/components/VehiclesSelect/VehiclesSelect'
+import { useMemo, useState } from 'react'
+import { UploadedFile } from '@/components/common/Upload/types'
+import Upload from '@/components/common/Upload/Upload'
+import { auth } from '@/services/firebase'
+import Overflow from '@/components/common/Overflow/Overflow'
+import { formatRelative, set } from 'date-fns'
+import { bg, enUS } from 'date-fns/locale'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
+import Confirm from '@/components/common/Confirm/Confirm'
+import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
+import { TrailersSelect } from '@/components/trailers/components/TrailersSelect/TrailersSelect'
 
 const AddMaintenanceView = ({
-    addMaintenance,
     units,
     vehicleId,
     setField,
     maintenance,
-    reset,
     fullButton,
+    handleOpen,
+    handleClose,
+    handleSubmit,
+    newMaintenanceOpen,
+    files,
+    deleteFile,
+    downloadFile,
 }: AddMaintenanceProps) => {
     const intl = useIntl()
-    const [newMaintenanceOpen, setNewMaintenanceOpen] = useState(false)
+    const { settings } = useSelector((state: RootState) => state.settings)
+    const [confirmDeleteFile, setConfirmDeleteFile] = useState<
+        UploadedFile | undefined
+    >()
+    const [isTrailer, setIsTrailer] = useState<boolean>(false)
 
-    const handleNewMaintenanceOpen = useCallback(() => {
-        setNewMaintenanceOpen(true)
-    }, [])
-
-    const handleNewMaintenanceClose = useCallback(() => {
-        setNewMaintenanceOpen(false)
-    }, [])
-
-    const handleSubmit = (event: SyntheticEvent) => {
-        event.preventDefault()
-        addMaintenance && addMaintenance(maintenance)
-        handleClose()
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsTrailer((event.target as HTMLInputElement).value === 'true')
     }
 
-    const handleClose = () => {
-        reset()
-        handleNewMaintenanceClose && handleNewMaintenanceClose()
-    }
+    const locale = useMemo(() => {
+        switch (settings?.locale) {
+            case 'bg':
+                return bg
+            default:
+                return enUS
+        }
+    }, [settings?.locale])
 
     return (
         <>
@@ -61,7 +86,7 @@ const AddMaintenanceView = ({
                         variant="contained"
                         color="primary"
                         startIcon={<Add />}
-                        onClick={handleNewMaintenanceOpen}
+                        onClick={handleOpen}
                         style={{ marginLeft: 'auto' }}
                     >
                         <FormattedMessage id="app.AddMaintenance" />
@@ -72,13 +97,13 @@ const AddMaintenanceView = ({
                     title={<FormattedMessage id="app.AddMaintenance" />}
                     sx={sx.button}
                 >
-                    <IconButton size="small" onClick={handleNewMaintenanceOpen}>
+                    <IconButton size="small" onClick={handleOpen}>
                         <AddCircle />
                     </IconButton>
                 </Tooltip>
             )}
             <Dialog
-                open={newMaintenanceOpen}
+                open={Boolean(newMaintenanceOpen)}
                 onClose={handleClose}
                 aria-labelledby="new-maintenance-dialog-title"
                 maxWidth="sm"
@@ -90,14 +115,64 @@ const AddMaintenanceView = ({
                         </DialogTitle>
                         <DialogContent>
                             {!vehicleId && (
-                                <Box sx={sx.row}>
-                                    <VehiclesSelect
-                                        vehicles={[maintenance.vehicleId || '']}
-                                        setVehicles={(vehicle) =>
-                                            setField('vehicleId', vehicle)
-                                        }
-                                    />
-                                </Box>
+                                <>
+                                    <Box sx={sx.row}>
+                                        <FormControl>
+                                            <RadioGroup
+                                                row
+                                                value={isTrailer}
+                                                onChange={handleChange}
+                                            >
+                                                <FormControlLabel
+                                                    value={false}
+                                                    control={<Radio />}
+                                                    label={
+                                                        <FormattedMessage id="app.Vehicle" />
+                                                    }
+                                                />
+                                                <FormControlLabel
+                                                    value={true}
+                                                    control={<Radio />}
+                                                    label={
+                                                        <FormattedMessage id="app.Trailer" />
+                                                    }
+                                                />
+                                            </RadioGroup>
+                                        </FormControl>
+                                    </Box>
+                                    <Box sx={sx.row}>
+                                        {isTrailer ? (
+                                            <TrailersSelect
+                                                trailers={[
+                                                    maintenance.vehicleId || '',
+                                                ]}
+                                                setTrailers={(trailer) => {
+                                                    setField(
+                                                        'vehicleId',
+                                                        trailer
+                                                    )
+                                                    setField(
+                                                        'isTrailer',
+                                                        'true'
+                                                    )
+                                                }}
+                                            />
+                                        ) : (
+                                            <VehiclesSelect
+                                                vehicles={[
+                                                    maintenance.vehicleId || '',
+                                                ]}
+                                                setVehicles={(vehicle) => {
+                                                    setField(
+                                                        'vehicleId',
+                                                        vehicle
+                                                    )
+                                                    setField('isTrailer', null)
+                                                }}
+                                            />
+                                        )}
+                                    </Box>
+                                </>
                             )}
                             <Box sx={sx.row}>
                                 <Autocomplete
@@ -295,6 +370,132 @@ const AddMaintenanceView = ({
                                     multiple
                                 />
                             </Box>
+                            <Box sx={sx.rowUpload}>
+                                <Box sx={sx.edit}>
+                                    <Upload
+                                        filepath={
+                                            auth?.currentUser?.uid
+                                                ? `user/${auth?.currentUser?.uid}/maintenances`
+                                                : undefined
+                                        }
+                                        dbpath="maintenances"
+                                        dbkey={newMaintenanceOpen || ''}
+                                        currentFiles={files || []}
+                                    />
+                                </Box>
+                                <Typography>
+                                    <FormattedMessage id="app.Documents" />
+                                </Typography>
+                                <List dense sx={sx.fixedHeight}>
+                                    {files &&
+                                        files.length > 0 &&
+                                        files.map((uf, i) => (
+                                            <ListItem
+                                                key={i}
+                                                secondaryAction={
+                                                    <IconButton
+                                                        edge="end"
+                                                        aria-label="delete"
+                                                        onClick={() =>
+                                                            setConfirmDeleteFile(
+                                                                uf
+                                                            )
+                                                        }
+                                                    >
+                                                        <Delete />
+                                                    </IconButton>
+                                                }
+                                                disablePadding
+                                            >
+                                                <ListItemButton
+                                                    onClick={() =>
+                                                        downloadFile(uf)
+                                                    }
+                                                >
+                                                    <ListItemIcon>
+                                                        <InsertDriveFile />
+                                                    </ListItemIcon>
+                                                    <ListItemText
+                                                        primary={
+                                                            <Overflow
+                                                                text={uf.name}
+                                                            />
+                                                        }
+                                                        secondary={formatRelative(
+                                                            new Date(uf.date),
+                                                            new Date(),
+                                                            { locale }
+                                                        )}
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                        }}
+                                                    />
+                                                </ListItemButton>
+                                            </ListItem>
+                                        ))}
+                                </List>
+                                <Confirm
+                                    onCancel={() =>
+                                        setConfirmDeleteFile(undefined)
+                                    }
+                                    onSubmit={() => {
+                                        confirmDeleteFile &&
+                                            deleteFile(
+                                                confirmDeleteFile,
+                                                'maintenances',
+                                                newMaintenanceOpen || '',
+                                                files || []
+                                            )
+                                        setConfirmDeleteFile(undefined)
+                                    }}
+                                    isOpen={Boolean(confirmDeleteFile)}
+                                    message={
+                                        <FormattedMessage
+                                            id="app.DeleteFileConfirm"
+                                            values={{
+                                                file: (
+                                                    <Overflow
+                                                        text={
+                                                            confirmDeleteFile?.name ||
+                                                            ''
+                                                        }
+                                                    />
+                                                ),
+                                            }}
+                                        />
+                                    }
+                                    type="warn"
+                                    submit={
+                                        <FormattedMessage id="app.Delete" />
+                                    }
+                                    cancel={
+                                        <FormattedMessage id="app.Cancel" />
+                                    }
+                                />
+                                {(!files || files.length === 0) && (
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        mb={2}
+                                    >
+                                        <Typography>
+                                            <FormattedMessage id="app.NoDocuments" />
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Box>
+                            <Box sx={sx.row}>
+                                <TextareaAutoSize
+                                    value={maintenance?.notes || ''}
+                                    placeholder={intl.formatMessage({
+                                        id: 'app.Notes',
+                                    })}
+                                    onChange={(event) =>
+                                        setField('notes', event.target.value)
+                                    }
+                                    maxRows={16}
+                                />
+                            </Box>
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleClose}>
@@ -304,7 +505,9 @@ const AddMaintenanceView = ({
                                 type="submit"
                                 color="primary"
                                 variant="contained"
-                                disabled={!maintenance.type}
+                                disabled={
+                                    !maintenance.type || !maintenance.vehicleId
+                                }
                             >
                                 <FormattedMessage id="app.Save" />
                             </Button>

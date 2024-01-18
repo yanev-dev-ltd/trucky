@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Route } from '../types'
 
-const initialState: Route[] = [{ key: 'loading' }]
+export const initialState: Route[] = [{ key: 'loading' }]
 
 
 export const routesSlice = createSlice({

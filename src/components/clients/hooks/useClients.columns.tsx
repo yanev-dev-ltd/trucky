@@ -6,6 +6,7 @@ import { Tooltip, IconButton } from '@mui/material'
 import Overflow from '@/components/common/Overflow/Overflow'
 import { FormatListBulleted } from '@mui/icons-material'
 import Link from 'next/link'
+import { GroupsView } from '@/components/common/Group/components/GroupsView/GroupsView'
 
 const useClientsColumns = (clients: Client[]) => {
     const sortType = (a: any, b: any, id: string) => {
@@ -16,6 +17,13 @@ const useClientsColumns = (clients: Client[]) => {
 
     const columns = useMemo<Column<Client>[]>(
         () => [
+            {
+                Header: '',
+                id: 'groups',
+                accessor: (c: Client) =>
+                    c.groups ? <GroupsView groups={c.groups} /> : null,
+                width: 36,
+            },
             {
                 Header: <FormattedMessage id="app.Name" />,
                 id: 'name',

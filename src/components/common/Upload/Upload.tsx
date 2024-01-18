@@ -34,10 +34,10 @@ const Upload = ({ filepath, dbpath, dbkey, currentFiles }: UploadProps) => {
     })
 
     return (
-        <Box component="form">
+        <Box>
             <input
                 type="file"
-                id="document-upload"
+                id={`document-upload-${dbkey}`}
                 name="document-upload"
                 multiple
                 style={{ display: 'none' }}
@@ -49,7 +49,7 @@ const Upload = ({ filepath, dbpath, dbkey, currentFiles }: UploadProps) => {
             <Tooltip title={<FormattedMessage id="app.Upload" />}>
                 <IconButton size="small">
                     <label
-                        htmlFor="document-upload"
+                        htmlFor={`document-upload-${dbkey}`}
                         style={{ cursor: 'pointer' }}
                     >
                         <CloudUpload />

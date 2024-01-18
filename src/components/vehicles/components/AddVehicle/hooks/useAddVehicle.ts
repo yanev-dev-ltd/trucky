@@ -26,7 +26,7 @@ const useAddVehicle = ({onSave, setOpen, open, redirectToEdit}: useAddVehiclePro
         setNewVehicle({ units: settings.units || 'km' })
     },[])
 
-    const changeField = useCallback((field: keyof NewVehicle, value: string) => {
+    const changeField = useCallback((field: keyof NewVehicle, value: string | string[] | null) => {
         setNewVehicle(oldVehicle => {
             return oldVehicle ? { ...oldVehicle, [field]: value  } : { units: settings.units, [field]: value }
         })

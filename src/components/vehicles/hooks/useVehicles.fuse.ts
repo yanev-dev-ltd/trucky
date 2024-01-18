@@ -2,16 +2,26 @@ import Fuse from 'fuse.js'
 import { useIntl } from 'react-intl'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import { Vehicle, VehicleTypes, FuelTypes, Vehicles } from '../types'
+import { Vehicle, Vehicles } from '../types'
 
 const useVehiclesFuse = (vehicles: Vehicles) => {
     const intl = useIntl()
     const allDrivers = useSelector((state: RootState) => state.drivers)
+    const allTrailers = useSelector((state: RootState) => state.trailers)
     const fuse: Fuse<Vehicle> = new Fuse(vehicles, {
         keys: [
             'name',
             'mileage',
             'route',
+            {
+                name: 'trailer',
+                getFn: (v: Vehicle) =>
+                    v.trailer
+                        ? `${allTrailers?.find((trailer) => trailer.key === v.trailer)?.name} ${allTrailers?.find((trailer) => trailer.key === v.trailer)?.type && intl.formatMessage({
+                            id: `app.TrailerType.${allTrailers?.find((trailer) => trailer.key === v.trailer)?.type}`,
+                        })}` || '-'
+                        : '-',
+            },
             {
                 name: 'drivers',
                 getFn: (d: Vehicle) =>
@@ -25,11 +35,7 @@ const useVehiclesFuse = (vehicles: Vehicles) => {
                 getFn: (t: Vehicle) =>
                     t.type
                         ? intl.formatMessage({
-                              id: `app.VehicleType.${
-                                  VehicleTypes[
-                                      t.type as keyof typeof VehicleTypes
-                                  ]
-                              }`,
+                              id: `app.VehicleType.${t.type}`,
                           })
                         : '-',
             },
@@ -38,11 +44,7 @@ const useVehiclesFuse = (vehicles: Vehicles) => {
                 getFn: (t: Vehicle) =>
                     t.fuel
                         ? intl.formatMessage({
-                              id: `app.FuelType.${
-                                  FuelTypes[
-                                      t.fuel as keyof typeof FuelTypes
-                                  ]
-                              }`,
+                              id: `app.FuelType.${t.fuel}`,
                           })
                         : '-',
             },

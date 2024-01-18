@@ -45,8 +45,10 @@ import { Order } from '@/components/orders/types'
 import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 import Confirm from '@/components/common/Confirm/Confirm'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
+import { VehiclesSelect } from '@/components/vehicles/components/VehiclesSelect/VehiclesSelect'
+import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
 
-const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
+const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
     const {
         route,
         changeField,
@@ -85,10 +87,12 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                         route.drivers.length === 0 ||
                         noRoute ||
                         !route.endDate ||
-                        !route.startDate
+                        !route.startDate ||
+                        (!vehicleId && !route.vehicleId)
                     )
                         return
                     saveRoute()
+                    onClose && onClose()
                 }}
             >
                 <DialogContent sx={sx.dialog}>
@@ -98,12 +102,42 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                 id={routeId ? 'app.EditRoute' : 'app.AddRoute'}
                             />
                         </Typography>
+                        {!vehicleId && (
+                            <Box sx={sx.row}>
+                                <VehiclesSelect
+                                    vehicles={
+                                        route?.vehicleId
+                                            ? [route?.vehicleId]
+                                            : []
+                                    }
+                                    setVehicles={(vehicles) =>
+                                        changeField(
+                                            'vehicleId',
+                                            typeof vehicles === 'string'
+                                                ? vehicles
+                                                : undefined
+                                        )
+                                    }
+                                />
+                            </Box>
+                        )}
                         <Box sx={sx.row}>
                             <DriversSelect
                                 drivers={route?.drivers || []}
                                 setDrivers={(drivers) =>
                                     changeField('drivers', drivers)
                                 }
+                                multiple
+                            />
+                        </Box>
+                        <Box sx={sx.row}>
+                            <GroupsSelect
+                                groups={route?.groups || []}
+                                setGroups={(groups) =>
+                                    changeField('groups', groups)
+                                }
+                                type="route"
+                                sx={sx.select}
                                 multiple
                             />
                         </Box>
@@ -766,6 +800,7 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                         <Button
                             onClick={() => {
                                 clearRoute()
+                                onClose && onClose()
                                 router.push(
                                     vehicleId
                                         ? `/vehicles/${vehicleId}`
@@ -786,7 +821,8 @@ const Route = ({ vehicleId, units, routeId, drivers }: RouteProps) => {
                                 route.drivers.length === 0 ||
                                 noRoute ||
                                 !route.endDate ||
-                                !route.startDate
+                                !route.startDate ||
+                                (!vehicleId && !route.vehicleId)
                             }
                         >
                             <FormattedMessage

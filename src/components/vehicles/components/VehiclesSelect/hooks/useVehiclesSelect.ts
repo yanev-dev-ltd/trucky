@@ -7,7 +7,7 @@ import { collection, query, where, onSnapshot } from 'firebase/firestore'
 import { firestore, auth } from '@/services/firebase'
 import { setVehicles as setVehiclesRedux } from '@/components/vehicles/redux'
 
-const useVehiclesSelect = ({ vehicles, setVehicles, sx, multiple }: useVehiclesSelectProps) => {
+const useVehiclesSelect = ({ vehicles, setVehicles, sx, multiple, type }: useVehiclesSelectProps) => {
     const allVehicles = useSelector((state: RootState) => state.vehicles)
     const dispatch = useDispatch()
 
@@ -15,7 +15,8 @@ const useVehiclesSelect = ({ vehicles, setVehicles, sx, multiple }: useVehiclesS
         if (!auth.currentUser?.uid) {
             return
         }
-        const q = query(collection(firestore, 'vehicles'), where('userId', '==', auth.currentUser?.uid))
+        const conditions = [where('userId', '==', auth.currentUser?.uid)]
+        const q = query(collection(firestore, 'vehicles'), ...conditions)
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const vehicles: Vehicle[] = []
             querySnapshot.forEach((doc) => {
@@ -35,7 +36,7 @@ const useVehiclesSelect = ({ vehicles, setVehicles, sx, multiple }: useVehiclesS
         return vehicles && allVehicles.find((v: Vehicle) => v.key === vehicles[0])
     }, [vehicles, allVehicles, multiple])
 
-    return { vehicles: selectedValue, setVehicles, allVehicles, sx, multiple }
+    return { vehicles: selectedValue, setVehicles, allVehicles, sx, multiple, type }
 }
 
 export default useVehiclesSelect

@@ -24,6 +24,7 @@ const VehiclesSelectView = ({
     allVehicles,
     sx,
     multiple,
+    type,
 }: VehiclesSelectProps) => {
     const intl = useIntl()
     const { settings } = useSelector((state: RootState) => state.settings)
@@ -36,7 +37,11 @@ const VehiclesSelectView = ({
                     id="vehicles-select"
                     sx={sx}
                     multiple={multiple}
-                    options={allVehicles}
+                    options={
+                        type
+                            ? allVehicles.filter((v) => v.type === type)
+                            : allVehicles
+                    }
                     value={vehicles || []}
                     getOptionLabel={(option) => option.name || ''}
                     onChange={(_, values) => {
@@ -141,7 +146,9 @@ const VehiclesSelectView = ({
                             label={
                                 <FormattedMessage
                                     id={
-                                        multiple
+                                        type
+                                            ? `app.VehicleType.${type}`
+                                            : multiple
                                             ? 'app.Vehicles'
                                             : 'app.Vehicle'
                                     }
