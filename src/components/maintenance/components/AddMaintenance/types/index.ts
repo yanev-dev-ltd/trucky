@@ -1,5 +1,6 @@
 import { UploadedFile } from '@/components/common/Upload/types'
 import { Maintenance } from '@/components/maintenance/types'
+import { SyntheticEvent } from 'react'
 
 export type AddMaintenanceProps = {
     units: string
@@ -9,7 +10,7 @@ export type AddMaintenanceProps = {
     fullButton?: boolean
     handleOpen: () => void
     handleClose: () => void
-    handleSubmit: () => void
+    handleSubmit: (event: SyntheticEvent) => void
     newMaintenanceOpen: string | false
     files: UploadedFile[]
     downloadFile: (f: UploadedFile) => void
