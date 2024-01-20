@@ -14,7 +14,7 @@ export type Vehicle = {
     name?: string
     type?: VehicleTypes
     fuel?: FuelTypes
-    units: string
+    units?: string
     route?: string
     files?: string
     maintenance?: Maintenances

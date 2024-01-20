@@ -31,7 +31,7 @@ const AddDriverWithButton = () => {
             </Tooltip>
             <AddDriver
                 open={open}
-                setOpen={setOpen}
+                setOpen={(isOpen) => setOpen(!!isOpen)}
                 onSave={() => setOpen(false)}
                 redirectToEdit
             />

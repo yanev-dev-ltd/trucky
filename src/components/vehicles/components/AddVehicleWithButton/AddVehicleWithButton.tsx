@@ -31,7 +31,7 @@ const AddVehicleWithButton = () => {
             </Tooltip>
             <AddVehicle
                 open={open}
-                setOpen={setOpen}
+                setOpen={(isOpen) => setOpen(!!isOpen)}
                 onSave={() => setOpen(false)}
                 redirectToEdit
             />

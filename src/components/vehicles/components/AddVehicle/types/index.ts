@@ -22,7 +22,7 @@ export type NewVehicle = {
     name?: string
     type?: VehicleTypes
     fuel?: FuelTypes
-    units: string
+    units?: string
     userId?: string
     trailer?: string | null
 }
