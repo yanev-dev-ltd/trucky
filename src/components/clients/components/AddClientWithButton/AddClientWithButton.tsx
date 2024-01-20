@@ -31,7 +31,7 @@ const AddClientWithButton = () => {
             </Tooltip>
             <AddClient
                 open={open}
-                setOpen={setOpen}
+                setOpen={(isOpen) => setOpen(!!isOpen)}
                 onSave={() => setOpen(false)}
                 redirectToEdit
             />
