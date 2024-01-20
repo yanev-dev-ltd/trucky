@@ -16,7 +16,6 @@ import {
     ListItemIcon,
     ListItemText,
     FormControl,
-    FormLabel,
     RadioGroup,
     FormControlLabel,
     Radio,
@@ -28,21 +27,19 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 
 import sx from '../styles/AddMaintenance.sx'
 import { AddMaintenanceProps } from '../types'
-import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 import { MaintenanceTypes } from '@/components/maintenance/types'
-import { VehiclesSelect } from '@/components/vehicles/components/VehiclesSelect/VehiclesSelect'
 import { useMemo, useState } from 'react'
 import { UploadedFile } from '@/components/common/Upload/types'
 import Upload from '@/components/common/Upload/Upload'
 import { auth } from '@/services/firebase'
 import Overflow from '@/components/common/Overflow/Overflow'
-import { formatRelative, set } from 'date-fns'
+import { formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import Confirm from '@/components/common/Confirm/Confirm'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
-import { TrailersSelect } from '@/components/trailers/components/TrailersSelect/TrailersSelect'
+import { Select } from '@/components/common/Select/Select'
 
 const AddMaintenanceView = ({
     units,
@@ -141,36 +138,23 @@ const AddMaintenanceView = ({
                                         </FormControl>
                                     </Box>
                                     <Box sx={sx.row}>
-                                        {isTrailer ? (
-                                            <TrailersSelect
-                                                trailers={[
-                                                    maintenance.vehicleId || '',
-                                                ]}
-                                                setTrailers={(trailer) => {
-                                                    setField(
-                                                        'vehicleId',
-                                                        trailer
-                                                    )
-                                                    setField(
-                                                        'isTrailer',
-                                                        'true'
-                                                    )
-                                                }}
-                                            />
-                                        ) : (
-                                            <VehiclesSelect
-                                                vehicles={[
-                                                    maintenance.vehicleId || '',
-                                                ]}
-                                                setVehicles={(vehicle) => {
-                                                    setField(
-                                                        'vehicleId',
-                                                        vehicle
-                                                    )
-                                                    setField('isTrailer', null)
-                                                }}
-                                            />
-                                        )}
+                                        <Select
+                                            items={[
+                                                maintenance.vehicleId || '',
+                                            ]}
+                                            setItems={(item) => {
+                                                setField('vehicleId', item)
+                                                setField(
+                                                    'isTrailer',
+                                                    isTrailer ? 'true' : ''
+                                                )
+                                            }}
+                                            type={
+                                                isTrailer
+                                                    ? 'trailers'
+                                                    : 'vehicles'
+                                            }
+                                        />
                                     </Box>
                                 </>
                             )}
@@ -362,11 +346,12 @@ const AddMaintenanceView = ({
                                 />
                             </Box>
                             <Box sx={sx.row}>
-                                <DriversSelect
-                                    drivers={maintenance.drivers || []}
-                                    setDrivers={(drivers) =>
+                                <Select
+                                    items={maintenance.drivers || []}
+                                    setItems={(drivers) =>
                                         setField('drivers', drivers)
                                     }
+                                    type="drivers"
                                     multiple
                                 />
                             </Box>

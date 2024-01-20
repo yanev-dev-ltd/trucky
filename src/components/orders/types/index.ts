@@ -1,4 +1,9 @@
 import { Location } from '@/components/routes/types'
+import { MutableRefObject } from 'react'
+import Fuse from 'fuse.js'
+import { Column } from 'react-table'
+import { Vehicle } from '@/components/vehicles/types'
+
 export type Order = {
     key?: string
     startStop?: Location
@@ -11,5 +16,20 @@ export type Order = {
     routeId?: string
     userId?: string
     shouldDelete?: boolean
-    clients?: string[]
+    client?: string
+    groups?: string[]
+}
+
+export type useOrdersProps = {
+    orderId?: string
+}
+
+export type OrdersProps = {
+    orders: Order[]
+    orderId?: string
+    searchRef: MutableRefObject<HTMLInputElement | null>
+    fuse: Fuse<Order>
+    columns: Column<Order>[]
+    vehicles: Vehicle[]
+    locations: Location[]
 }

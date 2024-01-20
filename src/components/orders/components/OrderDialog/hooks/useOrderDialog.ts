@@ -4,7 +4,7 @@ import type { Order } from '@/components/orders/types'
 import { format } from 'date-fns'
 import { useIntl } from 'react-intl'
 import { firestore, auth } from '@/services/firebase'
-import { doc,  collection } from 'firebase/firestore'
+import { doc,  collection, updateDoc } from 'firebase/firestore'
 const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder, locations, date, routeId, vehicleId }: useOrderDialogProps) => {
     const intl = useIntl()
     const [newOrder, setNewOrder] = useState<Order>()
@@ -35,7 +35,6 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
                 return
             }
             if (!newOrder?.key) {
-                console.log(routeId)
                 const newOrderRef = doc(collection(firestore, 'routes')).id
                 if (newOrderRef) setNewOrder({ ...newOrder, key: newOrderRef, vehicleId, routeId, userId: auth.currentUser.uid})
             }
@@ -43,7 +42,20 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
         }
     }, [order, newOrder, routeId, vehicleId])
 
-    return { open, setOpen, addOrder, editOrder, order: newOrder, isNew: !Boolean(order?.key), deleteOrder, changeField, locations, setNewOrder}
+    const editOrderCallback = useCallback(async (order: Order) => {
+        if (!order.key) return
+        if (editOrder) {
+            editOrder(order)
+        } else {
+            const { key, ...rest } = order
+            await updateDoc(doc(firestore, 'orders', order.key), rest)
+            setOpen(false)
+            setNewOrder(undefined)
+        }
+    
+    }, [])
+
+    return { open, setOpen, addOrder, editOrder: editOrderCallback, order: newOrder, isNew: !Boolean(order?.key), deleteOrder, changeField, locations, setNewOrder}
 }
 
 export default useOrderDialog

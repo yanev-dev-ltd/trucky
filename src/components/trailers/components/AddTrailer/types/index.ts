@@ -2,15 +2,15 @@ import { TrailerTypes } from '@/components/trailers/types'
 
 export type useAddTrailerProps = {
     onSave: (trailerId: string) => void
-    setOpen: (open: boolean) => void
-    open: boolean
+    setOpen: (open: boolean | string) => void
+    open: boolean | string
     changeField?: (field: keyof NewTrailer, value: string) => void
     newTrailer?: NewTrailer | undefined
     newTrailerLoading?: boolean
     redirectToEdit?: boolean
 }
 export type AddTrailerProps = {
-    open: boolean
+    open: boolean | string
     handleClose: () => void
     handleAddTrailer: () => void
     changeField: (field: keyof NewTrailer, value: string) => void

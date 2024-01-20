@@ -21,6 +21,7 @@ export type Maintenance = {
     files?: string
     notes?: string
     isTrailer?: boolean
+    new?: boolean
 }
 
 export type Maintenances = Maintenance[]

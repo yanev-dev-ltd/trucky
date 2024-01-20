@@ -1,6 +1,6 @@
 export type useAddClientProps = {
     onSave: (clientId: string) => void
-    setOpen: (open: boolean) => void
+    setOpen: (open: boolean | string) => void
     open: boolean | string
     changeField?: (field: string, value: string) => void
     newClient?: NewClient | undefined
@@ -10,7 +10,7 @@ export type useAddClientProps = {
 
 export type AddClientProps = {
     save: () => void
-    setOpen: (open: boolean) => void
+    setOpen: (open: boolean | string) => void
     open: boolean | string
     changeField: (field: string, value: string) => void
     newClient?: NewClient | undefined

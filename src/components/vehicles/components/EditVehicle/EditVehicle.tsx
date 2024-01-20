@@ -50,10 +50,9 @@ import Overflow from '@/components/common/Overflow/Overflow'
 import { AddMaintenance } from '@/components/maintenance/components/AddMaintenance/AddMaintenance'
 import { EditMaintenance } from '@/components/maintenance/components/EditMaintenance/EditMaintenance'
 import Route from '@/components/routes/components/Route/Route'
-import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
-import { TrailersSelect } from '@/components/trailers/components/TrailersSelect/TrailersSelect'
+import { Select } from '@/components/common/Select/Select'
 
 const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     const router = useRouter()
@@ -282,9 +281,9 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 <Typography>
                                     <FormattedMessage id="app.Trailer" />
                                 </Typography>
-                                <TrailersSelect
-                                    trailers={[editedVehicle?.trailer || '']}
-                                    setTrailers={(trailer) =>
+                                <Select
+                                    items={[editedVehicle?.trailer || '']}
+                                    setItems={(trailer) =>
                                         setEditedVehicle({
                                             ...vehicle,
                                             trailer:
@@ -293,6 +292,8 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                                     : trailer?.[0],
                                         })
                                     }
+                                    type="trailers"
+                                    sx={sx.select}
                                 />
                                 <Button
                                     color="primary"
@@ -610,15 +611,16 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                         <Close />
                                     </IconButton>
                                 </Tooltip>
-                                <DriversSelect
-                                    drivers={editedVehicle?.drivers || []}
-                                    setDrivers={(drivers) =>
+                                <Select
+                                    items={editedVehicle?.drivers || []}
+                                    setItems={(drivers) =>
                                         setEditedVehicle({
                                             ...vehicle,
                                             drivers,
                                         })
                                     }
                                     sx={sx.select}
+                                    type="drivers"
                                     multiple
                                 />
                                 <Button
@@ -926,7 +928,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                             <AddMaintenance
                                 vehicleId={vehicle.key}
                                 drivers={vehicle?.drivers || []}
-                                units={vehicle.units}
+                                units={vehicle.units || 'km'}
                             />
                         </Box>
                         {maintenances &&

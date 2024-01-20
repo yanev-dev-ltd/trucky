@@ -1,7 +1,6 @@
-import { Driver } from '@/components/drivers/types'
 export type useAddDriverProps = {
     onSave: (driverId: string) => void
-    setOpen: (open: boolean) => void
+    setOpen: (open: boolean | string) => void
     open: boolean | string
     changeField?: (field: string, value: string) => void
     newDriver?: NewDriver | undefined
@@ -11,7 +10,7 @@ export type useAddDriverProps = {
 
 export type AddDriverProps = {
     save: () => void
-    setOpen: (open: boolean) => void
+    setOpen: (open: boolean | string) => void
     open: boolean | string
     changeField: (field: string, value: string) => void
     newDriver?: NewDriver | undefined

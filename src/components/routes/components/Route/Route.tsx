@@ -47,6 +47,7 @@ import Confirm from '@/components/common/Confirm/Confirm'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { VehiclesSelect } from '@/components/vehicles/components/VehiclesSelect/VehiclesSelect'
 import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
+import { Select } from '@/components/common/Select/Select'
 
 const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
     const {
@@ -104,29 +105,31 @@ const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
                         </Typography>
                         {!vehicleId && (
                             <Box sx={sx.row}>
-                                <VehiclesSelect
-                                    vehicles={
+                                <Select
+                                    items={
                                         route?.vehicleId
                                             ? [route?.vehicleId]
                                             : []
                                     }
-                                    setVehicles={(vehicles) =>
+                                    setItems={(vehicles) =>
                                         changeField(
                                             'vehicleId',
-                                            typeof vehicles === 'string'
-                                                ? vehicles
+                                            typeof vehicles[0] === 'string'
+                                                ? vehicles[0]
                                                 : undefined
                                         )
                                     }
+                                    type="vehicles"
                                 />
                             </Box>
                         )}
                         <Box sx={sx.row}>
-                            <DriversSelect
-                                drivers={route?.drivers || []}
-                                setDrivers={(drivers) =>
+                            <Select
+                                items={route?.drivers || []}
+                                setItems={(drivers) =>
                                     changeField('drivers', drivers)
                                 }
+                                type="drivers"
                                 multiple
                             />
                         </Box>

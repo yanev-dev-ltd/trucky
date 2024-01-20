@@ -26,7 +26,7 @@ const AddVehicleWithButton = () => {
                     onClick={() => setOpen(true)}
                     style={{ marginLeft: 'auto' }}
                 >
-                    <FormattedMessage id="app.addVehicle" />
+                    <FormattedMessage id="app.AddVehicle" />
                 </Button>
             </Tooltip>
             <AddVehicle

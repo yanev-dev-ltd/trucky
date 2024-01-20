@@ -33,7 +33,7 @@ const AddTrailerView = ({
     const typeKeys = Object.values(TrailerTypes) as Array<TrailerTypes>
 
     return (
-        <Modal open={open}>
+        <Modal open={!!open}>
             <Box sx={sx.wrap}>
                 <Paper sx={sx.modal}>
                     <Box

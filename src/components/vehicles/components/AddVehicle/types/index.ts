@@ -2,15 +2,15 @@ import { VehicleTypes, FuelTypes } from '@/components/vehicles/types'
 
 export type useAddVehicleProps = {
     onSave: (driverId: string) => void
-    setOpen: (open: boolean) => void
-    open: boolean
+    setOpen: (open: boolean | string) => void
+    open: boolean | string
     changeField?: (field: keyof NewVehicle, value: string) => void
     newVehicle?: NewVehicle | undefined
     newVehicleLoading?: boolean
     redirectToEdit?: boolean
 }
 export type AddVehicleProps = {
-    open: boolean
+    open: boolean | string
     handleClose: () => void
     handleAddVehicle: () => void
     changeField: (field: keyof NewVehicle, value: string) => void

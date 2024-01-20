@@ -1,26 +1,25 @@
-import { useEffect, useRef } from 'react'
-import { Route, useRoutesProps } from '../types'
-import { RootState } from '@/store/store'
-import { useDispatch, useSelector } from 'react-redux'
-import useRoutesColumns from './useRoutes.columns'
+import { useEffect, useState, useRef, useCallback } from 'react'
+import { Order, useOrdersProps } from '../types'
 import { useRouter } from 'next/router'
-import useRoutesFuse from './useRoutes.fuse'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
+import useOrdersFuse from './useOrders.fuse'
 import { firestore, auth } from '@/services/firebase'
-import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore'
+import { collection, query, where, onSnapshot, doc, getDoc } from 'firebase/firestore'
+import { setOrders } from '../redux'
 import { Vehicle } from '@/components/vehicles/types'
 import { setVehicles } from '@/components/vehicles/redux'
-import { Driver } from '@/components/drivers/types'
-import { setDrivers } from '@/components/drivers/redux'
-import { setRoutes } from '../redux'
+import useOrdersColumns from './useOrders.columns'
+import { Location } from '@/components/routes/types'
 
-const useRoute = ({ routeId }: useRoutesProps) => {
-    const routes = useSelector((state: RootState) => state.routes)
-    const drivers = useSelector((state: RootState) => state.drivers)
+const useOrders = ({ orderId }: useOrdersProps) => {
+    const orders = useSelector((state: RootState) => state.orders)
     const vehicles = useSelector((state: RootState) => state.vehicles)
+    const [locations, setLocations] = useState<Location[]>([])
     const dispatch = useDispatch()
     const searchRef = useRef<HTMLInputElement | null>(null)
-    const { columns } = useRoutesColumns(routes)
-    const { fuse } = useRoutesFuse(routes)
+    const { columns } = useOrdersColumns(orders)
+    const { fuse } = useOrdersFuse(orders)
     const router = useRouter()
 
     useEffect(() => {
@@ -30,16 +29,15 @@ const useRoute = ({ routeId }: useRoutesProps) => {
         const conditions = [where('userId', '==', auth.currentUser?.uid)]
         router.query.group && conditions.push(where('groups', 'array-contains', router.query.group))
         const q = query(
-            collection(firestore, 'routes'),
-            ...conditions,
-            orderBy('startDate', 'desc')
+            collection(firestore, 'orders'),
+            ...conditions
         )
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const routes: Route[] = []
+            const orders: Order[] = []
             querySnapshot.forEach((doc) => {
-                routes.push({...doc.data() as Route, key: doc.id})
+                orders.push({...doc.data() as Order, key: doc.id})
             })
-            dispatch(setRoutes(routes))
+            dispatch(setOrders(orders))
         })
         const qv = query(
             collection(firestore, 'vehicles'),
@@ -52,20 +50,29 @@ const useRoute = ({ routeId }: useRoutesProps) => {
             })
             dispatch(setVehicles(vehicles))
         })
-        const qd = query(collection(firestore, 'drivers'), where('userId', '==', auth.currentUser?.uid))
-        const unsubscribeDrivers = onSnapshot(qd, (querySnapshot) => {
-            const drivers: Driver[] = []
-            querySnapshot.forEach((doc) => {
-                drivers.push({key: doc.id, ...doc.data()})
-            })
-            dispatch(setDrivers(drivers))
-        })
         return () => {
             unsubscribe()
             unsubscribeVehicles()
-            unsubscribeDrivers()
         } 
     }, [auth.currentUser?.uid, router.query.group])
+
+    useEffect(() => {
+        if (!orderId || !auth.currentUser?.uid) {
+            setLocations([])
+            return
+        }
+        const getLocations = async () => {
+            const order = orders.find(o => o.key === orderId)
+            const docRef = doc(firestore, "routes", order?.routeId || '');
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                setLocations(docSnap.data()?.locations)
+            } else {
+                setLocations([])
+            }
+        }
+        getLocations()
+    }, [orderId, orders])
 
     useEffect(() => {
         function handleKeyPress(event: KeyboardEvent) {
@@ -78,7 +85,7 @@ const useRoute = ({ routeId }: useRoutesProps) => {
         return () => document.removeEventListener('keydown', handleKeyPress)
     }, [])
 
-    return { routeId, routes, searchRef, columns, fuse, drivers, vehicles, router }
+    return { orderId, searchRef, fuse, columns, router, vehicles, orders, locations }
 }
 
-export default useRoute
+export default useOrders

@@ -27,13 +27,13 @@ import { MaintenanceTypes } from '@/components/maintenance/types'
 import { DesktopDatePicker } from '@mui/x-date-pickers'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import { DriversSelect } from '@/components/drivers/components/DriversSelect/DriversSelect'
 import Upload from '@/components/common/Upload/Upload'
 import { auth } from '@/services/firebase'
 import { UploadedFile } from '@/components/common/Upload/types'
 import { format, formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
+import { Select } from '@/components/common/Select/Select'
 
 const EditMaintenanceView = ({
     maintenance,
@@ -890,15 +890,16 @@ const EditMaintenanceView = ({
                                 <Typography>
                                     <FormattedMessage id="app.Drivers" />
                                 </Typography>
-                                <DriversSelect
-                                    multiple
-                                    drivers={editedMaintenance?.drivers || []}
-                                    setDrivers={(drivers) =>
+                                <Select
+                                    items={editedMaintenance?.drivers || []}
+                                    setItems={(drivers) =>
                                         setEditedMaintenance({
                                             ...maintenance,
                                             drivers,
                                         })
                                     }
+                                    type="drivers"
+                                    multiple
                                 />
                                 <Button
                                     color="primary"

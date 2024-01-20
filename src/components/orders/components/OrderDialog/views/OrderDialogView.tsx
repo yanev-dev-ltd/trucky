@@ -24,7 +24,8 @@ import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 import Confirm from '@/components/common/Confirm/Confirm'
 import Overflow from '@/components/common/Overflow/Overflow'
-import { ClientsSelect } from '@/components/clients/components/ClientsSelect/ClientsSelect'
+import { Select as SelectComponent } from '@/components/common/Select/Select'
+import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
 
 const OrderDialogView = ({
     open,
@@ -168,6 +169,16 @@ const OrderDialogView = ({
                                 fullWidth
                             />
                         </Grid>
+                        <Grid item xs={12}>
+                            <GroupsSelect
+                                groups={order?.groups || []}
+                                setGroups={(groups) =>
+                                    changeField('groups', groups)
+                                }
+                                type="order"
+                                multiple
+                            />
+                        </Grid>
                         <Grid item xs={6}>
                             <TextField
                                 label={
@@ -201,11 +212,12 @@ const OrderDialogView = ({
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <ClientsSelect
-                                clients={order?.clients || []}
-                                setClients={(clients) =>
-                                    changeField('clients', clients)
+                            <SelectComponent
+                                items={[order?.client || '']}
+                                setItems={(clients) =>
+                                    changeField('client', clients[0])
                                 }
+                                type="clients"
                             />
                         </Grid>
                         <Grid item xs={12}>

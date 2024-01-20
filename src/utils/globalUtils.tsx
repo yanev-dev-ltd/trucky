@@ -25,3 +25,6 @@ export const wrap =
 
 export const snapshotToArray = (snapshot: Object): any[] =>
     Object.entries(snapshot).map((e) => Object.assign(e[1], { key: e[0] }))
+
+export const capitalizeFirstLetter = (string: string) =>
+    string.charAt(0).toUpperCase() + string.slice(1)

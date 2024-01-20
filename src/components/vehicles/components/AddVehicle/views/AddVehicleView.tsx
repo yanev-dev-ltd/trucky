@@ -20,9 +20,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import sx from '../styles/AddVehicle.sx'
 import { FuelTypes, VehicleTypes } from '../../../types'
 import { AddVehicleProps } from '../types'
-import { VehiclesSelect } from '@/components/vehicles/components/VehiclesSelect/VehiclesSelect'
-import Trailers from 'pages/trailers/[[...index]]'
-import { TrailersSelect } from '@/components/trailers/components/TrailersSelect/TrailersSelect'
+import { Select as SelectComponent } from '@/components/common/Select/Select'
 
 const AddVehicleView = ({
     open,
@@ -37,7 +35,7 @@ const AddVehicleView = ({
     const fuelKeys = Object.values(FuelTypes) as Array<FuelTypes>
 
     return (
-        <Modal open={open}>
+        <Modal open={!!open}>
             <Box sx={sx.wrap}>
                 <Paper sx={sx.modal}>
                     <Box
@@ -61,7 +59,7 @@ const AddVehicleView = ({
                             sx={sx.paddingBottom}
                         >
                             <Typography variant="h6">
-                                <FormattedMessage id="app.addVehicle" />
+                                <FormattedMessage id="app.AddVehicle" />
                             </Typography>
                             <IconButton onClick={handleClose}>
                                 <Close />
@@ -132,17 +130,18 @@ const AddVehicleView = ({
                         </Box>
 
                         <Box sx={sx.row}>
-                            <TrailersSelect
-                                trailers={
+                            <SelectComponent
+                                items={
                                     typeof newVehicle?.trailer === 'string'
                                         ? [newVehicle?.trailer]
                                         : []
                                 }
-                                setTrailers={(trailer) =>
+                                setItems={(trailer) =>
                                     typeof trailer === 'string'
                                         ? changeField('trailer', trailer)
-                                        : changeField('trailer', '')
+                                        : changeField('trailer', trailer[0])
                                 }
+                                type="trailers"
                             />
                         </Box>
                         <Box sx={sx.row}>
@@ -235,7 +234,7 @@ const AddVehicleView = ({
                                 isLoading={newVehicleLoading}
                                 fullWidth
                             >
-                                <FormattedMessage id="app.addVehicle" />
+                                <FormattedMessage id="app.AddVehicle" />
                             </LoadingButton>
                         </Box>
                     </Box>

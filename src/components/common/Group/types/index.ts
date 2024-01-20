@@ -9,7 +9,8 @@ export enum GroupType {
     driver = 'driver',
     client = 'client',
     route = 'route',
-    trailer = 'trailer'
+    trailer = 'trailer',
+    order = 'order'
 }
 
 export type Group = {

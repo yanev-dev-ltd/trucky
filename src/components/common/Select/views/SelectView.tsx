@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ComponentPropsWithoutRef, useState } from 'react'
 import {
     Box,
     FormControl,
@@ -9,63 +9,51 @@ import {
 import { AddCircle } from '@mui/icons-material'
 import { createFilterOptions } from '@mui/material/Autocomplete'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Vehicle } from '@/components/vehicles/types'
 import Overflow from '@/components/common/Overflow/Overflow'
-import { VehiclesSelectProps } from '../types'
-import { AddVehicle } from '@/components/vehicles/components/AddVehicle/AddVehicle'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/store/store'
+import { SelectProps, SelectItem } from '../types'
+import { capitalizeFirstLetter } from '@/utils/globalUtils'
 
-const filter = createFilterOptions<Vehicle>()
-
-const VehiclesSelectView = ({
-    vehicles,
-    setVehicles,
-    allVehicles,
+const filter = createFilterOptions<SelectItem>()
+const SelectView = ({
+    items,
+    setItems,
+    allItems,
     sx,
     multiple,
     type,
-}: VehiclesSelectProps) => {
+    AddItem,
+}: SelectProps) => {
     const intl = useIntl()
-    const { settings } = useSelector((state: RootState) => state.settings)
     const [open, setOpen] = useState<boolean | string>(false)
-
     return (
         <>
             <FormControl fullWidth variant="outlined">
                 <Autocomplete
-                    id="vehicles-select"
+                    id={`${type}-select`}
                     sx={sx}
                     multiple={multiple}
-                    options={
-                        type
-                            ? allVehicles.filter((v) => v.type === type)
-                            : allVehicles
-                    }
-                    value={vehicles || []}
-                    getOptionLabel={(option) => option.name || ''}
+                    options={allItems as SelectItem[]}
+                    value={items || []}
+                    getOptionLabel={(option) => option?.name || ''}
                     onChange={(_, values) => {
-                        if (Array.isArray(values)) {
-                            setVehicles(values.map((v) => v.key))
-                        } else if (values?.key) {
-                            setVehicles(values.key)
-                        } else {
-                            setVehicles([])
-                        }
+                        if (Array.isArray(values))
+                            setItems(values.map((v) => v?.key || ''))
+                        else if (values) setItems([values.key])
+                        else setItems([])
                     }}
                     renderOption={(props, option) => (
                         <li
                             {...props}
                             style={{
-                                ...(option.new
+                                ...(option?.new
                                     ? {
                                           padding: 0,
                                       }
                                     : undefined),
                             }}
-                            key={option.key}
+                            key={option?.key}
                         >
-                            {option.new ? (
+                            {option?.new ? (
                                 <Box
                                     component="span"
                                     sx={{
@@ -97,7 +85,7 @@ const VehiclesSelectView = ({
                                     </Button>
                                 </Box>
                             ) : (
-                                option.name
+                                option?.name
                             )}
                         </li>
                     )}
@@ -107,7 +95,7 @@ const VehiclesSelectView = ({
                         const { inputValue } = params
                         // Suggest the creation of a new value
                         const isExisting = options.some(
-                            (option) => inputValue === option.name
+                            (option) => inputValue === option?.name
                         )
                         if (
                             inputValue !== '' &&
@@ -117,13 +105,14 @@ const VehiclesSelectView = ({
                             filtered.push({
                                 key: 'new',
                                 name: inputValue,
-                                units: settings.units,
                                 new: intl.formatMessage(
                                     {
-                                        id: 'app.Add[Vehicle]',
+                                        id: `app.Add[${capitalizeFirstLetter(
+                                            type
+                                        ).slice(0, -1)}]`,
                                     },
                                     {
-                                        vehicle: inputValue,
+                                        item: inputValue,
                                     }
                                 ),
                             })
@@ -131,9 +120,10 @@ const VehiclesSelectView = ({
                             filtered.splice(0, 0, {
                                 key: 'new',
                                 name: '',
-                                units: settings.units,
                                 new: intl.formatMessage({
-                                    id: 'app.AddVehicle',
+                                    id: `app.Add${capitalizeFirstLetter(
+                                        type
+                                    ).slice(0, -1)}`,
                                 }),
                             })
                         }
@@ -145,32 +135,28 @@ const VehiclesSelectView = ({
                             {...params}
                             label={
                                 <FormattedMessage
-                                    id={
-                                        type
-                                            ? `app.VehicleType.${type}`
-                                            : multiple
-                                            ? 'app.Vehicles'
-                                            : 'app.Vehicle'
-                                    }
+                                    id={`app.${capitalizeFirstLetter(type)}`}
                                 />
                             }
                         />
                     )}
                 />
             </FormControl>
-            <AddVehicle
-                open={Boolean(open)}
-                setOpen={setOpen}
-                onSave={(vehicleId) =>
-                    setVehicles(
-                        Array.isArray(vehicles) && multiple
-                            ? [...vehicles.map((v) => v.key), vehicleId]
-                            : vehicleId
-                    )
-                }
-            />
+            {AddItem && (
+                <AddItem
+                    open={open}
+                    setOpen={setOpen}
+                    onSave={(itemId) =>
+                        setItems(
+                            Array.isArray(items) && multiple
+                                ? [...items.map((i) => i?.key || ''), itemId]
+                                : [itemId]
+                        )
+                    }
+                />
+            )}
         </>
     )
 }
 
-export default VehiclesSelectView
+export default SelectView

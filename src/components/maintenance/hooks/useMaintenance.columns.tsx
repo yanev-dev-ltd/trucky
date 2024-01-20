@@ -96,7 +96,7 @@ const useMaintenanceColumns = (
                 disableSortBy: true,
             },
         ],
-        [maintenance, vehicles]
+        [maintenance, vehicles, trailers]
     )
 
     return { columns }
