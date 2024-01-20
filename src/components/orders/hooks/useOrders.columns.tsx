@@ -24,8 +24,7 @@ const useOrdersColumns = (orders: Order[]) => {
             {
                 Header: '',
                 id: 'groups',
-                accessor: (o: Order) =>
-                    o.groups ? <GroupsView groups={o.groups} /> : null,
+                accessor: (o: Order) => <GroupsView groups={o.groups || []} />,
                 width: 36,
             },
             {

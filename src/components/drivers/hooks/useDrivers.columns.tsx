@@ -20,8 +20,7 @@ const useDriversColumns = (drivers: Driver[]) => {
             {
                 Header: '',
                 id: 'groups',
-                accessor: (d: Driver) =>
-                    d.groups ? <GroupsView groups={d.groups} /> : null,
+                accessor: (d: Driver) => <GroupsView groups={d.groups || []} />,
                 width: 36,
             },
             {

@@ -26,8 +26,9 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
             {
                 Header: '',
                 id: 'groups',
-                accessor: (v: Vehicle) =>
-                    v.groups ? <GroupsView groups={v.groups} /> : null,
+                accessor: (v: Vehicle) => (
+                    <GroupsView groups={v.groups || []} />
+                ),
                 width: 36,
             },
             {

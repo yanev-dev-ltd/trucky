@@ -20,8 +20,7 @@ const useClientsColumns = (clients: Client[]) => {
             {
                 Header: '',
                 id: 'groups',
-                accessor: (c: Client) =>
-                    c.groups ? <GroupsView groups={c.groups} /> : null,
+                accessor: (c: Client) => <GroupsView groups={c.groups || []} />,
                 width: 36,
             },
             {

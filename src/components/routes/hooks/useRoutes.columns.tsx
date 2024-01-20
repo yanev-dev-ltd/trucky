@@ -25,8 +25,7 @@ const useRoutesColumns = (routes: Routes) => {
             {
                 Header: '',
                 id: 'groups',
-                accessor: (r: Route) =>
-                    r.groups ? <GroupsView groups={r.groups} /> : null,
+                accessor: (r: Route) => <GroupsView groups={r.groups || []} />,
                 width: 36,
             },
             {
