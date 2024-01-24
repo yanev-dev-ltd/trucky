@@ -16,7 +16,7 @@ export type AddMaintenanceProps = {
     downloadFile: (f: UploadedFile) => void
     deleteFile: (f: UploadedFile, dbpath: string, dbkey: string, files: UploadedFile[]) => void
     isTrailer?: boolean
-    currency: string
+    currency?: string
 }
 
 export type useAddMaintenanceProps = {
