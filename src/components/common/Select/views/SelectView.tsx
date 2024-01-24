@@ -1,10 +1,12 @@
-import { ComponentPropsWithoutRef, useState } from 'react'
+import { useState } from 'react'
 import {
     Box,
     FormControl,
     TextField,
     Autocomplete,
     Button,
+    ListItem,
+    ListItemText,
 } from '@mui/material'
 import { AddCircle } from '@mui/icons-material'
 import { createFilterOptions } from '@mui/material/Autocomplete'
@@ -42,7 +44,7 @@ const SelectView = ({
                         else setItems([])
                     }}
                     renderOption={(props, option) => (
-                        <li
+                        <ListItem
                             {...props}
                             style={{
                                 ...(option?.new
@@ -85,9 +87,9 @@ const SelectView = ({
                                     </Button>
                                 </Box>
                             ) : (
-                                option?.name
+                                <ListItemText primary={option?.name} />
                             )}
-                        </li>
+                        </ListItem>
                     )}
                     filterOptions={(options, params) => {
                         const filtered = filter(options, params)

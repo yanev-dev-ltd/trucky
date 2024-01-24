@@ -9,6 +9,7 @@ import Overflow from '@/components/common/Overflow/Overflow'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import { GroupsView } from '@/components/common/Group/components/GroupsView/GroupsView'
+import { format } from 'date-fns'
 
 const useOrdersColumns = (orders: Order[]) => {
     const allDrivers = useSelector((state: RootState) => state.drivers)
@@ -28,11 +29,19 @@ const useOrdersColumns = (orders: Order[]) => {
                 width: 36,
             },
             {
+                Header: <FormattedMessage id="app.Date" />,
+                id: 'date',
+                accessor: (o: Order) =>
+                    o.date ? format(new Date(+o.date), 'dd/MM/yyyy') : '-',
+                sortType,
+            },
+            {
                 Header: <FormattedMessage id="app.Reference" />,
                 id: 'reference',
                 accessor: (o: Order) => (
                     <Overflow text={`${o?.reference || '-'}`} />
                 ),
+                sortType,
             },
             {
                 Header: <FormattedMessage id="app.Vehicle" />,

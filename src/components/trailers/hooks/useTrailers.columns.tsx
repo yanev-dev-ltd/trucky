@@ -21,8 +21,9 @@ const useTrailersColumns = (trailers: Trailers) => {
             {
                 Header: '',
                 id: 'groups',
-                accessor: (t: Trailer) =>
-                    t.groups ? <GroupsView groups={t.groups} /> : null,
+                accessor: (t: Trailer) => (
+                    <GroupsView groups={t.groups || []} />
+                ),
                 width: 36,
             },
             {

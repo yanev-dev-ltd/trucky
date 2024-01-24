@@ -22,6 +22,7 @@ export type Maintenance = {
     notes?: string
     isTrailer?: boolean
     new?: boolean
+    currency: string
 }
 
 export type Maintenances = Maintenance[]

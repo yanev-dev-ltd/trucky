@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import type { useOrderDialogProps } from '../types'
 import type { Order } from '@/components/orders/types'
-import { format } from 'date-fns'
 import { useIntl } from 'react-intl'
 import { firestore, auth } from '@/services/firebase'
 import { doc,  collection, updateDoc } from 'firebase/firestore'
@@ -9,19 +8,21 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
     const intl = useIntl()
     const [newOrder, setNewOrder] = useState<Order>()
     const changeField = useCallback((field: string, value: any) => {
-        setNewOrder({ ...newOrder, [field]: value })
+        if (field === 'object') setNewOrder({ ...newOrder, ...value})
+        else setNewOrder({ ...newOrder, [field]: value })
     }, [newOrder])
     useEffect(() => {
         if (!order?.reference) changeField(
             'reference',
-            `${format(
-                date || new Date(),
-                'dd/MM/yy'
-            )} [${
+            `[${
                 newOrder?.startStop?.code || intl.formatMessage({ id: 'app.StartStop'})
             }] - [${newOrder?.endStop?.code || intl.formatMessage({ id: 'app.EndStop'})}]`
         )
     }, [newOrder?.startStop, newOrder?.endStop, order?.reference])
+
+    useEffect(() => {
+        if (!order?.key) setNewOrder({ ...newOrder, reference: '', startStop: undefined, endStop: undefined })
+    }, [newOrder?.routeId, order?.key])
 
     useEffect(() => {
         if (!newOrder?.key) setNewOrder(order)
@@ -36,7 +37,7 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
             }
             if (!newOrder?.key) {
                 const newOrderRef = doc(collection(firestore, 'routes')).id
-                if (newOrderRef) setNewOrder({ ...newOrder, key: newOrderRef, vehicleId, routeId, userId: auth.currentUser.uid})
+                if (newOrderRef) setNewOrder({ ...newOrder, key: newOrderRef, vehicleId: vehicleId || newOrder?.vehicleId, userId: auth.currentUser.uid})
             }
 
         }
@@ -55,7 +56,7 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
     
     }, [])
 
-    return { open, setOpen, addOrder, editOrder: editOrderCallback, order: newOrder, isNew: !Boolean(order?.key), deleteOrder, changeField, locations, setNewOrder}
+    return { open, setOpen, addOrder, editOrder: editOrderCallback, order: newOrder, isNew: !Boolean(order?.key), deleteOrder, changeField, locations, setNewOrder, routeId}
 }
 
 export default useOrderDialog

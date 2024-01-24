@@ -26,4 +26,5 @@ export type OrderDialogProps = {
     changeField: (field: string, value: any) => void
     locations?: Location[]
     setNewOrder: (order: Order) => void
+    routeId?: string
 }

@@ -19,6 +19,7 @@ import {
     RadioGroup,
     FormControlLabel,
     Radio,
+    InputAdornment,
 } from '@mui/material'
 import { AddCircle, Add, Delete, InsertDriveFile } from '@mui/icons-material'
 
@@ -40,6 +41,8 @@ import { RootState } from '@/store/store'
 import Confirm from '@/components/common/Confirm/Confirm'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 import { Select } from '@/components/common/Select/Select'
+import currencies from '@/api/currencies.json'
+import { Currencies } from '@/components/settings/components/Currency/Currency'
 
 const AddMaintenanceView = ({
     units,
@@ -101,7 +104,7 @@ const AddMaintenanceView = ({
             )}
             <Dialog
                 open={Boolean(newMaintenanceOpen)}
-                onClose={handleClose}
+                onClose={() => handleClose(true)}
                 aria-labelledby="new-maintenance-dialog-title"
                 maxWidth="sm"
             >
@@ -143,7 +146,12 @@ const AddMaintenanceView = ({
                                                 maintenance.vehicleId || '',
                                             ]}
                                             setItems={(item) => {
-                                                setField('vehicleId', item)
+                                                setField(
+                                                    'vehicleId',
+                                                    typeof item === 'string'
+                                                        ? item
+                                                        : item?.[0]
+                                                )
                                                 setField(
                                                     'isTrailer',
                                                     isTrailer ? 'true' : ''
@@ -329,6 +337,18 @@ const AddMaintenanceView = ({
                                     onChange={(event) =>
                                         setField('cost', event.target.value)
                                     }
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                {
+                                                    (currencies as Currencies)[
+                                                        settings.currency ||
+                                                            'EUR'
+                                                    ].symbol
+                                                }
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                     fullWidth
                                 />
                             </Box>
@@ -483,7 +503,7 @@ const AddMaintenanceView = ({
                             </Box>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={handleClose}>
+                            <Button onClick={() => handleClose(true)}>
                                 <FormattedMessage id="app.Cancel" />
                             </Button>
                             <Button

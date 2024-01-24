@@ -1,19 +1,21 @@
 import { useState, useCallback, useEffect, SyntheticEvent } from 'react'
 import { Maintenance } from '@/components/maintenance/types'
 import { useAddMaintenanceProps } from '../types'
-import { collection, addDoc, updateDoc, doc, onSnapshot } from 'firebase/firestore'
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
-import { auth, firestore } from '@/services/firebase'
+import { auth, firestore, storage } from '@/services/firebase'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import useFiles from '@/hooks/useFiles'
 import { UploadedFile } from '@/components/common/Upload/types'
+import { ref as storageRef, deleteObject } from 'firebase/storage'
 
 const useAddMaintenance = ({ drivers, vehicleId, units, fullButton, isTrailer}: useAddMaintenanceProps) => {
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
     const [newMaintenanceOpen, setNewMaintenanceOpen] = useState<string | false>(false)
+    const { settings } = useSelector((state: RootState) => state.settings)
     const [files, setFiles] = useState<UploadedFile[]>([])
     const allVehicles = useSelector((state: RootState) => state.vehicles)
     const { downloadFile, deleteFile } = useFiles()
@@ -33,6 +35,7 @@ const useAddMaintenance = ({ drivers, vehicleId, units, fullButton, isTrailer}: 
         startMileage: allVehicles.find((v) => v.key === vehicleId)?.mileage || 0,
         notes: '',
         isTrailer: isTrailer || false,
+        currency: settings?.currency || 'EUR',
     })
 
     const reset = () => {
@@ -52,6 +55,7 @@ const useAddMaintenance = ({ drivers, vehicleId, units, fullButton, isTrailer}: 
             startMileage: allVehicles.find((v) => v.key === vehicleId)?.mileage || 0,
             notes: '',
             isTrailer: false,
+            currency: settings?.currency || 'EUR',
         })
     }
 
@@ -115,17 +119,23 @@ const useAddMaintenance = ({ drivers, vehicleId, units, fullButton, isTrailer}: 
         setNewMaintenanceOpen(false)
     }, [])
 
-    const handleSubmit = (event: SyntheticEvent) => {
+    const handleSubmit = useCallback((event: SyntheticEvent) => {
         event.preventDefault()
         if (!maintenance.type || !maintenance.vehicleId) return
         addMaintenance && addMaintenance(maintenance)
-        handleClose()
-    }
+        handleClose(false)
+    },[maintenance])
 
-    const handleClose = () => {
+    const handleClose = useCallback(async (deleteMaintenance: boolean = true) => {
+        if (deleteMaintenance && newMaintenanceOpen) {
+            files.forEach(async (f) => {
+                await deleteObject(storageRef(storage, f.path))
+            })
+            await deleteDoc(doc(firestore, 'maintenances', newMaintenanceOpen))
+        }
         reset()
         handleNewMaintenanceClose && handleNewMaintenanceClose()
-    }
+    }, [newMaintenanceOpen, files])
 
     return {
         setField,

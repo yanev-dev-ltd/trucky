@@ -19,6 +19,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Group } from '@/components/common/Group/Group'
 import { OrderDialog } from '../components/OrderDialog/OrderDialog'
 import { useRouter } from 'next/router'
+import AddOrderWithButton from '../components/AddOrderWithButton/AddOrderWithButton'
 // import AddRouteWithButton from '../components/AddRouteWithButton/AddRouteWithButton'
 
 export const OrdersView: FC<OrdersProps> = ({
@@ -90,9 +91,7 @@ export const OrdersView: FC<OrdersProps> = ({
                     />
                     <Group type="order" />
                 </Box>
-                <Button onClick={() => router.push('/routes')}>
-                    <FormattedMessage id="app.AddOrderFromRoutes" />
-                </Button>
+                <AddOrderWithButton />
             </Box>
             {Array.isArray(orders) && filteredOrders.length > 0 && (
                 <Table

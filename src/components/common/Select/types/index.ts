@@ -4,7 +4,6 @@ import { Trailer } from '@/components/trailers/types'
 import { Vehicle } from '@/components/vehicles/types'
 import { RootState } from '@/store/store'
 import { SxProps, Theme } from '@mui/material'
-import { AnyAction } from 'redux'
 
 export type SelectItem = Client & Driver & Trailer & Vehicle
 

@@ -1,5 +1,5 @@
 import { Location } from '@/components/routes/types'
-import { MutableRefObject } from 'react'
+import React, { MutableRefObject } from 'react'
 import Fuse from 'fuse.js'
 import { Column } from 'react-table'
 import { Vehicle } from '@/components/vehicles/types'
@@ -18,6 +18,8 @@ export type Order = {
     shouldDelete?: boolean
     client?: string
     groups?: string[]
+    secondary?: string | React.ReactNode
+    date?: number
 }
 
 export type useOrdersProps = {

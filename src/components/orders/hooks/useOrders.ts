@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import useOrdersFuse from './useOrders.fuse'
 import { firestore, auth } from '@/services/firebase'
-import { collection, query, where, onSnapshot, doc, getDoc } from 'firebase/firestore'
+import { collection, query, where, onSnapshot, doc, getDoc, orderBy } from 'firebase/firestore'
 import { setOrders } from '../redux'
 import { Vehicle } from '@/components/vehicles/types'
 import { setVehicles } from '@/components/vehicles/redux'
@@ -30,7 +30,8 @@ const useOrders = ({ orderId }: useOrdersProps) => {
         router.query.group && conditions.push(where('groups', 'array-contains', router.query.group))
         const q = query(
             collection(firestore, 'orders'),
-            ...conditions
+            ...conditions,
+            orderBy('date', 'desc')
         )
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const orders: Order[] = []

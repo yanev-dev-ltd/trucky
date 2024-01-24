@@ -9,13 +9,14 @@ export type AddMaintenanceProps = {
     maintenance: Maintenance
     fullButton?: boolean
     handleOpen: () => void
-    handleClose: () => void
+    handleClose: (deleteMaintenance: boolean) => void
     handleSubmit: (event: SyntheticEvent) => void
     newMaintenanceOpen: string | false
     files: UploadedFile[]
     downloadFile: (f: UploadedFile) => void
     deleteFile: (f: UploadedFile, dbpath: string, dbkey: string, files: UploadedFile[]) => void
     isTrailer?: boolean
+    currency: string
 }
 
 export type useAddMaintenanceProps = {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     Dialog,
     Box,
@@ -26,6 +26,9 @@ import Confirm from '@/components/common/Confirm/Confirm'
 import Overflow from '@/components/common/Overflow/Overflow'
 import { Select as SelectComponent } from '@/components/common/Select/Select'
 import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
+import { SelectRoute } from '@/components/routes/components/SelectRoute/SelectRoute'
+import { Location } from '@/components/routes/types'
+import { DesktopDatePicker } from '@mui/x-date-pickers'
 
 const OrderDialogView = ({
     open,
@@ -36,10 +39,14 @@ const OrderDialogView = ({
     isNew,
     deleteOrder,
     changeField,
-    locations,
+    locations: currentLocations,
     setNewOrder,
+    routeId,
 }: OrderDialogProps) => {
     const intl = useIntl()
+    const [locations, setLocations] = useState<Location[]>(
+        currentLocations || []
+    )
     const [showDeleteOrder, setShowDeleteOrder] = useState(false)
     return (
         <Dialog open={(typeof open === 'number' && open >= 0) || open === true}>
@@ -74,6 +81,19 @@ const OrderDialogView = ({
             >
                 <DialogContent sx={sx.header}>
                     <Grid container spacing={2}>
+                        {!routeId && (
+                            <Grid item xs={12}>
+                                <SelectRoute
+                                    setFields={(fields) =>
+                                        changeField('object', fields)
+                                    }
+                                    setLocations={(locations) =>
+                                        setLocations(locations)
+                                    }
+                                    item={order?.routeId || ''}
+                                />
+                            </Grid>
+                        )}
                         <Grid item xs={6}>
                             <FormControl fullWidth>
                                 <InputLabel id="order-startStop-label">
@@ -87,6 +107,9 @@ const OrderDialogView = ({
                                     }
                                     label={
                                         <FormattedMessage id="app.StartStop" />
+                                    }
+                                    disabled={
+                                        !locations || locations.length < 2
                                     }
                                     onChange={(event: SelectChangeEvent) => {
                                         changeField(
@@ -129,6 +152,9 @@ const OrderDialogView = ({
                                     label={
                                         <FormattedMessage id="app.EndStop" />
                                     }
+                                    disabled={
+                                        !locations || locations.length < 2
+                                    }
                                     onChange={(event: SelectChangeEvent) => {
                                         changeField(
                                             'endStop',
@@ -167,6 +193,29 @@ const OrderDialogView = ({
                                     changeField('reference', event.target.value)
                                 }
                                 fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <DesktopDatePicker
+                                label={<FormattedMessage id="app.Date" />}
+                                inputFormat="dd/MM/yyyy"
+                                value={order?.date || null}
+                                onChange={(d: Date | null) =>
+                                    d && changeField('date', d.getTime())
+                                }
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        fullWidth
+                                        inputProps={{
+                                            ...params.inputProps,
+                                            placeholder:
+                                                intl.formatMessage({
+                                                    id: 'app.dd/MM/yyyy',
+                                                }) || '',
+                                        }}
+                                    />
+                                )}
                             />
                         </Grid>
                         <Grid item xs={12}>

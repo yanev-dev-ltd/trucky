@@ -15,6 +15,7 @@ import {
     ListItemButton,
     ListItemIcon,
     ListItemText,
+    InputAdornment,
 } from '@mui/material'
 import { Close, Edit, Delete, InsertDriveFile } from '@mui/icons-material'
 import sx from '../styles/EditMaintenance.sx'
@@ -34,6 +35,8 @@ import { format, formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 import { Select } from '@/components/common/Select/Select'
+import currencies from '@/api/currencies.json'
+import { Currencies } from '@/components/settings/components/Currency/Currency'
 
 const EditMaintenanceView = ({
     maintenance,
@@ -688,10 +691,32 @@ const EditMaintenanceView = ({
                                 <Typography>
                                     <FormattedMessage id="app.Cost" />
                                 </Typography>
-                                <Overflow
-                                    text={maintenance?.cost || '-'}
-                                    variant="h6"
-                                />
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'start',
+                                        gap: 1,
+                                    }}
+                                >
+                                    {maintenance?.cost ? (
+                                        <>
+                                            <Overflow
+                                                text={maintenance?.cost || '-'}
+                                                variant="h6"
+                                            />
+                                            <Typography variant="h6">
+                                                {
+                                                    (currencies as Currencies)[
+                                                        maintenance?.currency ||
+                                                            'EUR'
+                                                    ].symbol
+                                                }
+                                            </Typography>
+                                        </>
+                                    ) : (
+                                        <Typography variant="h6">-</Typography>
+                                    )}
+                                </Box>
                                 <Tooltip
                                     title={<FormattedMessage id="app.Edit" />}
                                 >
@@ -728,6 +753,18 @@ const EditMaintenanceView = ({
                                             cost: event.target.value || '',
                                         })
                                     }
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                {
+                                                    (currencies as Currencies)[
+                                                        maintenance?.currency ||
+                                                            'EUR'
+                                                    ].symbol
+                                                }
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                     fullWidth
                                 />
                                 <Button
