@@ -30,6 +30,7 @@ export const OrdersView: FC<OrdersProps> = ({
     columns,
     vehicles,
     locations,
+    deleteOrder,
 }): JSX.Element => {
     const intl = useIntl()
     const [search, setSearch] = useState<string | boolean>(false)
@@ -120,6 +121,7 @@ export const OrdersView: FC<OrdersProps> = ({
                     open={!!orderId}
                     order={order}
                     locations={locations}
+                    deleteOrder={deleteOrder}
                 />
             )}
         </Box>

@@ -19,7 +19,10 @@ export type Order = {
     client?: string
     groups?: string[]
     secondary?: string | React.ReactNode
-    date?: number
+    dateCompletion?: number
+    dateExecution?: number
+    palletsCount?: number
+    temperatureRegime?: number
 }
 
 export type useOrdersProps = {
@@ -34,4 +37,5 @@ export type OrdersProps = {
     columns: Column<Order>[]
     vehicles: Vehicle[]
     locations: Location[]
+    deleteOrder: () => void
 }

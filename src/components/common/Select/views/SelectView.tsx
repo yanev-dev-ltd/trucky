@@ -137,7 +137,9 @@ const SelectView = ({
                             {...params}
                             label={
                                 <FormattedMessage
-                                    id={`app.${capitalizeFirstLetter(type)}`}
+                                    id={`app.${capitalizeFirstLetter(
+                                        type
+                                    ).slice(0, multiple ? undefined : -1)}`}
                                 />
                             }
                         />

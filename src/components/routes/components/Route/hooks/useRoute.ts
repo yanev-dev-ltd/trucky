@@ -1,36 +1,54 @@
 import { useState, useCallback, useEffect } from 'react'
 import useLocalStorage from '@/hooks/useLocalStorage'
 import { auth, firestore } from '@/services/firebase'
-import { writeBatch, doc, onSnapshot, collection, query, where, getDocs } from 'firebase/firestore'
+import { writeBatch, doc, onSnapshot, collection, query, where, getDocs, getDoc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { Order } from '@/components/orders/types'
+import { TruckTypes } from '@/components/vehicles/types'
+import { RootState } from '@/store/store'
+import { useSelector } from 'react-redux'
 
 
 const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
-    const [route, setRoute] = useLocalStorage('route', {})
+    const { settings } = useSelector((state: RootState) => state.settings)
+    const [route, setRoute] = useLocalStorage('route', { currency: settings.currency || 'EUR' })
     const [distance, setDistance] = useState<number[]>([])
     const [toll, setToll] = useState<number[]>([])
     const [ferry, setFerry] = useState<boolean[]>([])
     const [noRoute, setNoRoute] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const [deleteRouteOpen, setDeleteRouteOpen] = useState<boolean>(false)
+    const [mode, setMode] = useState<'truck' | 'car'>('truck')
     const router = useRouter()
 
     const changeField = useCallback((field: string, value: any) => {
         setRoute({ ...route, [field]: value })
     }, [route])
     const clearRoute = useCallback(() => {
-        setRoute({})
+        setRoute({ currency: settings.currency || 'EUR' })
         setDistance([])
         setToll([])
         setFerry([])
         setNoRoute(false)
         setDeleteRouteOpen(false)
     }, [])
+
+    useEffect(() => {
+        if (!vehicleId && !route.vehicleId) return
+        const getMode = async () => {
+            const vehicleRef = doc(firestore, 'vehicles', vehicleId || route.vehicleId)
+            const vehicleSnapshot = await getDoc(vehicleRef)
+            if (vehicleSnapshot.exists()) {
+                const { type } = vehicleSnapshot.data()
+                setMode(TruckTypes.includes(type) ? 'truck' : 'car')
+            }
+        }
+        getMode()
+    }, [vehicleId, route.vehicleId])
 
     useEffect(() => {
         return () => clearRoute()
@@ -76,7 +94,7 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
             for (const order of orders) {
                 const orderRef = order.key ? doc(firestore, 'orders', order.key) : doc(collection(firestore, 'orders'))
                 const { key: orderKey, shouldDelete, ...orderData } = order
-                batch.set(orderRef, { ...orderData, routeId: routeKey, vehicleId: newVehicleId, userId: auth.currentUser.uid })
+                shouldDelete ? batch.delete(orderRef) : batch.set(orderRef, { ...orderData, routeId: routeKey, vehicleId: newVehicleId, userId: auth.currentUser.uid })
             }
         try {
             await batch.commit()
@@ -136,7 +154,8 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
         saveRoute,
         deleteRoute,
         setDeleteRouteOpen,
-        deleteRouteOpen
+        deleteRouteOpen,
+        mode,
     }
 }
 

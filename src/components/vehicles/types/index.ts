@@ -62,6 +62,18 @@ export enum VehicleTypes {
     VAN = 'Van',
 }
 
+export const TruckTypes = [
+    VehicleTypes.BULLDOZER,
+    VehicleTypes.CEMENT_MIXER,
+    VehicleTypes.CRANE,
+    VehicleTypes.DUMP_TRUCK,
+    VehicleTypes.EXCAVATOR,
+    VehicleTypes.FORKLIFT,
+    VehicleTypes.LIGHT_DUTY_TRUCK,
+    VehicleTypes.ROAD_TRACTOR,
+    VehicleTypes.TRACTOR,
+    VehicleTypes.TRUCK]
+
 export enum FuelTypes {
     GASOLINE = 'Gasoline',
     DIESEL = 'Diesel',

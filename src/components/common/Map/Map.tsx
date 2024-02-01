@@ -8,6 +8,8 @@ const Map = ({
     setToll,
     setFerry,
     setNoRoute,
+    mode,
+    currency,
 }: MapProps) => {
     const { mapRef, loading } = useMap({
         locations,
@@ -15,6 +17,8 @@ const Map = ({
         setToll,
         setFerry,
         setNoRoute,
+        mode,
+        currency,
     })
     return (
         <Box ref={mapRef} sx={{ ...sx, position: 'relative' }}>

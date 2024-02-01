@@ -5,14 +5,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import useOrdersFuse from './useOrders.fuse'
 import { firestore, auth } from '@/services/firebase'
-import { collection, query, where, onSnapshot, doc, getDoc, orderBy } from 'firebase/firestore'
+import { collection, query, where, onSnapshot, doc, getDoc, orderBy, deleteDoc } from 'firebase/firestore'
 import { setOrders } from '../redux'
 import { Vehicle } from '@/components/vehicles/types'
 import { setVehicles } from '@/components/vehicles/redux'
 import useOrdersColumns from './useOrders.columns'
 import { Location } from '@/components/routes/types'
+import { useIntl } from 'react-intl'
+import { useSnackbar } from 'notistack'
 
 const useOrders = ({ orderId }: useOrdersProps) => {
+    const intl = useIntl()
+    const { enqueueSnackbar } = useSnackbar()
     const orders = useSelector((state: RootState) => state.orders)
     const vehicles = useSelector((state: RootState) => state.vehicles)
     const [locations, setLocations] = useState<Location[]>([])
@@ -64,6 +68,7 @@ const useOrders = ({ orderId }: useOrdersProps) => {
         }
         const getLocations = async () => {
             const order = orders.find(o => o.key === orderId)
+            if (!order?.routeId) return
             const docRef = doc(firestore, "routes", order?.routeId || '');
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
@@ -86,7 +91,21 @@ const useOrders = ({ orderId }: useOrdersProps) => {
         return () => document.removeEventListener('keydown', handleKeyPress)
     }, [])
 
-    return { orderId, searchRef, fuse, columns, router, vehicles, orders, locations }
+    const deleteOrder = useCallback(async () => {
+        if (!orderId || orderId === '') return
+        try {
+            await deleteDoc(doc(firestore, 'orders', orderId))
+            enqueueSnackbar(intl.formatMessage({
+                id: 'app.OrderDeleted',
+            }), { variant: 'success' })
+        } catch (e) {
+            enqueueSnackbar(intl.formatMessage({
+                id: 'app.Error.DeletingOrder',
+            }), { variant: 'error', persist: true })
+        }
+    }, [orderId])
+
+    return { orderId, searchRef, fuse, columns, router, vehicles, orders, locations, deleteOrder }
 }
 
 export default useOrders

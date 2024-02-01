@@ -195,13 +195,42 @@ const OrderDialogView = ({
                                 fullWidth
                             />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={6}>
                             <DesktopDatePicker
-                                label={<FormattedMessage id="app.Date" />}
+                                label={
+                                    <FormattedMessage id="app.DateExecution" />
+                                }
                                 inputFormat="dd/MM/yyyy"
-                                value={order?.date || null}
+                                value={order?.dateExecution || null}
                                 onChange={(d: Date | null) =>
-                                    d && changeField('date', d.getTime())
+                                    d &&
+                                    changeField('dateExecution', d.getTime())
+                                }
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        fullWidth
+                                        inputProps={{
+                                            ...params.inputProps,
+                                            placeholder:
+                                                intl.formatMessage({
+                                                    id: 'app.dd/MM/yyyy',
+                                                }) || '',
+                                        }}
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DesktopDatePicker
+                                label={
+                                    <FormattedMessage id="app.DateCompletion" />
+                                }
+                                inputFormat="dd/MM/yyyy"
+                                value={order?.dateCompletion || null}
+                                onChange={(d: Date | null) =>
+                                    d &&
+                                    changeField('dateCompletion', d.getTime())
                                 }
                                 renderInput={(params) => (
                                     <TextField
@@ -254,6 +283,47 @@ const OrderDialogView = ({
                                     endAdornment: (
                                         <InputAdornment position="end">
                                             <FormattedMessage id="app.Kg" />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                type="number"
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label={
+                                    <FormattedMessage id="app.PalletsCount" />
+                                }
+                                variant="outlined"
+                                value={order?.palletsCount || ''}
+                                onChange={(event) =>
+                                    changeField(
+                                        'palletsCount',
+                                        event.target.value
+                                    )
+                                }
+                                type="number"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label={
+                                    <FormattedMessage id="app.TemperatureRegime" />
+                                }
+                                variant="outlined"
+                                value={order?.temperatureRegime || ''}
+                                onChange={(event) =>
+                                    changeField(
+                                        'temperatureRegime',
+                                        event.target.value
+                                    )
+                                }
+                                fullWidth
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <FormattedMessage id="app.Celsius" />
                                         </InputAdornment>
                                     ),
                                 }}

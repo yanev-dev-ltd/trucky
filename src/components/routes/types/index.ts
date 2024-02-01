@@ -25,6 +25,7 @@ export type Route = {
     toll?: number[]
     vehicleId?: string
     groups?: string[]
+    currency?: string
 }
 
 export type Routes = Route[]

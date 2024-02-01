@@ -43,7 +43,7 @@
     "react-redux": "^8.0.5",
     "react-scripts": "^5.0.1",
     "react-table": "^7.8.0",
-    "react-to-print": "^2.14.12",
+    "react-to-print": "^2.14.15",
     "react-virtuoso": "^4.6.0",
     "redux": "^4.2.0",
     "uuid": "^9.0.0"

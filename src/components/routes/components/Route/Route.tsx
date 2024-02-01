@@ -27,7 +27,6 @@ import {
     Delete,
     DirectionsBoat,
     ListAlt,
-    Print,
 } from '@mui/icons-material'
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker'
 import { FormattedMessage, useIntl } from 'react-intl'
@@ -46,6 +45,9 @@ import Confirm from '@/components/common/Confirm/Confirm'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
 import { Select } from '@/components/common/Select/Select'
+import RoutePrint from './components/RoutePrint/RoutePrint'
+import currencies from '@/api/currencies.json'
+import { Currencies } from '@/components/settings/components/Currency/Currency'
 
 const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
     const {
@@ -64,6 +66,7 @@ const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
         deleteRoute,
         setDeleteRouteOpen,
         deleteRouteOpen,
+        mode,
     } = useRoute(routeId, drivers, vehicleId)
     const intl = useIntl()
     const [routeOpen, setRouteOpen] = useState<boolean>(false)
@@ -396,9 +399,16 @@ const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
                                                                                     ].toFixed(
                                                                                         2
                                                                                     )
+                                                                                }{' '}
+                                                                                {
+                                                                                    (
+                                                                                        currencies as Currencies
+                                                                                    )[
+                                                                                        route?.currency ||
+                                                                                            'EUR'
+                                                                                    ]
+                                                                                        .symbol
                                                                                 }
-
-                                                                                €
                                                                             </Typography>
                                                                         )}
                                                                         {ferry[
@@ -747,6 +757,8 @@ const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
                         setToll={setToll}
                         setFerry={setFerry}
                         setNoRoute={setNoRoute}
+                        mode={mode}
+                        currency={route.currency}
                     />
                 </DialogContent>
                 <DialogActions>
@@ -793,9 +805,13 @@ const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
                             submit={<FormattedMessage id="app.Delete" />}
                             cancel={<FormattedMessage id="app.Cancel" />}
                         />
-                        <LoadingButton variant="outlined" startIcon={<Print />}>
-                            <FormattedMessage id="app.Print" />
-                        </LoadingButton>
+                        <RoutePrint
+                            route={route}
+                            distance={distance}
+                            toll={toll}
+                            ferry={ferry}
+                            units={units || 'km'}
+                        />
                     </Box>
                     <Box display="flex" gap={1}>
                         <Button

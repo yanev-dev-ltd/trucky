@@ -5,7 +5,7 @@ import { useSnackbar, SnackbarKey } from 'notistack'
 import { useIntl } from 'react-intl'
 import { useMapProps } from '../types'
 
-const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMapProps) => {
+const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute, mode = 'truck', currency = 'EUR'}: useMapProps) => {
     const mapRef = useRef(null)
     const message = useRef<SnackbarKey>()
     const [reload, setReload] = useState(false)
@@ -28,7 +28,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
         const defaultLayers = platform.createDefaultLayers()
         const hMap = new H.Map(
             mapRef.current,
-            defaultLayers.vector.normal.truck, //TODO: maptypes.vector.normal.map for cars
+            defaultLayers.vector.normal[mode === 'truck' ? 'truck' : 'map'],
             {
                 center: { lat: 50, lng: 5 },
                 zoom: 4,
@@ -73,9 +73,9 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
                             ...locations.filter((l, i) => i !== 0 && i !== (locations && locations.length - 1)).map((p) => `${p.lat},${p.lng}`),
                         ])}),
                         return: 'polyline,travelSummary,tolls,routeLabels',
-                        currency: 'EUR',
+                        currency,
                         'tolls[summaries]': 'total',
-                        transportMode: 'truck', //TODO: change to cars if needed
+                        transportMode: mode,
                     },
                     (result: any) => {
                         const sections = result?.routes[0]?.sections
@@ -151,7 +151,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute}: useMap
             hMap.dispose()
             window.removeEventListener('resize', handleResize)
         }
-    }, [mapRef, reload, locations])
+    }, [mapRef, reload, locations, mode])
 
     return { mapRef, loading }
 }

@@ -29,19 +29,28 @@ const useOrdersColumns = (orders: Order[]) => {
                 width: 36,
             },
             {
-                Header: <FormattedMessage id="app.Date" />,
-                id: 'date',
-                accessor: (o: Order) =>
-                    o.date ? format(new Date(+o.date), 'dd/MM/yyyy') : '-',
-                sortType,
-            },
-            {
                 Header: <FormattedMessage id="app.Reference" />,
                 id: 'reference',
                 accessor: (o: Order) => (
                     <Overflow text={`${o?.reference || '-'}`} />
                 ),
                 sortType,
+            },
+            {
+                Header: <FormattedMessage id="app.DateExecution" />,
+                id: 'dateExecution',
+                accessor: (o: Order) =>
+                    o.dateExecution
+                        ? format(new Date(+o.dateExecution), 'dd/MM/yyyy')
+                        : '-',
+            },
+            {
+                Header: <FormattedMessage id="app.DateCompletion" />,
+                id: 'dateCompletion',
+                accessor: (o: Order) =>
+                    o.dateCompletion
+                        ? format(new Date(+o.dateCompletion), 'dd/MM/yyyy')
+                        : '-',
             },
             {
                 Header: <FormattedMessage id="app.Vehicle" />,
@@ -59,6 +68,7 @@ const useOrdersColumns = (orders: Order[]) => {
                 accessor: (o: Order) => (
                     <Overflow text={`${o?.startStop?.address || '-'}`} />
                 ),
+                disableSortBy: true,
             },
             {
                 Header: <FormattedMessage id="app.EndStop" />,
@@ -66,6 +76,7 @@ const useOrdersColumns = (orders: Order[]) => {
                 accessor: (o: Order) => (
                     <Overflow text={`${o?.endStop?.address || '-'}`} />
                 ),
+                disableSortBy: true,
             },
             {
                 Header: <FormattedMessage id="app.Details" />,

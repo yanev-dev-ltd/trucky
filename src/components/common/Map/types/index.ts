@@ -11,6 +11,8 @@ export type useMapProps = {
     setFerry?: (ferry: boolean[]) => void
     setNoRoute?: (noRoute: boolean) => void
     setLoading?: (loading: boolean) => void
+    mode: 'truck' | 'car'
+    currency: string
 }
 
 export type MapProps = {
@@ -21,4 +23,6 @@ export type MapProps = {
     setFerry?: (ferry: boolean[]) => void
     setNoRoute?: (noRoute: boolean) => void
     setLoading?: (loading: boolean) => void
+    mode: 'truck' | 'car'
+    currency: string
 }
