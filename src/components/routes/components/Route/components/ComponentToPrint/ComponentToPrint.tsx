@@ -25,6 +25,7 @@ import {
 import { Order } from '@/components/orders/types'
 import currencies from '@/api/currencies.json'
 import { Currencies } from '@/components/settings/components/Currency/Currency'
+import { TrailerTypes } from '@/components/trailers/types'
 
 const OrderPrint = ({ order }: { order: Order }) => {
     const allGroups = useSelector((state: RootState) => state.groups)
@@ -144,6 +145,8 @@ const ComponentToPrint = forwardRef(
         const allVehicles = useSelector((state: RootState) => state.vehicles)
         const allDrivers = useSelector((state: RootState) => state.drivers)
         const allGroups = useSelector((state: RootState) => state.groups)
+        const allTrailers = useSelector((state: RootState) => state.trailers)
+        const trailerTypes = Object.values(TrailerTypes)
         return (
             <Box component="div" ref={ref} sx={sx.print}>
                 <Grid container spacing={2}>
@@ -193,6 +196,31 @@ const ComponentToPrint = forwardRef(
                     </Grid>
                     <Grid item xs={6}>
                         <Typography sx={sx.label}>
+                            <FormattedMessage id="app.Trailer" />
+                        </Typography>
+                        <Box>
+                            {allTrailers.find(
+                                (t) => t.key === props.route.trailerId
+                            )?.name || '-'}
+                            <Box>
+                                <Typography variant="caption">
+                                    <FormattedMessage
+                                        id={`app.TrailerType.${trailerTypes.find(
+                                            (t) =>
+                                                t ===
+                                                allTrailers.find(
+                                                    (t) =>
+                                                        t.key ===
+                                                        props.route.trailerId
+                                                )?.type
+                                        )}`}
+                                    />
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Typography sx={sx.label}>
                             <FormattedMessage id="app.FuelConsumption" />
                         </Typography>
                         <Box>{props.route.fuelConsumption || '-'}</Box>
@@ -210,7 +238,7 @@ const ComponentToPrint = forwardRef(
                                 .join(', ') || '-'}
                         </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
                         <Typography sx={sx.label}>
                             <FormattedMessage id="app.Groups" />
                         </Typography>

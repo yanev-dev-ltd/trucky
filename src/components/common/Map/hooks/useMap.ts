@@ -4,8 +4,9 @@ import svgMarker from '@/constants/marker'
 import { useSnackbar, SnackbarKey } from 'notistack'
 import { useIntl } from 'react-intl'
 import { useMapProps } from '../types'
+import { KM_to_MILES } from '@/constants/units'
 
-const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute, mode = 'truck', currency = 'EUR'}: useMapProps) => {
+const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute, mode = 'truck', currency = 'EUR', units = 'km'}: useMapProps) => {
     const mapRef = useRef(null)
     const message = useRef<SnackbarKey>()
     const [reload, setReload] = useState(false)
@@ -99,10 +100,11 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute, mode = 
                                 )
                             )
                             if (section.departure.place.originalLocation) {
-                                distance.push(Number(section?.travelSummary?.length))
+                                distance.push(Number(units === 'm' ? Math.round(section?.travelSummary?.length * KM_to_MILES) : section?.travelSummary?.length))
                                 toll.push(Number(section?.travelSummary?.tolls?.total?.value))
+                                ferry.push(false)
                             } else {
-                                distance[distance.length - 1] += Number(section?.travelSummary?.length)
+                                distance[distance.length - 1] += Number(units === 'm' ? Math.round(section?.travelSummary?.length * KM_to_MILES) : section?.travelSummary?.length)
                                 toll[toll.length - 1] += Number(section?.travelSummary?.tolls?.total?.value)
                             }
                             

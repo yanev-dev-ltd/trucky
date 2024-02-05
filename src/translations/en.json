@@ -415,6 +415,8 @@
     "app.LogIn": "Log In",
     "app.Logout": "Logout",
     "app.Maintenance": "Maintenance",
+    "app.Maintenance.Completed": "Maintenance Completed",
+    "app.Maintenance.NoAlarm": "No Alarm",
     "app.Maintenances": "Maintenance",
     "app.Maintenance.AlarmDate": "Alarm set for date.",
     "app.Maintenance.AlarmDateAndMileage": "Alarm set for date and mileage.",

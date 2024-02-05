@@ -18,15 +18,32 @@ import {
   // CollectionReference,
   // DocumentSnapshot,
 } from "firebase-admin/firestore";
-// import {getAuth} from "firebase-admin/auth";
+import {getAuth} from "firebase-admin/auth";
 import {initializeApp} from "firebase-admin/app";
 import {setGlobalOptions} from "firebase-functions/v2";
 import {Storage} from "@google-cloud/storage";
+import {email} from "./email";
+import {en} from "./locales/en";
+import {bg} from "./locales/bg";
 
 setGlobalOptions({region: "europe-west1", maxInstances: 10});
 
+export const kmToMiles = 0.621371192;
+export const milesToKm = 1.609344;
+const baseUrl = "http://localhost:3001/";
+
+const getLocale = (locale: string) => {
+  switch (locale) {
+    case "bg":
+      return bg;
+    default:
+      return en;
+  }
+};
+
 const app = initializeApp();
 const firestore = getFirestore(app);
+const auth = getAuth(app);
 // const auth = getAuth(app);
 firestore.settings({ignoreUndefinedProperties: true});
 
@@ -109,6 +126,10 @@ export const deleteUser = functions.auth.user().onDelete(async (user) => {
     const routes = await firestore.collection("routes").where("userId", "==", user.uid).get();
     routes.forEach(async (route) => {
       await route.ref.delete();
+    });
+    const notifications = await firestore.collection("notifications").where("userId", "==", user.uid).get();
+    notifications.forEach(async (notification) => {
+      await notification.ref.delete();
     });
     return firestore.collection("customers").doc(user.uid).delete();
   }
@@ -323,4 +344,226 @@ export const stripeWebhook = onRequest(
       }
       res.json({received: true});
       return;
+    });
+
+// update vehicle and trailer mileage on route change
+export const updateRoute = onDocumentWritten(
+    "routes/{routeId}",
+    async (event) => {
+      const data = event?.data?.after.data();
+      const prevData = event?.data?.before.data();
+      const vehicleId = data?.vehicleId || prevData?.vehicleId;
+      const vehicleSnapshot = await firestore.collection("vehicles").doc(vehicleId).get();
+      if (!vehicleSnapshot.exists) return;
+      const vehicle = vehicleSnapshot.data();
+      if (!vehicle || vehicle.units === "h") return;
+      let multiplier = 1;
+      const units = data?.units || prevData?.units;
+      switch (vehicle.units) {
+        case "km":
+          multiplier = (units === "km") ? 1 : milesToKm;
+          break;
+        case "mi":
+          multiplier = (units === "mi") ? 1 : kmToMiles;
+          break;
+        default:
+          break;
+      }
+      if (!event?.data?.before.exists && event?.data?.after.exists) {
+        if (data?.trailerId) {
+          const trailerSnapshot = await firestore.collection("trailers").doc(data?.trailerId).get();
+          if (trailerSnapshot.exists) {
+            const trailer = trailerSnapshot.data();
+            let trailerMultiplier = 1;
+            switch (trailer?.units) {
+              case "km":
+                trailerMultiplier = (units === "km") ? 1 : milesToKm;
+                break;
+              case "mi":
+                trailerMultiplier = (units === "mi") ? 1 : kmToMiles;
+                break;
+              default:
+                break;
+            }
+            await firestore.collection("trailers").doc(data?.trailerId).set({
+              mileage: Math.round((trailer?.mileage || 0) + (data?.distance.reduce((a: number, b: number) => a + b, 0)/1000 * trailerMultiplier)),
+            }, {merge: true});
+          }
+        }
+        await firestore.collection("vehicles").doc(vehicleId).set({
+          mileage: Math.round((vehicle.mileage || 0) + (data?.distance.reduce((a: number, b: number) => a + b, 0)/1000 * multiplier)),
+        }, {merge: true});
+      }
+      if (event?.data?.before.exists && event?.data?.after.exists) {
+        if (data?.trailerId) {
+          const trailerSnapshot = await firestore.collection("trailers").doc(data?.trailerId).get();
+          if (trailerSnapshot.exists) {
+            const trailer = trailerSnapshot.data();
+            let trailerMultiplier = 1;
+            switch (trailer?.units) {
+              case "km":
+                trailerMultiplier = (units === "km") ? 1 : milesToKm;
+                break;
+              case "mi":
+                trailerMultiplier = (units === "mi") ? 1 : kmToMiles;
+                break;
+              default:
+                break;
+            }
+            await firestore.collection("trailers").doc(data?.trailerId).set({
+              mileage: Math.round((trailer?.mileage || 0) + (data?.distance.reduce((a: number, b: number) => a + b, 0)/1000 * trailerMultiplier)),
+            }, {merge: true});
+          }
+        }
+        if (prevData?.trailerId) {
+          const prevTrailerSnapshot = await firestore.collection("trailers").doc(prevData?.trailerId).get();
+          if (prevTrailerSnapshot.exists) {
+            const prevTrailer = prevTrailerSnapshot.data();
+            let trailerMultiplier = 1;
+            switch (prevTrailer?.units) {
+              case "km":
+                trailerMultiplier = (units === "km") ? 1 : milesToKm;
+                break;
+              case "mi":
+                trailerMultiplier = (units === "mi") ? 1 : kmToMiles;
+                break;
+              default:
+                break;
+            }
+            const mileage = prevTrailer?.mileage ?
+            prevTrailer.mileage - Math.round(prevData?.distance.reduce((a: number, b: number) => a + b, 0)/1000 * trailerMultiplier) :
+            0;
+            await firestore.collection("trailers").doc(prevData?.trailerId).set({
+              mileage,
+            }, {merge: true});
+          }
+        }
+        await firestore.collection("vehicles").doc(vehicleId).set({
+          mileage: (vehicle.mileage || 0) + (
+            Math.round(
+                (data?.distance.reduce((a: number, b: number) => a + b, 0) -
+                prevData?.distance.reduce((a: number, b: number) => a + b, 0))/1000 *
+            multiplier)
+          ),
+        }, {merge: true});
+      }
+      if (event?.data?.before.exists && !event?.data?.after.exists) {
+        if (prevData?.trailerId) {
+          const prevTrailerSnapshot = await firestore.collection("trailers").doc(prevData?.trailerId).get();
+          if (prevTrailerSnapshot.exists) {
+            const prevTrailer = prevTrailerSnapshot.data();
+            let trailerMultiplier = 1;
+            switch (prevTrailer?.units) {
+              case "km":
+                trailerMultiplier = (units === "km") ? 1 : milesToKm;
+                break;
+              case "mi":
+                trailerMultiplier = (units === "mi") ? 1 : kmToMiles;
+                break;
+              default:
+                break;
+            }
+            const mileage = prevTrailer?.mileage ?
+            prevTrailer.mileage - Math.round(prevData?.distance.reduce((a: number, b: number) => a + b, 0)/1000 * trailerMultiplier) :
+            0;
+            await firestore.collection("trailers").doc(prevData?.trailerId).set({
+              mileage,
+            }, {merge: true});
+          }
+        }
+        const mileage = vehicle.mileage ?
+        vehicle.mileage - Math.round(prevData?.distance.reduce((a: number, b: number) => a + b, 0)/1000 * multiplier) :
+        0;
+        await firestore.collection("vehicles").doc(vehicleId).set({
+          mileage: mileage > 0 ? mileage : 0,
+        }, {merge: true});
+      }
+    });
+
+// check if vehicle maintenance is due
+export const updateVehicle = onDocumentWritten(
+    "vehicles/{vehicleId}",
+    async (event) => {
+      const data = event?.data?.after.data();
+      const prevData = event?.data?.before.data();
+      const vehicleId = event.params.vehicleId;
+      if (!data || data?.mileage <= prevData?.mileage) return;
+      const maintenancesColl = firestore.collection("maintenances");
+      const q1: Query<DocumentData> = maintenancesColl.where("vehicleId", "==", vehicleId).where("status", "==", "active");
+      const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
+      querySnapshot.forEach(async (maintenance) => {
+        const maintenanceData = maintenance.data();
+        if (data.mileage >= maintenanceData?.mileage) {
+          const settings = await firestore.collection("settings").doc(maintenanceData.userId).get();
+          const locale = getLocale(settings.get("locale"));
+          await maintenance.ref.set({
+            status: "completed",
+            completed: new Date().getTime(),
+          }, {merge: true});
+          const emailTo = (await auth.getUser(maintenanceData?.userId)).email;
+          await firestore.collection("notifications").add({
+            userId: maintenanceData?.userId,
+            to: emailTo,
+            message: {
+              subject: maintenanceData?.type,
+              html: email({
+                title: maintenanceData?.type,
+                message: locale.maintenanceDescription,
+                actionLink: `${baseUrl}vehicles/${maintenanceData.vehicleId}`,
+                actionText: locale["checkVehicle"],
+                locale: settings.get("locale"),
+              }),
+              text: maintenanceData?.type,
+              description: locale.maintenanceDescription,
+            },
+            status: "unread",
+            url: `${baseUrl}vehicles/${maintenanceData.vehicleId}`,
+            date: new Date().getTime(),
+          });
+        }
+      });
+    });
+
+// check if vehicle maintenance is due
+export const updateTrailer = onDocumentWritten(
+    "trailers/{trailerId}",
+    async (event) => {
+      const data = event?.data?.after.data();
+      const prevData = event?.data?.before.data();
+      const trailerId = event.params.trailerId;
+      if (!data || data?.mileage <= prevData?.mileage) return;
+      const maintenancesColl = firestore.collection("maintenances");
+      const q1: Query<DocumentData> = maintenancesColl.where("vehicleId", "==", trailerId).where("status", "==", "active");
+      const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
+      querySnapshot.forEach(async (maintenance) => {
+        const maintenanceData = maintenance.data();
+        if (data.mileage >= maintenanceData?.mileage) {
+          const settings = await firestore.collection("settings").doc(maintenanceData.userId).get();
+          const locale = getLocale(settings.get("locale"));
+          await maintenance.ref.set({
+            status: "completed",
+            completed: new Date().getTime(),
+          }, {merge: true});
+          const emailTo = (await auth.getUser(maintenanceData?.userId)).email;
+          await firestore.collection("notifications").add({
+            userId: maintenanceData?.userId,
+            to: emailTo,
+            message: {
+              subject: maintenanceData?.type,
+              html: email({
+                title: maintenanceData?.type,
+                message: locale.maintenanceDescription,
+                actionLink: `${baseUrl}trailers/${maintenanceData.vehicleId}`,
+                actionText: locale["checkTrailer"],
+                locale: settings.get("locale"),
+              }),
+              text: maintenanceData?.type,
+              description: locale.maintenanceDescription,
+            },
+            status: "unread",
+            url: `${baseUrl}trailers/${maintenanceData.vehicleId}`,
+            date: new Date().getTime(),
+          });
+        }
+      });
     });

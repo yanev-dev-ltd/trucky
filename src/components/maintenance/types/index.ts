@@ -23,6 +23,7 @@ export type Maintenance = {
     isTrailer?: boolean
     new?: boolean
     currency?: string
+    status?: string
 }
 
 export type Maintenances = Maintenance[]

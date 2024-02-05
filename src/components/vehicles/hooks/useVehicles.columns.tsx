@@ -118,8 +118,8 @@ const useVehiclesColumns = (vehicles: Vehicles) => {
                 Header: <FormattedMessage id="app.Trailer" />,
                 id: 'trailer',
                 accessor: (v: Vehicle) => {
-                    const t = allTrailers.find((t) => t.key === v.trailer)
-                    return v.trailer ? (
+                    const t = allTrailers.find((t) => t.key === v.trailerId)
+                    return v.trailerId ? (
                         <Box>
                             <Overflow text={t?.name || '-'} />
                             <Overflow

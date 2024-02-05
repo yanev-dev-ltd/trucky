@@ -24,5 +24,5 @@ export type NewVehicle = {
     fuel?: FuelTypes
     units?: string
     userId?: string
-    trailer?: string | null
+    trailerId?: string | null
 }

@@ -9,7 +9,7 @@ import {
     Paper,
 } from '@mui/material'
 
-import { Add, Search } from '@mui/icons-material'
+import { Search } from '@mui/icons-material'
 
 import Route from '@/components/routes/components/Route/Route'
 import sx from '../styles/Routes.sx'

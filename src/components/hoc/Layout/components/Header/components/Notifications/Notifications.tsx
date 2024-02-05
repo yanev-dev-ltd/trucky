@@ -25,102 +25,17 @@ import sx from './styles/Notifications.sx'
 import useNotifications from './hooks/useNotifications'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import { NotificationItem } from './types'
-
-const unreadMsgs = [
-    {
-        id: 1,
-        title: 'Title',
-        message: 'Message',
-        timeCreated: 1670602365240,
-        url: '/invoices',
-    },
-    {
-        id: 2,
-        title: 'Title 2',
-        message: 'Message 2',
-        timeCreated: 1670501365240,
-        url: '/invoices',
-    },
-    {
-        id: 3,
-        title: 'Title 3',
-        message: 'Message 3',
-        timeCreated: 1633005321168,
-        url: '/invoices',
-    },
-]
-
-const readMsgs = [
-    {
-        id: 1,
-        title: 'Title',
-        message: 'Message',
-        timeCreated: 1586774169772,
-        url: '/invoices',
-    },
-    {
-        id: 2,
-        title: 'Title 2',
-        message: 'Message 2',
-        timeCreated: 1586774169772,
-        url: '/invoices',
-    },
-    {
-        id: 3,
-        title: 'Title 3',
-        message: 'Message 3',
-        timeCreated: 1586774169772,
-        url: '/invoices',
-    },
-    {
-        id: 4,
-        title: 'Title',
-        message: 'Message',
-        timeCreated: 1586774169772,
-        url: '/invoices',
-    },
-    {
-        id: 5,
-        title: 'Title 2',
-        message: 'Message 2',
-        timeCreated: 1586774169772,
-        url: '/invoices',
-    },
-    {
-        id: 6,
-        title: 'Title 3',
-        message: 'Message 3',
-        timeCreated: 1586774169772,
-        url: '/invoices',
-    },
-    {
-        id: 7,
-        title: 'Title',
-        message: 'Message',
-        timeCreated: 1586774169772,
-        url: '/invoices',
-    },
-    {
-        id: 8,
-        title: 'Title 2',
-        message: 'Message 2',
-        timeCreated: 1586774169772,
-        url: '/invoices',
-    },
-    {
-        id: 9,
-        title: 'Title 3',
-        message: 'Message 3',
-        timeCreated: 1586774169772,
-        url: '/invoices',
-    },
-]
-
-const hasNotifications = true
+import { Notification } from './types'
 
 const Notifications = () => {
-    const { anchorEl, handleClick, handleClose } = useNotifications()
+    const {
+        anchorEl,
+        handleClick,
+        handleClose,
+        notifications,
+        hasNotifications,
+        handleItemClick,
+    } = useNotifications()
     const { settings } = useSelector((state: RootState) => state.settings)
     const locale = useMemo(() => {
         switch (settings?.locale) {
@@ -131,33 +46,51 @@ const Notifications = () => {
         }
     }, [settings?.locale])
 
-    const renderItem = (item: NotificationItem) => {
-        const { id, title, message, timeCreated, url } = item
+    const notificationsCount = useMemo(() => {
+        const count = notifications.filter((n) => n.status === 'unread').length
+        return count > 9 ? '9+' : count
+    }, [notifications])
+
+    const renderItem = (item: Notification) => {
+        const { key, message, date, url, status } = item
 
         return (
-            <ListItem key={id} sx={sx.item}>
+            <ListItem key={key} sx={status === 'unread' ? sx.itemNew : sx.item}>
                 <Link
-                    href={url}
+                    href={url || ''}
                     style={{ textDecoration: 'none', width: '100%' }}
+                    onClick={() => handleItemClick(key, url)}
                 >
                     <Box sx={sx.link}>
                         <ListItemAvatar sx={sx.avatar}>
                             <Box sx={sx.avatar}>
-                                <Box sx={sx.dot} />
-                                <Avatar>
+                                {(status === 'unread' || status === 'read') && (
+                                    <Box sx={sx.dot} />
+                                )}
+                                <Avatar
+                                    sx={status === 'unread' ? sx.light : null}
+                                >
                                     <ReceiptLong />
                                 </Avatar>
-                                <Typography sx={sx.time}>
-                                    {formatRelative(
-                                        new Date(timeCreated),
-                                        new Date(),
-                                        { locale }
-                                    )}
-                                </Typography>
                             </Box>
                         </ListItemAvatar>
                         <Box style={{ flex: 1 }}>
-                            <ListItemText primary={title} secondary={message} />
+                            <ListItemText
+                                primary={message?.subject}
+                                secondary={
+                                    <>
+                                        {message?.description}
+                                        <Box component="span" sx={sx.time}>
+                                            {date &&
+                                                formatRelative(
+                                                    new Date(date),
+                                                    new Date(),
+                                                    { locale }
+                                                )}
+                                        </Box>
+                                    </>
+                                }
+                            />
                         </Box>
                     </Box>
                 </Link>
@@ -165,8 +98,6 @@ const Notifications = () => {
         )
     }
 
-    const unread = unreadMsgs.map(renderItem)
-    const read = readMsgs.map(renderItem)
     return (
         <>
             <Head>
@@ -347,7 +278,11 @@ const Notifications = () => {
                     ) : (
                         <NotificationsNone />
                     )}
-                    <Typography sx={sx.notificationsCount}>9+</Typography>
+                    {notificationsCount ? (
+                        <Typography sx={sx.notificationsCount}>
+                            {notificationsCount}
+                        </Typography>
+                    ) : null}
                 </IconButton>
             </Tooltip>
             <Popover
@@ -365,31 +300,8 @@ const Notifications = () => {
                 }}
             >
                 <List sx={sx.notificationsList}>
-                    {unread.length > 0 && (
-                        <>
-                            <ListItem sx={sx.gray}>
-                                <ListItemText
-                                    secondary={
-                                        <FormattedMessage id="app.Recent" />
-                                    }
-                                />
-                            </ListItem>
-                            {unread}
-                        </>
-                    )}
-                    {read.length > 0 && (
-                        <>
-                            <ListItem sx={sx.gray}>
-                                <ListItemText
-                                    secondary={
-                                        <FormattedMessage id="app.Older" />
-                                    }
-                                />
-                            </ListItem>
-                            {read}
-                        </>
-                    )}
-                    {!unread.length && !read.length && (
+                    {notifications.map(renderItem)}
+                    {!notifications.length && (
                         <Box textAlign="center" m={1}>
                             <Typography>
                                 <FormattedMessage id="app.NoNotificationsYet" />

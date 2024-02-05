@@ -416,6 +416,8 @@
     "app.LogIn": "Вход",
     "app.Logout": "Изход",
     "app.Maintenance": "Поддръжка",
+    "app.Maintenance.Completed": "Поддръжката е завършена",
+    "app.Maintenance.NoAlarm": "Без аларма",
     "app.Maintenances": "Поддръжки",
     "app.Maintenance.AlarmDate": "Аларма за дата.",
     "app.Maintenance.AlarmDateAndMileage": "Аларма за дата и километраж.",

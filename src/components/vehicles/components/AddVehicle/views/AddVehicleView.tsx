@@ -132,14 +132,14 @@ const AddVehicleView = ({
                         <Box sx={sx.row}>
                             <SelectComponent
                                 items={
-                                    typeof newVehicle?.trailer === 'string'
-                                        ? [newVehicle?.trailer]
+                                    typeof newVehicle?.trailerId === 'string'
+                                        ? [newVehicle?.trailerId]
                                         : []
                                 }
                                 setItems={(trailer) =>
                                     typeof trailer === 'string'
-                                        ? changeField('trailer', trailer)
-                                        : changeField('trailer', trailer[0])
+                                        ? changeField('trailerId', trailer)
+                                        : changeField('trailerId', trailer[0])
                                 }
                                 type="trailers"
                             />

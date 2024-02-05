@@ -16,9 +16,9 @@ const useVehiclesFuse = (vehicles: Vehicles) => {
             {
                 name: 'trailer',
                 getFn: (v: Vehicle) =>
-                    v.trailer
-                        ? `${allTrailers?.find((trailer) => trailer.key === v.trailer)?.name} ${allTrailers?.find((trailer) => trailer.key === v.trailer)?.type && intl.formatMessage({
-                            id: `app.TrailerType.${allTrailers?.find((trailer) => trailer.key === v.trailer)?.type}`,
+                    v.trailerId
+                        ? `${allTrailers?.find((trailer) => trailer.key === v.trailerId)?.name} ${allTrailers?.find((trailer) => trailer.key === v.trailerId)?.type && intl.formatMessage({
+                            id: `app.TrailerType.${allTrailers?.find((trailer) => trailer.key === v.trailerId)?.type}`,
                         })}` || '-'
                         : '-',
             },

@@ -15,7 +15,7 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
     const { settings } = useSelector((state: RootState) => state.settings)
-    const [route, setRoute] = useLocalStorage('route', { currency: settings.currency || 'EUR' })
+    const [route, setRoute] = useLocalStorage('route', { currency: settings.currency || 'EUR', units: settings.units || 'km' })
     const [distance, setDistance] = useState<number[]>([])
     const [toll, setToll] = useState<number[]>([])
     const [ferry, setFerry] = useState<boolean[]>([])
@@ -29,7 +29,7 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
         setRoute({ ...route, [field]: value })
     }, [route])
     const clearRoute = useCallback(() => {
-        setRoute({ currency: settings.currency || 'EUR' })
+        setRoute({ currency: settings.currency || 'EUR', units: settings.units || 'km' })
         setDistance([])
         setToll([])
         setFerry([])
@@ -43,12 +43,13 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
             const vehicleRef = doc(firestore, 'vehicles', vehicleId || route.vehicleId)
             const vehicleSnapshot = await getDoc(vehicleRef)
             if (vehicleSnapshot.exists()) {
-                const { type } = vehicleSnapshot.data()
+                const { type, trailerId } = vehicleSnapshot.data()
                 setMode(TruckTypes.includes(type) ? 'truck' : 'car')
+                !routeId && !route.trailerId && changeField('trailerId', trailerId)
             }
         }
         getMode()
-    }, [vehicleId, route.vehicleId])
+    }, [vehicleId, route, changeField, routeId])
 
     useEffect(() => {
         return () => clearRoute()
@@ -109,7 +110,7 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
             clearRoute()
             vehicleId ? router.push(`/vehicles/${vehicleId}`) : router.push('/routes')
         }
-    }, [route, auth.currentUser?.uid, vehicleId, routeId])
+    }, [route, auth.currentUser?.uid, vehicleId, routeId, distance, toll, ferry])
 
     const deleteRoute = useCallback(async () => {
         if (!auth.currentUser?.uid) return

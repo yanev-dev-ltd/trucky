@@ -3,9 +3,12 @@ import { Add } from '@mui/icons-material'
 import { Button, Tooltip } from '@mui/material'
 import { FormattedMessage } from 'react-intl'
 import Route from '../Route/Route'
+import { RootState } from '@/store/store'
+import { useSelector } from 'react-redux'
 
 const AddRouteWithButton = () => {
     const [open, setOpen] = useState(false)
+    const { settings } = useSelector((state: RootState) => state.settings)
     useEffect(() => {
         function handleKeyPress(event: KeyboardEvent) {
             if (event.key === 'n' && event.ctrlKey) {
@@ -29,7 +32,9 @@ const AddRouteWithButton = () => {
                     <FormattedMessage id="app.AddRoute" />
                 </Button>
             </Tooltip>
-            {open && <Route onClose={() => setOpen(false)} />}
+            {open && (
+                <Route onClose={() => setOpen(false)} units={settings.units} />
+            )}
         </>
     )
 }

@@ -13,6 +13,7 @@ export type useMapProps = {
     setLoading?: (loading: boolean) => void
     mode: 'truck' | 'car'
     currency: string
+    units: string
 }
 
 export type MapProps = {
@@ -25,4 +26,5 @@ export type MapProps = {
     setLoading?: (loading: boolean) => void
     mode: 'truck' | 'car'
     currency: string
+    units: string
 }

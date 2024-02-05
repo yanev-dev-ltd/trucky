@@ -2,9 +2,22 @@ import { useMemo } from 'react'
 import { Column } from 'react-table'
 import { Maintenance } from '../types'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Tooltip, IconButton, Box, Typography } from '@mui/material'
+import {
+    Tooltip,
+    IconButton,
+    Box,
+    Typography,
+    List,
+    ListItemText,
+    Divider,
+} from '@mui/material'
 import Overflow from '@/components/common/Overflow/Overflow'
-import { FormatListBulleted } from '@mui/icons-material'
+import {
+    Check,
+    FormatListBulleted,
+    NotificationsActive,
+    NotificationsNone,
+} from '@mui/icons-material'
 import Link from 'next/link'
 import { Vehicle } from '@/components/vehicles/types'
 import { format } from 'date-fns'
@@ -25,6 +38,59 @@ const useMaintenanceColumns = (
 
     const columns = useMemo<Column<Maintenance>[]>(
         () => [
+            {
+                Header: <FormattedMessage id="app.Status" />,
+                id: 'status',
+                accessor: (m: Maintenance) => (
+                    <Tooltip
+                        title={
+                            (m.status !== 'completed' && m.reminderMileage) ||
+                            (m.reminderDate &&
+                                m.reminderDate > new Date().getTime()) ? (
+                                <List disablePadding>
+                                    {m.status != 'completed' &&
+                                        m.reminderMileage && (
+                                            <ListItemText
+                                                secondary={
+                                                    <FormattedMessage id="app.Maintenance.AlarmMileage" />
+                                                }
+                                            />
+                                        )}
+                                    {m.status != 'completed' &&
+                                        m.reminderDate &&
+                                        m.reminderDate >
+                                            new Date().getTime() && (
+                                            <Divider component="li" />
+                                        )}
+                                    {m.reminderDate &&
+                                        m.reminderDate >
+                                            new Date().getTime() && (
+                                            <ListItemText
+                                                secondary={
+                                                    <FormattedMessage id="app.Maintenance.AlarmDate" />
+                                                }
+                                            />
+                                        )}
+                                </List>
+                            ) : m.status === 'completed' ? (
+                                <FormattedMessage id="app.Maintenance.Completed" />
+                            ) : (
+                                <FormattedMessage id="app.Maintenance.NoAlarm" />
+                            )
+                        }
+                    >
+                        {(m.status !== 'completed' && m.reminderMileage) ||
+                        (m.reminderDate &&
+                            m.reminderDate > new Date().getTime()) ? (
+                            <NotificationsActive />
+                        ) : m.status === 'completed' ? (
+                            <Check />
+                        ) : (
+                            <NotificationsNone />
+                        )}
+                    </Tooltip>
+                ),
+            },
             {
                 Header: (
                     <Box component={'span'} sx={sx.multiLineHeader}>

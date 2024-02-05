@@ -26,6 +26,8 @@ export type Route = {
     vehicleId?: string
     groups?: string[]
     currency?: string
+    units?: string
+    trailerId?: string
 }
 
 export type Routes = Route[]

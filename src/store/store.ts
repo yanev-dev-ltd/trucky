@@ -12,6 +12,7 @@ import stripeReducer from '../components/settings/components/Payment/redux'
 import receiptsReducer from '../components/settings/components/Invoices/redux'
 import profileReducer from '../components/settings/components/Profile/redux'
 import groupsReducer from '../components/common/Group/redux'
+import notificationsReducer from '../components/hoc/Layout/components/Header/components/Notifications/redux'
 
 const reducer = {
     auth: authReducer,
@@ -27,6 +28,7 @@ const reducer = {
     groups: groupsReducer,
     trailers: trailersReducer,
     orders: ordersReducer,
+    notifications: notificationsReducer,
 }
 
 const store = configureStore({

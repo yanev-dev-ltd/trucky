@@ -370,9 +370,35 @@ const EditMaintenanceView = ({
                                     <FormattedMessage id="app.ReminderMileage" />
                                 </Typography>
                                 <Overflow
-                                    text={maintenance?.reminderMileage || '-'}
+                                    text={
+                                        (maintenance?.reminderMileage || '-') +
+                                        ` ${intl.formatMessage({
+                                            id:
+                                                maintenance.units === 'km'
+                                                    ? 'app.Km'
+                                                    : maintenance.units === 'm'
+                                                    ? 'app.Mi'
+                                                    : 'app.Hrs',
+                                        })}`
+                                    }
                                     variant="h6"
                                 />
+                                <Typography variant="caption">
+                                    <FormattedMessage id="app.StartMileage" />:{' '}
+                                    {maintenance?.startMileage
+                                        ? maintenance.startMileage +
+                                          ' ' +
+                                          intl.formatMessage({
+                                              id:
+                                                  maintenance.units === 'km'
+                                                      ? 'app.Km'
+                                                      : maintenance.units ===
+                                                        'm'
+                                                      ? 'app.Mi'
+                                                      : 'app.Hrs',
+                                          })
+                                        : '-'}
+                                </Typography>
                                 <Tooltip
                                     title={<FormattedMessage id="app.Edit" />}
                                 >

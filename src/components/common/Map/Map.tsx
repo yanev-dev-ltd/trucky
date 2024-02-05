@@ -10,6 +10,7 @@ const Map = ({
     setNoRoute,
     mode,
     currency,
+    units,
 }: MapProps) => {
     const { mapRef, loading } = useMap({
         locations,
@@ -19,6 +20,7 @@ const Map = ({
         setNoRoute,
         mode,
         currency,
+        units,
     })
     return (
         <Box ref={mapRef} sx={{ ...sx, position: 'relative' }}>

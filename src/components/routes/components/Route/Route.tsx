@@ -49,7 +49,7 @@ import RoutePrint from './components/RoutePrint/RoutePrint'
 import currencies from '@/api/currencies.json'
 import { Currencies } from '@/components/settings/components/Currency/Currency'
 
-const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
+const Route = ({ vehicleId, routeId, drivers, onClose }: RouteProps) => {
     const {
         route,
         changeField,
@@ -117,13 +117,29 @@ const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
                                             'vehicleId',
                                             typeof vehicles[0] === 'string'
                                                 ? vehicles[0]
-                                                : undefined
+                                                : null
                                         )
                                     }
                                     type="vehicles"
                                 />
                             </Box>
                         )}
+                        <Box sx={sx.row}>
+                            <Select
+                                items={
+                                    route?.trailerId ? [route?.trailerId] : []
+                                }
+                                setItems={(trailers) =>
+                                    changeField(
+                                        'trailerId',
+                                        typeof trailers[0] === 'string'
+                                            ? trailers[0]
+                                            : null
+                                    )
+                                }
+                                type="trailers"
+                            />
+                        </Box>
                         <Box sx={sx.row}>
                             <Select
                                 items={route?.drivers || []}
@@ -363,20 +379,16 @@ const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
                                                                         ) && (
                                                                             <Typography variant="caption">
                                                                                 {(
-                                                                                    (distance[
+                                                                                    distance[
                                                                                         index
                                                                                     ] /
-                                                                                        1000) *
-                                                                                    (units ===
-                                                                                    'm'
-                                                                                        ? 0.621371192
-                                                                                        : 1)
+                                                                                    1000
                                                                                 ).toFixed(
                                                                                     1
                                                                                 )}
                                                                                 <FormattedMessage
                                                                                     id={
-                                                                                        units ===
+                                                                                        route.units ===
                                                                                         'm'
                                                                                             ? 'app.Mi'
                                                                                             : 'app.Km'
@@ -759,6 +771,7 @@ const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
                         setNoRoute={setNoRoute}
                         mode={mode}
                         currency={route.currency}
+                        units={route.units}
                     />
                 </DialogContent>
                 <DialogActions>
@@ -810,7 +823,7 @@ const Route = ({ vehicleId, units, routeId, drivers, onClose }: RouteProps) => {
                             distance={distance}
                             toll={toll}
                             ferry={ferry}
-                            units={units || 'km'}
+                            units={route.units}
                         />
                     </Box>
                     <Box display="flex" gap={1}>

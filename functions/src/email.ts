@@ -1,0 +1,276 @@
+import {en} from "./locales/en";
+import {bg} from "./locales/bg";
+
+const getLocale = (locale: string) => {
+  switch (locale) {
+    case "bg":
+      return bg;
+    default:
+      return en;
+  }
+};
+
+export const email = (
+    {title, message, actionLink, actionText, locale = "en"}:
+    {title?: string, message?: string | string[], actionLink?: string, actionText?: string, locale: string}) => {
+  const t = getLocale(locale);
+  return `
+    <body class="body" style="width:100%;height:100%;padding:0;Margin:0;background-color:#000000"">
+    <div dir="ltr" class="es-wrapper-color" lang="en" style="background-color:#000000"><!--[if gte mso 9]>
+   <v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+     <v:fill type="tile"  color="#000000" origin="0.5, 0" position="0.5, 0"></v:fill>
+   </v:background>
+  <![endif]-->
+     <table
+        class="es-wrapper"
+        width="100%"
+        cellspacing="0"
+        cellpadding="0"
+        role="none"
+        style="mso-table-lspace:0pt;
+        mso-table-rspace:0pt;
+        border-collapse:collapse;
+        border-spacing:0px;
+        padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;background-color:#000000;">
+       <tr>
+        <td valign="top" style="padding:0;Margin:0">
+         <table
+            class="es-header"
+            cellspacing="0"
+            cellpadding="0"
+            align="center"
+            role="none"
+            style="mso-table-lspace:0pt;
+            mso-table-rspace:0pt;
+            border-collapse:collapse;
+            border-spacing:0px;
+            width:100%;table-layout:fixed !important;background-color:transparent;background-repeat:repeat;background-position:center top">
+           <tr>
+            <td align="center" style="padding:0;Margin:0">
+             <table
+                class="es-header-body"
+                cellspacing="0"
+                cellpadding="0"
+                bgcolor="#000000"
+                align="center"
+                width="100%"
+                style="mso-table-lspace:0pt;
+                mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#000000;max-width:600px" role="none">
+               <tr>
+                <td
+                    align="left"
+                    style="Margin:0;
+                    padding-top:30px;
+                    padding-right:20px;padding-bottom:20px;padding-left:20px"><!--[if mso]><table style="max-width:560px" cellpadding="0"
+                              cellspacing="0"><tr><td style="width:180px" valign="top"><![endif]-->
+                 <table
+                    class="es-left"
+                    cellspacing="0"
+                    cellpadding="0"
+                    align="left" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left">
+                   <tr>
+                    <td class="es-m-p0r es-m-p20b" valign="top" align="center" style="padding:0;Margin:0;width:180px">
+                     <table
+                        width="100%"
+                        cellspacing="0"
+                        cellpadding="0"
+                        role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                       <tr>
+                        <td
+                            align="center"
+                            style="padding:0;
+                            Margin:0;font-size:0">
+                            <a href="https://trucky.one" target="_blank">
+                                <img
+                                    src="https://app.trucky.one/icons/trucky.png"
+                                    alt="" width="180"
+                                    style="display:block;font-size:14px;border:0;outline:none;text-decoration:none">
+                            </a></td>
+                       </tr>
+                     </table></td>
+                   </tr>
+                 </table><!--[if mso]></td><td style="width:20px"></td><td style="max-width:360px" valign="top"><![endif]-->
+                 <table
+                    class="es-right"
+                    cellspacing="0"
+                    cellpadding="0"
+                    align="right"
+                    role="none"
+                    style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:right">
+                   <tr>
+                    <td align="left" style="padding:0;Margin:0;max-width:360px">
+                     <table
+                        width="100%"
+                        cellspacing="0"
+                        cellpadding="0"
+                        role="presentation"
+                        style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                       <tr>
+                        <td
+                            align="left"
+                            style="padding:0;Margin:0">
+                            <p
+                                align="right"
+                                style="Margin:0;
+                                    mso-line-height-rule:exactly;
+                                    font-family:arial, 'helvetica neue', helvetica, sans-serif;
+                                    line-height:16px;
+                                    letter-spacing:0;
+                                    color:#fff;
+                                    font-size:14px"
+                                class=" es-m-txt-c">${t["questions"]}<br/>
+                                    <a
+                                        target="_blank"
+                                        href="https://support.trucky.one"
+                                        style="mso-line-height-rule:exactly;text-decoration:underline;color:#0a84ff;font-size:14px">
+                                        support.trucky.one</a></p></td>
+                       </tr>
+                     </table></td>
+                   </tr>
+                 </table><!--[if mso]></td></tr></table><![endif]--></td>
+               </tr>
+             </table></td>
+           </tr>
+         </table>
+         <table
+            class="es-content"
+            cellspacing="0"
+            cellpadding="0"
+            align="center"
+            role="none"
+            width="100%"
+            style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed !important">
+           <tr>
+            <td align="center" style="padding:0;Margin:0">
+             <table
+                class="es-content-body"
+                cellspacing="0"
+                cellpadding="0"
+                bgcolor="#ffffff"
+                align="center"
+                width="100%"
+                style="mso-table-lspace:0pt;
+                    mso-table-rspace:0pt;
+                    border-collapse:separate;border-spacing:0px;background-color:#FFFFFF;max-width:600px;border-radius:12px;" role="none">
+               <tr>
+                <td
+                    align="left"
+                    style="padding:0;
+                        Margin:0;
+                        padding-right:20px;
+                        padding-left:20px;padding-top:20px;border-radius:30px;background-color:#ffffff" bgcolor="#ffffff">
+                 <table
+                    width="100%"
+                    cellspacing="0"
+                    cellpadding="0"
+                    role="none"
+                    style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                   <tr>
+                    <td valign="top" align="center" style="padding:0;Margin:0;">
+                     <table
+                        width="100%"
+                        cellspacing="0"
+                        cellpadding="0"
+                        role="presentation"
+                        style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                       ${title ? `<tr>
+                        <td
+                            align="left"
+                            style="padding:0;Margin:0">
+                                <h1
+                                    style="Margin:0;
+                                    margin-bottom:12px;
+                                    font-family:arial, 'helvetica neue', helvetica, sans-serif;
+                                    mso-line-height-rule:exactly;
+                                    letter-spacing:0;
+                                    font-size:30px;
+                                    font-style:normal;
+                                    font-weight:normal;line-height:36px;color:#333333">${title}</h1></td>
+                       </tr>` : ""}
+                       ${message ? `
+                       <tr>
+                        <td
+                            align="left"
+                            style="padding:0;Margin:0;padding-bottom:20px">
+                            <div
+                                style="Margin:0;
+                                mso-line-height-rule:exactly;
+                                font-family:arial, 'helvetica neue', helvetica, sans-serif;
+                                line-height:21px;letter-spacing:0;color:#111111;font-size:14px">
+                            ${Array.isArray(message) ? message.map((m) => `<p>${m}</p>`).join() : `<p>${message}</p>`}
+                        </div></td>
+                       </tr>` : ""}
+                       ${actionLink && actionText ? `<tr>
+                        <td
+                            align="left"
+                            style="padding:0;Margin:0;padding-bottom:24px;"><!--[if mso]><a href="${actionLink}" target="_blank" hidden>
+      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" esdevVmlButton href="${actionLink}" 
+                  style="height:41px; v-text-anchor:middle; width:148px" arcsize="15%" stroke="f"  fillcolor="#0a84ff">
+          <w:anchorlock></w:anchorlock>
+          <center
+            style='color:#ffffff;
+                font-family:arial, "helvetica neue", helvetica, sans-serif;
+                font-size:15px;
+                font-weight:400;
+                line-height:15px; 
+                mso-text-raise:1px'>${actionText}</center>
+      </v:roundrect></a>
+  <![endif]--><!--[if !mso]>--><span
+    class="es-button-border msohide"
+    style="border-style:solid;
+        background:#0a84ff;
+        border-width:0;
+        display:inline-block;
+        border-radius:6px;
+        width:auto;mso-hide:all">
+            <a
+                href="${actionLink}"
+                class="es-button"
+                target="_blank"
+                style="mso-style-priority:100 !important;
+                    text-decoration:none !important;
+                    mso-line-height-rule:exactly;
+                    color:#FFFFFF;
+                    font-size:18px;
+                    padding:10px 20px 10px 20px;
+                    display:inline-block;
+                    background:#0a84ff;
+                    border-radius:6px;
+                    font-family:arial, 'helvetica neue', helvetica, sans-serif;
+                    font-weight:normal;
+                    font-style:normal;
+                    line-height:22px;
+                    width:auto;
+                    text-align:center;
+                    letter-spacing:0;
+                    mso-padding-alt:0;
+                    mso-border-alt:10px solid #0a84ff">${actionText}</a></span><!--<![endif]--></td>
+                       </tr>
+                     </table></td>
+                   </tr>
+                 </table></td>
+               </tr>
+             </table></td>
+           </tr>` : ""}
+           <tr>
+            <td
+                align="center"
+                style="padding:0;
+                padding-top:20px;
+                Margin:0;
+                color:#fff;
+                font-family:arial, 'helvetica neue', helvetica, sans-serif;
+                line-height:21px;
+                letter-spacing:0;
+                font-size:14px">
+              &copy; ${new Date().getFullYear()} ${t["trucky"]}
+            </td>
+           </tr>
+         </table>
+         </td>
+       </tr>
+     </table>
+    </div>
+   </body>
+    `;
+};

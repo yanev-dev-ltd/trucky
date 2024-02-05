@@ -50,13 +50,20 @@ const sx: Record<string, SxProps<Theme>> = {
         paddingTop: 1,
         width: '100%',
     },
+    itemNew: {
+        padding: 0,
+        paddingBottom: 1,
+        paddingTop: 1,
+        width: '100%',
+        backgroundColor: 'primary.main',
+    },
     time: {
-        fontSize: 10,
+        fontSize: 11,
         wordWrap: 'break-word',
         maxWidth: '100%',
-        paddingRight: 1,
-        paddingLeft: 1,
-        textAlign: 'center'
+        textAlign: 'left',
+        paddingTop: 1,
+        display: 'block',
     },
     link: {
         color: 'text.primary',
@@ -75,6 +82,11 @@ const sx: Record<string, SxProps<Theme>> = {
         flexDirection: 'column',
         alignItems: 'center',
         position: 'relative',
+        paddingTop: 1,
+    },
+    light: {
+        color: 'primary.main',
+        backgroundColor: 'text.primary',
     },
     dot: {
         backgroundColor: 'primary.main',
@@ -82,7 +94,7 @@ const sx: Record<string, SxProps<Theme>> = {
         height: 6,
         borderRadius: 100,
         position: 'absolute',
-        top: '18px',
+        top: '26px',
         left: 8,
     }
 }

@@ -21,7 +21,7 @@ export type Vehicle = {
     notes?: string
     new?: ReactNode
     groups?: string[]
-    trailer?: string | null
+    trailerId?: string | null
 }
 
 export type useVehicleProps = {

@@ -30,6 +30,8 @@ import {
     Delete,
     NotificationsActive,
     Route as RouteIcon,
+    NotificationsNone,
+    Check,
 } from '@mui/icons-material'
 import { format, formatRelative } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
@@ -247,7 +249,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 <Overflow
                                     text={
                                         allTrailers?.find(
-                                            (t) => t.key === vehicle?.trailer
+                                            (t) => t.key === vehicle?.trailerId
                                         )?.name || '-'
                                     }
                                     variant="h6"
@@ -275,18 +277,18 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                 component="form"
                                 onSubmit={(event) => {
                                     event.preventDefault()
-                                    saveVehicleField('trailer')
+                                    saveVehicleField('trailerId')
                                 }}
                             >
                                 <Typography>
                                     <FormattedMessage id="app.Trailer" />
                                 </Typography>
                                 <Select
-                                    items={[editedVehicle?.trailer || '']}
+                                    items={[editedVehicle?.trailerId || '']}
                                     setItems={(trailer) =>
                                         setEditedVehicle({
                                             ...vehicle,
-                                            trailer:
+                                            trailerId:
                                                 typeof trailer === 'string'
                                                     ? trailer
                                                     : trailer?.[0],
@@ -299,8 +301,8 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                     color="primary"
                                     type="submit"
                                     disabled={
-                                        vehicle.trailer ===
-                                        editedVehicle?.trailer
+                                        vehicle.trailerId ===
+                                        editedVehicle?.trailerId
                                     }
                                 >
                                     <FormattedMessage id="app.Save" />
@@ -975,23 +977,65 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                                     <TableCell
                                                         sx={sx.smallCell}
                                                     >
-                                                        {(m.reminderDate ||
-                                                            m.reminderMileage) && (
-                                                            <Tooltip
-                                                                title={
-                                                                    m.reminderDate &&
-                                                                    m.reminderMileage ? (
-                                                                        <FormattedMessage id="app.Maintenance.AlarmDateAndMileage" />
-                                                                    ) : m.reminderDate ? (
-                                                                        <FormattedMessage id="app.Maintenance.AlarmDate" />
-                                                                    ) : (
-                                                                        <FormattedMessage id="app.Maintenance.AlarmMileage" />
-                                                                    )
-                                                                }
-                                                            >
+                                                        <Tooltip
+                                                            title={
+                                                                (m.status !==
+                                                                    'completed' &&
+                                                                    m.reminderMileage) ||
+                                                                (m.reminderDate &&
+                                                                    m.reminderDate >
+                                                                        new Date().getTime()) ? (
+                                                                    <List
+                                                                        disablePadding
+                                                                    >
+                                                                        {m.status !=
+                                                                            'completed' &&
+                                                                            m.reminderMileage && (
+                                                                                <ListItemText
+                                                                                    secondary={
+                                                                                        <FormattedMessage id="app.Maintenance.AlarmMileage" />
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                        {m.status !=
+                                                                            'completed' &&
+                                                                            m.reminderDate &&
+                                                                            m.reminderDate >
+                                                                                new Date().getTime() && (
+                                                                                <Divider component="li" />
+                                                                            )}
+                                                                        {m.reminderDate &&
+                                                                            m.reminderDate >
+                                                                                new Date().getTime() && (
+                                                                                <ListItemText
+                                                                                    secondary={
+                                                                                        <FormattedMessage id="app.Maintenance.AlarmDate" />
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                    </List>
+                                                                ) : m.status ===
+                                                                  'completed' ? (
+                                                                    <FormattedMessage id="app.Maintenance.Completed" />
+                                                                ) : (
+                                                                    <FormattedMessage id="app.Maintenance.NoAlarm" />
+                                                                )
+                                                            }
+                                                        >
+                                                            {(m.status !==
+                                                                'completed' &&
+                                                                m.reminderMileage) ||
+                                                            (m.reminderDate &&
+                                                                m.reminderDate >
+                                                                    new Date().getTime()) ? (
                                                                 <NotificationsActive />
-                                                            </Tooltip>
-                                                        )}
+                                                            ) : m.status ===
+                                                              'completed' ? (
+                                                                <Check />
+                                                            ) : (
+                                                                <NotificationsNone />
+                                                            )}
+                                                        </Tooltip>
                                                     </TableCell>
                                                     <TableCell
                                                         sx={sx.smallCell}
