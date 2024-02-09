@@ -68,7 +68,17 @@ const Profile = () => {
             >
                 <Box sx={{ marginTop: 2, minWidth: '25%' }}>
                     <Autocomplete
-                        options={Object.values(Country)}
+                        options={Object.values(Country).sort((a, b) =>
+                            intl
+                                .formatMessage({
+                                    id: `app.Country.${a}`,
+                                })
+                                .localeCompare(
+                                    intl.formatMessage({
+                                        id: `app.Country.${b}`,
+                                    })
+                                )
+                        )}
                         fullWidth
                         value={profile?.address?.country || ''}
                         onChange={(event: any, newValue: string | null) => {

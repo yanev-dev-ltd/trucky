@@ -18,6 +18,7 @@ import {
   // CollectionReference,
   // DocumentSnapshot,
 } from "firebase-admin/firestore";
+import {onSchedule} from "firebase-functions/v2/scheduler";
 import {getAuth} from "firebase-admin/auth";
 import {initializeApp} from "firebase-admin/app";
 import {setGlobalOptions} from "firebase-functions/v2";
@@ -493,7 +494,8 @@ export const updateVehicle = onDocumentWritten(
       const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
       querySnapshot.forEach(async (maintenance) => {
         const maintenanceData = maintenance.data();
-        if (data.mileage >= maintenanceData?.mileage) {
+        if (Number(maintenanceData.reminderMileage) > 0 &&
+        (Number(data.mileage) >= Number(maintenanceData.reminderMileage) + Number(maintenanceData?.startMileage))) {
           const settings = await firestore.collection("settings").doc(maintenanceData.userId).get();
           const locale = getLocale(settings.get("locale"));
           await maintenance.ref.set({
@@ -508,13 +510,13 @@ export const updateVehicle = onDocumentWritten(
               subject: maintenanceData?.type,
               html: email({
                 title: maintenanceData?.type,
-                message: locale.maintenanceDescription,
+                message: locale.maintenanceVehicleDescription.replace("{vehicle}", data?.name),
                 actionLink: `${baseUrl}vehicles/${maintenanceData.vehicleId}`,
                 actionText: locale["checkVehicle"],
                 locale: settings.get("locale"),
               }),
               text: maintenanceData?.type,
-              description: locale.maintenanceDescription,
+              description: locale.maintenanceVehicleDescription.replace("{vehicle}", data?.name),
             },
             status: "unread",
             url: `${baseUrl}vehicles/${maintenanceData.vehicleId}`,
@@ -537,7 +539,8 @@ export const updateTrailer = onDocumentWritten(
       const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
       querySnapshot.forEach(async (maintenance) => {
         const maintenanceData = maintenance.data();
-        if (data.mileage >= maintenanceData?.mileage) {
+        if (Number(maintenanceData.reminderMileage) > 0 &&
+        (Number(data.mileage) >= Number(maintenanceData.reminderMileage) + Number(maintenanceData?.startMileage))) {
           const settings = await firestore.collection("settings").doc(maintenanceData.userId).get();
           const locale = getLocale(settings.get("locale"));
           await maintenance.ref.set({
@@ -552,13 +555,13 @@ export const updateTrailer = onDocumentWritten(
               subject: maintenanceData?.type,
               html: email({
                 title: maintenanceData?.type,
-                message: locale.maintenanceDescription,
+                message: locale.maintenanceTrailerDescription.replace("{trailer}", data?.name),
                 actionLink: `${baseUrl}trailers/${maintenanceData.vehicleId}`,
                 actionText: locale["checkTrailer"],
                 locale: settings.get("locale"),
               }),
               text: maintenanceData?.type,
-              description: locale.maintenanceDescription,
+              description: locale.maintenanceTrailerDescription.replace("{trailer}", data?.name),
             },
             status: "unread",
             url: `${baseUrl}trailers/${maintenanceData.vehicleId}`,
@@ -567,3 +570,44 @@ export const updateTrailer = onDocumentWritten(
         }
       });
     });
+
+export const scheduleMaintenance = onSchedule("every day 00:00", async () => {
+  const maintenancesColl = firestore.collection("maintenances");
+  const q1: Query<DocumentData> = maintenancesColl.where("reminderDate", "<=", new Date().getTime());
+  const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
+  querySnapshot.forEach(async (maintenance) => {
+    const maintenanceData = maintenance.data();
+    await maintenance.ref.set({
+      dateStatus: "completed",
+      dateCompleted: new Date().getTime(),
+    }, {merge: true});
+    if (!maintenanceData.reminderDate || maintenanceData.dateStatus === "completed") return;
+    const user = await auth.getUser(maintenanceData?.userId);
+    const settings = await firestore.collection("settings").doc(maintenanceData.userId).get();
+    const vehicle = await firestore.collection(maintenanceData.isTrailer ? "trailers" : "vehicles").doc(maintenanceData.vehicleId).get();
+    const locale = getLocale(settings.get("locale"));
+    await firestore.collection("notifications").add({
+      userId: maintenanceData?.userId,
+      to: user.email,
+      message: {
+        subject: maintenanceData?.type,
+        html: email({
+          title: maintenanceData?.type,
+          message: maintenanceData.isTrailer ?
+            locale.maintenanceTrailerDateDescription.replace("{trailer}", vehicle.get("name")) :
+            locale.maintenanceVehicleDateDescription.replace("{vehicle}", vehicle.get("name")),
+          actionLink: `${baseUrl}${maintenanceData.isTrailer ? "trailers" : "vehicles"}/${maintenanceData.vehicleId}`,
+          actionText: maintenanceData.isTrailer ? locale["checkTrailer"] : locale["checkVehicle"],
+          locale: settings.get("locale"),
+        }),
+        text: maintenanceData?.type,
+        description: maintenanceData.isTrailer ?
+        locale.maintenanceTrailerDateDescription.replace("{trailer}", vehicle.get("name")) :
+        locale.maintenanceVehicleDateDescription.replace("{vehicle}", vehicle.get("name")),
+      },
+      status: "unread",
+      url: `${baseUrl}${maintenanceData.isTrailer ? "trailers" : "vehicles"}/${maintenanceData.vehicleId}`,
+      date: new Date().getTime(),
+    });
+  });
+});
