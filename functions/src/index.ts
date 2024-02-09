@@ -104,6 +104,10 @@ export const deleteUser = functions.auth.user().onDelete(async (user) => {
     vehicles.forEach(async (vehicle) => {
       await vehicle.ref.delete();
     });
+    const trailers = await firestore.collection("trailers").where("userId", "==", user.uid).get();
+    trailers.forEach(async (trailer) => {
+      await trailer.ref.delete();
+    });
     const drivers = await firestore.collection("drivers").where("userId", "==", user.uid).get();
     drivers.forEach(async (driver) => {
       await driver.ref.delete();
@@ -131,6 +135,10 @@ export const deleteUser = functions.auth.user().onDelete(async (user) => {
     const notifications = await firestore.collection("notifications").where("userId", "==", user.uid).get();
     notifications.forEach(async (notification) => {
       await notification.ref.delete();
+    });
+    const groups = await firestore.collection("groups").where("userId", "==", user.uid).get();
+    groups.forEach(async (group) => {
+      await group.ref.delete();
     });
     return firestore.collection("customers").doc(user.uid).delete();
   }
