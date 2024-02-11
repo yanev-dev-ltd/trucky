@@ -581,7 +581,8 @@ export const updateTrailer = onDocumentWritten(
 
 export const scheduleMaintenance = onSchedule("every day 00:00", async () => {
   const maintenancesColl = firestore.collection("maintenances");
-  const q1: Query<DocumentData> = maintenancesColl.where("reminderDate", "<=", new Date().getTime());
+  let q1: Query<DocumentData> = maintenancesColl.where("reminderDate", "<=", new Date().getTime());
+  q1 = maintenancesColl.where("dateStatus", "!=", "completed");
   const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
   querySnapshot.forEach(async (maintenance) => {
     const maintenanceData = maintenance.data();
@@ -589,7 +590,7 @@ export const scheduleMaintenance = onSchedule("every day 00:00", async () => {
       dateStatus: "completed",
       dateCompleted: new Date().getTime(),
     }, {merge: true});
-    if (!maintenanceData.reminderDate || maintenanceData.dateStatus === "completed") return;
+    if (!maintenanceData.reminderDate) return;
     const user = await auth.getUser(maintenanceData?.userId);
     const settings = await firestore.collection("settings").doc(maintenanceData.userId).get();
     const vehicle = await firestore.collection(maintenanceData.isTrailer ? "trailers" : "vehicles").doc(maintenanceData.vehicleId).get();
