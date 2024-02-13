@@ -4,6 +4,7 @@ export type DocumentType = 'vehicle' | 'trailer' | 'driver' | 'maintenance' | 'c
 export type useDocumentsProps = {
     type: DocumentType
     typeId: string
+    light?: boolean
 }
 
 export type Document = {
@@ -38,4 +39,5 @@ export type DocumentsProps = {
     reminderDates: (number | null)[]
     setReminderDates: (reminderDates: (number | null)[]) => void
     isLoading: boolean
+    light?: boolean
 }

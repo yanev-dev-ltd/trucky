@@ -16,7 +16,7 @@ import { addDoc, collection, onSnapshot, query, where, orderBy } from 'firebase/
 import { useSnackbar } from 'notistack'
 import { setDocuments } from '../redux'
 
-const useDocuments = ({ type, typeId }: useDocumentsProps) => {
+const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
     const { downloadFile } = useFiles()
     const intl = useIntl()
     const [filesToUpload, setFilesToUpload] = useState<File[]>([])
@@ -203,6 +203,7 @@ const useDocuments = ({ type, typeId }: useDocumentsProps) => {
         reminderDates,
         setReminderDates,
         isLoading,
+        light
     }
 }
 

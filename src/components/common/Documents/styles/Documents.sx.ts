@@ -6,6 +6,14 @@ const sx: Record<string, SxProps<Theme>> = {
         marginTop: 2,
         position: 'relative',
     },
+    paperLight: {
+        padding: 1,
+        marginTop: 1,
+        marginBottom: 1,
+        position: 'relative',
+        background: 'none',
+        border: (theme) => `1px solid ${theme.palette.divider}`
+    },
     fixedHeight: {
         maxHeight: 350,
         overflowY: 'auto',

@@ -52,10 +52,11 @@ export const DocumentsView = ({
     reminderDates,
     setReminderDates,
     isLoading,
+    light,
 }: DocumentsProps) => {
     const intl = useIntl()
     return (
-        <Paper sx={sx.paper}>
+        <Paper sx={light ? sx.paperLight : sx.paper}>
             <Box sx={sx.edit}>
                 <input
                     type="file"
@@ -64,7 +65,6 @@ export const DocumentsView = ({
                     multiple
                     style={{ display: 'none' }}
                     onChange={(event) => {
-                        clearFiles()
                         handleAddFiles(event)
                         event.target.value = ''
                     }}

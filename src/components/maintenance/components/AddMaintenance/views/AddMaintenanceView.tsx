@@ -351,6 +351,7 @@ const AddMaintenanceView = ({
                             <Documents
                                 type="maintenance"
                                 typeId={newMaintenanceOpen || ''}
+                                light
                             />
                             <Box sx={sx.row}>
                                 <TextareaAutoSize
