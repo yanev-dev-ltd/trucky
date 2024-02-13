@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback } from 'react'
 import {
     Box,
     Typography,
@@ -6,11 +6,6 @@ import {
     Drawer,
     Paper,
     IconButton,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
     Table as MuiTable,
     TableBody,
     TableCell,
@@ -24,31 +19,27 @@ import {
 import {
     Close,
     Edit,
-    InsertDriveFile,
     Visibility,
     Delete,
     NotificationsActive,
 } from '@mui/icons-material'
-import { format, formatRelative } from 'date-fns'
-import { bg, enUS } from 'date-fns/locale'
+import { format } from 'date-fns'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import { FormattedMessage } from 'react-intl'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
-import { auth } from '@/services/firebase'
 import sx from './styles/EditTrailer.sx'
 import { EditTrailerProps } from './types'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import { UploadedFile } from '@/components/common/Upload/types'
 import useEditTrailer from './hooks/useEditTrailer'
-import Upload from '@/components/common/Upload/Upload'
 import Confirm from '@/components/common/Confirm/Confirm'
 import Overflow from '@/components/common/Overflow/Overflow'
 import { AddMaintenance } from '@/components/maintenance/components/AddMaintenance/AddMaintenance'
 import { EditMaintenance } from '@/components/maintenance/components/EditMaintenance/EditMaintenance'
 import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
+import { Documents } from '@/components/common/Documents/Documents'
 
 const EditTrailer = ({ trailer, edit }: EditTrailerProps) => {
     const router = useRouter()
@@ -57,32 +48,16 @@ const EditTrailer = ({ trailer, edit }: EditTrailerProps) => {
         editedTrailer,
         setEditedTrailer,
         reset,
-        downloadFile,
-        deleteFile,
         deleteTrailer,
         maintenances,
-        files,
     } = useEditTrailer(trailer)
     const allGroups = useSelector((state: RootState) => state.groups)
     const { settings } = useSelector((state: RootState) => state.settings)
     const [editMaintenanceId, setEditMaintenanceId] = useState<
         number | undefined
     >()
-    const [confirmDeleteFile, setConfirmDeleteFile] = useState<
-        UploadedFile | undefined
-    >()
-    const [confirmDeleteTrailer, setConfirmDeleteTrailer] =
-        useState<boolean>(false)
+    const [confirmDeleteTrailer, setConfirmDeleteTrailer] = useState(false)
     const [editMaintenanceField, setEditMaintenanceField] = useState<string>()
-
-    const locale = useMemo(() => {
-        switch (settings?.locale) {
-            case 'bg':
-                return bg
-            default:
-                return enUS
-        }
-    }, [settings?.locale])
 
     const handleEditMaintenanceOpen = useCallback((id: number | undefined) => {
         setEditMaintenanceId(id)
@@ -429,104 +404,7 @@ const EditTrailer = ({ trailer, edit }: EditTrailerProps) => {
                             </Box>
                         )}
                     </Paper>
-                    <Paper sx={sx.paper}>
-                        <Box sx={sx.edit}>
-                            <Upload
-                                filepath={
-                                    auth?.currentUser?.uid
-                                        ? `user/${auth?.currentUser?.uid}/trailers`
-                                        : undefined
-                                }
-                                dbpath="trailers"
-                                dbkey={trailer.key}
-                                currentFiles={files || []}
-                            />
-                        </Box>
-                        <Typography>
-                            <FormattedMessage id="app.Documents" />
-                        </Typography>
-                        <List dense sx={sx.fixedHeight}>
-                            {files &&
-                                files.length > 0 &&
-                                files.map((uf, i) => (
-                                    <ListItem
-                                        key={i}
-                                        secondaryAction={
-                                            <IconButton
-                                                edge="end"
-                                                aria-label="delete"
-                                                onClick={() =>
-                                                    setConfirmDeleteFile(uf)
-                                                }
-                                            >
-                                                <Delete />
-                                            </IconButton>
-                                        }
-                                        disablePadding
-                                    >
-                                        <ListItemButton
-                                            onClick={() => downloadFile(uf)}
-                                        >
-                                            <ListItemIcon>
-                                                <InsertDriveFile />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary={
-                                                    <Overflow text={uf.name} />
-                                                }
-                                                secondary={formatRelative(
-                                                    new Date(uf.date),
-                                                    new Date(),
-                                                    { locale }
-                                                )}
-                                                style={{
-                                                    cursor: 'pointer',
-                                                }}
-                                            />
-                                        </ListItemButton>
-                                    </ListItem>
-                                ))}
-                        </List>
-                        <Confirm
-                            onCancel={() => setConfirmDeleteFile(undefined)}
-                            onSubmit={() => {
-                                confirmDeleteFile &&
-                                    deleteFile(
-                                        confirmDeleteFile,
-                                        'trailers',
-                                        trailer.key,
-                                        files || []
-                                    )
-                                setConfirmDeleteFile(undefined)
-                            }}
-                            isOpen={Boolean(confirmDeleteFile)}
-                            message={
-                                <FormattedMessage
-                                    id="app.DeleteFileConfirm"
-                                    values={{
-                                        file: (
-                                            <Overflow
-                                                text={
-                                                    confirmDeleteFile?.name ||
-                                                    ''
-                                                }
-                                            />
-                                        ),
-                                    }}
-                                />
-                            }
-                            type="warn"
-                            submit={<FormattedMessage id="app.Delete" />}
-                            cancel={<FormattedMessage id="app.Cancel" />}
-                        />
-                        {(!files || files.length === 0) && (
-                            <Box display="flex" justifyContent="center" mb={2}>
-                                <Typography>
-                                    <FormattedMessage id="app.NoDocuments" />
-                                </Typography>
-                            </Box>
-                        )}
-                    </Paper>
+                    <Documents type="trailer" typeId={trailer.key} />
                     <Paper sx={sx.paper}>
                         {edit !== 'notes' && (
                             <>

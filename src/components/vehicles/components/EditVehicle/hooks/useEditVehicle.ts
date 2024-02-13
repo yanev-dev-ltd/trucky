@@ -10,7 +10,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store/store'
 import { setMaintenances } from '@/components/maintenance/redux'
 import { setRoutes } from '../../../../routes/redux'
-import useFiles from '@/hooks/useFiles'
 import { Route } from '../../../../routes/types'
 import { collection, deleteDoc, updateDoc, doc, where, query, onSnapshot, orderBy } from 'firebase/firestore'
 import { Group } from '@/components/common/Group/types'
@@ -24,9 +23,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
     const intl = useIntl()
     const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
-    const { downloadFile, deleteFile } = useFiles()
     useEffect(() => setEditedVehicle(vehicle), [vehicle])
-    const files = JSON.parse(editedVehicle?.files || '[]')
 
     useEffect(() => {
         if (!auth.currentUser?.uid || !vehicle?.key) {
@@ -99,7 +96,7 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
         // TODO: delete the vehicle and write a function for clearing the db and storage
     }, [vehicle?.key])
 
-    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, downloadFile, deleteFile, deleteVehicle, maintenances, routes, files }
+    return { saveVehicleField, editedVehicle, setEditedVehicle, reset, deleteVehicle, maintenances, routes }
 }
 
 export default useEditVehicle

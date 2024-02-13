@@ -24,7 +24,6 @@ import {
 import {
     Close,
     Edit,
-    InsertDriveFile,
     AddCircle,
     Visibility,
     Delete,
@@ -33,20 +32,17 @@ import {
     NotificationsNone,
     Check,
 } from '@mui/icons-material'
-import { format, formatRelative } from 'date-fns'
+import { format } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import { FormattedMessage } from 'react-intl'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
-import { auth } from '@/services/firebase'
 import sx from './styles/EditVehicle.sx'
 import { EditVehicleProps } from './types'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import { UploadedFile } from '@/components/common/Upload/types'
 import useEditVehicle from './hooks/useEditVehicle'
-import Upload from '@/components/common/Upload/Upload'
 import Confirm from '@/components/common/Confirm/Confirm'
 import Overflow from '@/components/common/Overflow/Overflow'
 import { AddMaintenance } from '@/components/maintenance/components/AddMaintenance/AddMaintenance'
@@ -55,6 +51,7 @@ import Route from '@/components/routes/components/Route/Route'
 import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 import { Select } from '@/components/common/Select/Select'
+import { Documents } from '@/components/common/Documents/Documents'
 
 const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     const router = useRouter()
@@ -63,12 +60,9 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
         editedVehicle,
         setEditedVehicle,
         reset,
-        downloadFile,
-        deleteFile,
         deleteVehicle,
         maintenances,
         routes,
-        files,
     } = useEditVehicle(vehicle)
     const allDrivers = useSelector((state: RootState) => state.drivers)
     const allTrailers = useSelector((state: RootState) => state.trailers)
@@ -76,9 +70,6 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     const { settings } = useSelector((state: RootState) => state.settings)
     const [editMaintenanceId, setEditMaintenanceId] = useState<
         number | undefined
-    >()
-    const [confirmDeleteFile, setConfirmDeleteFile] = useState<
-        UploadedFile | undefined
     >()
     const [confirmDeleteVehicle, setConfirmDeleteVehicle] =
         useState<boolean>(false)
@@ -732,104 +723,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                             </Box>
                         )}
                     </Paper>
-                    <Paper sx={sx.paper}>
-                        <Box sx={sx.edit}>
-                            <Upload
-                                filepath={
-                                    auth?.currentUser?.uid
-                                        ? `user/${auth?.currentUser?.uid}/vehicles`
-                                        : undefined
-                                }
-                                dbpath="vehicles"
-                                dbkey={vehicle.key}
-                                currentFiles={files || []}
-                            />
-                        </Box>
-                        <Typography>
-                            <FormattedMessage id="app.Documents" />
-                        </Typography>
-                        <List dense sx={sx.fixedHeight}>
-                            {files &&
-                                files.length > 0 &&
-                                files.map((uf, i) => (
-                                    <ListItem
-                                        key={i}
-                                        secondaryAction={
-                                            <IconButton
-                                                edge="end"
-                                                aria-label="delete"
-                                                onClick={() =>
-                                                    setConfirmDeleteFile(uf)
-                                                }
-                                            >
-                                                <Delete />
-                                            </IconButton>
-                                        }
-                                        disablePadding
-                                    >
-                                        <ListItemButton
-                                            onClick={() => downloadFile(uf)}
-                                        >
-                                            <ListItemIcon>
-                                                <InsertDriveFile />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary={
-                                                    <Overflow text={uf.name} />
-                                                }
-                                                secondary={formatRelative(
-                                                    new Date(uf.date),
-                                                    new Date(),
-                                                    { locale }
-                                                )}
-                                                style={{
-                                                    cursor: 'pointer',
-                                                }}
-                                            />
-                                        </ListItemButton>
-                                    </ListItem>
-                                ))}
-                        </List>
-                        <Confirm
-                            onCancel={() => setConfirmDeleteFile(undefined)}
-                            onSubmit={() => {
-                                confirmDeleteFile &&
-                                    deleteFile(
-                                        confirmDeleteFile,
-                                        'vehicles',
-                                        vehicle.key,
-                                        files || []
-                                    )
-                                setConfirmDeleteFile(undefined)
-                            }}
-                            isOpen={Boolean(confirmDeleteFile)}
-                            message={
-                                <FormattedMessage
-                                    id="app.DeleteFileConfirm"
-                                    values={{
-                                        file: (
-                                            <Overflow
-                                                text={
-                                                    confirmDeleteFile?.name ||
-                                                    ''
-                                                }
-                                            />
-                                        ),
-                                    }}
-                                />
-                            }
-                            type="warn"
-                            submit={<FormattedMessage id="app.Delete" />}
-                            cancel={<FormattedMessage id="app.Cancel" />}
-                        />
-                        {(!files || files.length === 0) && (
-                            <Box display="flex" justifyContent="center" mb={2}>
-                                <Typography>
-                                    <FormattedMessage id="app.NoDocuments" />
-                                </Typography>
-                            </Box>
-                        )}
-                    </Paper>
+                    <Documents type="vehicle" typeId={vehicle.key} />
                     <Paper sx={sx.paper}>
                         {edit !== 'notes' && (
                             <>

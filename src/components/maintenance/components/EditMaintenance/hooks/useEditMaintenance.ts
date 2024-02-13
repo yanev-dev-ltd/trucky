@@ -3,15 +3,13 @@ import { useSnackbar } from 'notistack'
 import { useIntl } from 'react-intl'
 import { auth, firestore } from '@/services/firebase'
 import { Maintenance } from '@/components/maintenance/types'
-import { deleteDoc, updateDoc, doc, onSnapshot } from 'firebase/firestore'
+import { deleteDoc, updateDoc, doc } from 'firebase/firestore'
 import { useEditMaintenanceProps } from '../types'
-import useFiles from '@/hooks/useFiles'
 
 const useEditMaintenance = ({ maintenance = { units: '' }, edit, onClose, onCancel, onEdit }: useEditMaintenanceProps) => {
     const [editedMaintenance, setEditedMaintenance] = useState<Maintenance>(maintenance)
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
-    const { downloadFile, deleteFile } = useFiles()
     const files = JSON.parse(maintenance?.files || '[]')
 
     const saveMaintenanceField = useCallback(async (field: keyof Maintenance) => {
@@ -59,8 +57,6 @@ const useEditMaintenance = ({ maintenance = { units: '' }, edit, onClose, onCanc
         onClose,
         onCancel,
         onEdit,
-        deleteFile,
-        downloadFile,
         files,
     }
 }

@@ -9,9 +9,6 @@ import { useEditTrailerResponse } from '../types'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store/store'
 import { setMaintenances } from '@/components/maintenance/redux'
-import { setRoutes } from '../../../../routes/redux'
-import useFiles from '@/hooks/useFiles'
-import { Route } from '../../../../routes/types'
 import { collection, deleteDoc, updateDoc, doc, where, query, onSnapshot, orderBy } from 'firebase/firestore'
 import { Group } from '@/components/common/Group/types'
 import { setGroups } from '@/components/common/Group/redux'
@@ -23,9 +20,7 @@ const useEditTrailer = (trailer: Trailer | undefined): useEditTrailerResponse =>
     const intl = useIntl()
     const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
-    const { downloadFile, deleteFile } = useFiles()
     useEffect(() => setEditedTrailer(trailer), [trailer])
-    const files = JSON.parse(editedTrailer?.files || '[]')
 
     useEffect(() => {
         if (!auth.currentUser?.uid || !trailer?.key) {
@@ -89,7 +84,7 @@ const useEditTrailer = (trailer: Trailer | undefined): useEditTrailerResponse =>
         // TODO: delete the vehicle and write a function for clearing the db and storage
     }, [trailer?.key])
 
-    return { saveTrailerField, editedTrailer, setEditedTrailer, reset, downloadFile, deleteFile, deleteTrailer, maintenances, files }
+    return { saveTrailerField, editedTrailer, setEditedTrailer, reset, deleteTrailer, maintenances }
 }
 
 export default useEditTrailer

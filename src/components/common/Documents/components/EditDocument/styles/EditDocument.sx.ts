@@ -4,7 +4,7 @@ const sx: Record<string, SxProps<Theme>> = {
     dialog: {
         width: 400,
         maxHeight: '60vh',
-        overflowY: 'auto',  
+        overflowY: 'auto',
         '&::-webkit-scrollbar': {
             width: '5px',
         },
@@ -15,14 +15,6 @@ const sx: Record<string, SxProps<Theme>> = {
             background: (theme) => theme.palette.text.secondary,
         },   
     },
-    itewm: {
-        padding: 0
-    },
-    textWrap: {
-        textOverflow: 'ellipsis',
-        maxWidth: 340,
-        overflow: 'hidden'
-    }
 }
 
 export default sx

@@ -1,6 +1,5 @@
 import { Vehicle } from '../../../types'
 import { Maintenances } from '@/components/maintenance/types'
-import { UploadedFile } from '@/components/common/Upload/types'
 import { Route } from '@/components/routes/types'
 export type EditVehicleProps = {
     vehicle: Vehicle | undefined
@@ -13,10 +12,7 @@ export type useEditVehicleResponse = {
     editedVehicle: Vehicle | undefined
     setEditedVehicle: (vehicle: Vehicle | undefined) => void
     reset: () => void
-    downloadFile: (f: UploadedFile) => void
-    deleteFile: (f: UploadedFile, dbpath: string, dbkey: string, files: UploadedFile[]) => void
     deleteVehicle: () => void
     maintenances: Maintenances
     routes: Route[]
-    files: UploadedFile[]
 }

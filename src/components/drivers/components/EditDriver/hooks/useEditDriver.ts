@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 import { useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack'
 import { firestore, auth } from '@/services/firebase'
-import useFiles from '@/hooks/useFiles'
 import { collection, updateDoc, doc, where, query, onSnapshot } from 'firebase/firestore'
 import { Group } from '@/components/common/Group/types'
 import { setGroups } from '@/components/common/Group/redux'
@@ -17,7 +16,6 @@ const useEditDriver = ({ driver, edit }: useEditDriverProps) : EditDriverProps =
     const intl = useIntl()
     const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
-    const { downloadFile, deleteFile } = useFiles()
     useEffect(() => setEditedDriver(driver), [driver])
 
     useEffect(() => {
@@ -67,8 +65,6 @@ const useEditDriver = ({ driver, edit }: useEditDriverProps) : EditDriverProps =
         saveDriverField,
         setEditedDriver,
         editedDriver,
-        downloadFile,
-        deleteFile,
         deleteDriver
     }
 }

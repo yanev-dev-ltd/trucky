@@ -10,14 +10,9 @@ import {
     TextField,
     Tooltip,
     Autocomplete,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
     InputAdornment,
 } from '@mui/material'
-import { Close, Edit, Delete, InsertDriveFile } from '@mui/icons-material'
+import { Close, Edit, Delete } from '@mui/icons-material'
 import sx from '../styles/EditMaintenance.sx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import Confirm from '@/components/common/Confirm/Confirm'
@@ -28,15 +23,13 @@ import { MaintenanceTypes } from '@/components/maintenance/types'
 import { DesktopDatePicker } from '@mui/x-date-pickers'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import Upload from '@/components/common/Upload/Upload'
-import { auth } from '@/services/firebase'
-import { UploadedFile } from '@/components/common/Upload/types'
-import { format, formatRelative } from 'date-fns'
+import { format } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 import { Select } from '@/components/common/Select/Select'
 import currencies from '@/api/currencies.json'
 import { Currencies } from '@/components/settings/components/Currency/Currency'
+import { Documents } from '@/components/common/Documents/Documents'
 
 const EditMaintenanceView = ({
     maintenance,
@@ -49,18 +42,12 @@ const EditMaintenanceView = ({
     onClose,
     onCancel,
     onEdit,
-    downloadFile,
-    deleteFile,
-    files,
 }: EditMaintenanceProps) => {
     const allDrivers = useSelector((state: RootState) => state.drivers)
     const { settings } = useSelector((state: RootState) => state.settings)
     const intl = useIntl()
     const [confirmDeleteMaintenance, setConfirmDeleteMaintenance] =
         useState<boolean>(false)
-    const [confirmDeleteFile, setConfirmDeleteFile] = useState<
-        UploadedFile | undefined
-    >()
 
     const locale = useMemo(() => {
         switch (settings?.locale) {
@@ -992,104 +979,10 @@ const EditMaintenanceView = ({
                             </Box>
                         )}
                     </Paper>
-                    <Paper sx={sx.paper}>
-                        <Box sx={sx.edit}>
-                            <Upload
-                                filepath={
-                                    auth?.currentUser?.uid
-                                        ? `user/${auth?.currentUser?.uid}/maintenances`
-                                        : undefined
-                                }
-                                dbpath="maintenances"
-                                dbkey={maintenance.key || ''}
-                                currentFiles={files || []}
-                            />
-                        </Box>
-                        <Typography>
-                            <FormattedMessage id="app.Documents" />
-                        </Typography>
-                        <List dense sx={sx.fixedHeight}>
-                            {files &&
-                                files.length > 0 &&
-                                files.map((uf, i) => (
-                                    <ListItem
-                                        key={i}
-                                        secondaryAction={
-                                            <IconButton
-                                                edge="end"
-                                                aria-label="delete"
-                                                onClick={() =>
-                                                    setConfirmDeleteFile(uf)
-                                                }
-                                            >
-                                                <Delete />
-                                            </IconButton>
-                                        }
-                                        disablePadding
-                                    >
-                                        <ListItemButton
-                                            onClick={() => downloadFile(uf)}
-                                        >
-                                            <ListItemIcon>
-                                                <InsertDriveFile />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary={
-                                                    <Overflow text={uf.name} />
-                                                }
-                                                secondary={formatRelative(
-                                                    new Date(uf.date),
-                                                    new Date(),
-                                                    { locale }
-                                                )}
-                                                style={{
-                                                    cursor: 'pointer',
-                                                }}
-                                            />
-                                        </ListItemButton>
-                                    </ListItem>
-                                ))}
-                        </List>
-                        <Confirm
-                            onCancel={() => setConfirmDeleteFile(undefined)}
-                            onSubmit={() => {
-                                confirmDeleteFile &&
-                                    deleteFile(
-                                        confirmDeleteFile,
-                                        'maintenances',
-                                        maintenance.key || '',
-                                        files || []
-                                    )
-                                setConfirmDeleteFile(undefined)
-                            }}
-                            isOpen={Boolean(confirmDeleteFile)}
-                            message={
-                                <FormattedMessage
-                                    id="app.DeleteFileConfirm"
-                                    values={{
-                                        file: (
-                                            <Overflow
-                                                text={
-                                                    confirmDeleteFile?.name ||
-                                                    ''
-                                                }
-                                            />
-                                        ),
-                                    }}
-                                />
-                            }
-                            type="warn"
-                            submit={<FormattedMessage id="app.Delete" />}
-                            cancel={<FormattedMessage id="app.Cancel" />}
-                        />
-                        {(!files || files.length === 0) && (
-                            <Box display="flex" justifyContent="center" mb={2}>
-                                <Typography>
-                                    <FormattedMessage id="app.NoDocuments" />
-                                </Typography>
-                            </Box>
-                        )}
-                    </Paper>
+                    <Documents
+                        type="maintenance"
+                        typeId={maintenance.key || ''}
+                    />
                     <Paper sx={sx.paper}>
                         {edit !== 'notes' && (
                             <>

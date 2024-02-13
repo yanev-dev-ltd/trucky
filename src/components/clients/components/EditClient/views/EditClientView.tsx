@@ -6,33 +6,25 @@ import {
     Drawer,
     Paper,
     IconButton,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
     Divider,
     TextField,
     Tooltip,
 } from '@mui/material'
-import { Close, Edit, InsertDriveFile, Delete } from '@mui/icons-material'
+import { Close, Edit, Delete } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 import sx from '../styles/EditClient.sx'
 import NextLink from 'next/link'
 import { FormattedMessage } from 'react-intl'
-import Upload from '@/components/common/Upload/Upload'
-import { UploadedFile } from '@/components/common/Upload/types'
 import Confirm from '@/components/common/Confirm/Confirm'
 import Overflow from '@/components/common/Overflow/Overflow'
-import { auth } from '@/services/firebase'
 import { bg, enUS } from 'date-fns/locale'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import { formatRelative } from 'date-fns'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { EditClientProps } from '../types'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
+import { Documents } from '@/components/common/Documents/Documents'
 
 const EditClientView = ({
     client,
@@ -41,14 +33,9 @@ const EditClientView = ({
     saveClientField,
     setEditedClient,
     editedClient,
-    downloadFile,
-    deleteFile,
     deleteClient,
 }: EditClientProps) => {
     const router = useRouter()
-    const [confirmDeleteFile, setConfirmDeleteFile] = useState<
-        UploadedFile | undefined
-    >()
     const [confirmDeleteClient, setConfirmDeleteClient] =
         useState<boolean>(false)
     const { settings } = useSelector((state: RootState) => state.settings)
@@ -61,7 +48,6 @@ const EditClientView = ({
                 return enUS
         }
     }, [settings?.locale])
-    const files: UploadedFile[] = JSON.parse(client?.files || '[]')
 
     return (
         <Drawer
@@ -605,104 +591,7 @@ const EditClientView = ({
                             </Box>
                         )}
                     </Paper>
-                    <Paper sx={sx.paper}>
-                        <Box sx={sx.edit}>
-                            <Upload
-                                filepath={
-                                    auth?.currentUser?.uid
-                                        ? `user/${auth?.currentUser?.uid}/clients`
-                                        : undefined
-                                }
-                                dbpath="clients"
-                                dbkey={client?.key}
-                                currentFiles={files || []}
-                            />
-                        </Box>
-                        <Typography>
-                            <FormattedMessage id="app.Documents" />
-                        </Typography>
-                        <List dense sx={sx.fixedHeight}>
-                            {files &&
-                                files.length > 0 &&
-                                files.map((uf: UploadedFile, i: number) => (
-                                    <ListItem
-                                        key={i}
-                                        secondaryAction={
-                                            <IconButton
-                                                edge="end"
-                                                aria-label="delete"
-                                                onClick={() =>
-                                                    setConfirmDeleteFile(uf)
-                                                }
-                                            >
-                                                <Delete />
-                                            </IconButton>
-                                        }
-                                        disablePadding
-                                    >
-                                        <ListItemButton
-                                            onClick={() => downloadFile(uf)}
-                                        >
-                                            <ListItemIcon>
-                                                <InsertDriveFile />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary={
-                                                    <Overflow text={uf.name} />
-                                                }
-                                                secondary={formatRelative(
-                                                    new Date(uf.date),
-                                                    new Date(),
-                                                    { locale }
-                                                )}
-                                                style={{
-                                                    cursor: 'pointer',
-                                                }}
-                                            />
-                                        </ListItemButton>
-                                    </ListItem>
-                                ))}
-                        </List>
-                        <Confirm
-                            onCancel={() => setConfirmDeleteFile(undefined)}
-                            onSubmit={() => {
-                                confirmDeleteFile &&
-                                    deleteFile(
-                                        confirmDeleteFile,
-                                        'clients',
-                                        client.key,
-                                        files || []
-                                    )
-                                setConfirmDeleteFile(undefined)
-                            }}
-                            isOpen={Boolean(confirmDeleteFile)}
-                            message={
-                                <FormattedMessage
-                                    id="app.DeleteFileConfirm"
-                                    values={{
-                                        file: (
-                                            <Overflow
-                                                text={
-                                                    confirmDeleteFile?.name ||
-                                                    ''
-                                                }
-                                            />
-                                        ),
-                                    }}
-                                />
-                            }
-                            type="warn"
-                            submit={<FormattedMessage id="app.Delete" />}
-                            cancel={<FormattedMessage id="app.Cancel" />}
-                        />
-                        {(!files || files.length === 0) && (
-                            <Box display="flex" justifyContent="center" mb={2}>
-                                <Typography>
-                                    <FormattedMessage id="app.NoDocuments" />
-                                </Typography>
-                            </Box>
-                        )}
-                    </Paper>
+                    <Documents type="client" typeId={client.key} />
                     <Paper sx={sx.paper}>
                         {edit !== 'notes' && (
                             <>

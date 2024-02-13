@@ -9,19 +9,13 @@ import {
     Tooltip,
     IconButton,
     Autocomplete,
-    Typography,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
     FormControl,
     RadioGroup,
     FormControlLabel,
     Radio,
     InputAdornment,
 } from '@mui/material'
-import { AddCircle, Add, Delete, InsertDriveFile } from '@mui/icons-material'
+import { AddCircle, Add } from '@mui/icons-material'
 
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
@@ -29,20 +23,14 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import sx from '../styles/AddMaintenance.sx'
 import { AddMaintenanceProps } from '../types'
 import { MaintenanceTypes } from '@/components/maintenance/types'
-import { useMemo, useState } from 'react'
-import { UploadedFile } from '@/components/common/Upload/types'
-import Upload from '@/components/common/Upload/Upload'
-import { auth } from '@/services/firebase'
-import Overflow from '@/components/common/Overflow/Overflow'
-import { formatRelative } from 'date-fns'
-import { bg, enUS } from 'date-fns/locale'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import Confirm from '@/components/common/Confirm/Confirm'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 import { Select } from '@/components/common/Select/Select'
 import currencies from '@/api/currencies.json'
 import { Currencies } from '@/components/settings/components/Currency/Currency'
+import { Documents } from '@/components/common/Documents/Documents'
 
 const AddMaintenanceView = ({
     units,
@@ -54,29 +42,14 @@ const AddMaintenanceView = ({
     handleClose,
     handleSubmit,
     newMaintenanceOpen,
-    files,
-    deleteFile,
-    downloadFile,
 }: AddMaintenanceProps) => {
     const intl = useIntl()
     const { settings } = useSelector((state: RootState) => state.settings)
-    const [confirmDeleteFile, setConfirmDeleteFile] = useState<
-        UploadedFile | undefined
-    >()
     const [isTrailer, setIsTrailer] = useState<boolean>(false)
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsTrailer((event.target as HTMLInputElement).value === 'true')
     }
-
-    const locale = useMemo(() => {
-        switch (settings?.locale) {
-            case 'bg':
-                return bg
-            default:
-                return enUS
-        }
-    }, [settings?.locale])
 
     return (
         <>
@@ -375,120 +348,10 @@ const AddMaintenanceView = ({
                                     multiple
                                 />
                             </Box>
-                            <Box sx={sx.rowUpload}>
-                                <Box sx={sx.edit}>
-                                    <Upload
-                                        filepath={
-                                            auth?.currentUser?.uid
-                                                ? `user/${auth?.currentUser?.uid}/maintenances`
-                                                : undefined
-                                        }
-                                        dbpath="maintenances"
-                                        dbkey={newMaintenanceOpen || ''}
-                                        currentFiles={files || []}
-                                    />
-                                </Box>
-                                <Typography>
-                                    <FormattedMessage id="app.Documents" />
-                                </Typography>
-                                <List dense sx={sx.fixedHeight}>
-                                    {files &&
-                                        files.length > 0 &&
-                                        files.map((uf, i) => (
-                                            <ListItem
-                                                key={i}
-                                                secondaryAction={
-                                                    <IconButton
-                                                        edge="end"
-                                                        aria-label="delete"
-                                                        onClick={() =>
-                                                            setConfirmDeleteFile(
-                                                                uf
-                                                            )
-                                                        }
-                                                    >
-                                                        <Delete />
-                                                    </IconButton>
-                                                }
-                                                disablePadding
-                                            >
-                                                <ListItemButton
-                                                    onClick={() =>
-                                                        downloadFile(uf)
-                                                    }
-                                                >
-                                                    <ListItemIcon>
-                                                        <InsertDriveFile />
-                                                    </ListItemIcon>
-                                                    <ListItemText
-                                                        primary={
-                                                            <Overflow
-                                                                text={uf.name}
-                                                            />
-                                                        }
-                                                        secondary={formatRelative(
-                                                            new Date(uf.date),
-                                                            new Date(),
-                                                            { locale }
-                                                        )}
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                        }}
-                                                    />
-                                                </ListItemButton>
-                                            </ListItem>
-                                        ))}
-                                </List>
-                                <Confirm
-                                    onCancel={() =>
-                                        setConfirmDeleteFile(undefined)
-                                    }
-                                    onSubmit={() => {
-                                        confirmDeleteFile &&
-                                            deleteFile(
-                                                confirmDeleteFile,
-                                                'maintenances',
-                                                newMaintenanceOpen || '',
-                                                files || []
-                                            )
-                                        setConfirmDeleteFile(undefined)
-                                    }}
-                                    isOpen={Boolean(confirmDeleteFile)}
-                                    message={
-                                        <FormattedMessage
-                                            id="app.DeleteFileConfirm"
-                                            values={{
-                                                file: (
-                                                    <Overflow
-                                                        text={
-                                                            confirmDeleteFile?.name ||
-                                                            ''
-                                                        }
-                                                    />
-                                                ),
-                                            }}
-                                        />
-                                    }
-                                    type="warn"
-                                    submit={
-                                        <FormattedMessage id="app.Delete" />
-                                    }
-                                    cancel={
-                                        <FormattedMessage id="app.Cancel" />
-                                    }
-                                />
-                                {(!files || files.length === 0) && (
-                                    <Box
-                                        display="flex"
-                                        justifyContent="center"
-                                        mb={2}
-                                    >
-                                        <Typography>
-                                            <FormattedMessage id="app.NoDocuments" />
-                                        </Typography>
-                                    </Box>
-                                )}
-                            </Box>
+                            <Documents
+                                type="maintenance"
+                                typeId={newMaintenanceOpen || ''}
+                            />
                             <Box sx={sx.row}>
                                 <TextareaAutoSize
                                     value={maintenance?.notes || ''}
