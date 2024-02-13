@@ -2,7 +2,7 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from '
 import { Document, useDocumentsProps } from '../types'
 import { bg, enUS } from 'date-fns/locale'
 import { RootState } from '@/store/store'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { firestore, auth, storage } from '@/services/firebase'
 import useFiles from './useFiles'
 import { v4 as uuid } from 'uuid'
@@ -14,7 +14,7 @@ import {
 import { useIntl } from 'react-intl'
 import { addDoc, collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { useSnackbar } from 'notistack'
-import { setDocuments } from '../redux'
+import { set } from 'date-fns'
 
 const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
     const { downloadFile } = useFiles()
@@ -30,8 +30,7 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
     const readyRef = useRef(true)
     const { enqueueSnackbar } = useSnackbar()
     const { settings } = useSelector((state: RootState) => state.settings)
-    const documents = useSelector((state: RootState) => state.documents)
-    const dispatch = useDispatch()
+    const [documents, setDocuments] = useState<Document[]>([])
     const locale = useMemo(() => {
         switch (settings?.locale) {
             case 'bg':
@@ -45,6 +44,7 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
         if (!auth.currentUser?.uid || !typeId) {
             return
         }
+        setIsLoading(true)
         const qd = query(
             collection(firestore, 'documents'),
             where('userId', '==', auth.currentUser?.uid),
@@ -55,7 +55,8 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
             querySnapshot.forEach((doc) => {
                 documents.push({key: doc.id, ...doc.data()})
             })
-            dispatch(setDocuments(documents))
+            setDocuments(documents)
+            setIsLoading(false)
         }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))
         return () => {
             unsubscribeDocuments()

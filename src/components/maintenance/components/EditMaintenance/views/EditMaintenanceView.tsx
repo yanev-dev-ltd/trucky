@@ -24,7 +24,6 @@ import { DesktopDatePicker } from '@mui/x-date-pickers'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import { format } from 'date-fns'
-import { bg, enUS } from 'date-fns/locale'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 import { Select } from '@/components/common/Select/Select'
 import currencies from '@/api/currencies.json'
@@ -44,19 +43,9 @@ const EditMaintenanceView = ({
     onEdit,
 }: EditMaintenanceProps) => {
     const allDrivers = useSelector((state: RootState) => state.drivers)
-    const { settings } = useSelector((state: RootState) => state.settings)
     const intl = useIntl()
     const [confirmDeleteMaintenance, setConfirmDeleteMaintenance] =
         useState<boolean>(false)
-
-    const locale = useMemo(() => {
-        switch (settings?.locale) {
-            case 'bg':
-                return bg
-            default:
-                return enUS
-        }
-    }, [settings?.locale])
 
     const drivers = allDrivers.filter((d) =>
         editedMaintenance?.drivers?.find((dr) => dr === d.key)

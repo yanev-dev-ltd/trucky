@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
@@ -102,102 +103,77 @@ export const DocumentsView = ({
                         <List dense>
                             {filesToUpload.map((file, i) => (
                                 <Fragment key={i}>
-                                    <ListItem key={i} sx={sx.item}>
-                                        <ListItemIcon>
-                                            <InsertDriveFile />
-                                        </ListItemIcon>
-                                        <ListItemText
-                                            primary={
-                                                <Box
-                                                    sx={{
-                                                        width: '100%',
-                                                        flexGrow: 1,
-                                                        gap: 1,
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        marginBottom: 1,
-                                                    }}
-                                                >
-                                                    <TextField
-                                                        fullWidth
-                                                        size="small"
-                                                        value={titles[i] || ''}
-                                                        onChange={(e) => {
-                                                            const newTitles = [
-                                                                ...titles,
-                                                            ]
-                                                            newTitles[i] =
-                                                                e.target.value
-                                                            setTitles(newTitles)
-                                                        }}
-                                                        label={
-                                                            <FormattedMessage id="app.Title" />
-                                                        }
-                                                    />
-                                                    {file.name && (
-                                                        <Overflow
-                                                            text={file.name}
-                                                            variant="caption"
-                                                        />
-                                                    )}
-                                                </Box>
-                                            }
-                                            secondary={
-                                                <Box>
-                                                    <DesktopDatePicker
-                                                        label={
-                                                            <FormattedMessage id="app.ReminderDate" />
-                                                        }
-                                                        inputFormat="dd/MM/yyyy"
-                                                        value={
-                                                            reminderDates[i] ||
-                                                            null
-                                                        }
-                                                        onChange={(
-                                                            d: Date | null
-                                                        ) =>
-                                                            setReminderDates({
-                                                                ...reminderDates,
-                                                                [i]: d
-                                                                    ? d.getTime()
-                                                                    : null,
-                                                            })
-                                                        }
-                                                        renderInput={(
-                                                            params
-                                                        ) => (
-                                                            <TextField
-                                                                {...params}
-                                                                fullWidth
-                                                                size="small"
-                                                                helperText={
-                                                                    <FormattedMessage id="app.ReminderInfoDate" />
-                                                                }
-                                                                inputProps={{
-                                                                    ...params.inputProps,
-                                                                    placeholder:
-                                                                        intl.formatMessage(
-                                                                            {
-                                                                                id: 'app.dd/MM/yyyy',
-                                                                            }
-                                                                        ) || '',
-                                                                }}
-                                                            />
-                                                        )}
-                                                        disablePast
-                                                    />
-                                                    {uploadError[i] && (
-                                                        <Typography
-                                                            color="error"
-                                                            variant="caption"
-                                                        >
-                                                            {uploadError[i]}
-                                                        </Typography>
-                                                    )}
-                                                </Box>
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            flexGrow: 1,
+                                            gap: 1,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            marginBottom: 1,
+                                        }}
+                                    >
+                                        <TextField
+                                            fullWidth
+                                            size="small"
+                                            value={titles[i] || ''}
+                                            onChange={(e) => {
+                                                const newTitles = [...titles]
+                                                newTitles[i] = e.target.value
+                                                setTitles(newTitles)
+                                            }}
+                                            label={
+                                                <FormattedMessage id="app.Title" />
                                             }
                                         />
-                                    </ListItem>
+                                        {file.name && (
+                                            <Overflow
+                                                text={file.name}
+                                                variant="caption"
+                                            />
+                                        )}
+                                    </Box>
+                                    <Box>
+                                        <DesktopDatePicker
+                                            label={
+                                                <FormattedMessage id="app.ReminderDate" />
+                                            }
+                                            inputFormat="dd/MM/yyyy"
+                                            value={reminderDates[i] || null}
+                                            onChange={(d: Date | null) =>
+                                                setReminderDates({
+                                                    ...reminderDates,
+                                                    [i]: d ? d.getTime() : null,
+                                                })
+                                            }
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    fullWidth
+                                                    size="small"
+                                                    helperText={
+                                                        <FormattedMessage id="app.ReminderInfoDate" />
+                                                    }
+                                                    inputProps={{
+                                                        ...params.inputProps,
+                                                        placeholder:
+                                                            intl.formatMessage({
+                                                                id: 'app.dd/MM/yyyy',
+                                                            }) || '',
+                                                    }}
+                                                />
+                                            )}
+                                            disablePast
+                                        />
+                                        {uploadError[i] && (
+                                            <Typography
+                                                color="error"
+                                                variant="caption"
+                                            >
+                                                {uploadError[i]}
+                                            </Typography>
+                                        )}
+                                    </Box>
                                     <LinearProgress
                                         sx={{ marginTop: 1 }}
                                         variant="determinate"
@@ -341,6 +317,11 @@ export const DocumentsView = ({
                 editDocument={editFile}
                 setEditDocument={setEditFile}
             />
+            {isLoading && (
+                <Box display="flex" justifyContent="center" mb={2}>
+                    <CircularProgress />
+                </Box>
+            )}
             {(!documents || documents.length === 0) && (
                 <Box display="flex" justifyContent="center" mb={2}>
                     <Typography>
