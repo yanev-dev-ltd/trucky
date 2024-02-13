@@ -32,7 +32,7 @@ const useEditDocument = ({ editDocument, setEditDocument }: useEditDocumentsProp
             await updateDoc(doc(firestore, 'documents', document.key), {
                 ...rest,
                 date: new Date().getTime(),
-                status: document.reminderDate === editDocument?.reminderDate ? document.status : 'active'})
+                status: document.reminderDate === editDocument?.reminderDate ? document.status || 'active' : 'active'})
             enqueueSnackbar(intl.formatMessage({
                 id: `app.Saved.document`,
             }), { variant: 'success' })
