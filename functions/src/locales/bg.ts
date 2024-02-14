@@ -1,7 +1,9 @@
 export const bg = {
+  "checkDocument": "Провери документа",
   "checkMaintenance": "Провери поддръжката",
   "checkTrailer": "Провери ремаркето",
   "checkVehicle": "Провери превозното средство",
+  "documentReminder": "Напомняне за документ за {document}",
   "maintenanceTrailerDescription": "Поддръжката за ремарке {trailer} е достигнала известие за пробега.",
   "maintenanceVehicleDescription": "Поддръжката за превозно средство {vehicle} е достигнала известие за пробега.",
   "maintenanceVehicleDateDescription": "Поддръжката за превозно средство {vehicle} е достигнала известие за дата.",

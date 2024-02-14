@@ -14,6 +14,7 @@ import {
     AccountBox,
     Build,
     Settings,
+    InsertDriveFile,
 } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 import sx from './styles/Navigation.sx'
@@ -144,7 +145,24 @@ const Navigation = () => {
                         <FormattedMessage id="app.Clients" />
                     </Typography>
                 </MenuItem>
-                {/* <MenuItem
+                <MenuItem
+                    component={Link}
+                    href="/documents"
+                    sx={
+                        router.asPath.startsWith('/documents')
+                            ? sx.itemCurrent
+                            : sx.item
+                    }
+                    disabled={subscription === 'inactive'}
+                >
+                    <ListItemIcon>
+                        <InsertDriveFile fontSize="large" sx={sx.icon} />
+                    </ListItemIcon>
+                    <Typography variant="body2">
+                        <FormattedMessage id="app.Documents" />
+                    </Typography>
+                </MenuItem>
+                {/* <MenuItem InsertDriveFile
                     className={path.startsWith('/users') ? classes.itemCurrent : classes.item}
                     component={Link}
                     to='/users'

@@ -79,7 +79,7 @@ const Notifications = () => {
                                 primary={message?.subject}
                                 secondary={
                                     <>
-                                        {message?.description}
+                                        {message?.description || null}
                                         <Box component="span" sx={sx.time}>
                                             {date &&
                                                 formatRelative(

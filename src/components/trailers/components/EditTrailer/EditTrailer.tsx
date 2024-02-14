@@ -40,6 +40,8 @@ import { EditMaintenance } from '@/components/maintenance/components/EditMainten
 import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/GroupsSelect'
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 import { Documents } from '@/components/common/Documents/Documents'
+import Maintenance from 'pages/maintenance/[[...index]]'
+import MaintenanceStatus from '@/components/maintenance/components/MaintenanceStatus/MaintenanceStatus'
 
 const EditTrailer = ({ trailer, edit }: EditTrailerProps) => {
     const router = useRouter()
@@ -552,23 +554,9 @@ const EditTrailer = ({ trailer, edit }: EditTrailerProps) => {
                                                     <TableCell
                                                         sx={sx.smallCell}
                                                     >
-                                                        {(m.reminderDate ||
-                                                            m.reminderMileage) && (
-                                                            <Tooltip
-                                                                title={
-                                                                    m.reminderDate &&
-                                                                    m.reminderMileage ? (
-                                                                        <FormattedMessage id="app.Maintenance.AlarmDateAndMileage" />
-                                                                    ) : m.reminderDate ? (
-                                                                        <FormattedMessage id="app.Maintenance.AlarmDate" />
-                                                                    ) : (
-                                                                        <FormattedMessage id="app.Maintenance.AlarmMileage" />
-                                                                    )
-                                                                }
-                                                            >
-                                                                <NotificationsActive />
-                                                            </Tooltip>
-                                                        )}
+                                                        <MaintenanceStatus
+                                                            maintenance={m}
+                                                        />
                                                     </TableCell>
                                                     <TableCell
                                                         sx={sx.smallCell}

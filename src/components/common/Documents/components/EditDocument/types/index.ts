@@ -3,7 +3,8 @@ import { Document } from '../../../types'
 
 export type useEditDocumentsProps = {
     editDocument: Document | undefined
-    setEditDocument: (document: Document | undefined) => void
+    setEditDocument?: (document: Document | undefined) => void
+    redirectTo?: string
 }
 
 export type EditDocumentProps = {

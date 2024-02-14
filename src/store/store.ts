@@ -8,6 +8,7 @@ import driversReducer from '../components/drivers/redux'
 import routesReducer from '../components/routes/redux'
 import clientsReducer from '../components/clients/redux'
 import ordersReducer from '../components/orders/redux'
+import documentsReducer from '../components/documents/redux'
 import stripeReducer from '../components/settings/components/Payment/redux'
 import receiptsReducer from '../components/settings/components/Invoices/redux'
 import profileReducer from '../components/settings/components/Profile/redux'
@@ -29,6 +30,7 @@ const reducer = {
     trailers: trailersReducer,
     orders: ordersReducer,
     notifications: notificationsReducer,
+    documents: documentsReducer,
 }
 
 const store = configureStore({

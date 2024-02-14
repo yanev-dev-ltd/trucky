@@ -14,7 +14,6 @@ import {
 import { useIntl } from 'react-intl'
 import { addDoc, collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { useSnackbar } from 'notistack'
-import { set } from 'date-fns'
 
 const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
     const { downloadFile } = useFiles()

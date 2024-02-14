@@ -8,6 +8,7 @@ import {
     DialogTitle,
     IconButton,
     TextField,
+    Typography,
 } from '@mui/material'
 import { FormattedMessage, useIntl } from 'react-intl'
 import sx from '../styles/EditDocument.sx'
@@ -16,6 +17,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { EditDocumentProps } from '../types'
 import Confirm from '@/components/common/Confirm/Confirm'
+import { format } from 'date-fns'
 
 export const EditDocumentView = ({
     isLoading,
@@ -75,36 +77,44 @@ export const EditDocumentView = ({
                     )}
                 </Box>
                 <Box>
-                    <DesktopDatePicker
-                        label={<FormattedMessage id="app.ReminderDate" />}
-                        inputFormat="dd/MM/yyyy"
-                        value={document?.reminderDate || null}
-                        onChange={(d: Date | null) =>
-                            setDocument({
-                                key: document?.key || '',
-                                ...document,
-                                reminderDate: d ? d.getTime() : null,
-                            })
-                        }
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                fullWidth
-                                size="small"
-                                helperText={
-                                    <FormattedMessage id="app.ReminderInfoDate" />
-                                }
-                                inputProps={{
-                                    ...params.inputProps,
-                                    placeholder:
-                                        intl.formatMessage({
-                                            id: 'app.dd/MM/yyyy',
-                                        }) || '',
-                                }}
-                            />
-                        )}
-                        disablePast
-                    />
+                    {document?.status !== 'completed' ? (
+                        <DesktopDatePicker
+                            label={<FormattedMessage id="app.ReminderDate" />}
+                            inputFormat="dd/MM/yyyy"
+                            value={document?.reminderDate || null}
+                            onChange={(d: Date | null) =>
+                                setDocument({
+                                    key: document?.key || '',
+                                    ...document,
+                                    reminderDate: d ? d.getTime() : null,
+                                })
+                            }
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    fullWidth
+                                    size="small"
+                                    helperText={
+                                        <FormattedMessage id="app.ReminderInfoDate" />
+                                    }
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        placeholder:
+                                            intl.formatMessage({
+                                                id: 'app.dd/MM/yyyy',
+                                            }) || '',
+                                    }}
+                                />
+                            )}
+                            disablePast
+                        />
+                    ) : (
+                        <Typography>
+                            <FormattedMessage id="app.ReminderDateCompleted" />:{' '}
+                            {document.reminderDate &&
+                                format(document.reminderDate, 'dd/MM/yyyy')}
+                        </Typography>
+                    )}
                 </Box>
             </DialogContent>
             <DialogActions>

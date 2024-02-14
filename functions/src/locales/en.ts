@@ -1,7 +1,9 @@
 export const en = {
+  "checkDocument": "Check Document",
   "checkMaintenance": "Check Maintenance",
   "checkTrailer": "Check Trailer",
   "checkVehicle": "Check Vehicle",
+  "documentReminder": "Document Reminder for {document}",
   "maintenanceTrailerDescription": "The maintenance for vehicle {trailer} has reached its mileage notification.",
   "maintenanceVehicleDescription": "The maintenance for vehicle {vehicle} has reached its mileage notification.",
   "maintenanceVehicleDateDescription": "The maintenance for vehicle {vehicle} has reached its date notification.",

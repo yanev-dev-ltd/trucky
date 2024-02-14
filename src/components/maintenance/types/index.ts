@@ -24,6 +24,7 @@ export type Maintenance = {
     new?: boolean
     currency?: string
     status?: string
+    dateStatus?: string
 }
 
 export type Maintenances = Maintenance[]

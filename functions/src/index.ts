@@ -620,3 +620,38 @@ export const scheduleMaintenance = onSchedule("every day 00:00", async () => {
     });
   });
 });
+
+export const scheduleDocuments = onSchedule("every day 00:00", async () => {
+  const documentsColl = firestore.collection("documents");
+  let q1: Query<DocumentData> = documentsColl.where("reminderDate", "<=", new Date().getTime());
+  q1 = documentsColl.where("status", "!=", "completed");
+  const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
+  querySnapshot.forEach(async (document) => {
+    const documentData = document.data();
+    await document.ref.set({
+      status: "completed",
+      completed: new Date().getTime(),
+    }, {merge: true});
+    if (!documentData.reminderDate) return;
+    const user = await auth.getUser(documentData?.userId);
+    const settings = await firestore.collection("settings").doc(documentData.userId).get();
+    const locale = getLocale(settings.get("locale"));
+    await firestore.collection("notifications").add({
+      userId: documentData?.userId,
+      to: user.email,
+      message: {
+        subject: locale.documentReminder.replace("{document}", documentData?.title || documentData?.name),
+        html: email({
+          title: locale.documentReminder.replace("{document}", documentData?.title || documentData?.name),
+          actionLink: `${baseUrl}documents/${document.id}`,
+          actionText: locale["checkDocument"],
+          locale: settings.get("locale"),
+        }),
+        text: locale.documentReminder.replace("{document}", documentData?.title || documentData?.name),
+      },
+      status: "unread",
+      url: `${baseUrl}documents/${document.id}`,
+      date: new Date().getTime(),
+    });
+  });
+});

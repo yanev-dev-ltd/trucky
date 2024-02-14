@@ -1,3 +1,4 @@
+import { ro } from 'date-fns/locale';
 import { useState, useCallback, useEffect } from 'react'
 import { useEditDocumentsProps } from '../types'
 import { Document } from '../../../types'
@@ -6,13 +7,15 @@ import { updateDoc, doc, deleteDoc } from 'firebase/firestore'
 import { useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack'
 import { ref as storageRef, deleteObject } from 'firebase/storage'
+import { useRouter } from 'next/router';
 
-const useEditDocument = ({ editDocument, setEditDocument }: useEditDocumentsProps) => {
+const useEditDocument = ({ editDocument, setEditDocument, redirectTo }: useEditDocumentsProps) => {
     const intl = useIntl()
     const { enqueueSnackbar } = useSnackbar()
     const [document, setDocument] = useState<Document | undefined>()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [confirmDeleteDocument, setConfirmDeleteDocument] = useState<boolean>(false)
+    const router = useRouter()
 
     useEffect(() => {
         setDocument(editDocument)
@@ -20,9 +23,12 @@ const useEditDocument = ({ editDocument, setEditDocument }: useEditDocumentsProp
 
     const cancel = useCallback(() => {
         setDocument(undefined)
-        setEditDocument(undefined)
+        setEditDocument && setEditDocument(undefined)
         setConfirmDeleteDocument(false)
-    }, [])
+        if (redirectTo) {
+            router.push(redirectTo)
+        }
+    }, [redirectTo])
 
     const saveDocument = useCallback(async () => {
         if (!document?.key || !auth?.currentUser?.uid) return

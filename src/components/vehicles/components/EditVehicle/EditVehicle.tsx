@@ -27,10 +27,7 @@ import {
     AddCircle,
     Visibility,
     Delete,
-    NotificationsActive,
     Route as RouteIcon,
-    NotificationsNone,
-    Check,
 } from '@mui/icons-material'
 import { format } from 'date-fns'
 import { bg, enUS } from 'date-fns/locale'
@@ -52,6 +49,7 @@ import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/
 import TextareaAutoSize from '@/components/common/TextareaAutoSize/TextAreaAutoSize'
 import { Select } from '@/components/common/Select/Select'
 import { Documents } from '@/components/common/Documents/Documents'
+import MaintenanceStatus from '@/components/maintenance/components/MaintenanceStatus/MaintenanceStatus'
 
 const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
     const router = useRouter()
@@ -871,65 +869,9 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                                     <TableCell
                                                         sx={sx.smallCell}
                                                     >
-                                                        <Tooltip
-                                                            title={
-                                                                (m.status !==
-                                                                    'completed' &&
-                                                                    m.reminderMileage) ||
-                                                                (m.reminderDate &&
-                                                                    m.reminderDate >
-                                                                        new Date().getTime()) ? (
-                                                                    <List
-                                                                        disablePadding
-                                                                    >
-                                                                        {m.status !=
-                                                                            'completed' &&
-                                                                            m.reminderMileage && (
-                                                                                <ListItemText
-                                                                                    secondary={
-                                                                                        <FormattedMessage id="app.Maintenance.AlarmMileage" />
-                                                                                    }
-                                                                                />
-                                                                            )}
-                                                                        {m.status !=
-                                                                            'completed' &&
-                                                                            m.reminderDate &&
-                                                                            m.reminderDate >
-                                                                                new Date().getTime() && (
-                                                                                <Divider component="li" />
-                                                                            )}
-                                                                        {m.reminderDate &&
-                                                                            m.reminderDate >
-                                                                                new Date().getTime() && (
-                                                                                <ListItemText
-                                                                                    secondary={
-                                                                                        <FormattedMessage id="app.Maintenance.AlarmDate" />
-                                                                                    }
-                                                                                />
-                                                                            )}
-                                                                    </List>
-                                                                ) : m.status ===
-                                                                  'completed' ? (
-                                                                    <FormattedMessage id="app.Maintenance.Completed" />
-                                                                ) : (
-                                                                    <FormattedMessage id="app.Maintenance.NoAlarm" />
-                                                                )
-                                                            }
-                                                        >
-                                                            {(m.status !==
-                                                                'completed' &&
-                                                                m.reminderMileage) ||
-                                                            (m.reminderDate &&
-                                                                m.reminderDate >
-                                                                    new Date().getTime()) ? (
-                                                                <NotificationsActive />
-                                                            ) : m.status ===
-                                                              'completed' ? (
-                                                                <Check />
-                                                            ) : (
-                                                                <NotificationsNone />
-                                                            )}
-                                                        </Tooltip>
+                                                        <MaintenanceStatus
+                                                            maintenance={m}
+                                                        />
                                                     </TableCell>
                                                     <TableCell
                                                         sx={sx.smallCell}
