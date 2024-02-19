@@ -27,6 +27,7 @@ const useDocumentsColumns = (documents: Document[]) => {
     const drivers = useSelector((state: RootState) => state.drivers)
     const maintenances = useSelector((state: RootState) => state.maintenances)
     const clients = useSelector((state: RootState) => state.clients)
+    const orders = useSelector((state: RootState) => state.orders)
     const sortType = (a: any, b: any, id: string) => {
         if (!a.original[id]) return 1
         if (!b.original[id]) return -1
@@ -143,6 +144,11 @@ const useDocumentsColumns = (documents: Document[]) => {
                                 clients.find((c) => c.key === d.typeId)?.name ||
                                 '-'
                             break
+                        case 'order':
+                            typeName =
+                                orders.find((o) => o.key === d.typeId)
+                                    ?.reference || '-'
+                            break
                     }
                     return d.typeId ? (
                         <Box>
@@ -196,7 +202,16 @@ const useDocumentsColumns = (documents: Document[]) => {
                 disableSortBy: true,
             },
         ],
-        [documents, vehicles, trailers, drivers, maintenances, clients, intl]
+        [
+            documents,
+            vehicles,
+            trailers,
+            drivers,
+            maintenances,
+            clients,
+            orders,
+            intl,
+        ]
     )
 
     return { columns }

@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack'
 import { firestore, auth } from '@/services/firebase'
-import { collection, updateDoc, doc, where, query, onSnapshot } from 'firebase/firestore'
+import { collection, updateDoc, doc, where, query, onSnapshot, deleteDoc } from 'firebase/firestore'
 import { Group } from '@/components/common/Group/types'
 import { setGroups } from '@/components/common/Group/redux'
 import { useDispatch } from 'react-redux'
@@ -54,9 +54,19 @@ const useEditDriver = ({ driver, edit }: useEditDriverProps) : EditDriverProps =
         setEditedDriver(driver)
     }, [setEditedDriver, driver])
 
-    const deleteDriver = useCallback(() => {
-        console.log('delete driver: ',driver.key)
-        // TODO: set driver as deleted with db flag
+    const deleteDriver = useCallback(async () => {
+        if (!driver.key) return
+        try {
+            await deleteDoc(doc(firestore, 'drivers', driver.key))
+            enqueueSnackbar(intl.formatMessage({
+                id: 'app.DeletedDriverSuccess',
+            }), { variant: 'success' })
+            router.push('/drivers')
+        } catch (error) {
+            enqueueSnackbar(intl.formatMessage({
+                id: 'app.DeletedDriverError',
+            }), { variant: 'error', persist: true })
+        }
     }, [driver?.key])
     return {
         driver,

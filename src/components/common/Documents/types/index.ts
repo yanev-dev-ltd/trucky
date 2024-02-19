@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
 
-export type DocumentType = 'vehicle' | 'trailer' | 'driver' | 'maintenance' | 'client'
+export type DocumentType = 'vehicle' | 'trailer' | 'driver' | 'maintenance' | 'client' | 'order'
 export type useDocumentsProps = {
     type: DocumentType
     typeId: string

@@ -23,6 +23,7 @@ export type Order = {
     dateExecution?: number
     palletsCount?: number
     temperatureRegime?: number
+    date?: number
 }
 
 export type useOrdersProps = {

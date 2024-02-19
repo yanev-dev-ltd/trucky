@@ -36,8 +36,8 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
                 return
             }
             if (!newOrder?.key) {
-                const newOrderRef = doc(collection(firestore, 'routes')).id
-                if (newOrderRef) setNewOrder({ ...newOrder, key: newOrderRef, vehicleId: vehicleId || newOrder?.vehicleId, userId: auth.currentUser.uid})
+                const newOrderRef = doc(collection(firestore, 'orders')).id
+                if (newOrderRef) setNewOrder({ ...newOrder, key: newOrderRef, vehicleId: vehicleId || newOrder?.vehicleId, userId: auth.currentUser.uid, date: new Date().getTime()})
             }
 
         }
@@ -56,7 +56,19 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
     
     }, [])
 
-    return { open, setOpen, addOrder, editOrder: editOrderCallback, order: newOrder, isNew: !Boolean(order?.key), deleteOrder, changeField, locations, setNewOrder, routeId}
+    return {
+        open,
+        setOpen,
+        addOrder,
+        editOrder: editOrderCallback,
+        order: newOrder,
+        isNew: !Boolean(order?.key),
+        deleteOrder,
+        changeField,
+        locations,
+        setNewOrder,
+        routeId
+    }
 }
 
 export default useOrderDialog

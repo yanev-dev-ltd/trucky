@@ -29,6 +29,7 @@ import { GroupsSelect } from '@/components/common/Group/components/GroupsSelect/
 import { SelectRoute } from '@/components/routes/components/SelectRoute/SelectRoute'
 import { Location } from '@/components/routes/types'
 import { DesktopDatePicker } from '@mui/x-date-pickers'
+import { Documents } from '@/components/common/Documents/Documents'
 
 const OrderDialogView = ({
     open,
@@ -349,6 +350,13 @@ const OrderDialogView = ({
                                     changeField('notes', event.target.value)
                                 }
                                 maxRows={8}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Documents
+                                type="order"
+                                typeId={order?.key || ''}
+                                light
                             />
                         </Grid>
                     </Grid>

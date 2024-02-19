@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack'
 import { firestore, auth } from '@/services/firebase'
-import { updateDoc, doc } from 'firebase/firestore'
+import { updateDoc, doc, deleteDoc } from 'firebase/firestore'
 
 const useEditClient = ({ client, edit }: useEditClientProps) : EditClientProps => {
     const [editedClient, setEditedClient] = useState<Client | undefined>(client)
@@ -33,9 +33,19 @@ const useEditClient = ({ client, edit }: useEditClientProps) : EditClientProps =
         setEditedClient(client)
     }, [setEditedClient, client])
 
-    const deleteClient = useCallback(() => {
-        console.log('delete client: ',client.key)
-        // TODO: set client as deleted with db flag
+    const deleteClient = useCallback(async () => {
+        if (!client.key) return
+        try {
+            await deleteDoc(doc(firestore, 'clients', client.key))
+            enqueueSnackbar(intl.formatMessage({
+                id: 'app.DeletedClientSuccess',
+            }), { variant: 'success' })
+            router.push('/clients')
+        } catch (error) {
+            enqueueSnackbar(intl.formatMessage({
+                id: 'app.DeletedClientError',
+            }), { variant: 'error', persist: true })
+        }
     }, [client?.key])
     return {
         client,

@@ -81,7 +81,6 @@ const useEditTrailer = (trailer: Trailer | undefined): useEditTrailerResponse =>
             }), { variant: 'error', persist: true })
         }
         router.push('/trailers')
-        // TODO: delete the vehicle and write a function for clearing the db and storage
     }, [trailer?.key])
 
     return { saveTrailerField, editedTrailer, setEditedTrailer, reset, deleteTrailer, maintenances }

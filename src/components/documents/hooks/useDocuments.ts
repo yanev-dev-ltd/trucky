@@ -18,6 +18,8 @@ import { Maintenance } from '@/components/maintenance/types'
 import { setMaintenances } from '@/components/maintenance/redux'
 import { Client } from '@/components/clients/types'
 import { setClients } from '@/components/clients/redux'
+import { Order } from '@/components/orders/types'
+import { setOrders } from '@/components/orders/redux'
 
 const useClients = ({ documentId, edit }: useDocumentsProps): DocumentsProps => {
     const documents = useSelector((state: RootState) => state.documents)
@@ -79,6 +81,14 @@ const useClients = ({ documentId, edit }: useDocumentsProps): DocumentsProps => 
             })
             dispatch(setClients(clients))
         })
+        const qo = query(collection(firestore, 'orders'), where('userId', '==', auth.currentUser?.uid))
+        const unsubscribeOrders = onSnapshot(qo, (querySnapshot) => {
+            const orders: Order[] = []
+            querySnapshot.forEach((doc) => {
+                orders.push({key: doc.id, ...doc.data()})
+            })
+            dispatch(setOrders(orders))
+        })
         return () => {
             unsubscribe()
             unsubscribeVehicles()
@@ -86,6 +96,7 @@ const useClients = ({ documentId, edit }: useDocumentsProps): DocumentsProps => 
             unsubscribeDrivers()
             unsubscribeMaintenances()
             unsubscribeClients()
+            unsubscribeOrders()
         }
     }, [auth.currentUser?.uid])
 

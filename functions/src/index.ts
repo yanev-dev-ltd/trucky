@@ -2,7 +2,7 @@ import {
   onDocumentWritten,
   // onDocumentCreated,
   onDocumentUpdated,
-  // onDocumentDeleted,
+  onDocumentDeleted,
   // Change,
   // FirestoreEvent,
 } from "firebase-functions/v2/firestore";
@@ -139,6 +139,10 @@ export const deleteUser = functions.auth.user().onDelete(async (user) => {
     const groups = await firestore.collection("groups").where("userId", "==", user.uid).get();
     groups.forEach(async (group) => {
       await group.ref.delete();
+    });
+    const documents = await firestore.collection("documents").where("userId", "==", user.uid).get();
+    documents.forEach(async (document) => {
+      await document.ref.delete();
     });
     return firestore.collection("customers").doc(user.uid).delete();
   }
@@ -640,14 +644,16 @@ export const scheduleDocuments = onSchedule("every day 00:00", async () => {
       userId: documentData?.userId,
       to: user.email,
       message: {
-        subject: locale.documentReminder.replace("{document}", documentData?.title || documentData?.name),
+        subject: locale.documentTimeReminder,
         html: email({
-          title: locale.documentReminder.replace("{document}", documentData?.title || documentData?.name),
+          title: locale.documentTimeReminder,
+          message: locale.documentReminderDescription.replace("{document}", documentData?.title || documentData?.name),
           actionLink: `${baseUrl}documents/${document.id}`,
           actionText: locale["checkDocument"],
           locale: settings.get("locale"),
         }),
-        text: locale.documentReminder.replace("{document}", documentData?.title || documentData?.name),
+        text: locale.documentTimeReminder,
+        description: locale.documentReminderDescription.replace("{document}", documentData?.title || documentData?.name),
       },
       status: "unread",
       url: `${baseUrl}documents/${document.id}`,
@@ -655,3 +661,99 @@ export const scheduleDocuments = onSchedule("every day 00:00", async () => {
     });
   });
 });
+
+export const orderDeleted = onDocumentDeleted("orders/{orderId}",
+    async (event) => {
+      const orderId = event.params.orderId;
+      const storage = new Storage();
+      const bucket = storage.bucket("trucky-one.appspot.com");
+      const documentsColl = firestore.collection("documents");
+      let q1: Query<DocumentData> = documentsColl.where("type", "==", "order");
+      q1 = documentsColl.where("typeId", "==", orderId);
+      const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
+      querySnapshot.forEach(async (document) => {
+        const doc = document.data();
+        await bucket.file(doc.path).delete();
+        await document.ref.delete();
+      });
+    });
+
+export const vehicleDeleted = onDocumentDeleted("vehicles/{vehicleId}",
+    async (event) => {
+      const vehicleId = event.params.vehicleId;
+      const storage = new Storage();
+      const bucket = storage.bucket("trucky-one.appspot.com");
+      const documentsColl = firestore.collection("documents");
+      let q1: Query<DocumentData> = documentsColl.where("type", "==", "vehicle");
+      q1 = documentsColl.where("typeId", "==", vehicleId);
+      const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
+      querySnapshot.forEach(async (document) => {
+        const doc = document.data();
+        await bucket.file(doc.path).delete();
+        await document.ref.delete();
+      });
+    });
+
+export const trailerDeleted = onDocumentDeleted("trailers/{trailerId}",
+    async (event) => {
+      const trailerId = event.params.trailerId;
+      const storage = new Storage();
+      const bucket = storage.bucket("trucky-one.appspot.com");
+      const documentsColl = firestore.collection("documents");
+      let q1: Query<DocumentData> = documentsColl.where("type", "==", "trailer");
+      q1 = documentsColl.where("typeId", "==", trailerId);
+      const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
+      querySnapshot.forEach(async (document) => {
+        const doc = document.data();
+        await bucket.file(doc.path).delete();
+        await document.ref.delete();
+      });
+    });
+
+export const driverDeleted = onDocumentDeleted("drivers/{driverId}",
+    async (event) => {
+      const driverId = event.params.driverId;
+      const storage = new Storage();
+      const bucket = storage.bucket("trucky-one.appspot.com");
+      const documentsColl = firestore.collection("documents");
+      let q1: Query<DocumentData> = documentsColl.where("type", "==", "driver");
+      q1 = documentsColl.where("typeId", "==", driverId);
+      const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
+      querySnapshot.forEach(async (document) => {
+        const doc = document.data();
+        await bucket.file(doc.path).delete();
+        await document.ref.delete();
+      });
+    });
+
+export const maintenanceDeleted = onDocumentDeleted("maintenances/{maintenanceId}",
+    async (event) => {
+      const maintenanceId = event.params.maintenanceId;
+      const storage = new Storage();
+      const bucket = storage.bucket("trucky-one.appspot.com");
+      const documentsColl = firestore.collection("documents");
+      let q1: Query<DocumentData> = documentsColl.where("type", "==", "maintenance");
+      q1 = documentsColl.where("typeId", "==", maintenanceId);
+      const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
+      querySnapshot.forEach(async (document) => {
+        const doc = document.data();
+        await bucket.file(doc.path).delete();
+        await document.ref.delete();
+      });
+    });
+
+export const clientDeleted = onDocumentDeleted("clients/{clientId}",
+    async (event) => {
+      const clientId = event.params.clientId;
+      const storage = new Storage();
+      const bucket = storage.bucket("trucky-one.appspot.com");
+      const documentsColl = firestore.collection("documents");
+      let q1: Query<DocumentData> = documentsColl.where("type", "==", "client");
+      q1 = documentsColl.where("typeId", "==", clientId);
+      const querySnapshot: QuerySnapshot<DocumentData> = await q1.get();
+      querySnapshot.forEach(async (document) => {
+        const doc = document.data();
+        await bucket.file(doc.path).delete();
+        await document.ref.delete();
+      });
+    });

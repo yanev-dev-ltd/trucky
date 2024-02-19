@@ -93,7 +93,6 @@ const useEditVehicle = (vehicle: Vehicle | undefined): useEditVehicleResponse =>
             }), { variant: 'error', persist: true })
         }
         router.push('/vehicles')
-        // TODO: delete the vehicle and write a function for clearing the db and storage
     }, [vehicle?.key])
 
     return { saveVehicleField, editedVehicle, setEditedVehicle, reset, deleteVehicle, maintenances, routes }
