@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react'
-import { useHeaderProps, useHeader } from '../types';
+import { useHeaderProps, useHeader as useHeaderPropsType } from '../types';
 
 // @typescript-eslint/no-unused-vars
-const useHeader = (props: useHeader): useHeaderProps => {
+const useHeader = (props: useHeaderPropsType): useHeaderProps => {
     const [fullscreen, setFullscreen] = useState(false)
 
     const handleFullscreen = useCallback(() => {

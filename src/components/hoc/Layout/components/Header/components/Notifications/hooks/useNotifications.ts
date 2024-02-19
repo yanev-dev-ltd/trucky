@@ -11,6 +11,7 @@ import { ro } from 'date-fns/locale'
 const useNotifications = (): useNavigationProps => {
     const dispatch = useDispatch()
     const notifications = useSelector((state: RootState) => state.notifications)
+    const { settings } = useSelector((state: RootState) => state.settings)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
     const [hasNotifications, setHasNotifications] = useState(false)
     const router = useRouter()
@@ -29,7 +30,7 @@ const useNotifications = (): useNavigationProps => {
                 const data = doc.data()
                     n.push({key: doc.id, date: data.date, message: data.message, status: data.status, url: data.url } as Notification)
             })
-            if (unreadNotifications < n.filter(n => n.status === 'unread').length) {
+            if (unreadNotifications < n.filter(n => n.status === 'unread').length && settings.sound === 'on') {
                 const audio = new Audio('/sounds/notification.wav')
                 audio.play()
             }

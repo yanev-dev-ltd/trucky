@@ -18,6 +18,7 @@ import {
     Person2,
     Password as PasswordIcon,
     Euro,
+    VolumeUp,
 } from '@mui/icons-material'
 import { SettingsViewProps } from '../types'
 import sx from '../styles/Settings.sx'
@@ -33,6 +34,7 @@ import Profile from '../components/Profile/Profile'
 import Password from '../components/Password/Password'
 import Currency from '../components/Currency/Currency'
 import { Elements } from '@stripe/react-stripe-js'
+import Sound from '../components/Sound/Sound'
 
 export const SettingsView = ({
     section,
@@ -67,6 +69,8 @@ export const SettingsView = ({
                 return <Password />
             case 'currency':
                 return <Currency />
+            case 'sound':
+                return <Sound />
             default:
                 return null
         }
@@ -170,6 +174,18 @@ export const SettingsView = ({
                         </ListItemIcon>
                         <ListItemText>
                             <FormattedMessage id="app.DefaultUnits" />
+                        </ListItemText>
+                    </MenuItem>
+                    <MenuItem
+                        component={Link}
+                        href={'/settings/sound'}
+                        sx={section === 'sound' ? sx.active : undefined}
+                    >
+                        <ListItemIcon>
+                            <VolumeUp fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>
+                            <FormattedMessage id="app.Sound" />
                         </ListItemText>
                     </MenuItem>
                     <MenuItem

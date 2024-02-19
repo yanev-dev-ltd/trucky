@@ -37,7 +37,13 @@ const useOrderDialog = ({ open, setOpen, addOrder, editOrder, order, deleteOrder
             }
             if (!newOrder?.key) {
                 const newOrderRef = doc(collection(firestore, 'orders')).id
-                if (newOrderRef) setNewOrder({ ...newOrder, key: newOrderRef, vehicleId: vehicleId || newOrder?.vehicleId, userId: auth.currentUser.uid, date: new Date().getTime()})
+                if (newOrderRef) setNewOrder({
+                    ...newOrder,
+                    key: newOrderRef,
+                    vehicleId: vehicleId || newOrder?.vehicleId,
+                    userId: auth.currentUser.uid,
+                    date: new Date().getTime()
+                })
             }
 
         }

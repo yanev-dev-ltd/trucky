@@ -5,6 +5,7 @@ export type Settings = {
     locale: Locales
     units: string
     currency: string
+    sound: string
 }
 
 export enum Locales {
