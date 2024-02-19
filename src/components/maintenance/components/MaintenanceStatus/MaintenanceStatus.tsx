@@ -1,4 +1,4 @@
-import { Divider, List, ListItemText, Tooltip } from '@mui/material'
+import { Divider, List, ListItemText, Tooltip, Typography } from '@mui/material'
 import { Maintenance } from '../../types'
 import { FormattedMessage, useIntl } from 'react-intl'
 import {
@@ -10,6 +10,7 @@ import { format } from 'date-fns'
 import { RootState } from '@/store/store'
 import { useSelector } from 'react-redux'
 import { Fragment } from 'react'
+import sx from './styles/MaintenanceStatus.sx'
 
 const MaintenanceStatus = ({ maintenance }: { maintenance: Maintenance }) => {
     const { settings } = useSelector((state: RootState) => state.settings)
@@ -18,6 +19,7 @@ const MaintenanceStatus = ({ maintenance }: { maintenance: Maintenance }) => {
     if (maintenance.status !== 'completed' && maintenance.reminderMileage) {
         reminders.push(
             <ListItemText
+                sx={sx.tooltip}
                 secondary={`${intl.formatMessage({
                     id: 'app.Maintenance.AlarmMileage',
                 })}: ${
@@ -38,6 +40,7 @@ const MaintenanceStatus = ({ maintenance }: { maintenance: Maintenance }) => {
     ) {
         reminders.push(
             <ListItemText
+                sx={sx.tooltip}
                 secondary={`${intl.formatMessage({
                     id: 'app.Maintenance.CompletedMileage',
                 })}: ${
@@ -56,6 +59,7 @@ const MaintenanceStatus = ({ maintenance }: { maintenance: Maintenance }) => {
     if (maintenance.dateStatus !== 'completed' && maintenance.reminderDate) {
         reminders.push(
             <ListItemText
+                sx={sx.tooltip}
                 secondary={`${intl.formatMessage({
                     id: 'app.Maintenance.AlarmDate',
                 })}: ${format(maintenance.reminderDate, 'dd/MM/yyyy')}`}
@@ -67,6 +71,7 @@ const MaintenanceStatus = ({ maintenance }: { maintenance: Maintenance }) => {
     ) {
         reminders.push(
             <ListItemText
+                sx={sx.tooltip}
                 secondary={`${intl.formatMessage({
                     id: 'app.Maintenance.CompletedDate',
                 })}: ${format(maintenance.reminderDate, 'dd/MM/yyyy')}`}

@@ -33,6 +33,11 @@ const sx: Record<string, SxProps<Theme>> = {
     selected: {
         backgroundColor: (theme) => theme.palette.primary.main,
     },
+    tooltip: {
+        '& .MuiListItemText-secondary': {
+            color: '#fff',
+        },
+    }
 }
 
 export default sx
