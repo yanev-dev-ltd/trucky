@@ -15,7 +15,14 @@ const useRegistration = ({ locale }: useRegistrationProps) => {
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
     const router = useRouter()
-    const [settingsStorage, setSettingsStorage] = useLocalStorage('settings', { locale: Object.values(Locales).includes(locale) ? locale : 'en' })
+    const [settingsStorage, setSettingsStorage] = useLocalStorage('settings',
+        {
+            locale: Object.values(Locales).includes(locale) ? locale : 'en',
+            sound: 'on',
+            currency: 'EUR',
+            theme: 'light',
+            units: 'm'
+        })
 
     const onSubmit = useCallback(
         async (e: SyntheticEvent) => {
