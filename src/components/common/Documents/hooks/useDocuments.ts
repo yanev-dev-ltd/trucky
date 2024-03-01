@@ -14,6 +14,7 @@ import {
 import { useIntl } from 'react-intl'
 import { addDoc, collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { useSnackbar } from 'notistack'
+import { stat } from 'fs'
 
 const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
     const { downloadFile } = useFiles()
@@ -44,10 +45,10 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
             return
         }
         setIsLoading(true)
+        const conditions = [where('userId', '==', auth.currentUser?.uid), where('typeId', '==', typeId)]
         const qd = query(
             collection(firestore, 'documents'),
-            where('userId', '==', auth.currentUser?.uid),
-            where('typeId', '==', typeId),
+            ...conditions,
             orderBy('date', 'desc'))
         const unsubscribeDocuments = onSnapshot(qd, (querySnapshot) => {
             const documents: Document[] = []
@@ -143,7 +144,8 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
                                 type,
                                 typeId,
                                 title: titles[i] || '',
-                                reminderDate: reminderDates[i] || null
+                                reminderDate: reminderDates[i] || null,
+                                status: 'active'
                             })
                             readyRef.current = true
                             setUploadedFiles((oldUploadedFiles) => {
@@ -203,7 +205,7 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
         reminderDates,
         setReminderDates,
         isLoading,
-        light
+        light,
     }
 }
 

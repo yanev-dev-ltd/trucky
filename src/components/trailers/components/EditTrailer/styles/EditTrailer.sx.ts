@@ -30,8 +30,8 @@ const sx: Record<string, SxProps<Theme>> = {
     },
     edit: {
         position: 'absolute',
-        top: 1,
-        right: 1,
+        top: 8,
+        right: 8,
     },
     flexList: {
         display: 'flex',

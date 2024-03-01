@@ -71,13 +71,12 @@ export const DocumentsView = ({
                     }}
                 />
                 <Tooltip title={<FormattedMessage id="app.Upload" />}>
-                    <IconButton size="small">
-                        <label
-                            htmlFor={`document-upload-${type}`}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            <CloudUpload />
-                        </label>
+                    <IconButton
+                        size="small"
+                        component="label"
+                        htmlFor={`document-upload-${type}`}
+                    >
+                        <CloudUpload />
                     </IconButton>
                 </Tooltip>
                 <Dialog
