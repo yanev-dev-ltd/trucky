@@ -40,6 +40,4 @@ export type DocumentsProps = {
     setReminderDates: (reminderDates: (number | null)[]) => void
     isLoading: boolean
     light?: boolean
-    setGroup: (group: string) => void
-    selectedGroupKey?: string
 }
