@@ -473,13 +473,17 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                                                           sx={sx.textWrap}
                                                       >
                                                           {group?.description ||
-                                                              '-'}
+                                                              null}
                                                       </Typography>
                                                   </Box>
                                               )
                                           )
                                       })
                                     : '-'}
+                                {(!vehicle.groups ||
+                                    vehicle.groups.length === 0) && (
+                                    <Typography>-</Typography>
+                                )}
                             </>
                         )}
                         {edit === 'groups' && (
@@ -624,7 +628,7 @@ const EditVehicle = ({ vehicle, edit, routeId }: EditVehicleProps) => {
                         )}
                     </Paper>
                     <Paper sx={sx.paper}>
-                        <Box sx={sx.relative}>
+                        <Box>
                             <Typography>
                                 <FormattedMessage id="app.Routes" />
                             </Typography>

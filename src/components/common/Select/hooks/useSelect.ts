@@ -28,7 +28,7 @@ const useSelect = ({ items, setItems, sx, multiple, type }: useSelectProps) => {
             case 'clients':
                 return setClients
         }
-    }, [type])
+    }, [type, setTrailers, setVehicles, setDrivers, setClients])
 
     const AddItem = useMemo(() => {
         switch (type) {
@@ -41,10 +41,10 @@ const useSelect = ({ items, setItems, sx, multiple, type }: useSelectProps) => {
             case 'clients':
                 return AddClient
         }
-    }, [type])
+    }, [type, AddTrailer, AddVehicle, AddDriver, AddClient])
 
     useEffect(() => {
-        if (!auth.currentUser?.uid) {
+        if (!auth.currentUser?.uid || !type) {
             return
         }
         const q = query(collection(firestore, type), where('userId', '==', auth.currentUser?.uid))
@@ -56,7 +56,7 @@ const useSelect = ({ items, setItems, sx, multiple, type }: useSelectProps) => {
             dispatch(setRedux(items))
         })
         return () => unsubscribe()
-    }, [auth.currentUser?.uid])
+    }, [auth.currentUser?.uid, type, dispatch, setRedux])
 
     const selectedValue = useMemo(() => {
         if (items && multiple) {

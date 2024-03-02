@@ -81,10 +81,6 @@ const sx: Record<string, SxProps<Theme>> = {
             background: (theme) => theme.palette.text.secondary,
         },
     },
-    relative: {
-        position: 'relative',
-        padding: (theme) => `${theme.spacing()}px 0`,
-    },
     warn: {
         marginTop: 2,
         backgroundColor: 'danger.main',

@@ -23,7 +23,7 @@ const MaintenanceStatus = ({ maintenance }: { maintenance: Maintenance }) => {
                 secondary={`${intl.formatMessage({
                     id: 'app.Maintenance.AlarmMileage',
                 })}: ${
-                    maintenance.reminderMileage +
+                    +maintenance.reminderMileage +
                     (maintenance?.startMileage || 0)
                 } ${
                     settings.units === 'm'

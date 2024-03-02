@@ -45,7 +45,7 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
             if (vehicleSnapshot.exists()) {
                 const { type, trailerId } = vehicleSnapshot.data()
                 setMode(TruckTypes.includes(type) ? 'truck' : 'car')
-                !routeId && !route.trailerId && changeField('trailerId', trailerId)
+                !routeId && !route.trailerId && trailerId && changeField('trailerId', trailerId)
             }
         }
         getMode()
@@ -136,7 +136,7 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
                 id: 'app.Error.DeletingRoute',
             }), { variant: 'error', persist: true })
         }
-    }, [])
+    }, [route])
 
     return {
         route,

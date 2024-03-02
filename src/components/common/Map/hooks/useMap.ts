@@ -153,7 +153,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute, mode = 
             hMap.dispose()
             window.removeEventListener('resize', handleResize)
         }
-    }, [mapRef, reload, locations, mode])
+    }, [mapRef, reload, setReload, locations, mode, currency, units, setDistance, setToll, setFerry, setNoRoute, intl, enqueueSnackbar, closeSnackbar, setLoading])
 
     return { mapRef, loading }
 }
