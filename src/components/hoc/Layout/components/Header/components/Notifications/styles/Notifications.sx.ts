@@ -56,6 +56,9 @@ const sx: Record<string, SxProps<Theme>> = {
         paddingTop: 1,
         width: '100%',
         backgroundColor: 'primary.main',
+        '& *': {
+            color: '#fff',
+        },
     },
     time: {
         fontSize: 11,
