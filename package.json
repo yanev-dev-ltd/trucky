@@ -18,6 +18,7 @@
     "@mui/material": "^5.10.16",
     "@mui/x-date-pickers": "^5.0.12",
     "@reduxjs/toolkit": "^1.9.1",
+    "@sentry/nextjs": "^8",
     "@stripe/react-stripe-js": "^2.4.0",
     "@stripe/stripe-js": "^2.2.2",
     "@types/autosuggest-highlight": "^3.2.0",
