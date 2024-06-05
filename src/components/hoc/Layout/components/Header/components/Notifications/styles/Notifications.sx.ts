@@ -49,6 +49,9 @@ const sx: Record<string, SxProps<Theme>> = {
         paddingBottom: 1,
         paddingTop: 1,
         width: '100%',
+        '& path': {
+            color: '#fff',
+        }
     },
     itemNew: {
         padding: 0,
@@ -88,8 +91,10 @@ const sx: Record<string, SxProps<Theme>> = {
         paddingTop: 1,
     },
     light: {
-        color: 'primary.main',
-        backgroundColor: 'text.primary',
+        backgroundColor: '#fff',
+        '& path': {
+            color: 'primary.main',
+        }
     },
     dot: {
         backgroundColor: 'primary.main',

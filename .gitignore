@@ -4,3 +4,5 @@ node_modules
 /.firebase/
 .env
 credentials.properties
+# Sentry Config File
+.env.sentry-build-plugin

@@ -3,5 +3,9 @@
     "source.fixAll.eslint": "explicit"
   },
   "editor.formatOnSave": true,
-  "typescript.preferences.quoteStyle": "single"
+  "typescript.preferences.quoteStyle": "single",
+  "i18n-ally.localesPaths": [
+    "functions/lib/locales",
+    "functions/src/locales"
+  ]
 }
