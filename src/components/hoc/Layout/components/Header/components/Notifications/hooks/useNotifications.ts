@@ -6,7 +6,6 @@ import { useNavigationProps, Notification } from '../types'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import { useRouter } from 'next/router'
-import { ro } from 'date-fns/locale'
 
 const useNotifications = (): useNavigationProps => {
     const dispatch = useDispatch()
@@ -32,7 +31,12 @@ const useNotifications = (): useNavigationProps => {
             })
             if (unreadNotifications < n.filter(n => n.status === 'unread').length && settings.sound === 'on') {
                 const audio = new Audio('/sounds/notification.wav')
-                audio.play()
+                const promise = audio.play()
+                if (promise !== undefined) {
+                    promise.catch((error) => {
+                        console.log('audio error', error)
+                    })
+                }
             }
             dispatch(setNotifications(n))
         })
