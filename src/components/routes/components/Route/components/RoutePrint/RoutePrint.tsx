@@ -6,13 +6,7 @@ import { useReactToPrint } from 'react-to-print'
 import { Route } from '@/components/routes/types'
 import ComponentToPrint from '../ComponentToPrint/ComponentToPrint'
 
-const RoutePrint = (props: {
-    route: Route
-    distance: number[]
-    toll: number[]
-    ferry: boolean[]
-    units: string
-}) => {
+const RoutePrint = (props: { route: Route; units: string }) => {
     const componentRef = useRef(null)
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,

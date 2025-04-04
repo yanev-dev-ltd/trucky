@@ -8,6 +8,7 @@ import sx from '../styles/Header.sx'
 import Image from 'next/image'
 import { HeaderProps } from '../types'
 import Notifications from '../components/Notifications/Notifications'
+import Feedback from '../components/Feedback/Feedback'
 import useSubscription from '@/hooks/useSubscription'
 
 export const HeaderView = ({
@@ -50,6 +51,7 @@ export const HeaderView = ({
                 </Link>
             )}
             <Box sx={sx.buttons}>
+                <Feedback />
                 <Tooltip
                     title={
                         fullscreen ? (

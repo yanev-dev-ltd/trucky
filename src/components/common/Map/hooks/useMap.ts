@@ -1,66 +1,73 @@
-import { useState, useRef, useLayoutEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Location } from '@/components/routes/types'
 import svgMarker from '@/constants/marker'
 import { useSnackbar, SnackbarKey } from 'notistack'
 import { useIntl } from 'react-intl'
 import { useMapProps } from '../types'
 import { KM_to_MILES } from '@/constants/units'
+import H from '@here/maps-api-for-javascript'
 
-const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute, mode = 'truck', currency = 'EUR', units = 'km'}: useMapProps) => {
-    const mapRef = useRef(null)
+const useMap = ({ locations, changeField, setNoRoute, mode = 'truck', currency = 'EUR', units = 'km'}: useMapProps) => {
+    const mapRef = useRef<HTMLElement>(null)
+    const map = useRef<any>(null)
+    const platform = useRef<any>(null)
     const message = useRef<SnackbarKey>()
-    const [reload, setReload] = useState(false)
     const [loading, setLoading] = useState<boolean>(false)
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const intl = useIntl()
-    
-    useLayoutEffect(() => {
-        // `mapRef.current` will be `undefined` when this hook first runs; edge case that
-        if ((!mapRef.current && !reload) || !window.H) {
-            // some strange ref behavior needs to be reloaded
-            setReload(true)
-            return
-        }
-        const H = window.H
-        
-        const platform = new H.service.Platform({
-            apikey: process.env.TRUCKY_HERE_API_KEY || ''
-        })
-        const defaultLayers = platform.createDefaultLayers()
-        const hMap = new H.Map(
-            mapRef.current,
-            defaultLayers.vector.normal[mode === 'truck' ? 'truck' : 'map'],
-            {
-                center: { lat: 50, lng: 5 },
-                zoom: 4,
-                pixelRatio: window.devicePixelRatio || 1,
-                padding: {
-                    top: 40,
-                    left: 40,
-                    right: 40,
-                    bottom: 40,
-                },
-            }
-        )
-        
-        // const ui = H.ui.UI.createDefault(hMap, defaultLayers)
-        const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(hMap))
 
-        if(locations && locations.length > 1) {
+    useEffect(() => {
+        // Check if the map object has already been created
+        if (!map.current && mapRef.current) {
+            // Create a platform object with the API key and useCIT option
+            platform.current = new H.service.Platform({
+                apikey: process.env.TRUCKY_HERE_API_KEY || ''
+            });
+            // Obtain the default map types from the platform object:
+            const defaultLayers = platform.current.createDefaultLayers({
+                pois: true
+            });
+            // Create a new map instance with the Tile layer, center and zoom level
+            // Instantiate (and display) a map:
+            const newMap = new H.Map(
+                mapRef.current,
+                defaultLayers.vector.normal[mode === 'truck' ? 'truck' : 'map'], {
+                    center: { lat: 50, lng: 5 },
+                    zoom: 4,
+                    pixelRatio: window.devicePixelRatio || 1,
+                    padding: {
+                        top: 40,
+                        left: 40,
+                        right: 40,
+                        bottom: 40,
+                    },
+                }
+            );
+
+            // Add panning and zooming behavior to the map
+            const behavior = new H.mapevents.Behavior(
+                new H.mapevents.MapEvents(newMap)
+            );
+
+            // Set the map object to the reference
+            map.current = newMap;
+        }
+
+        if(locations && locations.length > 1 && map.current && platform.current && mapRef.current) {
             locations.map((location: Location, index: number) => {
-                const icon = new H.map.Icon(
+                const icon = new H.map.DomIcon(
                         svgMarker
                             .replace('{LEFT}', index > 8 ? '7' : '12')
                             .replace('{NUMBER}', `${index + 1}`)
                     ),
-                    marker = new H.map.Marker(
+                    marker = new H.map.DomMarker(
                         { lat: location.lat || 0, lng: location.lng || 0 },
-                        { icon }
+                        { icon, data: { lat: location.lat || 0, lng: location.lng || 0 }}
                     )
-                hMap.addObject(marker)
+                map.current.addObject(marker)
             })
 
-            const router = platform.getRoutingService(null, 8)
+            const router = platform.current.getRoutingService(null, 8)
             const origin = [...locations].shift()
             const destination = [...locations].pop()
             if (origin) {
@@ -80,7 +87,7 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute, mode = 
                     },
                     (result: any) => {
                         const sections = result?.routes[0]?.sections
-                        const lineStrings: unknown[] = []
+                        const lineStrings: any[] = []
                         const distance: number[] = []
                         const toll: number[] = []
                         const ferry: boolean[] = []
@@ -113,23 +120,20 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute, mode = 
                             }
                         })
 
-                        setDistance && setDistance(distance)
-                        setToll && setToll(toll)
-                        setFerry && setFerry(ferry)
+                        // changeField('distance', distance)
+                        // changeField('toll', toll)
+                        // changeField('ferry', ferry)
 
                         const multiLineString = new H.geo.MultiLineString(
                             lineStrings
                         )
                         const bounds = multiLineString.getBoundingBox()
                         // render route on the map
-                        hMap.addObject(
-                            new H.map.Polyline(multiLineString, {
-                                style: { lineWidth: 5 },
-                                arrows: { fillColor: 'white', frequency: 2, width: 0.8, length: 0.7 }
-                            })
+                        map.current.addObject(
+                            new H.map.Polyline(multiLineString)
                         )
                         // zoom to polyline
-                        hMap.getViewModel().setLookAtData({ bounds })
+                        map.current.getViewModel().setLookAtData({ bounds })
                         // hMap.addLayer(defaultLayers.vector.normal.trafficincidents)
                     },
                     () => {
@@ -142,7 +146,9 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute, mode = 
         }
 
         const handleResize = () => {
-            hMap.getViewPort().resize()
+            if (map.current) {
+                map.current.getViewPort().resize()
+            }
         }
 
         window.addEventListener('resize', handleResize)
@@ -150,10 +156,12 @@ const useMap = ({ locations, setDistance, setToll, setFerry, setNoRoute, mode = 
         // This will act as a cleanup to run once this hook runs again.
         // This includes when the component un-mounts
         return () => {
-            hMap.dispose()
+            // if (map.current) {
+            //     map.current.dispose()
+            // }
             window.removeEventListener('resize', handleResize)
         }
-    }, [mapRef, reload, setReload, locations, mode, currency, units, setDistance, setToll, setFerry, setNoRoute, intl, enqueueSnackbar, closeSnackbar, setLoading])
+    }, [mapRef, locations, mode, currency, units, setNoRoute, changeField, intl, enqueueSnackbar, closeSnackbar, setLoading])
 
     return { mapRef, loading }
 }

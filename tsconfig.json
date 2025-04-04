@@ -2,13 +2,27 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "@/components/*": ["components/*"],
-      "@/utils/*": ["utils/*"],
-      "@/services/*": ["services/*"],
-      "@/store/*": ["store/*"],
-      "@/api/*": ["api/*"],
-      "@/constants/*": ["constants/*"],
-      "@/hooks/*": ["hooks/*"],
+      "@/components/*": [
+        "components/*"
+      ],
+      "@/utils/*": [
+        "utils/*"
+      ],
+      "@/services/*": [
+        "services/*"
+      ],
+      "@/store/*": [
+        "store/*"
+      ],
+      "@/api/*": [
+        "api/*"
+      ],
+      "@/constants/*": [
+        "constants/*"
+      ],
+      "@/hooks/*": [
+        "hooks/*"
+      ]
     },
     "target": "es5",
     "lib": [
@@ -33,6 +47,16 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs", "src/components/common/LoadingButton/types"],
-  "exclude": ["node_modules", "functions"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    "src/components/common/LoadingButton/types"
+, "webpack.config.js"  ],
+  "exclude": [
+    "node_modules",
+    "functions"
+  ]
 }

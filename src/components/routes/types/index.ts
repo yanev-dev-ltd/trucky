@@ -23,6 +23,7 @@ export type Route = {
     endDate?: number
     distance?: number[]
     toll?: number[]
+    ferry?: boolean[]
     vehicleId?: string
     groups?: string[]
     currency?: string

@@ -38,7 +38,6 @@ import StopDialog from '../StopDialog/StopDialog'
 import { Location } from '../../types'
 import Overflow from '@/components/common/Overflow/Overflow'
 import { SortableList } from '../../../common/SortableList/SortableList'
-import Map from '@/components/common/Map/Map'
 import { OrderDialog } from '@/components/orders/components/OrderDialog/OrderDialog'
 import { Order } from '@/components/orders/types'
 import Confirm from '@/components/common/Confirm/Confirm'
@@ -48,17 +47,15 @@ import { Select } from '@/components/common/Select/Select'
 import RoutePrint from './components/RoutePrint/RoutePrint'
 import currencies from '@/api/currencies.json'
 import { Currencies } from '@/components/settings/components/Currency/Currency'
+import dynamic from 'next/dynamic'
 
 const Route = ({ vehicleId, routeId, drivers, onClose }: RouteProps) => {
+    const Map = dynamic(() => import('@/components/common/Map/Map'), {
+        ssr: false,
+    })
     const {
         route,
         changeField,
-        distance,
-        setDistance,
-        toll,
-        setToll,
-        ferry,
-        setFerry,
         noRoute,
         setNoRoute,
         clearRoute,
@@ -373,13 +370,16 @@ const Route = ({ vehicleId, routeId, drivers, onClose }: RouteProps) => {
                                                                 secondary={
                                                                     <>
                                                                         {Boolean(
-                                                                            distance[
-                                                                                index
-                                                                            ]
+                                                                            route.distance &&
+                                                                                route
+                                                                                    .distance[
+                                                                                    index
+                                                                                ]
                                                                         ) && (
                                                                             <Typography variant="caption">
                                                                                 {(
-                                                                                    distance[
+                                                                                    route
+                                                                                        .distance[
                                                                                         index
                                                                                     ] /
                                                                                     1000
@@ -397,16 +397,18 @@ const Route = ({ vehicleId, routeId, drivers, onClose }: RouteProps) => {
                                                                             </Typography>
                                                                         )}{' '}
                                                                         {Boolean(
-                                                                            toll[
-                                                                                index
-                                                                            ]
+                                                                            route.toll &&
+                                                                                route
+                                                                                    .toll[
+                                                                                    index
+                                                                                ]
                                                                         ) && (
                                                                             <Typography variant="caption">
                                                                                 <FormattedMessage id="app.Toll" />
 
                                                                                 :{' '}
                                                                                 {
-                                                                                    +toll[
+                                                                                    +route.toll[
                                                                                         index
                                                                                     ].toFixed(
                                                                                         2
@@ -423,24 +425,26 @@ const Route = ({ vehicleId, routeId, drivers, onClose }: RouteProps) => {
                                                                                 }
                                                                             </Typography>
                                                                         )}
-                                                                        {ferry[
-                                                                            index
-                                                                        ] && (
-                                                                            <Tooltip
-                                                                                title={
-                                                                                    <FormattedMessage id="app.FerryIncluded" />
-                                                                                }
-                                                                            >
-                                                                                <DirectionsBoat
-                                                                                    fontSize="small"
-                                                                                    sx={{
-                                                                                        marginLeft: 1,
-                                                                                        marginBottom:
-                                                                                            -0.7,
-                                                                                    }}
-                                                                                />
-                                                                            </Tooltip>
-                                                                        )}
+                                                                        {route.ferry &&
+                                                                            route
+                                                                                .ferry[
+                                                                                index
+                                                                            ] && (
+                                                                                <Tooltip
+                                                                                    title={
+                                                                                        <FormattedMessage id="app.FerryIncluded" />
+                                                                                    }
+                                                                                >
+                                                                                    <DirectionsBoat
+                                                                                        fontSize="small"
+                                                                                        sx={{
+                                                                                            marginLeft: 1,
+                                                                                            marginBottom:
+                                                                                                -0.7,
+                                                                                        }}
+                                                                                    />
+                                                                                </Tooltip>
+                                                                            )}
                                                                     </>
                                                                 }
                                                             />
@@ -765,9 +769,7 @@ const Route = ({ vehicleId, routeId, drivers, onClose }: RouteProps) => {
                             width: '100%',
                             flexGrow: 1,
                         }}
-                        setDistance={setDistance}
-                        setToll={setToll}
-                        setFerry={setFerry}
+                        changeField={changeField}
                         setNoRoute={setNoRoute}
                         mode={mode}
                         currency={route.currency}
@@ -818,13 +820,7 @@ const Route = ({ vehicleId, routeId, drivers, onClose }: RouteProps) => {
                             submit={<FormattedMessage id="app.Delete" />}
                             cancel={<FormattedMessage id="app.Cancel" />}
                         />
-                        <RoutePrint
-                            route={route}
-                            distance={distance}
-                            toll={toll}
-                            ferry={ferry}
-                            units={route.units}
-                        />
+                        <RoutePrint route={route} units={route.units} />
                     </Box>
                     <Box display="flex" gap={1}>
                         <Button

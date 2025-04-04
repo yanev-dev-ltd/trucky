@@ -135,9 +135,6 @@ const ComponentToPrint = forwardRef(
     (
         props: {
             route: Route
-            distance: number[]
-            toll: number[]
-            ferry: boolean[]
             units: string
         },
         ref
@@ -202,21 +199,24 @@ const ComponentToPrint = forwardRef(
                             {allTrailers.find(
                                 (t) => t.key === props.route.trailerId
                             )?.name || '-'}
-                            <Box>
-                                <Typography variant="caption">
-                                    <FormattedMessage
-                                        id={`app.TrailerType.${trailerTypes.find(
-                                            (t) =>
-                                                t ===
-                                                allTrailers.find(
-                                                    (t) =>
-                                                        t.key ===
-                                                        props.route.trailerId
-                                                )?.type
-                                        )}`}
-                                    />
-                                </Typography>
-                            </Box>
+                            {props.route.trailerId && (
+                                <Box>
+                                    <Typography variant="caption">
+                                        <FormattedMessage
+                                            id={`app.TrailerType.${trailerTypes.find(
+                                                (t) =>
+                                                    t ===
+                                                    allTrailers.find(
+                                                        (t) =>
+                                                            t.key ===
+                                                            props.route
+                                                                .trailerId
+                                                    )?.type
+                                            )}`}
+                                        />
+                                    </Typography>
+                                </Box>
+                            )}
                         </Box>
                     </Grid>
                     <Grid item xs={6}>
@@ -289,58 +289,70 @@ const ComponentToPrint = forwardRef(
                                         }}
                                         secondary={
                                             <>
-                                                {Boolean(
-                                                    props.distance[index]
-                                                ) && (
-                                                    <Typography variant="caption">
-                                                        {(
-                                                            (props.distance[
-                                                                index
-                                                            ] /
-                                                                1000) *
-                                                            (props.units === 'm'
-                                                                ? 0.621371192
-                                                                : 1)
-                                                        ).toFixed(1)}
-                                                        <FormattedMessage
-                                                            id={
-                                                                props.units ===
+                                                {props?.route?.distance &&
+                                                    Boolean(
+                                                        props.route.distance[
+                                                            index
+                                                        ]
+                                                    ) && (
+                                                        <Typography variant="caption">
+                                                            {(
+                                                                (props.route
+                                                                    .distance[
+                                                                    index
+                                                                ] /
+                                                                    1000) *
+                                                                (props.units ===
                                                                 'm'
-                                                                    ? 'app.Mi'
-                                                                    : 'app.Km'
+                                                                    ? 0.621371192
+                                                                    : 1)
+                                                            ).toFixed(1)}
+                                                            <FormattedMessage
+                                                                id={
+                                                                    props.units ===
+                                                                    'm'
+                                                                        ? 'app.Mi'
+                                                                        : 'app.Km'
+                                                                }
+                                                            />
+                                                        </Typography>
+                                                    )}{' '}
+                                                {props.route.toll &&
+                                                    Boolean(
+                                                        props.route.toll[index]
+                                                    ) && (
+                                                        <Typography variant="caption">
+                                                            <FormattedMessage id="app.Toll" />
+                                                            :{' '}
+                                                            {
+                                                                +props.route.toll[
+                                                                    index
+                                                                ].toFixed(2)
+                                                            }{' '}
+                                                            {
+                                                                (
+                                                                    currencies as Currencies
+                                                                )[
+                                                                    props.route
+                                                                        ?.currency ||
+                                                                        'EUR'
+                                                                ].symbol
                                                             }
+                                                        </Typography>
+                                                    )}
+                                                {props.route.ferry &&
+                                                    props.route.ferry[
+                                                        index
+                                                    ] && (
+                                                        <DirectionsBoat
+                                                            fontSize="small"
+                                                            sx={{
+                                                                marginLeft: 1,
+                                                                marginBottom:
+                                                                    -0.7,
+                                                            }}
                                                         />
-                                                    </Typography>
-                                                )}{' '}
-                                                {Boolean(props.toll[index]) && (
-                                                    <Typography variant="caption">
-                                                        <FormattedMessage id="app.Toll" />
-                                                        :{' '}
-                                                        {
-                                                            +props.toll[
-                                                                index
-                                                            ].toFixed(2)
-                                                        }{' '}
-                                                        {
-                                                            (
-                                                                currencies as Currencies
-                                                            )[
-                                                                props.route
-                                                                    ?.currency ||
-                                                                    'EUR'
-                                                            ].symbol
-                                                        }
-                                                    </Typography>
-                                                )}
-                                                {props.ferry[index] && (
-                                                    <DirectionsBoat
-                                                        fontSize="small"
-                                                        sx={{
-                                                            marginLeft: 1,
-                                                            marginBottom: -0.7,
-                                                        }}
-                                                    />
-                                                )}
+                                                    )}
                                             </>
                                         }
                                     />

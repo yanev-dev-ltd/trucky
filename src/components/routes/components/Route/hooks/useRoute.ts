@@ -16,9 +16,6 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
     const { enqueueSnackbar } = useSnackbar()
     const { settings } = useSelector((state: RootState) => state.settings)
     const [route, setRoute] = useLocalStorage('route', { currency: settings.currency || 'EUR', units: settings.units || 'km' })
-    const [distance, setDistance] = useState<number[]>([])
-    const [toll, setToll] = useState<number[]>([])
-    const [ferry, setFerry] = useState<boolean[]>([])
     const [noRoute, setNoRoute] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const [deleteRouteOpen, setDeleteRouteOpen] = useState<boolean>(false)
@@ -28,11 +25,9 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
     const changeField = useCallback((field: string, value: any) => {
         setRoute({ ...route, [field]: value })
     }, [route])
+
     const clearRoute = useCallback(() => {
         setRoute({ currency: settings.currency || 'EUR', units: settings.units || 'km' })
-        setDistance([])
-        setToll([])
-        setFerry([])
         setNoRoute(false)
         setDeleteRouteOpen(false)
     }, [])
@@ -90,7 +85,7 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
         const routeKey = key || doc(collection(firestore, 'routes')).id
         const routeRef = doc(firestore, 'routes', routeKey)
         const newVehicleId = routeData.vehicleId ?? vehicleId
-        batch.set(routeRef, { ...routeData, distance, toll, ferry, userId: auth.currentUser.uid, vehicleId: newVehicleId })
+        batch.set(routeRef, { ...routeData, userId: auth.currentUser.uid, vehicleId: newVehicleId })
         if (orders)
             for (const order of orders) {
                 const orderRef = order.key ? doc(firestore, 'orders', order.key) : doc(collection(firestore, 'orders'))
@@ -110,7 +105,7 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
             clearRoute()
             vehicleId ? router.push(`/vehicles/${vehicleId}`) : router.push('/routes')
         }
-    }, [route, auth.currentUser?.uid, vehicleId, routeId, distance, toll, ferry])
+    }, [route, auth.currentUser?.uid, vehicleId, routeId])
 
     const deleteRoute = useCallback(async () => {
         if (!auth.currentUser?.uid) return
@@ -141,12 +136,6 @@ const useRoute = (routeId?: string, drivers?: string[], vehicleId?: string) => {
     return {
         route,
         changeField,
-        distance,
-        setDistance,
-        toll,
-        setToll,
-        ferry,
-        setFerry,
         setNoRoute,
         noRoute,
         loading,

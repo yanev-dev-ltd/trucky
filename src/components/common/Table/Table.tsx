@@ -117,20 +117,24 @@ export function Table<T extends Record<string, unknown>>(
                             onContextMenu={handleClick}
                         />
                     ),
-                    TableBody: forwardRef(({ style, ...props }, ref) => (
-                        <TableBody
-                            {...getTableBodyProps()}
-                            {...props}
-                            ref={ref}
-                        />
-                    )),
+                    TableBody: forwardRef(({ style, ...props }, ref) => {
+                        return (
+                            <TableBody
+                                {...getTableBodyProps()}
+                                {...props}
+                                ref={ref}
+                            />
+                        )
+                    }),
                     TableRow: (props) => {
                         const index = props['data-index']
                         const row = rows[index]
+                        const { key, ...rest } = row.getRowProps()
                         return (
                             <TableRow
+                                key={key}
                                 {...props}
-                                {...row.getRowProps()}
+                                {...rest}
                                 sx={sx.row}
                             />
                         )
@@ -138,92 +142,104 @@ export function Table<T extends Record<string, unknown>>(
                     TableHead,
                 }}
                 fixedHeaderContent={() => {
-                    return headerGroups.map((headerGroup) => (
-                        <TableRow {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                <TableCell
-                                    {...column.getHeaderProps({
-                                        ...column.getSortByToggleProps(),
-                                        style: {
-                                            maxWidth: column.maxWidth,
-                                            width: column.width,
-                                        },
-                                    })}
-                                    sx={{
-                                        backgroundColor: 'background.default',
-                                        boxShadow: (theme) =>
-                                            `inset 0px -1px 0 0 ${theme.palette.divider}`,
-                                    }}
-                                >
-                                    <Tooltip
-                                        title={
-                                            column.canSort
-                                                ? intl.formatMessage({
-                                                      id: 'app.Sort',
-                                                  })
-                                                : undefined
-                                        }
-                                        placement="bottom-start"
-                                    >
-                                        <Box
-                                            sx={
-                                                column.isSorted
-                                                    ? sx.sorted
-                                                    : sx.root
-                                            }
+                    return headerGroups.map((headerGroup) => {
+                        const { key, ...rest } =
+                            headerGroup.getHeaderGroupProps()
+                        return (
+                            <TableRow key={key} {...rest}>
+                                {headerGroup.headers.map((column) => {
+                                    const { key, ...rest } =
+                                        column.getHeaderProps({
+                                            ...column.getSortByToggleProps(),
+                                            style: {
+                                                maxWidth: column.maxWidth,
+                                                width: column.width,
+                                            },
+                                        })
+                                    return (
+                                        <TableCell
+                                            key={key}
+                                            {...rest}
+                                            sx={{
+                                                backgroundColor:
+                                                    'background.default',
+                                                boxShadow: (theme) =>
+                                                    `inset 0px -1px 0 0 ${theme.palette.divider}`,
+                                            }}
                                         >
-                                            {column.render('Header')}
-                                            <Box component="span" sx={sx.sort}>
-                                                {column.isSorted ? (
-                                                    column.isSortedDesc ? (
-                                                        <ArrowDropDown
-                                                            fontSize="small"
-                                                            style={{
-                                                                marginBottom:
-                                                                    '-5px',
-                                                            }}
-                                                        />
-                                                    ) : (
-                                                        <ArrowDropUp
-                                                            fontSize="small"
-                                                            style={{
-                                                                marginBottom:
-                                                                    '-5px',
-                                                            }}
-                                                        />
-                                                    )
-                                                ) : (
-                                                    <ArrowDropUp
-                                                        fontSize="small"
-                                                        style={{
-                                                            visibility:
-                                                                'hidden',
-                                                            marginBottom:
-                                                                '-5px',
-                                                        }}
-                                                    />
-                                                )}
-                                            </Box>
-                                        </Box>
-                                    </Tooltip>
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    ))
+                                            <Tooltip
+                                                title={
+                                                    column.canSort
+                                                        ? intl.formatMessage({
+                                                              id: 'app.Sort',
+                                                          })
+                                                        : undefined
+                                                }
+                                                placement="bottom-start"
+                                            >
+                                                <Box
+                                                    sx={
+                                                        column.isSorted
+                                                            ? sx.sorted
+                                                            : sx.root
+                                                    }
+                                                >
+                                                    {column.render('Header')}
+                                                    <Box
+                                                        component="span"
+                                                        sx={sx.sort}
+                                                    >
+                                                        {column.isSorted ? (
+                                                            column.isSortedDesc ? (
+                                                                <ArrowDropDown
+                                                                    fontSize="small"
+                                                                    style={{
+                                                                        marginBottom:
+                                                                            '-5px',
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                <ArrowDropUp
+                                                                    fontSize="small"
+                                                                    style={{
+                                                                        marginBottom:
+                                                                            '-5px',
+                                                                    }}
+                                                                />
+                                                            )
+                                                        ) : (
+                                                            <ArrowDropUp
+                                                                fontSize="small"
+                                                                style={{
+                                                                    visibility:
+                                                                        'hidden',
+                                                                    marginBottom:
+                                                                        '-5px',
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </Box>
+                                                </Box>
+                                            </Tooltip>
+                                        </TableCell>
+                                    )
+                                })}
+                            </TableRow>
+                        )
+                    })
                 }}
                 itemContent={(index, user) => {
                     const row = rows[index]
                     prepareRow(row)
                     return row.cells.map((cell) => {
+                        const { key, ...rest } = cell.getCellProps({
+                            style: {
+                                maxWidth: cell.column.maxWidth,
+                                width: cell.column.width,
+                            },
+                        })
                         return (
-                            <TableCell
-                                {...cell.getCellProps({
-                                    style: {
-                                        maxWidth: cell.column.maxWidth,
-                                        width: cell.column.width,
-                                    },
-                                })}
-                            >
+                            <TableCell key={key} {...rest}>
                                 {cell.render('Cell')}
                             </TableCell>
                         )
