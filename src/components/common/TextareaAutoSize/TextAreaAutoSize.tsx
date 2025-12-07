@@ -1,4 +1,4 @@
-import TextareaAutosize from '@mui/base/TextareaAutosize'
+import { TextareaAutosize } from '@mui/base/TextareaAutosize'
 import { styled } from '@mui/system'
 const TextareaAutoSize = styled(TextareaAutosize)(({ theme }) => ({
     width: '100%',
