@@ -120,7 +120,6 @@ const StopDialog = ({
                                 <li {...props} key={state.index}>
                                     <Grid container alignItems="center">
                                         <Grid
-                                            item
                                             sx={{
                                                 display: 'flex',
                                                 width: 44,
@@ -133,7 +132,6 @@ const StopDialog = ({
                                             />
                                         </Grid>
                                         <Grid
-                                            item
                                             sx={{
                                                 width: 'calc(100% - 44px)',
                                                 wordWrap: 'break-word',

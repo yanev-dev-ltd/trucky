@@ -252,54 +252,52 @@ const AddMaintenanceView = ({
                                     label={
                                         <FormattedMessage id="app.ReminderDate" />
                                     }
-                                    inputFormat="dd/MM/yyyy"
-                                    value={maintenance.reminderDate || null}
+                                    format="dd/MM/yyyy"
+                                    value={
+                                        maintenance.reminderDate
+                                            ? new Date(maintenance.reminderDate)
+                                            : null
+                                    }
                                     onChange={(d: Date | null) =>
                                         d &&
                                         setField('reminderDate', d.getTime())
                                     }
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            fullWidth
-                                            helperText={
+                                    slotProps={{
+                                        textField: {
+                                            fullWidth: true,
+                                            helperText: (
                                                 <FormattedMessage id="app.ReminderInfoDate" />
-                                            }
-                                            inputProps={{
-                                                ...params.inputProps,
-                                                placeholder:
-                                                    intl.formatMessage({
-                                                        id: 'app.dd/MM/yyyy',
-                                                    }) || '',
-                                            }}
-                                        />
-                                    )}
+                                            ),
+                                            placeholder:
+                                                intl.formatMessage({
+                                                    id: 'app.dd/MM/yyyy',
+                                                }) || '',
+                                        },
+                                    }}
                                     disablePast
                                 />
                             </Box>
                             <Box sx={sx.row}>
                                 <DesktopDatePicker
                                     label={<FormattedMessage id="app.Date" />}
-                                    inputFormat="dd/MM/yyyy"
+                                    format="dd/MM/yyyy"
                                     value={
-                                        maintenance.date || new Date().getTime()
+                                        maintenance.date
+                                            ? new Date(maintenance.date)
+                                            : new Date()
                                     }
                                     onChange={(d: Date | null) =>
                                         d && setField('date', d?.getTime())
                                     }
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            fullWidth
-                                            inputProps={{
-                                                ...params.inputProps,
-                                                placeholder:
-                                                    intl.formatMessage({
-                                                        id: 'app.dd/MM/yyyy',
-                                                    }) || '',
-                                            }}
-                                        />
-                                    )}
+                                    slotProps={{
+                                        textField: {
+                                            fullWidth: true,
+                                            placeholder:
+                                                intl.formatMessage({
+                                                    id: 'app.dd/MM/yyyy',
+                                                }) || '',
+                                        },
+                                    }}
                                 />
                             </Box>
                             <Box sx={sx.row}>

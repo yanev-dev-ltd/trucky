@@ -39,22 +39,22 @@ const OrderPrint = ({ order }: { order: Order }) => {
                 margin: '12px 0',
             }}
         >
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <Typography variant="h6">{order.reference}</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
                 <Typography sx={sx.label}>
                     <FormattedMessage id="app.StartStop" />
                 </Typography>
                 <Box>{order.startStop?.address || '-'}</Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
                 <Typography sx={sx.label}>
                     <FormattedMessage id="app.EndStop" />
                 </Typography>
                 <Box>{order.endStop?.address || '-'}</Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
                 <Typography sx={sx.label}>
                     <FormattedMessage id="app.DateExecution" />
                 </Typography>
@@ -64,7 +64,7 @@ const OrderPrint = ({ order }: { order: Order }) => {
                         : '-'}
                 </Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
                 <Typography sx={sx.label}>
                     <FormattedMessage id="app.DateCompletion" />
                 </Typography>
@@ -74,7 +74,7 @@ const OrderPrint = ({ order }: { order: Order }) => {
                         : '-'}
                 </Box>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <Typography sx={sx.label}>
                     <FormattedMessage id="app.Groups" />
                 </Typography>
@@ -85,25 +85,25 @@ const OrderPrint = ({ order }: { order: Order }) => {
                         .join(', ') || '-'}
                 </Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
                 <Typography sx={sx.label}>
                     <FormattedMessage id="app.TypeOfGoods" />
                 </Typography>
                 <Box>{order.type || '-'}</Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
                 <Typography sx={sx.label}>
                     <FormattedMessage id="app.Weight" />
                 </Typography>
                 <Box>{order.weight || '-'}</Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
                 <Typography sx={sx.label}>
                     <FormattedMessage id="app.PalletsCount" />
                 </Typography>
                 <Box>{order.palletsCount || '-'}</Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
                 <Typography sx={sx.label}>
                     <FormattedMessage id="app.TemperatureRegime" />
                 </Typography>
@@ -112,7 +112,7 @@ const OrderPrint = ({ order }: { order: Order }) => {
                     <FormattedMessage id="app.Celsius" />
                 </Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
                 <Typography sx={sx.label}>
                     <FormattedMessage id="app.Client" />
                 </Typography>
@@ -121,7 +121,7 @@ const OrderPrint = ({ order }: { order: Order }) => {
                         '-'}
                 </Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
                 <Typography sx={sx.label}>
                     <FormattedMessage id="app.Notes" />
                 </Typography>
@@ -147,7 +147,7 @@ const ComponentToPrint = forwardRef(
         return (
             <Box component="div" ref={ref} sx={sx.print}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Typography variant="h5">
                             {props.route?.locations &&
                                 props.route.locations
@@ -155,7 +155,7 @@ const ComponentToPrint = forwardRef(
                                     .join(' → ')}
                         </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                         <Typography sx={sx.label}>
                             <FormattedMessage id="app.StartDateAndHour" />
                         </Typography>
@@ -168,7 +168,7 @@ const ComponentToPrint = forwardRef(
                                 : '-'}
                         </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                         <Typography sx={sx.label}>
                             <FormattedMessage id="app.EndDateAndHour" />
                         </Typography>
@@ -181,7 +181,7 @@ const ComponentToPrint = forwardRef(
                                 : '-'}
                         </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                         <Typography sx={sx.label}>
                             <FormattedMessage id="app.Vehicle" />
                         </Typography>
@@ -191,7 +191,7 @@ const ComponentToPrint = forwardRef(
                             )?.name || '-'}
                         </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                         <Typography sx={sx.label}>
                             <FormattedMessage id="app.Trailer" />
                         </Typography>
@@ -219,13 +219,13 @@ const ComponentToPrint = forwardRef(
                             )}
                         </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                         <Typography sx={sx.label}>
                             <FormattedMessage id="app.FuelConsumption" />
                         </Typography>
                         <Box>{props.route.fuelConsumption || '-'}</Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                         <Typography sx={sx.label}>
                             <FormattedMessage id="app.Drivers" />
                         </Typography>
@@ -238,7 +238,7 @@ const ComponentToPrint = forwardRef(
                                 .join(', ') || '-'}
                         </Box>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Typography sx={sx.label}>
                             <FormattedMessage id="app.Groups" />
                         </Typography>
@@ -251,7 +251,7 @@ const ComponentToPrint = forwardRef(
                                 .join(', ') || '-'}
                         </Box>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Typography sx={sx.label}>
                             <FormattedMessage id="app.Stops" />
                         </Typography>
@@ -378,7 +378,7 @@ const ComponentToPrint = forwardRef(
                                 </ListItem>
                             ))}
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Typography sx={sx.label}>
                             <FormattedMessage id="app.Orders" />
                         </Typography>

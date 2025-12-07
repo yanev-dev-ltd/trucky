@@ -83,7 +83,7 @@ const OrderDialogView = ({
                 <DialogContent sx={sx.header}>
                     <Grid container spacing={2}>
                         {!routeId && (
-                            <Grid item xs={12}>
+                            <Grid size={{ xs: 12 }}>
                                 <SelectRoute
                                     setFields={(fields) =>
                                         changeField('object', fields)
@@ -95,7 +95,7 @@ const OrderDialogView = ({
                                 />
                             </Grid>
                         )}
-                        <Grid item xs={6}>
+                        <Grid size={{ xs: 6 }}>
                             <FormControl fullWidth>
                                 <InputLabel id="order-startStop-label">
                                     <FormattedMessage id="app.StartStop" />
@@ -141,7 +141,7 @@ const OrderDialogView = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid size={{ xs: 6 }}>
                             <FormControl fullWidth>
                                 <InputLabel id="order-endStop-label">
                                     <FormattedMessage id="app.EndStop" />
@@ -185,7 +185,7 @@ const OrderDialogView = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <TextField
                                 label={<FormattedMessage id="app.Reference" />}
                                 variant="outlined"
@@ -196,59 +196,59 @@ const OrderDialogView = ({
                                 fullWidth
                             />
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid size={{ xs: 6 }}>
                             <DesktopDatePicker
                                 label={
                                     <FormattedMessage id="app.DateExecution" />
                                 }
-                                inputFormat="dd/MM/yyyy"
-                                value={order?.dateExecution || null}
+                                format="dd/MM/yyyy"
+                                value={
+                                    order?.dateExecution
+                                        ? new Date(order.dateExecution)
+                                        : null
+                                }
                                 onChange={(d: Date | null) =>
                                     d &&
                                     changeField('dateExecution', d.getTime())
                                 }
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        fullWidth
-                                        inputProps={{
-                                            ...params.inputProps,
-                                            placeholder:
-                                                intl.formatMessage({
-                                                    id: 'app.dd/MM/yyyy',
-                                                }) || '',
-                                        }}
-                                    />
-                                )}
+                                slotProps={{
+                                    textField: {
+                                        fullWidth: true,
+                                        placeholder:
+                                            intl.formatMessage({
+                                                id: 'app.dd/MM/yyyy',
+                                            }) || '',
+                                    },
+                                }}
                             />
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid size={{ xs: 6 }}>
                             <DesktopDatePicker
                                 label={
                                     <FormattedMessage id="app.DateCompletion" />
                                 }
-                                inputFormat="dd/MM/yyyy"
-                                value={order?.dateCompletion || null}
+                                format="dd/MM/yyyy"
+                                value={
+                                    order?.dateCompletion
+                                        ? new Date(order.dateCompletion)
+                                        : null
+                                }
                                 onChange={(d: Date | null) =>
                                     d &&
                                     changeField('dateCompletion', d.getTime())
                                 }
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        fullWidth
-                                        inputProps={{
-                                            ...params.inputProps,
-                                            placeholder:
-                                                intl.formatMessage({
-                                                    id: 'app.dd/MM/yyyy',
-                                                }) || '',
-                                        }}
-                                    />
-                                )}
+                                slotProps={{
+                                    textField: {
+                                        fullWidth: true,
+                                        placeholder:
+                                            intl.formatMessage({
+                                                id: 'app.dd/MM/yyyy',
+                                            }) || '',
+                                    },
+                                }}
                             />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <GroupsSelect
                                 groups={order?.groups || []}
                                 setGroups={(groups) =>
@@ -258,7 +258,7 @@ const OrderDialogView = ({
                                 multiple
                             />
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid size={{ xs: 6 }}>
                             <TextField
                                 label={
                                     <FormattedMessage id="app.TypeOfGoods" />
@@ -271,7 +271,7 @@ const OrderDialogView = ({
                                 fullWidth
                             />
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid size={{ xs: 6 }}>
                             <TextField
                                 label={<FormattedMessage id="app.Weight" />}
                                 variant="outlined"
@@ -290,7 +290,7 @@ const OrderDialogView = ({
                                 type="number"
                             />
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid size={{ xs: 6 }}>
                             <TextField
                                 label={
                                     <FormattedMessage id="app.PalletsCount" />
@@ -307,7 +307,7 @@ const OrderDialogView = ({
                                 fullWidth
                             />
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid size={{ xs: 6 }}>
                             <TextField
                                 label={
                                     <FormattedMessage id="app.TemperatureRegime" />
@@ -331,7 +331,7 @@ const OrderDialogView = ({
                                 type="number"
                             />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <SelectComponent
                                 items={[order?.client || '']}
                                 setItems={(clients) =>
@@ -340,7 +340,7 @@ const OrderDialogView = ({
                                 type="clients"
                             />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <TextareaAutoSize
                                 placeholder={intl.formatMessage({
                                     id: 'app.Notes',
@@ -352,7 +352,7 @@ const OrderDialogView = ({
                                 maxRows={8}
                             />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <Documents
                                 type="order"
                                 typeId={order?.key || ''}

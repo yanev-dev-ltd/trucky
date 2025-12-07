@@ -146,7 +146,9 @@ export const DocumentsView = ({
                                             onChange={(d: Date | null) =>
                                                 setReminderDates({
                                                     ...reminderDates,
-                                                    [i]: d ? d.getTime() : null,
+                                                    ...(d
+                                                        ? { [i]: d.getTime() }
+                                                        : {}),
                                                 })
                                             }
                                             slotProps={{

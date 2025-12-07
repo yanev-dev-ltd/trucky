@@ -524,11 +524,13 @@ const EditMaintenanceView = ({
                                     <FormattedMessage id="app.ReminderDate" />
                                 </Typography>
                                 <DesktopDatePicker
-                                    inputFormat="dd/MM/yyyy"
+                                    format="dd/MM/yyyy"
                                     value={
-                                        Number(
-                                            editedMaintenance?.reminderDate
-                                        ) || null
+                                        editedMaintenance?.reminderDate
+                                            ? new Date(
+                                                  editedMaintenance?.reminderDate
+                                              )
+                                            : null
                                     }
                                     onChange={(d: Date | null) =>
                                         d &&
@@ -537,25 +539,23 @@ const EditMaintenanceView = ({
                                             reminderDate: d.getTime() || null,
                                         })
                                     }
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            fullWidth
-                                            helperText={
+                                    slotProps={{
+                                        textField: {
+                                            fullWidth: true,
+                                            helperText: (
                                                 <FormattedMessage id="app.ReminderInfoDate" />
-                                            }
-                                            InputLabelProps={{
+                                            ),
+                                            InputLabelProps: {
                                                 shrink: !!editedMaintenance?.reminderDate,
-                                            }}
-                                            inputProps={{
-                                                ...params.inputProps,
+                                            },
+                                            inputProps: {
                                                 placeholder:
                                                     intl.formatMessage({
                                                         id: 'app.dd/MM/yyyy',
                                                     }) || '',
-                                            }}
-                                        />
-                                    )}
+                                            },
+                                        },
+                                    }}
                                     disablePast
                                 />
                                 <Button
@@ -631,9 +631,11 @@ const EditMaintenanceView = ({
                                     <FormattedMessage id="app.Date" />
                                 </Typography>
                                 <DesktopDatePicker
-                                    inputFormat="dd/MM/yyyy"
+                                    format="dd/MM/yyyy"
                                     value={
-                                        Number(editedMaintenance?.date) || null
+                                        editedMaintenance?.date
+                                            ? new Date(editedMaintenance?.date)
+                                            : null
                                     }
                                     onChange={(d: Date | null) =>
                                         d &&
@@ -642,22 +644,20 @@ const EditMaintenanceView = ({
                                             date: d.getTime() || null,
                                         })
                                     }
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            fullWidth
-                                            InputLabelProps={{
+                                    slotProps={{
+                                        textField: {
+                                            fullWidth: true,
+                                            InputLabelProps: {
                                                 shrink: !!editedMaintenance?.date,
-                                            }}
-                                            inputProps={{
-                                                ...params.inputProps,
+                                            },
+                                            inputProps: {
                                                 placeholder:
                                                     intl.formatMessage({
                                                         id: 'app.dd/MM/yyyy',
                                                     }) || '',
-                                            }}
-                                        />
-                                    )}
+                                            },
+                                        },
+                                    }}
                                 />
                                 <Button
                                     color="primary"

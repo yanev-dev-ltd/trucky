@@ -163,24 +163,20 @@ const Route = ({ vehicleId, routeId, drivers, onClose }: RouteProps) => {
                                 label={
                                     <FormattedMessage id="app.StartDateAndHour" />
                                 }
-                                inputFormat="dd/MM/yyyy HH:mm"
+                                format="dd/MM/yyyy HH:mm"
                                 ampm={false}
                                 value={route?.startDate || null}
                                 onChange={(d: Date | null) =>
                                     d && changeField('startDate', d.getTime())
                                 }
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        fullWidth
-                                        inputProps={{
-                                            ...params.inputProps,
-                                            placeholder: intl.formatMessage({
-                                                id: 'app.dd/MM/yyyy HH:mm',
-                                            }),
-                                        }}
-                                    />
-                                )}
+                                slotProps={{
+                                    textField: {
+                                        fullWidth: true,
+                                        placeholder: intl.formatMessage({
+                                            id: 'app.dd/MM/yyyy HH:mm',
+                                        }),
+                                    },
+                                }}
                             />
                         </Box>
                         <Box sx={sx.row}>
@@ -188,24 +184,20 @@ const Route = ({ vehicleId, routeId, drivers, onClose }: RouteProps) => {
                                 label={
                                     <FormattedMessage id="app.EndDateAndHour" />
                                 }
-                                inputFormat="dd/MM/yyyy HH:mm"
+                                format="dd/MM/yyyy HH:mm"
+                                ampm={false}
                                 value={route?.endDate || null}
                                 onChange={(d: Date | null) =>
                                     d && changeField('endDate', d.getTime())
                                 }
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        fullWidth
-                                        inputProps={{
-                                            ...params.inputProps,
-                                            placeholder:
-                                                intl.formatMessage({
-                                                    id: 'app.dd/MM/yyyy HH:mm',
-                                                }) || '',
-                                        }}
-                                    />
-                                )}
+                                slotProps={{
+                                    textField: {
+                                        fullWidth: true,
+                                        placeholder: intl.formatMessage({
+                                            id: 'app.dd/MM/yyyy HH:mm',
+                                        }),
+                                    },
+                                }}
                             />
                         </Box>
                         <Box sx={sx.row}>

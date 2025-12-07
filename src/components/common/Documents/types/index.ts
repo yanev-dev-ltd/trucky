@@ -42,8 +42,8 @@ export type DocumentsProps = {
     uploadError: string[]
     titles: string[]
     setTitles: (titles: string[]) => void
-    reminderDates: (number | null)[]
-    setReminderDates: (reminderDates: (number | null)[]) => void
+    reminderDates: number[]
+    setReminderDates: (reminderDates: number[]) => void
     isLoading: boolean
     light?: boolean
 }

@@ -1,4 +1,11 @@
-import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+    ChangeEvent,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react'
 import { Document, useDocumentsProps } from '../types'
 import { bg, enUS } from 'date-fns/locale'
 import { RootState } from '@/store/store'
@@ -12,7 +19,14 @@ import {
     getDownloadURL,
 } from 'firebase/storage'
 import { useIntl } from 'react-intl'
-import { addDoc, collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
+import {
+    addDoc,
+    collection,
+    onSnapshot,
+    query,
+    where,
+    orderBy,
+} from 'firebase/firestore'
 import { useSnackbar } from 'notistack'
 
 const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
@@ -23,7 +37,7 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
     const [editFile, setEditFile] = useState<Document | undefined>(undefined)
     const [uploadError, setUploadError] = useState<string[]>([])
     const [titles, setTitles] = useState<string[]>([])
-    const [reminderDates, setReminderDates] = useState<(number | null)[]>([])
+    const [reminderDates, setReminderDates] = useState<number[]>([])
     const [uploadedFiles, setUploadedFiles] = useState<Document[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const readyRef = useRef(true)
@@ -44,19 +58,31 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
             return
         }
         setIsLoading(true)
-        const conditions = [where('userId', '==', auth.currentUser?.uid), where('typeId', '==', typeId)]
+        const conditions = [
+            where('userId', '==', auth.currentUser?.uid),
+            where('typeId', '==', typeId),
+        ]
         const qd = query(
             collection(firestore, 'documents'),
             ...conditions,
-            orderBy('date', 'desc'))
-        const unsubscribeDocuments = onSnapshot(qd, (querySnapshot) => {
-            const documents: Document[] = []
-            querySnapshot.forEach((doc) => {
-                documents.push({key: doc.id, ...doc.data()})
-            })
-            setDocuments(documents)
-            setIsLoading(false)
-        }, (error) => enqueueSnackbar(error.message, { variant: 'error', persist: true }))
+            orderBy('date', 'desc')
+        )
+        const unsubscribeDocuments = onSnapshot(
+            qd,
+            (querySnapshot) => {
+                const documents: Document[] = []
+                querySnapshot.forEach((doc) => {
+                    documents.push({ key: doc.id, ...doc.data() })
+                })
+                setDocuments(documents)
+                setIsLoading(false)
+            },
+            (error) =>
+                enqueueSnackbar(error.message, {
+                    variant: 'error',
+                    persist: true,
+                })
+        )
         return () => {
             unsubscribeDocuments()
         }
@@ -72,7 +98,7 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
         setIsLoading(false)
     }, [])
 
-    const handleAddFiles = useCallback( 
+    const handleAddFiles = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
             clearFiles()
             if (
@@ -83,12 +109,20 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
             ) {
                 return
             }
-            setFilesToUpload(
-                Array.from(event?.target?.files || [])
+            setFilesToUpload(Array.from(event?.target?.files || []))
+            setUploadProgress(
+                Array.from(
+                    {
+                        length: event?.target?.files
+                            ? event?.target?.files.length
+                            : 0,
+                    },
+                    () => 0
+                )
             )
-            setUploadProgress(Array.from({length: event?.target?.files ? event?.target?.files.length : 0}, () => 0))
         },
-    [clearFiles])
+        [clearFiles]
+    )
 
     const handleUpload = useCallback(async () => {
         if (!auth.currentUser?.uid) return
@@ -103,7 +137,8 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
             uploadTask.on(
                 'state_changed',
                 (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                     setUploadProgress((prevProgress) => {
                         const newProgress = [...prevProgress]
                         newProgress[i] = Math.round(progress)
@@ -134,7 +169,7 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then(
                         async (downloadURL) => {
-                            await addDoc(collection(firestore, "documents"), {
+                            await addDoc(collection(firestore, 'documents'), {
                                 name: filesToUpload[i].name,
                                 url: downloadURL,
                                 path: filePath,
@@ -144,7 +179,7 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
                                 typeId,
                                 title: titles[i] || '',
                                 reminderDate: reminderDates[i] || null,
-                                status: 'active'
+                                status: 'active',
                             })
                             readyRef.current = true
                             setUploadedFiles((oldUploadedFiles) => {
@@ -155,7 +190,7 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
                                         name: filesToUpload[i].name,
                                         url: downloadURL,
                                         path: filePath,
-                                        date: new Date().getTime()
+                                        date: new Date().getTime(),
                                     },
                                 ]
                             })
@@ -168,23 +203,56 @@ const useDocuments = ({ type, typeId, light }: useDocumentsProps) => {
     }, [filesToUpload, type, typeId, intl, titles, reminderDates])
 
     useEffect(() => {
-        if (filesToUpload.length > 0 && filesToUpload.length === uploadedFiles.length && readyRef.current) {
-            const count = uploadedFiles.filter((uf) => uf.url !== 'error').length
-            const errors = uploadedFiles.filter((uf) => uf.url === 'error').length
+        if (
+            filesToUpload.length > 0 &&
+            filesToUpload.length === uploadedFiles.length &&
+            readyRef.current
+        ) {
+            const count = uploadedFiles.filter(
+                (uf) => uf.url !== 'error'
+            ).length
+            const errors = uploadedFiles.filter(
+                (uf) => uf.url === 'error'
+            ).length
             if (count > 0) {
-                enqueueSnackbar(intl.formatMessage({
-                    id: count === 1 ? 'app.UploadedOneDocumentSuccess' : 'app.UploadedManyDocumentsSuccess',
-                }, { count }), { variant: 'success' })
+                enqueueSnackbar(
+                    intl.formatMessage(
+                        {
+                            id:
+                                count === 1
+                                    ? 'app.UploadedOneDocumentSuccess'
+                                    : 'app.UploadedManyDocumentsSuccess',
+                        },
+                        { count }
+                    ),
+                    { variant: 'success' }
+                )
             }
             if (errors > 0) {
-                enqueueSnackbar(intl.formatMessage({
-                    id: errors === 1 ? 'app.UploadedOneDocumentError' : 'app.UploadedManyDocumentsError',
-                }, { errors }), { variant: 'error' })
+                enqueueSnackbar(
+                    intl.formatMessage(
+                        {
+                            id:
+                                errors === 1
+                                    ? 'app.UploadedOneDocumentError'
+                                    : 'app.UploadedManyDocumentsError',
+                        },
+                        { errors }
+                    ),
+                    { variant: 'error' }
+                )
             }
-            clearFiles()   
+            clearFiles()
             readyRef.current = false
         }
-    }, [uploadedFiles, filesToUpload, readyRef.current, intl, enqueueSnackbar, clearFiles])
+    }, [
+        uploadedFiles,
+        filesToUpload,
+        readyRef.current,
+        intl,
+        enqueueSnackbar,
+        clearFiles,
+    ])
 
     return {
         documents,
