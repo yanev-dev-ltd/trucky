@@ -137,31 +137,31 @@ export const DocumentsView = ({
                                             label={
                                                 <FormattedMessage id="app.ReminderDate" />
                                             }
-                                            inputFormat="dd/MM/yyyy"
-                                            value={reminderDates[i] || null}
+                                            format="dd/MM/yyyy"
+                                            value={
+                                                reminderDates[i]
+                                                    ? new Date(reminderDates[i])
+                                                    : null
+                                            }
                                             onChange={(d: Date | null) =>
                                                 setReminderDates({
                                                     ...reminderDates,
                                                     [i]: d ? d.getTime() : null,
                                                 })
                                             }
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    fullWidth
-                                                    size="small"
-                                                    helperText={
+                                            slotProps={{
+                                                textField: {
+                                                    fullWidth: true,
+                                                    size: 'small',
+                                                    helperText: (
                                                         <FormattedMessage id="app.ReminderInfoDate" />
-                                                    }
-                                                    inputProps={{
-                                                        ...params.inputProps,
-                                                        placeholder:
-                                                            intl.formatMessage({
-                                                                id: 'app.dd/MM/yyyy',
-                                                            }) || '',
-                                                    }}
-                                                />
-                                            )}
+                                                    ),
+                                                    placeholder:
+                                                        intl.formatMessage({
+                                                            id: 'app.dd/MM/yyyy',
+                                                        }) || '',
+                                                },
+                                            }}
                                             disablePast
                                         />
                                         {uploadError[i] && (
