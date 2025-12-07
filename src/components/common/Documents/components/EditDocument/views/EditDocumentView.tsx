@@ -1,4 +1,4 @@
-import { Close, InsertDriveFile } from '@mui/icons-material'
+import { Close } from '@mui/icons-material'
 import {
     Box,
     Button,
@@ -13,7 +13,7 @@ import {
 import { FormattedMessage, useIntl } from 'react-intl'
 import sx from '../styles/EditDocument.sx'
 import Overflow from '@/components/common/Overflow/Overflow'
-import { DesktopDatePicker } from '@mui/x-date-pickers'
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import LoadingButton from '@/components/common/LoadingButton/LoadingButton'
 import { EditDocumentProps } from '../types'
 import Confirm from '@/components/common/Confirm/Confirm'
@@ -80,8 +80,12 @@ export const EditDocumentView = ({
                     {document?.status !== 'completed' ? (
                         <DesktopDatePicker
                             label={<FormattedMessage id="app.ReminderDate" />}
-                            inputFormat="dd/MM/yyyy"
-                            value={document?.reminderDate || null}
+                            format="dd/MM/yyyy"
+                            value={
+                                document?.reminderDate
+                                    ? new Date(document.reminderDate)
+                                    : null
+                            }
                             onChange={(d: Date | null) =>
                                 setDocument({
                                     key: document?.key || '',
@@ -89,24 +93,20 @@ export const EditDocumentView = ({
                                     reminderDate: d ? d.getTime() : null,
                                 })
                             }
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    fullWidth
-                                    size="small"
-                                    helperText={
-                                        <FormattedMessage id="app.ReminderInfoDate" />
-                                    }
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        placeholder:
-                                            intl.formatMessage({
-                                                id: 'app.dd/MM/yyyy',
-                                            }) || '',
-                                    }}
-                                />
-                            )}
                             disablePast
+                            slotProps={{
+                                textField: {
+                                    fullWidth: true,
+                                    size: 'small',
+                                    helperText: (
+                                        <FormattedMessage id="app.ReminderInfoDate" />
+                                    ),
+                                    placeholder:
+                                        intl.formatMessage({
+                                            id: 'app.dd/MM/yyyy',
+                                        }) || '',
+                                },
+                            }}
                         />
                     ) : (
                         <Typography>
